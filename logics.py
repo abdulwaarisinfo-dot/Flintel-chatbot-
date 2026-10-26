@@ -236,14 +236,31 @@ _SCAN_STATUS_LOCK = threading.Lock()
 _SCAN_STATUS_MAX = 2000
 
 
-def _register_scan_status(chat_id, topic_key, complete: bool) -> None:
+def _register_scan_status(chat_id, topic_key, complete: bool, scored: bool = True) -> None:
+    """`complete` keeps its meaning (every collection read without error; the strict wait logic reads it).
+    (FRESHNESS) `scored` is False for an exit that registered a status WITHOUT having scored anything
+    (the query embeddings were unusable): that call is not evidence that a search produced results.
+    `thread` is the registering thread, so a request can tell its own status from another scan's."""
     if not chat_id or not topic_key:
         return
     with _SCAN_STATUS_LOCK:
         if len(_SCAN_STATUS) >= _SCAN_STATUS_MAX:
             for k in list(_SCAN_STATUS)[: _SCAN_STATUS_MAX // 2]:
                 _SCAN_STATUS.pop(k, None)
-        _SCAN_STATUS[(chat_id, topic_key)] = {"complete": bool(complete), "at": time.monotonic()}
+        _SCAN_STATUS[(chat_id, topic_key)] = {"complete": bool(complete), "at": time.monotonic(),
+                                              "scored": bool(scored), "thread": threading.get_ident()}
+
+
+def _mark_scan_unscored(chat_id, topic_key) -> None:
+    """(FRESHNESS) Called just before get_matched_signals() returns [] because no usable query embeddings
+    existed AFTER the collections were read: flags the status THIS thread registered as not scored.
+    A status registered by another thread is left alone."""
+    if not chat_id or not topic_key:
+        return
+    with _SCAN_STATUS_LOCK:
+        entry = _SCAN_STATUS.get((chat_id, topic_key))
+        if entry is not None and entry.get("thread") == threading.get_ident():
+            entry["scored"] = False
 
 
 def get_scan_status(chat_id, topic_key) -> Optional[dict]:
@@ -767,6 +784,443 @@ def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_r
         return json.dumps(data, ensure_ascii=False)
     except Exception as exc:
         log.warning(f"No-results enrichment failed (answer left unchanged): {exc}")
+        return answer_text
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (FRESHNESS DISCLOSURE, LI-02 M2) Server-built, factual statement about an
+# answer's evidence: stored post dates, the window searched, whether a search
+# really ran for THIS request or saved results were reused, and what is not
+# known. Nothing here changes which posts are returned or in what order.
+#
+# Four different times are kept apart and never merged:
+#   * stored post date      -> each post's "published_at" / "created_utc" as
+#                              stored. It is NOT verified as the original
+#                              publication time (a MySQL source may fall back
+#                              to a row-creation column), so it is only ever
+#                              called "stored post date".
+#   * saved-results update  -> the cache document's "updated_at": when the
+#                              saved results last CHANGED, not when they were
+#                              last checked.
+#   * search activity       -> a scan of stored posts during THIS request,
+#                              recorded by get_evidence_with_topup(). It is a
+#                              read of stored data, never a collection.
+#   * collection time       -> always reported as unknown.
+# Flag: FRESHNESS_DISCLOSURE_ENABLED, read live, default OFF in code. Off =
+# no provenance is recorded and the answer text is returned untouched.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_FD_VERSION = 1
+_FD_SKIP_FORMATS = {"disallowed", "not_available"}      # not about the posts found
+_FD_MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def freshness_enabled() -> bool:
+    """True only when FRESHNESS_DISCLOSURE_ENABLED is the boolean True."""
+    return _cfg_value("FRESHNESS_DISCLOSURE_ENABLED", False) is True
+
+
+def _fd_utc(value):
+    try:
+        return timerange.to_utc(value)
+    except Exception:
+        return None
+
+
+def _fd_is_naive(value) -> bool:
+    if isinstance(value, datetime):
+        return value.tzinfo is None
+    if isinstance(value, str):
+        try:
+            return datetime.fromisoformat(value.strip().replace("Z", "+00:00")).tzinfo is None
+        except ValueError:
+            return False
+    return False
+
+
+def _fd_fmt(dt, with_time: bool = False) -> str:
+    text = f"{dt.day} {_FD_MONTHS[dt.month - 1]} {dt.year}"
+    return f"{text}, {dt.hour:02d}:{dt.minute:02d} UTC" if with_time else text
+
+
+def _fd_age(seconds) -> str:
+    """Coarse age, e.g. "under an hour", "about 3 days"."""
+    s = max(0, int(seconds))
+    if s < 3600:
+        return "under an hour"
+    if s < 2 * 86400:
+        h = s // 3600
+        return f"about {h} hour{'s' if h != 1 else ''}"
+    if s < 60 * 86400:
+        return f"about {s // 86400} days"
+    if s < 2 * 365 * 86400:
+        return f"about {s // (30 * 86400)} months"
+    return f"about {s // (365 * 86400)} years"
+
+
+def summarize_publication_times(posts, reference_utc=None) -> dict:
+    """Counts and newest/oldest STORED POST DATE of `posts`, relative to one
+    reference instant. A post's date is its "published_at", else "created_utc".
+    Missing / unreadable / future dates are counted and never used for newest
+    or oldest; Google discovery stubs ("google_rank" key) and repeated URLs are
+    not counted as evidence posts. Naive datetimes are read as UTC. Never raises."""
+    ref = _fd_utc(reference_utc) if reference_utc is not None else None
+    if ref is None:
+        ref = datetime.now(timezone.utc)
+    out = {"evidence_posts": 0, "with_date": 0, "no_date": 0, "invalid_date": 0, "future_date": 0,
+           "naive_assumed_utc": 0, "discovery_only": 0,
+           "newest": None, "oldest": None, "newest_age_seconds": None, "oldest_age_seconds": None}
+    seen = set()
+    dated = []
+    for post in posts or []:
+        if not isinstance(post, dict):
+            continue
+        url = post.get("post_url")
+        if url:
+            if url in seen:
+                continue
+            seen.add(url)
+        if "google_rank" in post:
+            out["discovery_only"] += 1
+            continue
+        out["evidence_posts"] += 1
+        raws = [post.get(k) for k in ("published_at", "created_utc")
+                if post.get(k) is not None and not (isinstance(post.get(k), str) and not post.get(k).strip())]
+        if not raws:
+            out["no_date"] += 1
+            continue
+        when = None
+        for raw in raws:
+            when = _fd_utc(raw)
+            if when is not None:
+                if _fd_is_naive(raw):
+                    out["naive_assumed_utc"] += 1
+                break
+        if when is None:
+            out["invalid_date"] += 1
+        elif when > ref:
+            out["future_date"] += 1
+        else:
+            out["with_date"] += 1
+            dated.append(when)
+    if dated:
+        newest, oldest = max(dated), min(dated)
+        out["newest"], out["oldest"] = newest.isoformat(), oldest.isoformat()
+        out["newest_age_seconds"] = int((ref - newest).total_seconds())
+        out["oldest_age_seconds"] = int((ref - oldest).total_seconds())
+    return out
+
+
+def describe_search_window(time_range=None, time_window_days=None) -> str:
+    """The window wording enrich_no_results_answer() already uses."""
+    tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+    days = time_window_days if isinstance(time_window_days, int) and time_window_days > 0 else None
+    if tr is not None:
+        return tr.describe()
+    if days:
+        return f"the last {days} day{'s' if days != 1 else ''}"
+    return "all posts Flintel has collected so far (no time limit)"
+
+
+def _prov_marker(chat_id, topic_key):
+    entry = get_scan_status(chat_id, topic_key)
+    return None if entry is None else entry.get("at")
+
+
+def _prov_urls(out, posts, already=None):
+    """(FRESHNESS) URLs of `posts` that are not in `already`; None when tracking is off or anything is odd."""
+    if out is None:
+        return None
+    try:
+        known = {p.get("post_url") for p in (already or []) if isinstance(p, dict) and p.get("post_url")}
+        return [u for u in (p.get("post_url") for p in (posts or []) if isinstance(p, dict)) if u and u not in known]
+    except Exception:
+        return None
+
+
+def _prov_note(out, kind, chat_id=None, topic_key=None, marker_before=None,
+               saved_updated_at=None, saved_count=0, range_stats=None, searchable=True, cancelled=False,
+               scan_urls=None) -> None:
+    """Records what get_evidence_with_topup() just did into `out` (a per-request
+    dict). kind: "saved_only" | "scan" | "range". `searchable=False` means the
+    matcher was given nothing to search for and returned without searching: that
+    is recorded as "scan_skipped", never as a search. `cancelled=True` means the
+    caller had already abandoned this scan (deadline / disconnect) - that is only
+    a flag: whether its results were used is decided later, from `scan_urls` (the
+    post URLs this scan returned that were not already saved) against the evidence
+    the answer was really built from. A scan counts as reporting its own status only
+    when a status was registered during THIS call by THIS thread, and that status
+    says scoring ran; anything else is recorded as "scan_unconfirmed".
+    The whole record is applied with ONE dict.update(), so a reader never sees
+    half of it. Write-only, never raises, no effect when `out` is None."""
+    if out is None:
+        return
+    try:
+        if kind == "saved_only":
+            if not out.get("scan_count") and not out.get("saved_used"):
+                out.update(saved_used=True, saved_updated_at=saved_updated_at, saved_count=saved_count)
+            return
+        rec = {}
+        if not out.get("scan_count") and not out.get("saved_used") and saved_count > 0:
+            rec.update(saved_used=True, saved_updated_at=saved_updated_at, saved_count=saved_count)
+        if not searchable:
+            rec["scan_skipped"] = True
+            out.update(rec)
+            return
+        after = get_scan_status(chat_id, topic_key)
+        mine = (after is not None and after.get("thread") == threading.get_ident()
+                and (marker_before is None or after.get("at") != marker_before))
+        rec["scan_count"] = out.get("scan_count", 0) + 1
+        rec["search_time"] = datetime.now(timezone.utc)
+        if range_stats is not None:
+            rec["range"] = dict(range_stats)
+        if cancelled:
+            rec["scan_cancelled"] = True
+        if scan_urls is not None:
+            rec["scan_urls"] = list(dict.fromkeys(list(out.get("scan_urls") or []) + list(scan_urls)))[:2000]
+        if not mine:
+            rec["scan_unconfirmed"] = True       # this call never reported its own status
+        elif after.get("scored") is False:
+            rec["scan_unconfirmed"] = True       # a status was registered, but nothing was scored
+            rec["scan_unscored"] = True
+        elif not after.get("complete"):
+            rec["scan_incomplete"] = True
+        out.update(rec)
+    except Exception as exc:
+        log.warning(f"Freshness provenance note failed (ignored): {exc}")
+
+
+def build_data_freshness(posts, reference_utc=None, *, time_range=None, time_window_days=None,
+                         provenance=None, matched_count=None, evidence_limit=None,
+                         timed_out: bool = False) -> dict:
+    """The "data_freshness" object for one answer, including a plain-text
+    "statement". Pure given its inputs. Never raises.
+
+    "search_status" says what is known about THIS request's search:
+      confirmed    a scan ran and reported its own status -> its time is given
+      unconfirmed  a scan was attempted but never reported its own status, or reported that nothing was
+                   scored -> NO time, qualified wording
+      cancelled    the caller abandoned the scan (deadline / disconnect) -> its results are not included
+      not_run      the matcher was given no search terms and did not search (or saved results were reused)
+      not_recorded nothing was recorded (also: another request's scan, another worker)
+    `provenance` is copied ONCE up front, so a scan thread writing to it meanwhile cannot produce a mixture."""
+    ref = _fd_utc(reference_utc) if reference_utc is not None else None
+    if ref is None:
+        ref = datetime.now(timezone.utc)
+    try:
+        prov = dict(provenance) if isinstance(provenance, dict) else {}       # one snapshot, read only from here on
+        if isinstance(prov.get("range"), dict):
+            prov["range"] = dict(prov["range"])
+    except Exception:
+        prov = {}
+    summary = summarize_publication_times(posts, ref)
+    n = summary["evidence_posts"]
+    window = describe_search_window(time_range, time_window_days)
+    attempted = bool(prov.get("scan_count"))
+    # A cancel flag only says the caller had abandoned the scan by the time it returned. What matters is whether the
+    # scan finished cleanly (own status, complete, scored) and whether its results are in the evidence used here.
+    cancel_flag = attempted and bool(prov.get("scan_cancelled"))
+    scan_urls = prov.get("scan_urls") if isinstance(prov.get("scan_urls"), list) else None
+    evidence_urls = {p.get("post_url") for p in (posts or []) if isinstance(p, dict) and "google_rank" not in p
+                     and p.get("post_url")}
+    scan_used = None if scan_urls is None else bool(evidence_urls.intersection(scan_urls))
+    scan_clean = attempted and not prov.get("scan_incomplete") and not prov.get("scan_unconfirmed")
+    cancelled, late_results, finished_before_cancel = cancel_flag, False, False
+    if cancel_flag and scan_clean and scan_urls is not None:
+        cancelled = False
+        if scan_used or not scan_urls:
+            finished_before_cancel = True      # it ran to its end and its results (if any) are in the evidence
+        else:
+            late_results = True                # it ran to its end, but none of its posts are in the evidence used
+    results_included = (scan_used if scan_urls else None) if (cancel_flag and scan_urls is not None) else None
+    unconfirmed = attempted and not cancelled and bool(prov.get("scan_unconfirmed"))
+    confirmed = attempted and not cancelled and not unconfirmed
+    saved_used = bool(prov.get("saved_used"))
+    not_run = bool(prov.get("scan_skipped")) and not attempted
+    rng = prov.get("range") if isinstance(prov.get("range"), dict) else None
+    if cancelled:
+        mode = "scan_cancelled"
+    elif late_results:
+        mode = "scan_late"
+    elif rng is not None and attempted:
+        mode = "range_scan"
+    elif attempted and saved_used:
+        mode = "saved_plus_scan"
+    elif attempted:
+        mode = "scanned"
+    elif saved_used:
+        mode = "saved_only"
+    elif not_run:
+        mode = "no_search_run"
+    else:
+        mode = "unknown"
+    search_status = ("confirmed" if confirmed else "unconfirmed" if unconfirmed else "cancelled" if cancelled
+                     else "not_run" if (not_run or mode == "saved_only") else "not_recorded")
+    search_time = _fd_utc(prov.get("search_time")) if confirmed else None
+    saved_at = _fd_utc(prov.get("saved_updated_at")) if saved_used else None
+
+    scan_complete = None
+    if attempted:
+        scan_complete = False if prov.get("scan_incomplete") else (None if prov.get("scan_unconfirmed") else True)
+    partial = None
+    if late_results:
+        partial = "late_results"
+    elif finished_before_cancel:
+        partial = None                         # the search finished and its posts are in the evidence
+    elif timed_out:
+        partial = "time_limit"
+    elif cancelled:
+        partial = "cancelled"
+    elif scan_complete is False:
+        partial = "source_unreadable"
+    elif attempted and scan_complete is None:
+        partial = "unconfirmed"
+
+    lines = []
+    when = f" on {_fd_fmt(search_time, True)}" if search_time else ""
+    no_time = "could not be confirmed, so no search time is given"
+    saved_txt = f"last updated {_fd_fmt(saved_at, True)}" if saved_at else "update time unknown"
+    consider = f"{n} stored post{'s' if n != 1 else ''} {'was' if n == 1 else 'were'} considered"
+    if mode == "saved_only":
+        lines.append(f"These results were reused from an earlier search in this chat (saved results {saved_txt}). "
+                     f"No new search of stored posts was run for this answer, so posts stored since then are not included. "
+                     f"{consider}.")
+    elif mode == "saved_plus_scan" and confirmed:
+        lines.append(f"Saved results from an earlier search in this chat ({saved_txt}) were extended by searching "
+                     f"stored posts again{when}. {consider}.")
+    elif mode == "saved_plus_scan":
+        lines.append(f"Saved results from an earlier search in this chat ({saved_txt}) were used. A search of stored "
+                     f"posts was attempted for this answer but {no_time}, and it is not known whether it added "
+                     f"posts. {consider}.")
+    elif mode == "scan_late" and saved_used:
+        lines.append(f"Saved results from an earlier search in this chat ({saved_txt}) were used. A new search of "
+                     f"stored posts finished{when}, but the posts it found are not included in this answer. {consider}.")
+    elif mode == "scan_late":
+        lines.append(f"A search of stored posts finished{when}, but the posts it found are not included in this "
+                     f"answer. {consider}.")
+    elif mode == "scan_cancelled" and results_included and saved_used:
+        lines.append(f"Saved results from an earlier search in this chat ({saved_txt}) were used. A new search of "
+                     f"stored posts was started for this answer but was stopped before it finished; the posts it had "
+                     f"found by then are included. {consider}.")
+    elif mode == "scan_cancelled" and results_included:
+        lines.append(f"A search of stored posts was started for this answer but was stopped before it finished; the "
+                     f"posts it had found by then are included. {consider}.")
+    elif mode == "scan_cancelled" and saved_used:
+        lines.append(f"Saved results from an earlier search in this chat ({saved_txt}) were used. A new search of "
+                     f"stored posts was started for this answer but was stopped before it finished, so its results "
+                     f"are not included and it did not extend the saved results. {consider}.")
+    elif mode == "scan_cancelled":
+        lines.append(f"A search of stored posts was started for this answer but was stopped before it finished, so "
+                     f"its results are not included. {consider}.")
+    elif mode == "range_scan" and confirmed:
+        lines.append(f"Stored posts were searched{when}, limited to {window} by stored post date. {consider}.")
+    elif mode == "range_scan":
+        lines.append(f"A search of stored posts limited to {window} by stored post date was attempted but {no_time}. "
+                     f"{consider}.")
+    elif mode == "scanned" and confirmed:
+        lines.append(f"Stored posts were searched{when}. {consider}.")
+    elif mode == "scanned":
+        lines.append(f"A search of stored posts was attempted for this answer but {no_time}. {consider}.")
+    elif mode == "no_search_run":
+        lines.append(f"No search of stored posts was run for this answer because the request had no search terms. "
+                     f"{consider}.")
+    else:
+        lines.append(f"How these results were gathered is not recorded for this answer. {consider}.")
+    if rng is not None and attempted and not cancelled and (rng.get("outside") or rng.get("no_timestamp")):
+        lines.append(f"Left out by date: {int(rng.get('outside') or 0)} outside the range and "
+                     f"{int(rng.get('no_timestamp') or 0)} without a stored date.")
+    if n == 0:
+        if confirmed or mode == "saved_only":
+            lines.append("No stored posts matched this search. Flintel searches only posts it has already stored, very "
+                         "recent posts may not be stored yet, and this does not show that nothing was posted. A temporary "
+                         "error can also produce an empty result.")
+        else:
+            lines.append("No stored posts are available for this answer. This does not show that nothing was posted, "
+                         "and a temporary error can also produce an empty result.")
+    elif summary["with_date"]:
+        newest = _fd_utc(summary["newest"])
+        oldest = _fd_utc(summary["oldest"])
+        text = (f"Stored post dates: newest {_fd_fmt(newest)} ({_fd_age(summary['newest_age_seconds'])} before this answer), "
+                f"oldest {_fd_fmt(oldest)}.")
+        lines.append(text)
+    else:
+        lines.append("None of these posts has a usable stored post date, so their age cannot be stated.")
+    undated = summary["no_date"] + summary["invalid_date"] + summary["future_date"]
+    if n and undated:
+        bits = []
+        if summary["no_date"]:
+            bits.append(f"{summary['no_date']} without a date")
+        if summary["invalid_date"]:
+            bits.append(f"{summary['invalid_date']} with an unreadable date")
+        if summary["future_date"]:
+            bits.append(f"{summary['future_date']} dated after this answer")
+        if summary["with_date"]:
+            lines.append(f"Not counted in the date range: {', '.join(bits)}.")
+    if mode != "range_scan":
+        lines.append(f"Window: {window}.")
+    if partial == "time_limit":
+        lines.append("Partial results: the search stopped at its time limit before every source was checked, "
+                     "so posts may be missing.")
+    elif partial == "late_results":
+        lines.append("Partial results: the finished search found posts that this answer does not include.")
+    elif partial == "cancelled":
+        lines.append("Partial results: the search was stopped before it finished, so posts may be missing.")
+    elif partial == "source_unreadable":
+        lines.append("Partial results: one or more sources could not be read, so posts may be missing.")
+    elif partial == "unconfirmed":
+        lines.append("Because the search could not be confirmed, posts may be missing.")
+    limit_reached = bool(isinstance(evidence_limit, int) and evidence_limit > 0
+                         and isinstance(matched_count, int) and matched_count >= evidence_limit)
+    if limit_reached:
+        lines.append(f"Showing up to {evidence_limit} matching posts; more may exist.")
+    lines.append("Collection time is unknown, and this is not a complete view of Reddit.")
+
+    return {
+        "version": _FD_VERSION,
+        "reference_utc": ref.isoformat(),
+        "mode": mode,
+        "search_status": search_status,
+        "searched_this_request": confirmed,
+        "scan_results_included": results_included,
+        "finished_before_cancel": finished_before_cancel,
+        "search_time_utc": search_time.isoformat() if search_time else None,
+        "saved_results_updated_at": saved_at.isoformat() if saved_at else None,
+        "window": window,
+        "post_dates": {"basis": "stored_post_date", "newest": summary["newest"], "oldest": summary["oldest"]},
+        "counts": {k: summary[k] for k in ("evidence_posts", "with_date", "no_date", "invalid_date",
+                                           "future_date", "discovery_only")},
+        "partial": partial,
+        "evidence_limit_reached": limit_reached,
+        "collection_time": "unknown",
+        "statement": " ".join(lines),
+    }
+
+
+def enrich_freshness_answer(answer_text, posts, *, time_range=None, time_window_days=None, provenance=None,
+                            matched_count=None, evidence_limit=None, timed_out: bool = False,
+                            reference_utc=None):
+    """Adds "data_freshness" to a structured answer. Returns `answer_text`
+    unchanged when the flag is off, `provenance` is None (the caller did not
+    track it), the text is not a structured answer, the answer is cut off, or
+    its format is not about the posts found. Never raises."""
+    if not freshness_enabled() or provenance is None:
+        return answer_text
+    try:
+        data = json.loads((answer_text or "").strip())
+    except (ValueError, TypeError, AttributeError):
+        return answer_text
+    if (not isinstance(data, dict) or not isinstance(data.get("format"), str)
+            or data.get("answer_status") == "incomplete" or data["format"] in _FD_SKIP_FORMATS
+            or "data_freshness" in data):
+        return answer_text
+    try:
+        data["data_freshness"] = build_data_freshness(
+            posts, reference_utc, time_range=time_range, time_window_days=time_window_days,
+            provenance=provenance, matched_count=matched_count, evidence_limit=evidence_limit,
+            timed_out=timed_out)
+        return json.dumps(data, ensure_ascii=False)
+    except Exception as exc:
+        log.warning(f"Freshness disclosure failed (answer left unchanged): {exc}")
         return answer_text
 
 
@@ -2431,7 +2885,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     ):
         _qe_early = _prep_query_embeddings()
         if not _qe_early or not _normalize_query_embeddings(_qe_early):
-            _register_scan_status(chat_id, topic_key, True)
+            _register_scan_status(chat_id, topic_key, True, scored=False)   # nothing was read or scored
             return []
         try:
             _raw_q_s = [q for q in _qe_early if q and len(q) > 0]
@@ -2584,6 +3038,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # the embeddings/cache are never generated or read twice.
     query_embeddings = _prep_query_embeddings()
     if not query_embeddings:
+        _mark_scan_unscored(chat_id, topic_key)       # (FRESHNESS) collections were read, nothing was scored
         return []
 
     # (LAZY EMBEDDING BACKFILL) Find any docs in raw_docs that are missing
@@ -2606,6 +3061,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # as 0.0.
     _normalized_queries = _normalize_query_embeddings(query_embeddings)
     if not _normalized_queries:
+        _mark_scan_unscored(chat_id, topic_key)       # (FRESHNESS) collections were read, nothing was scored
         return []
 
     # (UNLIMITED POOL / EMBEDDING-BASED MATCHING) Score every candidate doc
@@ -3280,7 +3736,7 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
                               since_days: int = None, unfiltered: bool = False,
                               user_query: str = None,
                               cancel_event: "threading.Event" = None,
-                              time_range=None) -> list:
+                              time_range=None, provenance_out: dict = None) -> list:
     """CORE FUNCTION — instead of running a fully-fresh query every time
     the same topic is asked about again:
       1. Check the cache first.
@@ -3307,6 +3763,14 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     up on two different Mongo documents for the same (chat, topic) pair.
     Nothing else about this function changed."""
     strict = strict_intent_mode()
+    # (FRESHNESS) get_matched_signals() returns [] WITHOUT searching when it is given no keywords and no
+    # phrases (unless the query is "unfiltered"); that call must not be recorded as a search.
+    _can_search = True
+    if provenance_out is not None:         # only when tracking: with the feature off this line does nothing
+        try:
+            _can_search = bool(unfiltered) or any(k for k in (keywords or [])) or any(p for p in (match_phrases or []))
+        except Exception:
+            _can_search = True
     # (DATE/TIME) A message with an explicit publication range never reuses or
     # writes the topic cache / incremental-scan state: those are shared by every
     # message with the same text in this chat and know nothing about ranges
@@ -3323,7 +3787,11 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
             _call_kwargs["time_range"] = _tr
         if cancel_event is not None and _accepts_kw(matcher_fn, "cancel_event"):
             _call_kwargs["cancel_event"] = cancel_event
+        _pm = _prov_marker(chat_id, topic_key) if provenance_out is not None else None
         posts, stats = timerange.filter_posts(matcher_fn(topic_key, keywords, **_call_kwargs), _tr)
+        _prov_note(provenance_out, "range", chat_id, topic_key, _pm, range_stats=stats, searchable=_can_search,
+                   cancelled=bool(provenance_out is not None and cancel_event is not None and cancel_event.is_set()),
+                   scan_urls=_prov_urls(provenance_out, posts))   # (FRESHNESS) write-only
         if stats["outside"] or stats["no_timestamp"]:
             log.info(f"Time-range filter | topic_key={topic_key} | kept={stats['kept']} "
                      f"outside={stats['outside']} no_timestamp={stats['no_timestamp']}")
@@ -3349,6 +3817,8 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
 
     if cached_count >= (evidence_required or MIN_ANALYSIS_EVIDENCE):
         # Cache already has enough — no new fetch needed.
+        _prov_note(provenance_out, "saved_only", saved_updated_at=(cached or {}).get("updated_at"),
+                   saved_count=cached_count)           # (FRESHNESS) write-only: no search ran
         return cached_posts
 
     # A top-up is needed — fetch at least TOPIC_CACHE_MIN_TOPUP more than
@@ -3381,7 +3851,12 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     if cancel_event is not None and _accepts_kw(matcher_fn, "cancel_event"):
         _call_kwargs["cancel_event"] = cancel_event
     _t_scan = time.monotonic()
+    _pm = _prov_marker(chat_id, topic_key) if provenance_out is not None else None
     fresh_posts = matcher_fn(topic_key, keywords, **_call_kwargs)
+    _prov_note(provenance_out, "scan", chat_id, topic_key, _pm, searchable=_can_search,
+               cancelled=bool(provenance_out is not None and cancel_event is not None and cancel_event.is_set()),
+               scan_urls=_prov_urls(provenance_out, fresh_posts, cached_posts),
+               saved_updated_at=(cached or {}).get("updated_at"), saved_count=cached_count)   # (FRESHNESS) write-only
 
     # De-dup: old cached posts + new posts, keyed on post_url.
     seen_urls = {p.get("post_url") for p in cached_posts if p.get("post_url")}
@@ -8179,9 +8654,12 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         # only fetches the delta (via get_matched_signals, injected as
         # matcher_fn) otherwise — same wiring as _fill_in_message_
         # outputs()'s own call site in index.py.
+        _fresh_prov = {} if freshness_enabled() else None      # (FRESHNESS) per-request provenance; None = off
         try:
             _strict_fb = strict_intent_mode()
             _fb_kwargs = {"user_query": query} if _strict_fb else {}
+            if _fresh_prov is not None:
+                _fb_kwargs["provenance_out"] = _fresh_prov
             with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
                 matched = get_evidence_with_topup(
                     chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
@@ -8231,6 +8709,8 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
         answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
         answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
+        answer = enrich_freshness_answer(answer, merged_pool, time_range=time_range, provenance=_fresh_prov,   # (FRESHNESS)
+                                         matched_count=len(matched), evidence_limit=effective_evidence_limit)
         final_answer, results_to_save = _finalize_answer_and_results(answer, merged_pool, seed=query)
 
         final_answer = guest_gate.mark_limited(gate_key, request_id, final_answer)   # (GUEST GATE) says "limited results"
@@ -8271,7 +8751,7 @@ _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 
 # (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
 # made only of these renders as an EMPTY answer on the page.
-_ANSWER_META_KEYS = {"format", "searched", "near_match_confidence", "answer_status", "website_context"}
+_ANSWER_META_KEYS = {"format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness"}
 
 
 def _answer_has_content(data) -> bool:
