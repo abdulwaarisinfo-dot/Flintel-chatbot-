@@ -146,7 +146,8 @@ def test_sitemap_xml_valid_and_lists_only_public_pages(app_env):
     root = ET.fromstring(r.content)                                       # valid XML
     assert root.tag == SITEMAP_NS + "urlset"
     urls = [u.find(SITEMAP_NS + "loc").text for u in root.findall(SITEMAP_NS + "url")]
-    assert urls == ["http://testserver/", "http://testserver/billing/upgrade", "http://testserver/find-buyers-on-reddit"]
+    assert urls == ["http://testserver/", "http://testserver/billing/upgrade", "http://testserver/find-buyers-on-reddit",
+                    "http://testserver/discover"]
     assert "/chat/" not in r.text and "lastmod" not in r.text
     assert r.headers["cache-control"].startswith("public") and "no-store" not in r.headers["cache-control"]
     assert "set-cookie" not in r.headers and not c.cookies
@@ -231,20 +232,32 @@ def _fresh_visitor_home(idx, rts, monkeypatch):
     return _client(idx).get("/").text
 
 
-def test_home_visible_marketing_text_claims_only_reddit(app_env, monkeypatch):
+def _signed_in_home_without_conversation(idx, rts, monkeypatch):
+    """A signed-in owner who has not started a conversation yet (a first visit, like the logged-out one)."""
+    monkeypatch.setattr(rts, "get_current_user", lambda request: {"name": "Test User", "email": "t@example.com"})
+    monkeypatch.setattr(rts, "get_owner", lambda request: ("user:t@example.com", "user"))
+    monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key, on_error=True: False)
+    monkeypatch.setattr(rts, "get_user_chat_list", lambda owner_key: [])
+    return _client(idx).get("/").text
+
+
+def test_logged_out_home_has_no_long_about_text_but_keeps_the_search_and_explore(app_env, monkeypatch):
     idx, rts, _ = app_env
     html = _fresh_visitor_home(idx, rts, monkeypatch)
-    about = re.search(r'<section class="seo-about".*?</section>', html, re.S).group(0)
-    text = re.sub(r"<[^>]+>", " ", about)
-    assert "Reddit" in text and "Other platforms are not available yet" in text
-    for name in ("Twitter", "LinkedIn", "Facebook", "Instagram", "TikTok"):
-        assert name not in text, name
-    assert "does not guarantee leads" in text                                      # no promise of leads
-    assert len(text.split()) >= 150
-    assert "<h1" not in about and html[:html.index('class="seo-about"')].count("<h1 class=\"headline\">") == 1   # the hero keeps the only H1
-    assert 'href="/billing/upgrade"' in about                                      # crawlable link to pricing
-    explore = html[html.index('class="explore-panel"'):html.index('class="seo-about"')]
-    assert 'alt="Reddit"' in explore and 'alt="LinkedIn"' not in explore and 'alt="Facebook"' not in explore
+    assert 'class="seo-about"' not in html and 'id="about-flintel"' not in html           # not rendered at all (not CSS-hidden)
+    assert "Find out what Reddit is saying about your brand, product or market" not in html
+    assert html.count('<h1 class="headline">') == 1 and "What's the internet saying?" in html   # the hero keeps the only H1
+    assert 'id="search-input"' in html and 'class="explore-panel"' in html and html.count('class="explore-row"') == 3
+
+
+def test_first_visit_home_claims_only_reddit(app_env, monkeypatch):
+    """The first-visit home (logged out or signed in) has no long marketing text any more; what it does show names only Reddit."""
+    idx, rts, _ = app_env
+    for html in (_fresh_visitor_home(idx, rts, monkeypatch), _signed_in_home_without_conversation(idx, rts, monkeypatch)):
+        assert 'class="seo-about"' not in html and html.count('<h1 class="headline">') == 1     # the hero keeps the only H1
+        explore = html[html.index('class="explore-panel"'):][:5000]
+        assert 'alt="Reddit"' in explore and 'alt="LinkedIn"' not in explore and 'alt="Facebook"' not in explore
+        assert 'alt="X (Twitter)"' not in explore and html.count('class="explore-row"') == 3
 
 
 def test_pricing_page_has_metadata_and_is_in_the_sitemap(app_env, monkeypatch):
@@ -260,7 +273,8 @@ def test_pricing_page_has_metadata_and_is_in_the_sitemap(app_env, monkeypatch):
     assert '<meta property="og:url" content="http://testserver/billing/upgrade">' in head
     assert "noindex" not in head
     locs = [e.text for e in ET.fromstring(c.get("/sitemap.xml").content).iter(f"{SITEMAP_NS}loc")]
-    assert locs == ["http://testserver/", "http://testserver/billing/upgrade", "http://testserver/find-buyers-on-reddit"]
+    assert locs == ["http://testserver/", "http://testserver/billing/upgrade", "http://testserver/find-buyers-on-reddit",
+                    "http://testserver/discover"]
 
 
 def test_production_site_url_drives_every_absolute_url(app_env, monkeypatch):
@@ -270,7 +284,7 @@ def test_production_site_url_drives_every_absolute_url(app_env, monkeypatch):
     assert "Sitemap: https://getflintel.com/sitemap.xml" in c.get("/robots.txt").text
     locs = [e.text for e in ET.fromstring(c.get("/sitemap.xml").content).iter(f"{SITEMAP_NS}loc")]
     assert locs == ["https://getflintel.com/", "https://getflintel.com/billing/upgrade",
-                    "https://getflintel.com/find-buyers-on-reddit"]
+                    "https://getflintel.com/find-buyers-on-reddit", "https://getflintel.com/discover"]
     home = c.get("/").text
     assert '<link rel="canonical" href="https://getflintel.com/">' in home
     assert 'content="https://getflintel.com/og-card.png"' in home and "testserver" not in _head_of(home)
@@ -367,8 +381,8 @@ def test_about_section_is_hidden_once_a_conversation_has_started(app_env, monkey
     monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key, on_error=True: True)
     monkeypatch.setattr(rts, "get_user_chat_list", lambda owner_key: [])
     assert 'class="seo-about"' not in c.get("/").text
-    css = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
-    assert "#hero-wrap.hidden ~ .seo-about { display: none; }" in css           # and it hides with the hero on submit
+    tpl = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
+    assert 'class="seo-about"' not in tpl                                        # the block no longer exists in the template
 
 
 # 9 ─ og-card: the 1200x630 social preview, same logo artwork on the app's dark background; /og-image.png is untouched
@@ -419,11 +433,12 @@ def _failing_chats(idx, monkeypatch):
     return calls
 
 
-def test_lookup_failure_does_not_hide_the_about_section_from_a_visitor_without_cookies(app_env, monkeypatch):
+def test_lookup_failure_keeps_the_first_visit_home_for_a_visitor_without_cookies(app_env, monkeypatch):
     idx, _rts, _ = app_env
     calls = _failing_chats(idx, monkeypatch)
     html = _client(idx).get("/").text                       # a brand-new client: no cookie of any kind
-    assert 'class="seo-about"' in html and "What's the internet saying?" in html
+    assert 'class="seo-about"' not in html and "What's the internet saying?" in html
+    assert 'class="explore-panel"' in html                    # the first-visit hero and Explore stay (fails open to "not started")
     assert 'id="home-greeting"' not in html                   # the stable H1, not the returning-user greeting
     assert calls                                              # the lookup was attempted (once) and its failure fails open
     assert len(calls) == 1                                    # and not repeated within one render
@@ -438,12 +453,19 @@ def test_lookup_failure_keeps_the_existing_behaviour_for_a_returning_visitor(app
     assert calls and 'class="seo-about"' not in html          # lookup attempted; the failure still counts as "started"
 
 
-def test_a_returning_visitor_with_no_chats_still_sees_the_about_section(app_env, monkeypatch):
+def test_a_returning_logged_out_visitor_with_no_chats_gets_the_first_visit_home_without_about(app_env, monkeypatch):
     idx, _rts, _ = app_env
     c = _client(idx)
     c.get("/")
     monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=lambda *a, **k: None))
-    assert 'class="seo-about"' in c.get("/").text
+    html = c.get("/").text
+    assert 'class="seo-about"' not in html and 'class="explore-panel"' in html
+
+
+def test_a_signed_in_owner_with_no_conversation_does_not_see_the_about_section(app_env, monkeypatch):
+    idx, rts, _ = app_env
+    html = _signed_in_home_without_conversation(idx, rts, monkeypatch)
+    assert 'class="seo-about"' not in html and 'class="explore-panel"' in html and 'id="search-input"' in html
 
 
 def test_fresh_visitor_detection_never_assumes_an_identity(app_env, monkeypatch):
@@ -466,21 +488,25 @@ def test_fresh_visitor_detection_never_assumes_an_identity(app_env, monkeypatch)
     monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=lambda *a, **k: None))   # the fixture DB is a stub
     forged = _client(idx)
     forged.cookies.set("fl_gid", "not-a-valid-signature")
-    assert rts._read_guest_cookie.__name__ and 'class="seo-about"' in forged.get("/").text     # a forged cookie proves nothing
+    page = forged.get("/").text
+    assert rts._read_guest_cookie.__name__ and "What's the internet saying?" in page and 'class="seo-about"' not in page
+    # a forged cookie proves nothing: it is still a first-time visit (hero + Explore, no About)
 
 
 # --- six cases of the About-section rule (fresh / existing owner / lookup failure) ---------------------------------
 
-def test_case1_fresh_visitor_healthy_db_sees_about(app_env, monkeypatch):
+def test_case1_fresh_visitor_healthy_db_gets_the_first_visit_home_without_about(app_env, monkeypatch):
     idx, _rts, _ = app_env
     monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=lambda *a, **k: None))
-    assert 'class="seo-about"' in _client(idx).get("/").text
+    html = _client(idx).get("/").text
+    assert 'class="seo-about"' not in html and 'class="explore-panel"' in html
 
 
-def test_case2_fresh_visitor_lookup_failure_sees_about(app_env, monkeypatch):
+def test_case2_fresh_visitor_lookup_failure_gets_the_first_visit_home_without_about(app_env, monkeypatch):
     idx, _rts, _ = app_env
     _failing_chats(idx, monkeypatch)
-    assert 'class="seo-about"' in _client(idx).get("/").text
+    html = _client(idx).get("/").text
+    assert 'class="seo-about"' not in html and 'class="explore-panel"' in html
 
 
 def test_case3_existing_owner_with_conversations_does_not_see_about(app_env, monkeypatch):
