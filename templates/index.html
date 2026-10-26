@@ -372,14 +372,6 @@
 
   /* (SEO) Plain-text description of the product for visitors and crawlers. Sits below the hero (its position is unchanged)
      and disappears with it once a conversation starts. */
-  .seo-about { max-width: 720px; margin: 0 auto; padding: 8px 20px 64px; color: #a8a7a4; font-size: 15px; line-height: 1.65; }
-  @media (min-width: 1060px) { .seo-about { max-width: 946px; padding-left: 109px; padding-right: 109px; box-sizing: content-box; } }
-  .seo-about h2 { color: #fff; font-size: 20px; font-weight: 600; letter-spacing: -0.2px; margin: 36px 0 10px; }
-  .seo-about h3 { color: #e8e7e5; font-size: 16px; font-weight: 600; margin: 20px 0 4px; }
-  .seo-about p, .seo-about li { margin-bottom: 10px; }
-  .seo-about ol, .seo-about ul { padding-left: 22px; }
-  .seo-about a { color: #009dff; text-decoration: underline; text-underline-offset: 2px; }
-  #hero-wrap.hidden ~ .seo-about { display: none; }
 
   .eyebrow { color: #757473; font-size: 15px; letter-spacing: 0.15px; margin-bottom: 13px; }
   .headline {
@@ -1517,6 +1509,7 @@
 
   <div class="mobile-overlay" id="mobile-overlay"></div>
 
+  {% import "_site_menu.html" as sitemenu %}
   <!-- Mobile top bar -->
   <div class="mobile-topbar">
     <div class="logo-group">
@@ -1530,8 +1523,11 @@
       <button class="icon-btn" id="mobile-sidebar-toggle" aria-label="Toggle sidebar" aria-pressed="false">
         <svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="0.5" y="0.5" width="14" height="14" rx="2.5" stroke="currentColor"/><line x1="5.5" y1="1" x2="5.5" y2="14" stroke="currentColor"/></svg>
       </button>
+      {{ sitemenu.button() }}
     </div>
   </div>
+  {{ sitemenu.panel() }}
+  {{ sitemenu.assets() }}
 
   <!-- Main -->
   <main class="main">
@@ -1544,6 +1540,7 @@
       {% else %}
       <button class="topbar-btn signup" id="topbar-signup-btn" type="button">Sign up</button>
       {% endif %}
+      {{ sitemenu.button() }}
     </div>
 
     {# (HOME UI) "started" = this owner has at least one saved, non-blank user message
@@ -1670,35 +1667,8 @@
       </div>
     </div>
 
-    {% if not conv_started and not (chat and chat.messages) %}
-    <section class="seo-about" id="about-flintel" aria-labelledby="about-flintel-title">
-      <h2 id="about-flintel-title">Find out what Reddit is saying about your brand, product or market</h2>
-      <p>Flintel searches Reddit conversations that match a brand, product or topic you type in, then writes a short summary of what people are saying. Every answer links back to the Reddit posts it is based on, so you can open them and read the originals.</p>
-
-      <h2>How it works</h2>
-      <ol>
-        <li>Search a brand, product or topic, or include a website address so the search reflects what your business does.</li>
-        <li>Flintel finds relevant Reddit posts and labels each one by buying intent and sentiment.</li>
-        <li>Read the summary, then open the source posts, each with its subreddit, summary, intent, posted date and sentiment.</li>
-      </ol>
-
-      <h2>What you can use it for</h2>
-      <ul>
-        <li>See how people talk about your brand or a competitor.</li>
-        <li>Spot recurring customer pain points and questions.</li>
-        <li>Find posts from people asking for alternatives or comparing options.</li>
-        <li>Narrow a search to a time range, for example posts from today or the last week.</li>
-      </ul>
-
-      <h2>Common questions</h2>
-      <h3>Which platforms does Flintel search?</h3>
-      <p>Reddit. Other platforms are not available yet.</p>
-      <h3>Will Flintel find me leads?</h3>
-      <p>Flintel shows what has actually been posted and collected, and labels the posts it finds. It does not guarantee leads, and a search can return useful conversations without any that look ready to buy. <a href="/find-buyers-on-reddit">Read how buying-intent labels and qualified leads work</a>.</p>
-      <h3>Is Flintel free to try?</h3>
-      <p>There is a free plan with monthly search credits. See the <a href="/billing/upgrade">pricing page</a> for plans.</p>
-    </section>
-    {% endif %}
+    {# (HOME CLEANUP) The long About / marketing text that used to follow Explore Flintel on a first visit is no longer
+       rendered for anyone; its useful content lives on /find-buyers-on-reddit. #}
 
     <!-- Conversation area: one .turn-block per real message in the active
          chat. `chat` is passed in from index.py's home()/chat() route for
@@ -5187,6 +5157,20 @@
       }
     }
   });
+
+  // ---- Pre-fill from /?q=... (links on /discover). Fills the box only; nothing is submitted. ----
+  (function prefillFromQuery() {
+    try {
+      const q = new URLSearchParams(window.location.search).get('q');
+      const searchInput = document.getElementById('search-input');
+      if (!q || !searchInput || searchInput.value.trim() !== '') return;
+      searchInput.value = q.replace(/\s+/g, ' ').trim().slice(0, 300);
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) submitBtn.disabled = searchInput.value.trim().length === 0;   // nothing is running on page load
+      autoGrowSearchInput(searchInput);
+      searchInput.focus();
+    } catch (e) { /* a malformed query string must never break the page */ }
+  })();
 
   // ---- SSE stream wiring + soft search-submit (copied unchanged from
   //      chat.html) ----
