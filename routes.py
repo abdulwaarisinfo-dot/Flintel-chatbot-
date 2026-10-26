@@ -3,7 +3,7 @@ routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure  
 and business logic. Imports `app` from index.py and registers every
 route on it; index.py imports this module once, at the bottom, purely 
-for its side effect of registering these routes. 
+for its side effect of registering these routes.   
 """
 
 import json
@@ -76,6 +76,7 @@ from logics import build_guidance_note   # (DATA-BACKED GUIDANCE)
 from logics import platform_display_value   # (PLATFORM PERSISTENCE)
 from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
 from logics import enrich_no_results_answer   # (NO-RESULTS UI)
+from logics import freshness_enabled, enrich_freshness_answer   # (FRESHNESS DISCLOSURE)
 import os   # (DATE/TIME) DEFAULT_USER_TIMEZONE env var
 import timerange   # (DATE/TIME)
 import turn_finisher   # (STREAM LEASE) the stream holds its turn's lease while it runs
@@ -2804,6 +2805,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     # env var + restarting is enough to roll back.
     nonblocking = bool(getattr(config, "NONBLOCKING_STREAM_ENABLED", True))
 
+    _fresh_prov = {} if freshness_enabled() else None     # (FRESHNESS) per-request provenance; None = feature off
+
     def _topup(cancel_event=None):
         """The one place get_evidence_with_topup() is called for this
         message — used by the sync (flag-off) path, the background scan
@@ -2827,6 +2830,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             kwargs["time_range"] = msg["time_range"]   # (DATE/TIME) the message's own publication range
         if cancel_event is not None:
             kwargs["cancel_event"] = cancel_event
+        if _fresh_prov is not None:
+            kwargs["provenance_out"] = _fresh_prov     # (FRESHNESS) write-only record of what this call did
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
                                 request_id=msg.get("request_id")):
             return get_evidence_with_topup(**kwargs)
@@ -3318,6 +3323,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     full_answer = enrich_no_results_answer(   # (NO-RESULTS UI) verified search facts + next steps
                         full_answer, msg.get("query"), msg.get("targeting_platform"), msg.get("time_range"),
                         msg.get("time_window_days"), msg.get("keywords"))
+                if full_answer:
+                    full_answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement
+                        full_answer, merged_pool, time_range=msg.get("time_range"),
+                        time_window_days=msg.get("time_window_days"), provenance=_fresh_prov,
+                        matched_count=len(matched), evidence_limit=effective_evidence_limit,
+                        timed_out=bool(scan_timed_out))
                 full_answer, results_to_save = (
                     _finalize_answer_and_results(full_answer, merged_pool, seed=msg.get("query", ""))
                     if full_answer else (full_answer, merged_pool)
