@@ -5,7 +5,7 @@ This module owns: the FastAPI app itself (middleware, no-cache headers,
 session setup, Google OAuth registration), password hashing, and every
 `flintel_users` / `flintel_users_chat` Mongo-backed function (user
 accounts, chat sessions, message bookkeeping, the busy-lock, the  
-background-trigger orchestration for Google-fallback/search-progress, 
+background-trigger orchestration for Google-fallback/search-progress,
 and the two functions that decide when a message's answer is ready to  
 fill in). 
 
@@ -149,6 +149,7 @@ def _cfg_strict_wait() -> float:
 from logics import (
     normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, unsupported_requested, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
+    freshness_enabled, enrich_freshness_answer,   # (FRESHNESS DISCLOSURE)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
     _call_claude, classify_and_maybe_chat,
@@ -1424,7 +1425,8 @@ def _abandon_guest_message(chat_id: str, owner_key: str, msg: dict, gate_key=Non
         log.warning(f"Saving the superseded-search notice failed for topic_key={msg.get('topic_key')}: {exc}")
 
 
-def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict, matched: list):
+def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict, matched: list,
+                                         freshness_prov: dict = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic — this is exactly what
     _fill_in_message_outputs() already did inline for the "needs_answer" +
     "needs_results" case, just pulled into its own function so it can be
@@ -1643,6 +1645,9 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 answer = _inject_website_context_into_answer(answer, msg["website_context"])
             answer = enrich_no_results_answer(answer, msg.get("query"), msg.get("targeting_platform"),   # (NO-RESULTS UI)
                                               msg.get("time_range"), msg.get("time_window_days"), msg.get("keywords"))
+            answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement; no-op when off
+                answer, merged_pool, time_range=msg.get("time_range"), time_window_days=msg.get("time_window_days"),
+                provenance=freshness_prov, matched_count=len(matched), evidence_limit=effective_evidence_limit)
             # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
             verdict = guest_gate.on_answer_ready(gate_key, chat_id, msg["topic_key"], gate_token, answer, lease=gate_lease)
             if verdict != guest_gate.DELIVER:
@@ -1850,6 +1855,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # it always has.
         effective_evidence_limit = msg.get("evidence_required")
 
+        _fresh_prov = {} if freshness_enabled() else None      # (FRESHNESS) per-request provenance; None = off
         try:
             with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
                                     request_id=msg.get("request_id")):
@@ -1868,6 +1874,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                     # STRICT: the intent bridge needs the query text; without it
                     # this path would return un-filtered posts. Flag off: unchanged.
                     **({"user_query": msg.get("query")} if strict_intent_mode() else {}),
+                    **({"provenance_out": _fresh_prov} if _fresh_prov is not None else {}),   # (FRESHNESS)
                 )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
@@ -2056,10 +2063,11 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # since the flag document wouldn't exist yet during that window.
         if not _is_owner_busy(owner_key):
             _set_owner_busy(owner_key)
+            _fp_kw = {"freshness_prov": _fresh_prov} if _fresh_prov is not None else {}   # (FRESHNESS) off = call unchanged
             if background_tasks is not None:
-                background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
+                background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched, **_fp_kw)
             else:
-                _complete_message_answer_and_results(chat_id, owner_key, msg, matched)
+                _complete_message_answer_and_results(chat_id, owner_key, msg, matched, **_fp_kw)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
