@@ -4033,7 +4033,7 @@ _SEO_CACHE = {"Cache-Control": "public, max-age=3600"}
 # delete/feedback, the chat list and new-chat, /search, the auth routes, login/
 # signup/logout, /api/*). "/", "/billing/upgrade", the icon routes and the SEO
 # routes themselves stay allowed.
-_SITEMAP_PATHS = ("/", "/billing/upgrade", "/find-buyers-on-reddit")
+_SITEMAP_PATHS = ("/", "/billing/upgrade", "/find-buyers-on-reddit", "/discover")
 _ROBOTS_DISALLOW = ("/chat/", "/chats", "/search", "/auth/", "/login", "/logout", "/signup", "/api/")
 
 
@@ -4071,6 +4071,21 @@ def find_buyers_on_reddit(request: Request):
     return templates.TemplateResponse(
         request, "find-buyers-on-reddit.html",
         {"canonical_url": base + "/find-buyers-on-reddit", "og_image_url": base + "/og-card.png"},
+        headers=_SEO_CACHE)
+
+
+@app.get("/discover", include_in_schema=False)
+def discover(request: Request):
+    """Public editorial page: written guides and example searches (discover_content.py). Static: no session, no user,
+    no database, no credits, no stored conversation data."""
+    import discover_content
+    base = _site_base_url(request)
+    return templates.TemplateResponse(
+        request, "discover.html",
+        {"canonical_url": base + "/discover", "og_image_url": base + "/og-card.png",
+         "categories": discover_content.CATEGORIES, "feed": discover_content.build_feed(),
+         "related_searches": discover_content.build_related_searches(), "guides": discover_content.GUIDES,
+         "sources_note": discover_content.SOURCES_NOTE},
         headers=_SEO_CACHE)
 
 
