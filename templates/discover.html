@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Discover — Flintel</title>
+<meta name="description" content="Example searches and short guides for finding buyers, competitor complaints and customer pain points in Reddit conversations with Flintel.">
+<link rel="canonical" href="{{ canonical_url }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Flintel">
+<meta property="og:title" content="Discover — Flintel">
+<meta property="og:description" content="Example searches and short guides for finding buyers, competitor complaints and customer pain points in Reddit conversations with Flintel.">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:image" content="{{ og_image_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=3">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% import "_site_menu.html" as sitemenu %}
+{#- Decorative artwork only: a gradient with a simple glyph. It is not a photo and carries no data. -#}
+{% macro art(kind) -%}
+{%- set glyphs = {
+  'signal': 'M3 12h4l3-8 4 16 3-8h4',
+  'switch': 'M7 7h11l-3-3M17 17H6l3 3',
+  'labels': 'M4 6h16M4 12h10M4 18h6',
+  'source': 'M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1',
+  'complaint': 'M4 5h16v10H9l-5 4z',
+  'price': 'M12 3v18M16 7.5c-.8-1-2.2-1.5-4-1.5-2.2 0-4 1-4 2.8 0 4 8 2 8 6 0 1.8-1.8 2.8-4 2.8-1.8 0-3.3-.6-4.2-1.7',
+  'pain': 'M12 3l9 16H3zM12 10v4M12 17h.01',
+  'question': 'M9 9a3 3 0 1 1 4.5 2.6c-1 .6-1.5 1.2-1.5 2.4M12 18h.01',
+  'check': 'M5 12l4 4 10-10',
+  'time': 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0',
+  'compare': 'M4 6h7v12H4zM13 10h7v8h-7z',
+  'limits': 'M12 8v5M12 16h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0'
+} -%}
+<div class="dsc-art dsc-art-{{ kind }}" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ glyphs.get(kind, glyphs['signal']) }}"/></svg>
+</div>
+{%- endmacro %}
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --bg: #171615; --surface: #1e1d1b; --line: #2b2a28; --text: #e8e7e5; --muted: #a8a7a4; --faint: #7a7a77; --link: #009dff; }
+  html { font-family: 'Figtree', sans-serif; background: var(--bg); color: #d1d0cf; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+  a, button { font-family: inherit; cursor: pointer; background: none; border: none; color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 6px; }
+
+  /* top bar */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 62px; border-bottom: 1px solid var(--line); flex-shrink: 0; position: sticky; top: 0; z-index: 20; background: var(--bg); }
+  .logo-group { display: flex; align-items: center; gap: 9px; }
+  .logo-mark { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+  .logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+  .logo-text { color: #fff; font-size: 16px; font-weight: 500; letter-spacing: 0.16px; }
+  .topbar-right { display: flex; align-items: center; gap: 18px; }
+  .topbar-right a.plain { font-size: 13.5px; font-weight: 500; color: var(--faint); transition: color .15s; }
+  .topbar-right a.plain:hover { color: #d1d0cf; }
+
+  /* section tabs (in-page anchors) */
+  .dsc-tabs { border-bottom: 1px solid var(--line); background: var(--bg); }
+  .dsc-tabs-inner { max-width: 1180px; margin: 0 auto; padding: 0 24px; display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; }
+  .dsc-tabs-inner::-webkit-scrollbar { display: none; }
+  .dsc-tab { font-size: 14px; font-weight: 500; color: var(--faint); padding: 13px 0 11px; border-bottom: 2px solid transparent; white-space: nowrap; transition: color .15s; }
+  .dsc-tab:hover { color: #d1d0cf; }
+  .dsc-tab.is-first { color: #fff; border-bottom-color: #fff; }
+
+  /* page grid */
+  .dsc-wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 28px 24px 72px; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: start; flex: 1; }
+  .dsc-intro { margin-bottom: 22px; }
+  .dsc-intro h1 { font-size: 30px; font-weight: 700; color: #fff; letter-spacing: -0.015em; line-height: 1.15; }
+  .dsc-intro p { margin-top: 8px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 640px; }
+
+  /* artwork (decorative gradients) */
+  .dsc-art { position: relative; overflow: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.88); background: linear-gradient(135deg, #2a3d63, #1c2540); }
+  .dsc-art::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 85% 0%, rgba(255,255,255,.14), transparent 55%); pointer-events: none; }
+  .dsc-art svg { width: 34%; max-width: 72px; height: auto; position: relative; z-index: 1; }
+  .dsc-art-signal { background: linear-gradient(135deg, #1f4d7a, #12263f); }
+  .dsc-art-switch { background: linear-gradient(135deg, #5b3a7a, #2a1c44); }
+  .dsc-art-labels { background: linear-gradient(135deg, #1d5a52, #102a2b); }
+  .dsc-art-source { background: linear-gradient(135deg, #3b4a6b, #1b2234); }
+  .dsc-art-complaint { background: linear-gradient(135deg, #7a3a3a, #3a1a1c); }
+  .dsc-art-price { background: linear-gradient(135deg, #7a5b2a, #3a2a12); }
+  .dsc-art-pain { background: linear-gradient(135deg, #7a4a2a, #3a2012); }
+  .dsc-art-question { background: linear-gradient(135deg, #2a5a7a, #12303f); }
+  .dsc-art-check { background: linear-gradient(135deg, #2a6a4a, #123a28); }
+  .dsc-art-time { background: linear-gradient(135deg, #4a4a7a, #20203f); }
+  .dsc-art-compare { background: linear-gradient(135deg, #3a6a6a, #163030); }
+  .dsc-art-limits { background: linear-gradient(135deg, #4a4a48, #232321); }
+
+  /* cards */
+  .dsc-meta { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--faint); margin-bottom: 8px; }
+  .dsc-kind { display: inline-block; font-weight: 600; color: #fff; background: #2b2a28; border-radius: 5px; padding: 1px 7px; font-size: 11.5px; letter-spacing: .02em; }
+  .dsc-kind.is-search { background: #1f3a5f; color: #cfe6ff; }
+  .dsc-title { font-weight: 600; color: #fff; letter-spacing: -0.005em; line-height: 1.25; }
+  .dsc-sum { color: var(--muted); line-height: 1.55; margin-top: 8px; }
+  .dsc-actions { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 13.5px; font-weight: 600; }
+  .dsc-actions a { color: var(--link); }
+  .dsc-actions a:hover { color: #4db8ff; text-decoration: underline; text-underline-offset: 2px; }
+  .dsc-card { scroll-margin-top: 88px; }
+
+  .dsc-lead { display: grid; grid-template-columns: minmax(0, 1fr) 42%; gap: 28px; align-items: center; padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+  .dsc-lead .dsc-title { font-size: 28px; }
+  .dsc-lead .dsc-sum { font-size: 15.5px; }
+  .dsc-lead .dsc-art { aspect-ratio: 16 / 10; }
+
+  .dsc-trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .dsc-trio .dsc-art { aspect-ratio: 16 / 10; margin-bottom: 12px; }
+  .dsc-trio .dsc-title { font-size: 16px; }
+  .dsc-trio .dsc-sum { font-size: 13.5px; }
+
+  .dsc-wide { display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 24px; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .dsc-wide .dsc-title { font-size: 20px; }
+  .dsc-wide .dsc-sum { font-size: 14.5px; }
+  .dsc-wide .dsc-art { aspect-ratio: 4 / 3; }
+
+  .dsc-end { padding: 26px 0 0; font-size: 14px; color: var(--faint); line-height: 1.6; }
+  .dsc-end a { color: var(--link); }
+
+  /* sidebar */
+  .dsc-side { position: sticky; top: 88px; display: grid; gap: 16px; }
+  .dsc-box { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 16px 14px; }
+  .dsc-box h2 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 10px; letter-spacing: 0.01em; }
+  .dsc-box p { font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+  .dsc-cta { display: block; text-align: center; margin-top: 12px; background: #fff; color: #000 !important; font-size: 14px; font-weight: 600; padding: 9px 14px; border-radius: 9px; }
+  .dsc-cta:hover { background: #e6e6e6; }
+  .dsc-list { list-style: none; display: grid; gap: 2px; margin: 0 -8px; }
+  .dsc-list a { display: block; padding: 7px 8px; border-radius: 8px; font-size: 14px; line-height: 1.35; color: #d1d0cf; }
+  .dsc-list a:hover { background: #2b2a28; color: #fff; }
+
+  footer { border-top: 1px solid var(--line); padding: 24px; text-align: center; font-size: 13px; color: var(--faint); margin-top: auto; }
+  .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 24px; }
+  .footer-links a { color: var(--faint); transition: color .15s; }
+  .footer-links a:hover { color: #d1d0cf; }
+
+  @media (max-width: 980px) {
+    .dsc-wrap { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .dsc-side { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 720px) {
+    .topbar { padding: 0 16px; }
+    .topbar-right { gap: 12px; }
+    .dsc-tabs-inner, .dsc-wrap { padding-left: 16px; padding-right: 16px; }
+    .dsc-wrap { padding-top: 20px; padding-bottom: 56px; }
+    .dsc-intro h1 { font-size: 25px; }
+    .dsc-lead { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .dsc-lead .dsc-art { order: -1; }
+    .dsc-lead .dsc-title { font-size: 23px; }
+    .dsc-trio { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .dsc-trio .dsc-card { display: grid; grid-template-columns: 96px minmax(0, 1fr); column-gap: 14px; align-items: start; }
+    .dsc-trio .dsc-card > * { grid-column: 2; }
+    .dsc-trio .dsc-art { grid-column: 1; grid-row: 1 / span 4; aspect-ratio: 1 / 1; margin: 0; }
+    .dsc-lead .dsc-art { aspect-ratio: 16 / 9; }
+    .dsc-wide { grid-template-columns: minmax(0, 1fr) 104px; gap: 16px; align-items: start; }
+    .dsc-wide .dsc-title { font-size: 17px; }
+    .dsc-wide .dsc-sum { font-size: 13.5px; }
+    .dsc-side { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="logo-group" href="/" aria-label="Flintel home">
+    <div class="logo-mark"><img src="/favicon-48x48.png?v=3" alt="" aria-hidden="true"></div>
+    <span class="logo-text">Flintel</span>
+  </a>
+  <div class="topbar-right">
+    <a class="plain" href="/">Try Flintel</a>
+    {{ sitemenu.button() }}
+  </div>
+</header>
+{{ sitemenu.panel('discover') }}
+
+<nav class="dsc-tabs" aria-label="Discover sections">
+  <div class="dsc-tabs-inner">
+    <a class="dsc-tab is-first" href="#top-stories">All</a>
+    {% for c in categories %}<a class="dsc-tab" href="#{{ c.id }}">{{ c.label }}</a>{% endfor %}
+  </div>
+</nav>
+
+<main class="dsc-wrap" id="top-stories">
+  <div class="dsc-feed">
+    <div class="dsc-intro">
+      <h1>Discover</h1>
+      <p>Example searches and short guides for finding buyers, competitor complaints and customer pain points in Reddit conversations. These are written guides, not posts: real posts appear in your own search results, each linked to its Reddit source.</p>
+    </div>
+
+    {% for layout, cards in feed %}
+      {% if layout == 'lead' %}
+        {% set c = cards[0] %}
+        <article class="dsc-lead dsc-card"{% if c.anchor %} id="{{ c.anchor }}"{% endif %}>
+          <div class="dsc-body">
+            <div class="dsc-meta"><span class="dsc-kind{% if c.kind == 'Search idea' %} is-search{% endif %}">{{ c.kind }}</span></div>
+            <h2 class="dsc-title">{{ c.title }}</h2>
+            <p class="dsc-sum">{{ c.summary }}</p>
+            <div class="dsc-actions">
+              {% if c.href %}<a href="{{ c.href }}">{{ c.href_label }}</a>{% endif %}
+              {% if c.search_href %}<a href="{{ c.search_href }}" rel="nofollow">Try this search</a>{% endif %}
+            </div>
+          </div>
+          {{ art(c.art) }}
+        </article>
+      {% elif layout == 'trio' %}
+        <div class="dsc-trio">
+          {% for c in cards %}
+          <article class="dsc-card"{% if c.anchor %} id="{{ c.anchor }}"{% endif %}>
+            {{ art(c.art) }}
+            <div class="dsc-meta"><span class="dsc-kind{% if c.kind == 'Search idea' %} is-search{% endif %}">{{ c.kind }}</span></div>
+            <h3 class="dsc-title">{{ c.title }}</h3>
+            <p class="dsc-sum">{{ c.summary }}</p>
+            <div class="dsc-actions">
+              {% if c.href %}<a href="{{ c.href }}">{{ c.href_label }}</a>{% endif %}
+              {% if c.search_href %}<a href="{{ c.search_href }}" rel="nofollow">Try this search</a>{% endif %}
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        {% set c = cards[0] %}
+        <article class="dsc-wide dsc-card"{% if c.anchor %} id="{{ c.anchor }}"{% endif %}>
+          <div class="dsc-body">
+            <div class="dsc-meta"><span class="dsc-kind{% if c.kind == 'Search idea' %} is-search{% endif %}">{{ c.kind }}</span></div>
+            <h3 class="dsc-title">{{ c.title }}</h3>
+            <p class="dsc-sum">{{ c.summary }}</p>
+            <div class="dsc-actions">
+              {% if c.href %}<a href="{{ c.href }}">{{ c.href_label }}</a>{% endif %}
+              {% if c.search_href %}<a href="{{ c.search_href }}" rel="nofollow">Try this search</a>{% endif %}
+            </div>
+          </div>
+          {{ art(c.art) }}
+        </article>
+      {% endif %}
+    {% endfor %}
+
+    <p class="dsc-end">Cards marked <strong>Search idea</strong> open Flintel with the search ready to run; nothing starts until you press search. {{ sources_note }} Results come from posts Flintel has already stored, so they are not a complete view of Reddit, and Flintel does not guarantee leads. See the guide to <a href="/find-buyers-on-reddit">finding buyers on Reddit</a> for how results are labelled and what the limits are.</p>
+  </div>
+
+  <aside class="dsc-side" aria-label="Discover sidebar">
+    <section class="dsc-box">
+      <h2>Start a search</h2>
+      <p>Describe a brand, product or market and read the Reddit posts behind the answer.</p>
+      <a class="dsc-cta" href="/">Search with Flintel</a>
+    </section>
+    <section class="dsc-box">
+      <h2>Browse by topic</h2>
+      <ul class="dsc-list">
+        {% for c in categories %}<li><a href="#{{ c.id }}">{{ c.label }}</a></li>{% endfor %}
+      </ul>
+    </section>
+    <section class="dsc-box">
+      <h2>Related searches</h2>
+      <ul class="dsc-list">
+        {% for s in related_searches %}<li><a href="{{ s.href }}" rel="nofollow">{{ s.query }}</a></li>{% endfor %}
+      </ul>
+    </section>
+    <section class="dsc-box">
+      <h2>Guides</h2>
+      <ul class="dsc-list">
+        {% for g in guides %}<li><a href="{{ g.href }}">{{ g.label }}</a></li>{% endfor %}
+      </ul>
+    </section>
+    <section class="dsc-box">
+      <h2>Supported sources</h2>
+      <p>{{ sources_note }}</p>
+    </section>
+  </aside>
+</main>
+
+<footer>
+  <nav class="footer-links" aria-label="Footer links">
+    <a href="/">Flintel home</a>
+    <a href="/find-buyers-on-reddit">Find buyers on Reddit</a>
+    <a href="/billing/upgrade">Pricing</a>
+    <a href="mailto:hello.flintel@gmail.com">Contact</a>
+  </nav>
+</footer>
+
+{{ sitemenu.assets() }}
+</body>
+</html>
