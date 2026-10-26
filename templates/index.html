@@ -806,6 +806,7 @@
   .answer-rendered .ap-headline { font-size: 20px; line-height: 28px; margin: 0 0 16px 0; }
   /* (NO-RESULTS UI) structured "nothing qualifying found" answer */
   .answer-rendered .nr-searched { color: #a0a09d; font-size: 14px; line-height: 20px; margin: 0 0 14px 0; }
+  .answer-rendered .data-freshness { color: #8a8a87; font-size: 13px; line-height: 19px; margin: 18px 0 0 0; }
   .answer-rendered .nr-note { color: #c9c8c5; }
   .answer-rendered .nr-steps { margin: 0 0 18px 0; padding-left: 22px; color: #e8e7e4; font-size: 16px; line-height: 26px; }
   .answer-rendered .nr-steps li { margin: 6px 0; }
@@ -4153,13 +4154,27 @@
   function answerHasText(data) {
     // Same rule as logics._answer_has_content(): any non-empty text outside
     // the meta keys. Text the renderer doesn't know is still real content.
-    const META = { format: 1, searched: 1, near_match_confidence: 1, answer_status: 1, website_context: 1 };
+    const META = { format: 1, searched: 1, near_match_confidence: 1, answer_status: 1, website_context: 1, data_freshness: 1 };
     const has = (v) => (typeof v === 'string' ? v.trim() !== ''
       : Array.isArray(v) ? v.some(has)
       : (v && typeof v === 'object') ? Object.values(v).some(has) : false);
     return !!data && typeof data === 'object' && Object.keys(data).some((k) => !META[k] && has(data[k]));
   }
   // ANSWER-STATE-HELPERS-END
+
+  // (FRESHNESS DISCLOSURE) One plain-text line under the answer, written by the server (stored post dates, window,
+  // saved-vs-searched, what is unknown). Rendered as text only; absent -> nothing is added.
+  function appendFreshnessNote(data, container) {
+    const f = data && data.data_freshness;
+    if (!f || typeof f !== 'object' || typeof f.statement !== 'string') return;
+    const text = f.statement.trim().slice(0, 1500);
+    if (!text) return;
+    const p = document.createElement('p');
+    p.className = 'data-freshness';
+    p.setAttribute('role', 'note');
+    p.textContent = text;
+    container.appendChild(p);
+  }
 
   function renderMarkdownAnswers(root) {
     root.querySelectorAll('.answer-wrap').forEach((wrap) => {
@@ -4248,6 +4263,7 @@
             rawEl.style.display = 'block';
             return;
           }
+          if (!answerEmpty) appendFreshnessNote(data, renderedEl);   // (FRESHNESS DISCLOSURE)
           if (answerEmpty) {
             renderAnswerUnavailable(wrap, renderedEl);
           } else if (data.answer_status === 'partial') {
