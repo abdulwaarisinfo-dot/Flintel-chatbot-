@@ -95,12 +95,10 @@ def test_internal_links_to_and_from_the_page(app_env):
         if href.endswith((".png", ".ico")):
             continue
         assert c.get(href).status_code == 200, href
-    # the page is linked from the home page About section (visitors and crawlers) and from the pricing footer
+    # the page is linked from the home page menu (visitors and crawlers) and from the pricing footer
     pricing = c.get("/billing/upgrade").text
     assert 'href="/find-buyers-on-reddit"' in pricing
-    home_tpl = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
-    about = home_tpl[home_tpl.index('class="seo-about"'):home_tpl.index("</section>", home_tpl.index('class="seo-about"'))]
-    assert 'href="/find-buyers-on-reddit"' in about
+    assert 'href="/find-buyers-on-reddit"' in c.get("/").text
 
 
 def test_only_reddit_is_claimed_as_supported(app_env):
