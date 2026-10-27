@@ -116,6 +116,10 @@ __all__ = [
     "MAX_MATCHED_RESULTS",
     "MAX_POSTS_PER_PLATFORM",
     "MAX_TIME_WINDOW_DAYS",
+    "RECENT_DEFAULT_WINDOW_DAYS",
+    "RECENCY_RANK_WEIGHT",
+    "RECENCY_HALF_LIFE_DAYS",
+    "OPTION_A_ENABLED",
     # Evidence-count limits
     "MAX_ANALYSIS_EVIDENCE",
     "MIN_ANALYSIS_EVIDENCE",
@@ -246,6 +250,34 @@ except (TypeError, ValueError):
 MAX_MATCHED_RESULTS = int(os.getenv("MAX_MATCHED_RESULTS", "25"))
 MAX_POSTS_PER_PLATFORM = int(os.getenv("MAX_POSTS_PER_PLATFORM", "3"))
 MAX_TIME_WINDOW_DAYS = int(os.getenv("MAX_TIME_WINDOW_DAYS", "3650"))
+
+# (RECENCY, Phase 2 Step 2) A query that asks for the "latest / most recent / recent / current" posts but names no period is
+# searched over this many days (documented default; the user's own period or calendar range always wins). 0 or negative
+# turns the default off (such a query is then searched without a window, as before).
+try:
+    RECENT_DEFAULT_WINDOW_DAYS = int(os.getenv("RECENT_DEFAULT_WINDOW_DAYS", "30"))
+except (TypeError, ValueError):
+    RECENT_DEFAULT_WINDOW_DAYS = 30
+# (RECENCY) Ordering of matched posts BEFORE any cap: score = similarity + RECENCY_RANK_WEIGHT * freshness, where freshness
+# decays 1.0 -> 0.5 over RECENCY_HALF_LIFE_DAYS from the post's validated PUBLICATION time (unknown dates get 0, never a
+# bonus). Cosine similarity is the primary key: a 0.05 weight lets a recent post overtake an older one of comparable
+# similarity (within ~0.05), but not a clearly better match. NOT calibrated against labelled data; 0 restores pure
+# similarity ordering.
+try:
+    RECENCY_RANK_WEIGHT = float(os.getenv("RECENCY_RANK_WEIGHT", "0.05"))
+except (TypeError, ValueError):
+    RECENCY_RANK_WEIGHT = 0.05
+try:
+    RECENCY_HALF_LIFE_DAYS = float(os.getenv("RECENCY_HALF_LIFE_DAYS", "30"))
+except (TypeError, ValueError):
+    RECENCY_HALF_LIFE_DAYS = 30.0
+
+# (PILOT SAFETY, Gate 2) "Option A": a reply that asks to work WITH the posts of the previous answer ("draft outreach notes for
+# these") is answered by logics.build_outreach_report(), a model-written plain-text report about named prospects. Its tests
+# cannot be collected (tests/test_option_a_outreach.py, imported by all three Option A test files, does not exist) and its text
+# bypasses answer_integrity.py, so it is OFF unless explicitly enabled. Off: the router is never offered the previous result, a
+# pick of that option gets an honest "not available" reply, and nothing is generated. Read live by routes.py.
+OPTION_A_ENABLED = os.getenv("OPTION_A_ENABLED", "false").lower() in ("1", "true", "yes")
 
 # ── Evidence-count limits (EVIDENCE-BUDGET FEATURE — used by logics.py's
 #    router/analysis/timeout-fallback layer to decide how many matched+
