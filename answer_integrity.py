@@ -20,6 +20,10 @@ subreddit) live in PlatformRules subclasses; everything else is shared.
 import bisect
 import json
 import re
+from datetime import datetime, timedelta, timezone
+
+import platforms   # the platform registry: identity, URL hosts, community labels (Phase 2.2)
+import timerange   # pure date helpers: publication_time / post_published_at (Phase 2: dates decide what counts for a window)
 
 ROLES = ("buyer", "discussion", "competitor_promo", "testimonial", "irrelevant")
 NON_DEMAND_ROLES = ("competitor_promo", "testimonial")
@@ -31,63 +35,41 @@ _LABEL_ORDER = {"High": 3, "Medium": 2, "Uncertain": 1, "Low": 0}
 # ── platform-specific rules ──────────────────────────────────────────────────
 
 class PlatformRules:
-    """Generic rules: no platform-specific removal markers or community field."""
+    """Generic rules: no platform-specific removal markers. Identity, community and removed-content detection are read from the
+    platform registry (platforms.py), so every platform shares one implementation."""
     name = "generic"
 
     def community(self, sig):
-        return sig.get("community") or None
+        return platforms.community(sig)
 
     def is_removed(self, sig) -> bool:
-        return False
+        return platforms.is_removed(sig)
 
     def source_id(self, sig) -> str:
-        """Stable identity of the stored record: its URL without scheme, www,
-        query string, fragment or trailing slash."""
-        url = re.sub(r"^https?://(www\.)?", "", str(sig.get("post_url") or "").strip().lower())
-        return re.split(r"[?#]", url)[0].rstrip("/")
+        """Stable identity of the stored record: its URL without scheme, www, query string, fragment or trailing slash (the
+        platform's own post id where the registry knows how to read one). "" when the record has no URL."""
+        return platforms.source_id(sig)
 
 
 class RedditRules(PlatformRules):
     name = "reddit"
-    _REMOVED = {"[removed]", "[deleted]", "[deleted by user]", "[removed by reddit]", "[ removed by reddit ]"}
-
-    def community(self, sig):
-        sub = sig.get("subreddit")
-        if not sub:
-            found = re.findall(r"/r/([^/?#]+)", str(sig.get("post_url") or ""))
-            sub = found[0] if found else None
-        return sub
-
-    def source_id(self, sig) -> str:
-        found = re.findall(r"/comments/([a-z0-9]+)", str(sig.get("post_url") or "").lower())
-        return f"reddit:{found[0]}" if found else super().source_id(sig)
-
-    def is_removed(self, sig) -> bool:
-        text = (sig.get("post_text") or "").strip().lower()
-        title = (sig.get("title") or "").strip().lower()
-        return bool(sig.get("removed_by_category")) or text in self._REMOVED or title in self._REMOVED
 
 
-PLATFORM_RULES = {"reddit": RedditRules()}
+PLATFORM_RULES = {key: (RedditRules() if key == "reddit" else PlatformRules()) for key in platforms.REGISTRY}
 _GENERIC_RULES = PlatformRules()
-_HOSTS = (("reddit.com", "reddit"), ("redd.it", "reddit"), ("x.com", "x"), ("twitter.com", "x"),
-          ("linkedin.com", "linkedin"), ("facebook.com", "facebook"))
 
 
 def platform_of(sig) -> str:
-    """Stored platform, else inferred from the URL host, else "unknown"."""
+    """Stored platform, else inferred from the URL host (registry), else "unknown". X / Twitter is reported as "x"."""
     plat = str((sig or {}).get("platform") or "").strip().lower()
     if plat:
         return "x" if plat == "twitter" else plat
-    host = re.sub(r"^https?://(www\.)?", "", str((sig or {}).get("post_url") or "").lower()).split("/")[0]
-    for suffix, name in _HOSTS:
-        if host == suffix or host.endswith("." + suffix):
-            return name
-    return "unknown"
+    key = platforms.from_url(platforms.url_of(sig))
+    return "unknown" if key is None else ("x" if key == "x_twitter" else key)
 
 
 def rules_for(sig) -> PlatformRules:
-    return PLATFORM_RULES.get(platform_of(sig), _GENERIC_RULES)
+    return PLATFORM_RULES.get(platforms.canonical_key(platform_of(sig)), _GENERIC_RULES)
 
 
 # ── shared text rules ────────────────────────────────────────────────────────
@@ -889,7 +871,7 @@ def classify_post(sig: dict, model_post: dict, terms: set, icp: bool, identity: 
     if status != "verified":
         # Nothing reliable to classify: kept and labelled, never judged on content we do not have.
         evidence = _pick_evidence(title, text, None, None) if (status == "inaccessible" and text) else None
-        return {"role": None, "purchase_intent": "unknown", "product_fit": "unknown", "relevance": "unverified",
+        return {"role": None, "purchase_intent": "unknown", "product_fit": "unknown", "relevance": "unverified", "analysis_status": "not_applicable",
                 "intent": "Uncertain", "qualified": False, "evidence": evidence,
                 "evidence_source": "excerpt" if evidence else None, "verification_status": status,
                 "intent_reason": _STATUS_REASONS[status], "uncertainty": [], "analysis_identity": None,
@@ -977,8 +959,11 @@ def classify_post(sig: dict, model_post: dict, terms: set, icp: bool, identity: 
     if not matched and label in ("High", "Medium"):
         label, reason = "Uncertain", "Labels come from the post's text alone; the analysis for this row could not be verified."
 
+    # An analysis that is not provably about THIS post gives the row no standing as evidence: its relevance is unconfirmed
+    # (text-only heuristics alone never make a row a relevant buyer), whatever the source text suggests.
     return {"role": role, "purchase_intent": intent, "product_fit": fit,
-            "relevance": "uncertain" if fit == "uncertain" else "relevant",
+            "relevance": "uncertain" if (fit == "uncertain" or not matched) else "relevant",
+            "analysis_status": "matched" if matched else "unmatched",
             "intent": label, "qualified": label == "High", "evidence": evidence, "evidence_source": evidence_source,
             "verification_status": status, "intent_reason": reason, "uncertainty": uncertainty,
             "analysis_identity": identity, "analysis_verified": matched, "_exclude": None,
@@ -1266,6 +1251,21 @@ def _map_indices(values, gmap):
 _FINDING_TEXT = ("impact", "what_evidence_shows", "why_it_matters")
 
 
+def is_evidence_row(p: dict) -> bool:
+    """True only for a row that may support a conclusion: its source was retrieved (verification_status "verified") AND the
+    displayed analysis was matched to that source (analysis_verified). Two different checks: the first says the post exists
+    and its text was stored; the second says the summary/labels shown are about that post. A row that fails the second stays
+    in the table, with its source link, but supports no count, finding or demand claim.
+    (Phase 2) In a time-bounded search a row outside the window, or without a valid publication date, is likewise listed
+    but is not evidence for that period (`in_window` is False). Without a window the field is absent: nothing changes."""
+    return _analysis_ok(p) and p.get("in_window") is not False
+
+
+def _analysis_ok(p: dict) -> bool:
+    """Retrieved source AND analysis matched to it (Phase 1). Independent of any time window."""
+    return p.get("verification_status") == "verified" and p.get("analysis_verified") is True
+
+
 def _enforce_findings(items, by_index, require_support: bool, ctx):
     """Each finding keeps only supporting rows that can carry it: available
     sources, and — for a buyer-demand finding — relevant buyer rows. Its text
@@ -1296,6 +1296,15 @@ def _enforce_findings(items, by_index, require_support: bool, ctx):
         if cited & set(supports):
             supports = [i for i in supports if i in cited]     # the count shown is the posts its text cites
         posts = [by_index[i] for i in supports]
+        # A finding may not claim more qualified / high-intent buyers than the qualified rows that support IT.
+        n_f = sum(1 for p in posts if p.get("qualified"))
+        dropped = False
+        for key in ("finding", "title") + _FINDING_TEXT:
+            if isinstance(f.get(key), str) and f[key].strip():
+                f[key] = _reconcile_claims(f[key], n_f, len(posts), ctx["rows"])
+                dropped = dropped or (not f[key].strip() and key in ("finding", "title", main))
+        if dropped:
+            continue                                           # its headline claim cannot be supported: the finding goes
         demand = any(p.get("role") == "buyer" and p.get("relevance") == "relevant" for p in posts)
         f["supporting_post_indices"] = supports
         f["supporting_count"] = len(supports)
@@ -1311,6 +1320,488 @@ def _enforce_findings(items, by_index, require_support: bool, ctx):
                     f[key] = _LEAD_QUANT.sub(lambda m: "One " + _SINGULAR_NOUN.get(m.group(1).lower(), m.group(1)[:-1]), f[key], count=1)
         out.append(f)
     return out
+
+
+# ── claim reconciliation ─────────────────────────────────────────────────────
+# Free text may not state how many buyers / leads are high-intent or qualified unless the number matches the qualifying rows
+# the server shows. The authority is the server count (rows that are High AND analysis-matched), never the model's wording.
+# A claim that can be checked and is wrong is corrected only in the one safe shape ("seven high-intent buyers" -> "two high-intent
+# buyers", same plural); anything else that cannot be validated is REMOVED, never rewritten into a new claim. When a summary
+# field is left empty by that, the server's own sentence for the count is used. This is a safety net, not a parser of English:
+# claim shapes it does not recognise are left to the citation / strong-claim checks above.
+_UNITS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+          "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen")
+_TENS = ("", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety")
+
+
+def _spell(n: int) -> str:
+    """0..99 in words (a count written in words is never mistaken for a stray figure by the number check); larger: digits."""
+    if 0 <= n < 20:
+        return _UNITS[n]
+    if 20 <= n < 100:
+        return _TENS[n // 10] + (f"-{_UNITS[n % 10]}" if n % 10 else "")
+    return str(n)
+
+
+_WORD_VALUE = {_spell(i): i for i in range(100)}
+_NUM = (r"\d{1,3}|(?:" + "|".join(sorted(_WORD_VALUE, key=len, reverse=True)) + r")")      # no "no": see _ZERO
+_ZERO = r"no|zero"
+_QUANT_MIN = {"several": 2, "multiple": 2, "a few": 2, "a number of": 2, "a couple of": 2, "numerous": 3, "many": 3,
+              "dozens of": 12}
+_QUANT_RE = "|".join(sorted(_QUANT_MIN, key=len, reverse=True))
+_NEG = re.compile(r"\b(?:not|never|neither|nor|without|cannot)\b|n't\b", re.I)
+_HI_TERM = (r"high[- ]intent|ready[- ]to[- ](?:buy|purchase|sign)|purchase[- ]ready|qualified|hot|"
+            r"strong(?:,?\s+immediate)?(?:\s+(?:outreach|buying|purchase))?|immediate(?:\s+outreach)?")
+_CLAIM_NOUN = r"buyers?|leads?|prospects?|opportunit(?:y|ies)|targets?|customers?|people|users|posts?"
+_CLAIM_A = re.compile(r"\b(?:" + _HI_TERM + r")\s+(?:" + _CLAIM_NOUN + r")\b", re.I)                    # "hot leads"
+_CLAIM_B = re.compile(r"\b(?:" + _CLAIM_NOUN + r")\b(?:\s+[\w'-]+){0,3}?\s+(?:is|are|was|were|appears?|looks?|seems?)\s+"
+                      r"(?:(?:not|never|all|also|now|already|clearly|an?|the)\s+)?(?:" + _HI_TERM + r")\b", re.I)  # "buyers are (a) high-intent"
+_HI_CLAIM = re.compile(
+    r"\b(?P<n>" + _NUM + r"|" + _QUANT_RE + r")\s+(?P<adj>(?:high[- ]intent|qualified|ready[- ]to[- ]buy|hot|"
+    r"strong(?:,?\s+immediate)?(?:\s+(?:outreach|buying|purchase))?)\s+)"
+    r"(?P<noun>buyers?|leads?|prospects?|opportunit(?:y|ies)|targets?|customers?)\b", re.I)
+_SERVER_SENTENCE_KEYS = ("headline", "executive_summary", "summary")
+
+
+def _number_of(token: str):
+    t = token.lower()
+    return 0 if t in ("no", "zero") else (int(t) if t.isdigit() else _WORD_VALUE.get(t))
+
+
+# Words that make a claim about a PROPORTION of the posts shown ("most posts are high-intent"). A small fixed set, checked only
+# in the "<posts> are <high-intent>" shape; every other aggregate phrasing is left to the citation / strong-claim checks.
+_NONE_RE = r"\b(?:none|not\s+one)\b(?:\s+of)?(?:\s+(?:the|these|those))?\s*$"
+_AGGREGATES = (("nearly", r"(?:nearly|almost)\s+(?:all|every\w*)"), ("majority", r"(?:the\s+)?(?:vast\s+)?majority|most"),
+               ("half", r"(?:about\s+|roughly\s+)?half"), ("all", r"all|every|each|both|everyone"))
+
+
+def _claimed_quantity(window: str, after: str, form: str = "A"):
+    """The quantity a claim states, read from the few words before it (and a ": 7" right after it), or None.
+    "no"/"zero" count only when they sit directly in front of the claim (at most one word between)."""
+    w = window.lower()
+    if form == "B" and re.search(_NONE_RE, " ".join(w.split()[-4:])):     # "none of the posts are ..." / "not one of the posts ..."
+        return ("agg", "none")
+    found = []
+    for kind, pat in (("of", r"\b(" + _NUM + r")\s+of\s+(?:the\s+)?(" + _NUM + r")\s*$"),
+                      ("top", r"\b(?:top|first|best|strongest|leading)\s+(" + _NUM + r")\s*$"),
+                      ("quant", r"\b(" + _QUANT_RE + r")\b(?:\s+[\w'-]+){0,2}\s*$"),
+                      ("num", r"\b(" + _NUM + r")\b(?:\s+[\w'-]+){0,2}\s*$"),
+                      ("num", r"\b(" + _ZERO + r")\b(?:\s+[\w'-]+){0,1}\s*$")):
+        m = re.search(pat, w)
+        if m:
+            found.append((m.start(), kind, m))
+    if found:
+        specific = [t for t in found if t[1] in ("of", "top")]          # "7 of the 10", "top 3" win over a bare number
+        _start, kind, m = specific[0] if specific else max(found, key=lambda t: t[0])
+        if kind == "of":
+            return ("of", _number_of(m.group(1)), _number_of(m.group(2)))
+        if kind == "top":
+            return ("top", _number_of(m.group(1)))
+        return ("quant", m.group(1)) if kind == "quant" else ("num", _number_of(m.group(1)))
+    m = re.match(r"\s*[:\-\u2013]\s*(" + _NUM + r"|" + _ZERO + r")\b", after.lower())
+    if m:
+        return ("num", _number_of(m.group(1)))
+    if form == "B":
+        tail = " ".join(w.split()[-4:])
+        for name, pat in _AGGREGATES:
+            if re.search(r"\b(?:" + pat + r")\b(?:\s+of)?(?:\s+(?:the|these|those))?\s*$", tail):
+                return ("agg", name)
+    return None
+
+
+def _count_word(n: int) -> str:
+    return "no" if n == 0 else _spell(n)
+
+
+def _rewrite_claim_count(clause: str, n: int) -> str:
+    """"seven high-intent buyers" -> "two high-intent buyers" (same plural, adjacent form only), else "" """
+    def sub(m):
+        noun = m.group("noun").lower()
+        noun = "opportunities" if noun.startswith("opportunit") else noun.rstrip("s") + "s"
+        word = _count_word(n)
+        return f"{word.capitalize() if m.group('n')[0].isupper() else word} {m.group('adj')}{noun}"
+    return _HI_CLAIM.sub(sub, clause, count=1) if _HI_CLAIM.search(clause) else ""
+
+
+def _spell_claim_digits(clause: str, start: int, end: int, values) -> str:
+    """A claim whose number matches the server count keeps its meaning but has its digits written as words, so that the
+    generic number check (which looks for the figure in the posts) cannot blank a sentence the server has already validated."""
+    pre = clause[:start]
+    toks = list(re.finditer(r"\S+", pre))[-5:]
+    if toks:
+        cut_at = toks[0].start()
+        pre = pre[:cut_at] + re.sub(r"\b\d{1,3}\b", lambda d: _spell(int(d.group())) if int(d.group()) in values else d.group(), pre[cut_at:])
+    post = re.sub(r"^(\s*[:\-\u2013]\s*)(\d{1,3})\b", lambda d: d.group(1) + (_spell(int(d.group(2))) if int(d.group(2)) in values else d.group(2)),
+                  clause[end:])
+    return pre + clause[start:end] + post
+
+
+def _reconcile_clause(clause: str, n: int, shown: int, rows: dict) -> str:
+    body = _CITED.sub("", clause)
+    m = _CLAIM_B.search(body)
+    form = "B" if m else "A"
+    m = m or _CLAIM_A.search(body)
+    if not m:
+        return clause
+    cited = [int(x) for c in _CITED.finditer(clause) for x in re.findall(r"\d+", c.group(0))]
+    if cited and rows is None:
+        return clause                                          # citations not yet mapped to table rows: checked in the later pass
+    picked = [rows[i] for i in cited if i in (rows or {})]
+    if picked:                                                 # a claim about cited posts is checked against those posts
+        n, shown = sum(1 for r in picked if r.get("qualified")), len(picked)
+    window = " ".join(body[:m.start()].split()[-5:])
+    # a negation counts only when it sits right in front of the claim (last three words) or inside it, not anywhere in the sentence
+    if _NEG.search(" ".join(window.split()[-3:])) or _NEG.search(m.group(0)):
+        return clause if n == 0 else ""                        # "not / never any" is true only when nothing qualifies
+    claim = _claimed_quantity(window, body[m.end():], form)
+    if claim is None:
+        return clause if n > 0 else ""                         # qualitative claim: needs at least one qualifying row
+    kind = claim[0]
+    if kind == "of":
+        ok = claim[1] == n and claim[2] == shown
+    elif kind == "top":
+        ok = 0 < claim[1] <= n
+    elif kind == "quant":
+        ok = n >= _QUANT_MIN[claim[1]]
+    elif kind == "agg":
+        ok = (n == 0) if claim[1] == "none" else shown > 0 and {
+            "majority": 2 * n > shown, "nearly": 5 * n >= 4 * shown, "half": 2 * n == shown, "all": n == shown}[claim[1]]
+    else:
+        ok = claim[1] == n
+    if ok:
+        if not cited and kind in ("num", "of", "top"):
+            return _spell_claim_digits(clause, m.start(), m.end(), {v for v in claim[1:] if isinstance(v, int)})
+        return clause
+    plural_before = kind == "quant" or (kind == "num" and claim[1] >= 2)
+    if kind in ("num", "quant") and plural_before and n != 1:
+        return _rewrite_claim_count(clause, n)                 # adjacent form, plural stays plural
+    return ""                                                   # cannot be corrected safely: remove, do not invent
+
+
+def _reconcile_claims(text, n: int, shown: int, rows: dict):
+    if not isinstance(text, str) or not text.strip():
+        return text
+    clauses = _CLAUSES.split(text)
+    out = [_reconcile_clause(c, n, shown, rows) for c in clauses]
+    return text if out == clauses else _tidy(" ".join(c for c in out if c.strip()))
+
+
+def _qualified_sentence(n: int) -> str:
+    """The server's own statement of the count, used when a summary field was emptied by claim removal."""
+    return f"Posts shown with a qualifying purchase step: {'none' if n == 0 else _spell(n)}."
+
+
+def _reconcile_tree(node, n: int, shown: int, rows: dict, key=None):
+    if isinstance(node, str):
+        out = _reconcile_claims(node, n, shown, rows)
+        if node.strip() and not out.strip():
+            return _qualified_sentence(n) if key and (key in _SERVER_SENTENCE_KEYS or key.endswith(("summary", "headline"))) else ""
+        return out
+    if isinstance(node, list):
+        out = [_reconcile_tree(x, n, shown, rows, key) for x in node]
+        return [x for x, orig in zip(out, node) if not (isinstance(orig, str) and orig.strip() and not x)]
+    if isinstance(node, dict):
+        return {k: (v if k in _NO_REWRITE_KEYS or k == "subjects" else _reconcile_tree(v, n, shown, rows, k))
+                for k, v in node.items()}
+    return node
+
+
+def _newest_from_scope(time_scope):
+    """The server's "newest stored post" record from the scope the caller built (logics.newest_stored_post), cleaned to the
+    fields the UI may show. Anything else in the scope is ignored; no record = None (the line is then not shown)."""
+    ns = time_scope.get("newest_stored") if isinstance(time_scope, dict) else None
+    if not isinstance(ns, dict) or ns.get("status") not in ("found", "empty", "partial", "unavailable"):
+        return None
+    when = timerange.publication_time(ns.get("published_at"))
+    return {"status": ns["status"] if (ns["status"] in ("empty", "unavailable") or when is not None) else "unavailable",
+            "published_at": when.isoformat() if when is not None and ns["status"] in ("found", "partial") else None,
+            "scope": str(ns.get("scope") or "all")[:80]}
+
+
+def _time_scope_summary(rows: list, window, time_scope=None) -> dict:
+    """What the report may say about publication dates: how many listed posts are dated / undated and, for a bounded
+    search, how many fall inside the window. Deterministic, from the validated dates only."""
+    dated = sum(1 for p in rows if p.get("date_status") == "dated")
+    out = {"window": None, "shown": len(rows), "dated": dated, "undated": len(rows) - dated}
+    if window is not None:
+        out["window"] = {"start": window[0].isoformat(), "end": window[1].isoformat(), "label": window[2]}
+        out["in_window"] = sum(1 for p in rows if p.get("in_window") is True)
+        out["not_counted"] = sum(1 for p in rows if p.get("in_window") is False)
+    newest = _newest_from_scope(time_scope)
+    if newest is not None:
+        out["newest_stored"] = newest
+    return out
+
+
+def _scope_rows(platforms) -> list:
+    return [p for e in (platforms if isinstance(platforms, list) else []) if isinstance(e, dict)
+            for p in (e.get("posts") or []) if isinstance(p, dict) and is_evidence_row(p)]
+
+
+def _scope_buyers(platforms) -> int:
+    posts = [p for e in (platforms if isinstance(platforms, list) else []) if isinstance(e, dict)
+             for p in (e.get("posts") or []) if isinstance(p, dict)]
+    return sum(1 for p in posts if is_evidence_row(p) and p.get("role") == "buyer" and p.get("relevance") == "relevant")
+
+
+_TEMPORAL_ADJ = r"recent|current|latest|new"
+_TEMPORAL_NOUN = r"buyers?|leads?|prospects?|customers?|opportunit(?:y|ies)|requests?|inquir(?:y|ies)"
+_TEMPORAL_COUNT = re.compile(r"\b(?P<n>" + _NUM + r")\s+(?P<adj>" + _TEMPORAL_ADJ + r")\s+(?P<noun>" + _TEMPORAL_NOUN + r")\b", re.I)
+_TEMPORAL_DEMAND = re.compile(r"\b(?:current|recent|latest|ongoing|active)\b\W+(?:\w+\W+){0,2}?"
+                              r"(?:demand|interest|buying\s+intent|buyers?|leads?|opportunit\w+)\b", re.I)
+
+
+def _reconcile_temporal_clause(clause: str, n_buyers: int) -> str:
+    """"12 recent buyers" must match the buyers counted (for the window, or for all shown rows when the search is not
+    time-bounded); "current demand" cannot stand when no buyer was found. Corrected only in the plural-preserving number
+    swap, otherwise removed (never rewritten into a new claim). A count written in words is checked like a digit count."""
+    m = _TEMPORAL_COUNT.search(clause)
+    if m:
+        claimed = _number_of(m.group("n"))
+        if claimed == n_buyers:
+            return clause
+        if claimed is not None and claimed >= 2 and n_buyers != 1:
+            noun = m.group("noun").lower()
+            noun = "opportunities" if noun.startswith("opportunit") else (noun.rstrip("s") if not noun.endswith(("ies",)) else noun)
+            noun = noun if noun.endswith(("s", "ies")) else noun + "s"
+            noun = {"inquirys": "inquiries"}.get(noun, noun)
+            word = _count_word(n_buyers)
+            word = word.capitalize() if m.group("n")[0].isupper() else word
+            return clause[:m.start()] + f"{word} {m.group('adj')} {noun}" + clause[m.end():]
+        return ""
+    if n_buyers == 0 and _TEMPORAL_DEMAND.search(clause) and not _T_NEG.search(clause):   # "no recent buyers" is true: kept
+        return ""
+    return clause
+
+
+# ── TEMPORAL CLAIM VALIDATION (Phase 2, Step 2.1) ────────────────────────────────────────────────────────────────────
+# Prose may not present a claim about TIME as an established fact unless the stored, validated publication dates of the
+# evidence support it. Every claim kind below is detected by a small closed vocabulary, but the DECISION never depends on
+# the wording: it is made from server data only.
+#   freshness  "live", "real-time", "up to date" ...       never supported: no trustworthy freshness signal exists
+#   trend      "surged", "trending upward", "most active"   never supported by one snapshot; allowed only in a trend_report
+#                                                           whose dated evidence spans at least two calendar weeks
+#   calendar   "yesterday", "this week", "last month" ...  not verifiable (the viewer's time zone / calendar is unknown)
+#   rolling    "in the last 7 days", "over the past month" supported only when the stored dates of the cited kind of rows
+#                                                           inside that period match (a stated count must equal the server's)
+#   currency   "currently", "recent buyers", "current demand is strong"
+#                                                           the marker is kept only inside a time-bounded search that has
+#                                                           in-window evidence, otherwise removed; a magnitude claim about
+#                                                           current demand is never supported
+# A clause that is negated or hedged ("not live", "no sign of a surge") is a disclosure, not a claim, and is kept. A claim
+# that cannot be validated is removed (its clause), never rewritten into a different claim; no count, date or freshness
+# statement is ever invented. This is a closed vocabulary, not a language parser: phrasings outside it are not covered.
+_T_NEG = re.compile(r"\b(?:no|not|never|cannot|without|unable|neither|nor|none|unverified|unknown|unclear)\b|n't\b", re.I)
+_T_FRESH = re.compile("|".join([
+    r"\b(?:live|real[- ]?time|up[- ]to[- ]the[- ](?:minute|second)|fresh(?:est)?)\s+(?:\w+\s+){0,2}?"
+    r"(?:data|dataset|feed|results?|information|index|signals?|insights?|leads?|intelligence|monitoring|tracking|coverage|updates?)\b",
+    r"\b(?:data|dataset|feed|results?|information|index|signals?|coverage|monitoring|platform|database)\b\W+(?:\w+\W+){0,3}?"
+    r"(?:is|are|was|were|stays?|remains?|kept|being)\W+(?:\w+\W+){0,2}?(?:live|real[- ]?time|up[- ]to[- ]date|current|fresh)\b",
+    r"\bup[- ]to[- ]date\b", r"\breal[- ]?time\b",
+    r"\b(?:updated|refreshed|monitored|scanned|collected|tracked)\s+(?:continuously|constantly|in real[- ]?time|live|hourly|daily|24/7)\b",
+    r"\b(?:continuously|constantly|always)\s+(?:updated|refreshed|monitored|scanned|current)\b",
+    r"\b(?:latest|most\s+(?:current|recent))\s+(?:data|dataset|information|snapshot)\b",
+]), re.I)
+_T_ACTIVITY = (r"demand|interest|buyers?|leads?|activity|volume|mentions|posts|conversations?|discussions?|sentiment|requests?|"
+               r"inquir\w+|intent|searches|adoption|traffic|signals?")
+_T_TREND_STRONG = re.compile(
+    r"\b(?:surg\w*|spik(?:e|es|ed|ing)|skyrocket\w*|soar\w*|uptick|uptrend|upward|trending|momentum|gaining\s+traction|"
+    r"picking\s+up|heating\s+up|ramp(?:s|ed|ing)?\s+up|boom(?:s|ed|ing)?|accelerat\w+|most\s+active|busiest|peak(?:s|ed|ing)?|"
+    r"(?:week|month|year)[- ]over[- ](?:week|month|year)|on\s+the\s+rise|rising|growing|increasing|declining|decreasing|"
+    r"falling|dropping|more\s+than\s+(?:last|before|previously)|fewer\s+than\s+(?:last|before|previously)|"
+    r"compared\s+(?:to|with)\s+(?:last|the\s+(?:previous|prior))|up\s+from|down\s+from)\b", re.I)
+_T_TREND_WEAK = re.compile(r"\b(?:rose|risen|rise|grew|grown|growth|jump(?:s|ed)?|climb(?:s|ed)?|increase[sd]?|decrease[sd]?|"
+                           r"declined?|dropped?|fell|doubled|tripled|dipped?|plunged?)\b", re.I)
+_T_ACTIVITY_RE = re.compile(r"\b(?:" + _T_ACTIVITY + r")\b", re.I)
+_T_CAL = re.compile(r"\b(?:yesterday|today|tonight|this\s+(?:morning|afternoon|evening|week|weekend|month|quarter|year)|"
+                    r"last\s+(?:week|weekend|month|quarter|year|night)|earlier\s+this\s+\w+|overnight|"
+                    r"(?:a|an|\d+|one|two|three|few|several)\s+(?:hours?|days?|weeks?|months?)\s+ago)\b", re.I)
+_T_UNIT_DAYS = {"hour": 1 / 24, "day": 1, "week": 7, "month": 30, "year": 365}
+_T_ROLL = re.compile(r"\b(?:last|past|previous)\s+(?:(?P<n>\d{1,3}|" + "|".join(sorted(_WORD_VALUE, key=len, reverse=True)) +
+                     r")\s+)?(?P<u>hour|day|week|month|year)s?\b", re.I)
+_T_AGG = re.compile(r"\b(?:buyers?|leads?|prospects?|customers?|posts?|people|users|teams|companies|founders|threads|mentions|"
+                    r"discussions?|demand|interest|activity|conversations?|requests?|inquir(?:y|ies)|searches|signals?|"
+                    r"opportunit(?:y|ies)|businesses|agencies|owners|managers|results?|complaints?|questions?)\b", re.I)
+_T_COUNTED = re.compile(r"\b(?P<n>" + _NUM + r")\s+(?!(?:hours?|days?|weeks?|months?|years?|of)\b)(?:[\w-]+\s+){0,2}?"
+                        r"(?P<noun>buyers?|leads?|prospects?|customers?|opportunit(?:y|ies)|requests?|inquir(?:y|ies)|"
+                        r"posts?|people|users|teams|companies|threads|mentions|conversations?)\b", re.I)
+_T_BUYER_NOUN = re.compile(r"^(?:buyers?|leads?|prospects?|customers?|opportunit(?:y|ies)|requests?|inquir(?:y|ies))$", re.I)
+_T_VAGUE_ADV = re.compile(r"\s*,?\s*\b(?:recently|lately|currently|right\s+now|at\s+the\s+moment|at\s+present|these\s+days|nowadays|"
+                          r"as\s+of\s+now|just\s+now|of\s+late)\b\s*,?", re.I)
+_T_VAGUE_ADJ = re.compile(r"\b(?:current|recent|latest|newest)\s+(?=(?:[\w-]+\s+){0,1}?(?:buyers?|leads?|prospects?|demand|"
+                          r"interest|requests?|inquir\w+|opportunit\w+|activity|posts?|signals?|customers?|conversations?)\b)", re.I)
+_T_CURRENCY = re.compile(r"\b(?:current(?:ly)?|recent(?:ly)?|latest|ongoing|present|right\s+now|these\s+days|today|now)\b", re.I)
+_T_DEMAND_NOUN = re.compile(r"\b(?:demand|interest|appetite|need|buying\s+intent|traction|market)\b", re.I)
+_T_MAGNITUDE = re.compile(r"\b(?:strong|high|healthy|robust|solid|significant|substantial|massive|huge|booming|hot|heavy|"
+                          r"steady|consistent|sustained|abundant|plentiful|thriving|vibrant|big)\b", re.I)
+_T_ACT_VERB = re.compile(r"\b(?:posted|asked|requested|searching|looking|active|mentioned|complained|wrote|shared|appeared|"
+                         r"emerged|discussed|signed|started|opened|submitted|came\s+in|showed?\s+up|there\s+(?:were|was|are|is)|"
+                         r"were|are)\b", re.I)
+_T_CHANGE = re.compile(
+    r"\b(?:improv\w+|worsen\w+|deteriorat\w+|shift(?:ed|ing|s)?|chang(?:e|ed|es|ing)|recover\w+|rebound\w+|dramatic\w*|"
+    r"turn(?:ed|ing)\s+(?:more|less|negative|positive)|(?:more|less)\s+(?:positive|negative)|(?:better|worse)\s+than|"
+    r"(?:will|going\s+to|expected\s+to|likely\s+to|set\s+to|poised\s+to)\s+(?:keep|continue|rise|grow|increase|accelerate|"
+    r"improve|decline|drop|fall|surge|remain)|forecast\w*|predict\w*|outlook|projected)\b", re.I)
+_T_FOUND = re.compile(r"\b(?:found|identified|discovered|detected|spotted|located|there\s+(?:are|were|is|was)|we\s+(?:have|see|saw))\b", re.I)
+_T_SKIP_KEYS = {"platforms", "counts", "excluded_posts", "website_context", "searched", "format", "verified_summary",
+                "time_scope", "data_freshness", "analysis_check", "subjects", "trend_check", "link", "evidence_type",
+                "signal_strength", "supporting_post_indices"}
+_T_FINDING_STRUCT = ("title", "finding")
+
+
+def _trend_claim(clause: str) -> bool:
+    return bool(_T_TREND_STRONG.search(clause) or (_T_TREND_WEAK.search(clause) and _T_ACTIVITY_RE.search(clause)))
+
+
+def _period_count(tctx: dict, days: float, buyers_only: bool):
+    """Stored posts with a validated publication time in the last `days` before the request. None = not verifiable."""
+    if tctx["dated"] is None or (buyers_only and not tctx["labelled"]):
+        return None
+    start, end = tctx["now"] - timedelta(days=days), tctx["now"] + timerange.FUTURE_TOLERANCE
+    return sum(1 for when, buyer in tctx["dated"] if start <= when < end and (buyer or not buyers_only))
+
+
+def _rolling_supported(clause: str, m, tctx: dict) -> bool:
+    unit = m.group("u").lower()
+    n = m.group("n")
+    if n is None and m.group(0).lower().split()[0] != "past":
+        return False                                # "last week" / "last month": a calendar period, not verifiable
+    count = _number_of(n) if n else 1
+    if count is None or count <= 0:
+        return False
+    days = count * _T_UNIT_DAYS[unit]
+    claimed = _T_COUNTED.search(clause)
+    buyers_only = bool(claimed and _T_BUYER_NOUN.match(claimed.group("noun"))) or bool(
+        not claimed and re.search(r"\b(?:buyers?|leads?|prospects?|demand)\b", clause, re.I))
+    have = _period_count(tctx, days, buyers_only)
+    if have is None:
+        return False
+    if claimed:
+        wanted = _number_of(claimed.group("n"))
+        return wanted is not None and wanted == have
+    return have >= 1
+
+
+def _spell_period(clause: str, m) -> str:
+    """A verified "last 7 days" is written "last seven days": the generic number check blanks a stray figure, and this one
+    has just been checked against the stored dates."""
+    n = m.group("n")
+    if n and n.isdigit() and int(n) < 100:
+        return clause[:m.start("n")] + _spell(int(n)) + clause[m.end("n"):]
+    return clause
+
+
+def _validate_temporal_clause(clause: str, tctx: dict) -> str:
+    """The clause itself, with an unsupported temporal marker removed, or "" when the clause is such a claim."""
+    if not clause.strip():
+        return clause
+    if tctx["buyers"] is not None:
+        clause = _reconcile_temporal_clause(clause, tctx["buyers"])       # "12 recent buyers" / "current demand" with none
+    elif _TEMPORAL_COUNT.search(clause):
+        return ""                                                          # no labelled rows: a recent-buyer count is unverifiable
+    if not clause.strip():
+        return ""
+    if _T_NEG.search(clause):                                              # a disclosure ("not live"), not a claim:
+        return clause                                                      # kept exactly as written (never edited into a claim)
+    if _T_FRESH.search(clause):
+        return ""
+    if tctx.get("plain") and _T_COUNTED.search(clause) and _T_FOUND.search(clause):
+        return ""                                                          # plain text: "we found 12 buyers" has no evidence behind it
+    if _trend_claim(clause) and not tctx["trend_ok"]:
+        return ""
+    if tctx.get("strict_trend") and _T_CHANGE.search(clause):
+        return ""                                                          # a trend_report: no change / forecast claim
+    if _CITED.search(clause):
+        return clause                                                      # about specific cited posts: their own text decides
+    if _T_AGG.search(clause) and (_T_COUNTED.search(clause) or _T_ACT_VERB.search(clause)):   # an activity assertion
+        if _T_CAL.search(clause):
+            return ""
+        m = _T_ROLL.search(clause)
+        if m:
+            if not _rolling_supported(clause, m, tctx):
+                return ""
+            clause = _spell_period(clause, m)
+    if _T_CURRENCY.search(clause) and _T_DEMAND_NOUN.search(clause) and _T_MAGNITUDE.search(clause):
+        return ""                                                          # "current demand is strong": magnitude is unverifiable
+    if not tctx["vague_ok"]:
+        raw = _T_VAGUE_ADJ.sub("", _T_VAGUE_ADV.sub(" ", clause))
+        if raw != clause:                                   # only a clause that actually lost a marker is rewritten
+            lead = len(clause) - len(clause.lstrip())
+            clause = _recase(clause[lead:], _tidy(raw))
+    return clause
+
+
+def _recase(original: str, edited: str) -> str:
+    """An edit that removed the first word ("Latest posts show ..." -> "posts show ...") keeps the sentence capitalised."""
+    if original[:1].isupper() and edited[:1].islower():
+        return edited[:1].upper() + edited[1:]
+    return edited
+
+
+def _temporal_text(text, tctx: dict):
+    if not isinstance(text, str) or not text.strip():
+        return text
+    clauses = _CLAUSES.split(text)
+    out = [_validate_temporal_clause(c, tctx) for c in clauses]
+    return text if out == clauses else _tidy(" ".join(c for c in out if c.strip()))
+
+
+def _temporal_sentence(tctx: dict) -> str:
+    """The server's own replacement when a summary / headline was removed entirely (never an invented claim)."""
+    n = tctx["buyers"]
+    if n is None:
+        return ""
+    return (f"Buyer posts found in the {tctx['label']}: {'none' if n == 0 else _spell(n)}." if tctx["label"]
+            else f"Buyer posts among those shown: {'none' if n == 0 else _spell(n)}.")
+
+
+def _reconcile_temporal_tree(node, tctx: dict, key=None):
+    if isinstance(node, str):
+        out = _temporal_text(node, tctx)
+        return out
+    if isinstance(node, list):
+        res = [_reconcile_temporal_tree(x, tctx, key) for x in node]
+        return [x for x, orig in zip(res, node) if x is not None and not (isinstance(orig, str) and orig.strip() and not x)]
+    if isinstance(node, dict):
+        out = {k: (v if k in _T_SKIP_KEYS else _reconcile_temporal_tree(v, tctx, k)) for k, v in node.items()}
+        if "supporting_post_indices" in node:                              # a finding: its claim text may not be emptied
+            main = [k for k in _FINDING_TEXT if isinstance(node.get(k), str) and node[k].strip()]
+            if main and not any(out.get(k, "").strip() for k in main):
+                return None
+            for k in _T_FINDING_STRUCT:
+                if isinstance(node.get(k), str) and node[k].strip() and not out.get(k, "").strip():
+                    out[k] = "Finding"
+        return out
+    return node
+
+
+def _temporal_ctx(rows, window, buyers, labelled=True, trend_ok=False, now=None) -> dict:
+    """Server data a temporal claim is checked against. `rows`: the evidence rows (validated dates only); `buyers`: the
+    server's buyer count for them (None when the rows carry no role labels)."""
+    dated = []
+    for p in rows:
+        when = timerange.publication_time(p.get("published_at")) if isinstance(p, dict) else None
+        if when is not None:
+            dated.append((when, bool(p.get("role") == "buyer" and p.get("relevance") == "relevant")))
+    if now is None:
+        now = (window[1] - timerange.FUTURE_TOLERANCE) if window is not None else datetime.now(timezone.utc)
+    return {"dated": dated, "buyers": buyers, "labelled": labelled, "trend_ok": trend_ok, "strict_trend": False, "now": now,
+            "label": window[2] if window is not None else None,
+            "vague_ok": bool(window is not None and (len(rows) > 0)), "evidence": len(rows)}
+
+
+def _reconcile_subjects(data: dict, rows):
+    """Each comparison subject is reconciled against its OWN rows (its summary may not claim another subject's buyers)."""
+    if isinstance(data.get("subjects"), list):
+        data["subjects"] = [_reconcile_tree(sj, *_scope_numbers(sj.get("platforms")), rows) if isinstance(sj, dict) else sj
+                            for sj in data["subjects"]]
+    return data
+
+
+def _scope_numbers(platforms):
+    posts = [p for e in (platforms if isinstance(platforms, list) else []) if isinstance(e, dict)
+             for p in (e.get("posts") or []) if isinstance(p, dict)]
+    return sum(1 for p in posts if p.get("qualified") and is_evidence_row(p)), len(posts)
 
 
 def _restate_count(m, counts: dict) -> str:
@@ -1329,8 +1820,21 @@ def _restate_count(m, counts: dict) -> str:
     return f"{m.group(1)} {n} {m.group(3) or ''}{m.group(4) or ''}{noun}"
 
 
-def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, query, post_records=None) -> dict:
+def _window_bounds(time_scope):
+    """(start, end, label) of a search's publication window from {"start","end","label"} (ISO UTC), or None."""
+    if not isinstance(time_scope, dict):
+        return None
+    start, end = timerange.to_utc(time_scope.get("start")), timerange.to_utc(time_scope.get("end"))
+    if start is None or end is None or not start < end:
+        return None
+    return start, end, str(time_scope.get("label") or "the search window")
+
+
+def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, query, post_records=None,
+                             time_scope=None) -> dict:
     """Applies the guardrails to a parsed source_list / comparison answer.
+    `time_scope` ({"start","end","label"}, from logics.build_time_scope) is given for a time-bounded search: a listed post
+    outside it or without a valid publication date stays in the table but supports no count or finding for that period.
     `aligned` is the exact list whose position i was "[Post i+1]" in the prompt.
     `post_records` ({prompt number: map-step record}) comes only from the server
     (logics._take_post_records); a "_post_records" field in `data` is never used."""
@@ -1344,6 +1848,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
     for i, s in enumerate(aligned or [], 1):
         if isinstance(s, dict) and s.get("post_url"):
             global_pos.setdefault(s["post_url"], i)
+    window = _window_bounds(time_scope)
     terms = product_terms(query)
     icp = bool(_ICP_MARKERS.search(str(query or "")))
 
@@ -1357,12 +1862,12 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
     seen = set()
     entries = []
 
-    def collect(platforms):
+    def collect(plat_list):
         nonlocal listed
-        if not isinstance(platforms, list):
-            return platforms
+        if not isinstance(plat_list, list):
+            return plat_list
         out = []
-        for entry in platforms:
+        for entry in plat_list:
             if not isinstance(entry, dict) or not isinstance(entry.get("posts"), list):
                 out.append(entry)
                 continue
@@ -1401,6 +1906,14 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
                     excluded_posts.append({"link": sig["post_url"], "reason": "not relevant"})
                     continue
                 new = dict(post, **labels)
+                when = timerange.post_published_at(sig)       # the validated PUBLICATION time (never scan/ingestion time)
+                new["date_status"] = "dated" if when is not None else "undated"
+                if when is not None:
+                    new["published_at"] = when.isoformat()       # only ever the stored record's validated date ...
+                else:
+                    new.pop("published_at", None)                # ... never a date the model wrote, never a placeholder
+                if window is not None:
+                    new["in_window"] = bool(when is not None and window[0] <= when < window[1])
                 for key in ("_model_title", "_model_index"):
                     new.pop(key, None)
                 summary = post.get("summary")
@@ -1421,6 +1934,9 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
             kept.sort(key=lambda p: (-_LABEL_ORDER[p["intent"]], p["verification_status"] != "verified",
                                      p["role"] in NON_DEMAND_ROLES, p["_pos"]))
             entry = dict(entry, posts=kept)
+            # (Phase 2.2) how this table names a post's community ("Subreddit" / "r/"): from the registry, not the page
+            _label, _prefix = platforms.community_display(platforms.canonical_key(kept[0]["platform"] if kept else entry.get("platform")))
+            entry["community_label"], entry["community_prefix"] = _label, _prefix
             entries.append(entry)
             if kept:
                 out.append(entry)
@@ -1456,6 +1972,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
         entry["total_analyzed"] = analyzed_by_platform.get(plat, len(aligned or []))
 
     verified_rows = [p for p in rows if p["verification_status"] == "verified"]
+    evidence_rows = [p for p in rows if is_evidence_row(p)]
     counts = {
         "retrieved": len(sigs),
         "unique": len({s.get("post_url") or _fingerprint(s) for s in sigs}),
@@ -1464,13 +1981,13 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
         "excluded": sum(excluded.values()),
         "excluded_reasons": excluded,
         "shown": len(rows),
-        "relevant": sum(1 for p in verified_rows if p["relevance"] == "relevant"),
-        "uncertain": sum(1 for p in verified_rows if p["relevance"] == "uncertain"),
+        "relevant": sum(1 for p in evidence_rows if p["relevance"] == "relevant"),
+        "uncertain": sum(1 for p in verified_rows if p["relevance"] == "uncertain" or not is_evidence_row(p)),
         "unverified": len(rows) - len(verified_rows),
-        "verified": len(verified_rows),
-        "buyers": sum(1 for p in verified_rows if p["role"] == "buyer" and p["relevance"] == "relevant"),
-        "qualified": sum(1 for p in rows if p["qualified"]),
-        "researching": sum(1 for p in rows if p["role"] == "buyer" and p["intent"] == "Medium"),
+        "verified": len(verified_rows),                 # SOURCE retrieved (kept key; see data["analysis_check"] for the analysis)
+        "buyers": sum(1 for p in evidence_rows if p["role"] == "buyer" and p["relevance"] == "relevant"),
+        "qualified": sum(1 for p in evidence_rows if p["qualified"]),
+        "researching": sum(1 for p in evidence_rows if p["role"] == "buyer" and p["intent"] == "Medium"),
         "competitor": sum(1 for p in rows if p["role"] in NON_DEMAND_ROLES),
         "categories": {k: sum(1 for p in rows if _row_category(p) == k) for k in CATEGORY_ORDER},
     }
@@ -1486,14 +2003,15 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
             "suggested_actions": [],
             "counts": counts,
             "excluded_posts": excluded_posts,
+            "time_scope": _time_scope_summary(rows, window, time_scope),     # (Phase 2.2) the period searched, even with nothing to show
         }
 
     require_support = bool(rows)
     ctx = {"gmap": gmap, "max_ref": max(len(aligned or []), listed),
-           "unavailable": frozenset(p["index"] for p in rows if p["verification_status"] != "verified"),
+           "unavailable": frozenset(p["index"] for p in rows if not is_evidence_row(p)),   # no source, or analysis not matched
            "row_text": {p["index"]: " ".join(str(x) for x in (by_url[p["link"]].get("title"), by_url[p["link"]].get("post_text"),
                                                               p.get("published_at")) if x)
-                        for p in rows if p["verification_status"] == "verified"},
+                        for p in rows if is_evidence_row(p)},               # a figure in an unmatched row validates nothing
            "rows": {p["index"]: {"role": p["role"], "qualified": p["qualified"]} for p in rows},
            "qualified": counts["qualified"],
            "count_values": ({counts[k] for k in ("shown", "analyzed", "retrieved", "unique", "relevant", "verified",
@@ -1505,11 +2023,167 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
         for key in ("key_findings", "detailed_findings"):
             if key in scope:
                 scope[key] = _enforce_findings(scope[key], by_index, require_support, ctx)
+    # First pass, before the generic number check can blank a sentence the model wrote about its own count: claims that
+    # cite no post are reconciled with the server's counts. The pass after the citation rewrite handles the rest.
+    data = _reconcile_subjects(_reconcile_tree(data, counts["qualified"], counts["shown"], None), None)
+    # (STEP 2.1) Temporal claims (counts of recent buyers, "this week", surges, "live" data ...) are validated against the
+    # stored publication dates of the evidence rows, in a time-bounded AND in an unbounded search; before the generic number
+    # check, so a "12 recent buyers" claim is corrected instead of blanked.
+    _main_ctx = _temporal_ctx(evidence_rows, window, counts["buyers"])
+    _had = {k for k in _SERVER_SENTENCE_KEYS if isinstance(data.get(k), str) and data[k].strip()}
+    data = _reconcile_temporal_tree(data, _main_ctx)
+    _had = {k for k in _had if not str(data.get(k) or "").strip()}     # emptied by THIS check (not by any other)
     data = _rewrite_tree(data, ctx)
+    # Counts of high-intent / qualified buyers in free text come from the qualifying rows, not from the model's wording
+    # (findings were reconciled against their own supporting rows above; a comparison subject against its own rows).
+    data = _reconcile_tree(data, counts["qualified"], counts["shown"], ctx["rows"])
+    data = _reconcile_subjects(data, ctx["rows"])
+    time_out = _time_scope_summary(rows, window, time_scope)
+    if isinstance(data.get("subjects"), list):             # each comparison subject against its OWN rows
+        subs = []
+        for sj in data["subjects"]:
+            if isinstance(sj, dict):
+                sctx = _temporal_ctx(_scope_rows(sj.get("platforms")), window, _scope_buyers(sj.get("platforms")))
+                had = {k for k in _SERVER_SENTENCE_KEYS if isinstance(sj.get(k), str) and sj[k].strip()}
+                sj = _reconcile_temporal_tree(sj, sctx)
+                sj.update({k: _temporal_sentence(sctx) for k in had if not str(sj.get(k) or "").strip()})
+            subs.append(sj)
+        data["subjects"] = subs
+    # A headline / summary the temporal check emptied gets the server's own count sentence (added last: it is not model text)
+    data.update({k: _temporal_sentence(_main_ctx) for k in _had if not str(data.get(k) or "").strip()})
+    data["time_scope"] = time_out
     data["counts"] = counts
+    # Kept apart from `counts` (whose keys are an existing contract): source retrieval vs analysis match.
+    analysis_ok = [p for p in rows if _analysis_ok(p)]
+    analysis_check = {"source_verified": len(verified_rows), "analysis_verified": len(analysis_ok),
+                      "analysis_unverified": len(verified_rows) - len(analysis_ok)}
+    data["analysis_check"] = analysis_check
     data["excluded_posts"] = excluded_posts
-    data["verified_summary"] = verified_summary(counts)
+    data["verified_summary"] = verified_summary(counts, analysis_check, time_out)
     return data
+
+
+# ── formats without a post table (Step 2.1, trend_report rewritten in Phase 2.2) ─────────────────────────────────────────
+# trend_report / no_results / not_available / disallowed carry prose (and, for a trend_report, model-written tables) but no
+# listed posts, so the Phase 1 post checks do not apply. They get the TEMPORAL validation above, scoped to the stored dates of
+# the retrieved posts, plus the active time scope. Restrictions, stated on purpose:
+#   - none of these formats can claim buyer counts or a "recent buyers" figure (their rows carry no role labels);
+#   - TREND_REPORT: Flintel does not compute per-period sentiment, counts or changes from the stored posts, so every figure in
+#     the model's `shift_table`, `weekly_table` and forward-looking `trend` is the model's own and is REMOVED, always. The
+#     prose (`interpretation`, `conclusion`) keeps what is not a change / growth / forecast claim; the per-post drivers (which
+#     paraphrase retrieved posts) are kept. The server adds a descriptive `evidence_summary` computed from the stored dates.
+#     Dates in two different weeks are NOT evidence of a trend, and no minimum sample is invented to pretend otherwise: a
+#     trend needs a server-side computation (labelled posts per period) that does not exist yet;
+#   - an unknown / plain-text / unrecognised format is not touched.
+TEMPORAL_ONLY_FORMATS = ("trend_report", "no_results", "not_available", "disallowed")
+_TR_SKIP_KEYS = {"positive_drivers", "negative_drivers", "topic", "platforms", "shift_table", "weekly_table", "window"}
+_TR_MODEL_FIGURES = ("shift_table", "weekly_table", "trend")
+_SAFE_MESSAGE = {"no_results": "No matching posts were found for this search.",
+                 "not_available": "This is not available.", "disallowed": "This request cannot be answered."}
+
+
+def _signal_rows(sigs: list, window) -> list:
+    rows = []
+    for s in sigs:
+        when = timerange.post_published_at(s)
+        row = {"date_status": "dated" if when is not None else "undated"}
+        if when is not None:
+            row["published_at"] = when.isoformat()
+        if window is not None:
+            row["in_window"] = bool(when is not None and window[0] <= when < window[1])
+        rows.append(row)
+    return rows
+
+
+def _evidence_summary(srows: list, window) -> dict:
+    """What the retrieved posts are, from their stored publication dates only: how many, how many are dated, and the
+    earliest / latest validated date. Descriptive; it says nothing about change over time."""
+    usable = [r for r in srows if window is None or r.get("in_window")]
+    dated = sorted(r["published_at"] for r in usable if r["date_status"] == "dated")
+    return {"posts": len(usable), "dated": len(dated), "undated": len(usable) - len(dated),
+            "earliest": dated[0] if dated else None, "latest": dated[-1] if dated else None}
+
+
+def _evidence_note(summary: dict, window) -> str:
+    n = summary["posts"]
+    if n == 0:
+        return ("No retrieved posts support a period comparison" + (f" for the {window[2]}." if window is not None else ".")) \
+            + " Flintel does not compute sentiment or volume changes over time from stored posts."
+    span = (f" published between {summary['earliest'][:10]} and {summary['latest'][:10]} (UTC)" if summary["dated"] else "")
+    undated = f", {summary['undated']} without a valid publication date" if summary["undated"] else ""
+    return (f"Based on {n} retrieved post{'s' if n != 1 else ''}{span}{undated}. Flintel does not compute sentiment or volume "
+            "changes over time from stored posts, so no period-over-period figures are shown.")
+
+
+def enforce_temporal_claims(data: dict, matched_signals: list, time_scope=None, generic: bool = False) -> dict:
+    """Temporal-claim validation for a structured answer without a post table. `generic=True` (Gate 2) also covers a JSON
+    answer whose `format` is missing or unrecognised: its strings are validated like those of a no_results answer."""
+    if not isinstance(data, dict) or (not generic and data.get("format") not in TEMPORAL_ONLY_FORMATS):
+        return data
+    fmt = data.get("format") if data.get("format") in TEMPORAL_ONLY_FORMATS else "other"
+    window = _window_bounds(time_scope)
+    srows = _signal_rows([s for s in (matched_signals or []) if isinstance(s, dict)], window)
+    usable = [r for r in srows if r["date_status"] == "dated" and (window is None or r["in_window"])]
+    tctx = _temporal_ctx(usable, window, None, labelled=False, trend_ok=False)
+    tctx["vague_ok"] = False
+    tctx["strict_trend"] = fmt == "trend_report"
+    before = data.get("message")
+    skip = _TR_SKIP_KEYS if fmt == "trend_report" else set()
+    out = {k: (v if (k in _T_SKIP_KEYS or k in skip) else _reconcile_temporal_tree(v, tctx, k)) for k, v in data.items()}
+    if fmt in _SAFE_MESSAGE and isinstance(before, str) and before.strip() and not str(out.get("message") or "").strip():
+        out["message"] = _SAFE_MESSAGE[fmt]
+    if fmt == "trend_report":
+        for k in _TR_MODEL_FIGURES:
+            out.pop(k, None)
+        summary = _evidence_summary(srows, window)
+        out["evidence_summary"] = summary
+        out["evidence_note"] = _evidence_note(summary, window)
+        out["trend_check"] = {"comparative_evidence": False, "reason": "no_server_side_trend_calculation",
+                              "dated_posts": summary["dated"], "figures_verified": False}
+        out["window"] = (window[2][:1].upper() + window[2][1:]) if window is not None else "All collected posts (no time limit)"
+    out["time_scope"] = _time_scope_summary(srows, window, time_scope)
+    return out
+
+
+# ── plain-text replies and website text (Gate 2) ──────────────────────────────────────────────────────────────────────────
+# A plain-text reply (a model-written chat / clarify reply, or a non-JSON answer) has no evidence rows to check, so it may not
+# state ANY time-dependent fact about Flintel's data: no freshness / live-monitoring claim, no trend, no "yesterday / this
+# week", no "last 7 days" figure, no "we found N buyers", and no recency marker presented as established. Negated and hedged
+# statements ("the data is not live", "very recent posts may not be collected yet") are kept as written, as is every sentence
+# that makes none of these claims. Same closed vocabulary as the structured formats; wording outside it is NOT covered.
+def _plain_ctx() -> dict:
+    ctx = _temporal_ctx([], None, None, labelled=False, trend_ok=False)
+    ctx["vague_ok"], ctx["plain"] = False, True
+    return ctx
+
+
+def validate_plain_text(text):
+    """`text` with unsupported temporal / freshness / trend / count claims removed. Never raises; non-text is returned as is.
+    An empty result means every sentence was such a claim (the caller substitutes its own safe line)."""
+    if not isinstance(text, str) or not text.strip():
+        return text
+    try:
+        return _temporal_text(text, _plain_ctx())
+    except Exception:
+        return text
+
+
+_T_FLINTEL_SUBJECT = re.compile(r"\b(?:flintel|reddit|stored\s+posts?|search\s+results?|these\s+results|our\s+(?:data|index|posts|results|coverage)|"
+                                r"the\s+(?:data|dataset|index|results))\b", re.I)
+
+
+def validate_data_claims(text):
+    """Website-derived text describes the user's OWN site, so only a sentence that speaks about Flintel, Reddit or the stored
+    data is checked ("Flintel monitors Reddit in real time" goes; "Acme offers real-time analytics" stays)."""
+    if not isinstance(text, str) or not text.strip():
+        return text
+    try:
+        ctx = _plain_ctx()
+        clauses = _CLAUSES.split(text)
+        out = [(_validate_temporal_clause(c, ctx) if _T_FLINTEL_SUBJECT.search(c) else c) for c in clauses]
+        return text if out == clauses else _tidy(" ".join(c for c in out if c.strip()))
+    except Exception:
+        return text
 
 
 CATEGORY_ORDER = ("qualified", "researching", "unconfirmed", "discussion", "competitor", "unavailable")
@@ -1530,6 +2204,8 @@ def _row_category(p: dict) -> str:
         return "unavailable"
     if p["role"] in NON_DEMAND_ROLES:
         return "competitor"
+    if p.get("in_window") is False:
+        return "unconfirmed"                      # outside the period / undated: listed, not counted for it
     if p["qualified"]:
         return "qualified"
     if p["intent"] == "Uncertain":
@@ -1539,7 +2215,7 @@ def _row_category(p: dict) -> str:
     return "discussion"
 
 
-def verified_summary(counts: dict) -> str:
+def verified_summary(counts: dict, analysis_check: dict = None, time_scope: dict = None) -> str:
     """One server-written sentence stating the checked counts behind the report:
     one category per shown row, the excluded posts out of those the analysis
     listed, and what "qualified" means."""
@@ -1550,8 +2226,18 @@ def verified_summary(counts: dict) -> str:
     parts = [n(cats.get("qualified", 0), "qualified lead", "qualified leads")]
     parts += [n(cats[k], one, many) for k, one, many in _CATEGORY_WORDS if cats.get(k)]
     text = "Checked against the stored posts: " + ", ".join(parts)
+    unmatched = (analysis_check or {}).get("analysis_unverified", 0)
+    if unmatched:
+        text += (f"; {n(unmatched, 'listed post', 'listed posts')} kept with a source link only, because its "
+                 "analysis could not be matched to the post (not counted as evidence)")
     if counts.get("excluded"):
         text += f"; {counts['excluded']} of {n(counts.get('listed', 0), 'listed post', 'listed posts')} excluded"
+    ts = time_scope or {}
+    if ts.get("window"):
+        text += f"; counted for the {ts['window']['label']} only"
+        if ts.get("not_counted"):
+            text += (f" ({n(ts['not_counted'], 'listed post', 'listed posts')} outside it or without a valid publication "
+                     "date are shown but not counted)")
     return f"{text}. {QUALIFIED_DEFINITION}"
 
 
@@ -1571,8 +2257,8 @@ def annotate_results(results: list, answer_text) -> list:
         return results
     groups = [data.get("platforms")] + [s.get("platforms") for s in (data.get("subjects") or []) if isinstance(s, dict)]
     in_report = {}
-    for platforms in groups:
-        for entry in platforms if isinstance(platforms, list) else []:
+    for plat_list in groups:
+        for entry in plat_list if isinstance(plat_list, list) else []:
             for p in (entry.get("posts") if isinstance(entry, dict) else None) or []:
                 if isinstance(p, dict) and p.get("link"):
                     in_report[p["link"]] = {"status": "in_report", "index": p.get("index"), "intent": p.get("intent"),
