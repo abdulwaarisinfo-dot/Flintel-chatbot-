@@ -2147,7 +2147,7 @@ def schedule_unfinished_turns(chat_id: str, owner_key: str, messages: list, skip
         if ids:
             turn_finisher.wake(ids)
     except Exception as exc:
-        log.warning(f"Scheduling unfinished turns failed for chat_id={chat_id}: {exc}")
+        log.warning(f"Scheduling unfinished turns failed for chat_id={chat_id}: {exc}") 
     return ids
 
 
