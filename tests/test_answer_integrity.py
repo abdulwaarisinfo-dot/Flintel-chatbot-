@@ -489,8 +489,7 @@ def test_search_to_report_flow_renders_the_same_records(integrity_browser, env, 
         shown = {int(r[0]) for r in rows}
         assert set(_cited(page.inner_text(".answer-rendered"))) <= shown            # UI citation audit
         text = page.inner_text(".answer-rendered")
-        qualified = "1 qualified lead" if approved else "0 qualified leads"
-        assert "Reddit · 4 of 22" in text and qualified in text and "3 of 7 listed excluded" in text
+        assert "Reddit · 4 of 22" not in text and "qualified lead" not in text and "listed excluded" not in text   # classification counts are not shown
         assert "onlyfans" not in text.lower() and "Post 22" not in text and "Post 13" not in text
         assert "not buyer demand" in text and errors == []
     finally:
@@ -823,3 +822,561 @@ def test_my_business_does_not_switch_on_the_b2b_audience_check():
     out = _run([s], [{"index": 1, "link": s["post_url"]}], query="Find homeowners who need a plumber app for my business")
     assert len(_rows(out)) == 1
 
+
+
+# ── Phase 1: an analysis that is not matched to its source supports nothing ───────────────────────────────────────
+# SYNTHETIC FIXTURES. Every post below is invented for these tests (labelled "[synthetic]"); none is a real Reddit post and
+# none reproduces the original CRM report, whose records are not available in this project.
+BUYER_A = ("[synthetic] Commercial brokerage needs a CRM",
+           "[synthetic] We are a small commercial brokerage. We need a CRM for deals and contacts. Our budget is approved "
+           "and we will sign with a vendor this month.")
+BUYER_B = ("[synthetic] Property managers need a CRM for tenants",
+           "[synthetic] Our property management firm needs a CRM for tenant follow-ups. The budget is approved by finance "
+           "and we will subscribe this quarter.")
+VENDOR = ("[synthetic] I built a CRM for brokerages",
+          "[synthetic] Launch week! I built a CRM for small brokerages. Budget-friendly pricing, try it today.")
+CRM_QUERY = "Find people looking for a CRM"
+
+
+def _sigs(*pairs):
+    return [_sig(i + 1, t, x, sub="CRM") for i, (t, x) in enumerate(pairs)]
+
+
+def _own(sig, **extra):
+    """An analysis entry written about this very post (matched by title and number)."""
+    return dict({"link": sig["post_url"], "role": "buyer", "purchase_intent": "explicit", "product_fit": "fits"}, **extra)
+
+
+def _foreign(sig, **extra):
+    """An analysis entry whose title and quotation do not tie it to this post (a mismatched analysis)."""
+    return dict({"link": sig["post_url"], "title": "[synthetic] A different post entirely", "role": "buyer",
+                 "purchase_intent": "explicit", "product_fit": "fits", "summary": "Budget approved and ready to sign."}, **extra)
+
+
+def _go(sigs, posts, findings=None, summary="", **top):
+    posts = [dict(p, index=i + 1) if "index" not in p else p for i, p in enumerate(posts)]
+    posts = [dict(p, title=sigs[p["index"] - 1]["title"]) if "title" not in p else p for p in posts]
+    data = _answer(posts, findings, summary)
+    data.update(top)
+    return ai.enforce_answer_integrity(data, sigs, sigs, CRM_QUERY)
+
+
+def _finding(indices, strength="Strong", text=None):
+    refs = ", ".join(f"Post {i}" for i in indices)
+    return {"finding": "Brokerages are ready to buy a CRM", "evidence_type": "Buyer", "signal_strength": strength,
+            "supporting_post_indices": list(indices), "impact": text or f"{refs} are ready to buy."}
+
+
+def test_matched_buyer_still_qualifies():
+    s = _sigs(BUYER_A)
+    out = _go(s, [_own(s[0])], summary="I found 1 qualified post.")
+    p = _rows(out)[0]
+    assert p["analysis_status"] == "matched" and p["analysis_verified"] is True
+    assert p["qualified"] and p["intent"] == "High"
+    c = out["counts"]
+    assert (c["qualified"], c["buyers"], c["relevant"], c["uncertain"]) == (1, 1, 1, 0)
+    assert out["analysis_check"] == {"source_verified": 1, "analysis_verified": 1, "analysis_unverified": 0}
+
+
+def test_unmatched_analysis_contributes_zero_but_keeps_its_source_record():
+    s = _sigs(BUYER_A, BUYER_B)
+    out = _go(s, [_own(s[0]), _foreign(s[1])])
+    matched, unmatched = _rows(out)
+    assert matched["analysis_status"] == "matched" and matched["qualified"]
+    # the source record is kept and still traceable ...
+    assert unmatched["link"] == s[1]["post_url"] and unmatched["verification_status"] == "verified"
+    assert unmatched["analysis_status"] == "unmatched" and unmatched["analysis_verified"] is False
+    assert unmatched["summary"] == ai.SUMMARY_UNAVAILABLE and "could not confirm" in " ".join(unmatched["uncertainty"])
+    # ... but nothing it says counts: not a lead, not relevant, not a buyer, not demand
+    assert unmatched["intent"] == "Uncertain" and unmatched["qualified"] is False and unmatched["relevance"] == "uncertain"
+    c = out["counts"]
+    assert (c["shown"], c["qualified"], c["buyers"], c["relevant"], c["uncertain"], c["researching"]) == (2, 1, 1, 1, 1, 0)
+    assert c["shown"] == c["relevant"] + c["uncertain"] + c["unverified"]            # existing invariant
+    assert out["analysis_check"] == {"source_verified": 2, "analysis_verified": 1, "analysis_unverified": 1}
+    assert sum(c["categories"].values()) == c["shown"] and c["categories"]["unconfirmed"] == 1
+    assert "kept with a source link only" in out["verified_summary"]
+
+
+def test_unmatched_row_alone_supports_no_finding_and_no_headline():
+    s = _sigs(BUYER_A)
+    out = _go(s, [_foreign(s[0])], findings=[_finding([1])],
+              summary="Flintel identified seven high-intent buyers. Posts 1 are ready to buy.", headline="7 high-intent buyers found")
+    assert out["counts"]["qualified"] == 0 and out["counts"]["buyers"] == 0 and out["counts"]["relevant"] == 0
+    assert out["key_findings"] == []                                   # the only support was an unmatched analysis: removed
+    text = out["executive_summary"] + " " + out["headline"]
+    assert "seven" not in text and "7 " not in text and "ready to buy" not in text
+    assert _rows(out)[0]["link"] == s[0]["post_url"]                   # the source record is still listed
+
+
+def test_mixed_rows_keep_only_the_matched_support_in_a_finding():
+    s = _sigs(BUYER_A, BUYER_B)
+    out = _go(s, [_own(s[0]), _foreign(s[1])], findings=[_finding([1, 2], text="Posts 1 and 2 are ready to buy.")])
+    f = out["key_findings"][0]
+    assert f["supporting_post_indices"] == [1] and f["supporting_count"] == 1 and f["demand_signal"] is True
+    assert "Post 2" not in f["impact"] and "Posts 1 and 2" not in f["impact"]
+
+
+def test_unmatched_row_cannot_back_a_market_wide_claim():
+    s = _sigs(BUYER_A, BUYER_B)
+    out = _go(s, [_foreign(s[0]), _foreign(s[1])], findings=[_finding([1, 2], text="Posts 1 and 2 show strong demand.")])
+    assert out["key_findings"] == [] and out["counts"]["qualified"] == out["counts"]["buyers"] == 0
+
+
+def test_headline_with_zero_qualifying_rows_never_claims_buyers():
+    s = _sigs(VENDOR)
+    out = _go(s, [_own(s[0])], summary="There are 4 high-intent buyers here.", headline="Seven high-intent buyers found")
+    assert out["counts"]["qualified"] == 0 and out["counts"]["buyers"] == 0 and out["counts"]["competitor"] == 1
+    assert "4 high-intent" not in out["executive_summary"] and not out["headline"].lower().startswith("seven")
+    assert _rows(out)[0]["role"] == "competitor_promo"                  # vendor promotion is not buyer demand
+
+
+def test_two_matched_rows_state_two():
+    s = _sigs(BUYER_A, BUYER_B)
+    out = _go(s, [_own(s[0]), _own(s[1])], summary="We found seven qualified leads.")
+    assert out["counts"]["qualified"] == 2 and out["executive_summary"] == "We found two qualified leads."
+
+
+def test_vendor_with_a_matched_analysis_is_not_demand_in_a_finding():
+    s = _sigs(VENDOR)
+    out = _go(s, [_own(s[0])], findings=[_finding([1], text="Post 1 is ready to buy.")])
+    assert out["counts"]["buyers"] == 0 and (not out["key_findings"] or out["key_findings"][0]["demand_signal"] is False)
+
+
+def test_contract_fields_are_unchanged_and_additions_are_additive():
+    s = _sigs(BUYER_A)
+    out = _go(s, [_own(s[0])])
+    assert set(out["counts"]) == {"retrieved", "unique", "analyzed", "listed", "excluded", "excluded_reasons", "shown",
+                                  "relevant", "uncertain", "unverified", "verified", "buyers", "qualified", "researching",
+                                  "competitor", "categories"}
+    assert out["format"] == "source_list" and "verified_summary" in out and "excluded_posts" in out
+
+
+# ── Phase 1 correction: one test per safeguard (each neutralises the OTHER layers, so it can only fail for its own rule) ──
+def _S(word):
+    """The server's own sentence for the qualifying count (used when a summary was emptied by claim removal)."""
+    return f"Posts shown with a qualifying purchase step: {word}."
+
+
+def _force(monkeypatch, **labels):
+    """Simulates a regression in the labelling layer: an unmatched analysis comes back with these labels."""
+    real = ai.classify_post
+
+    def wrapped(sig, model_post, terms, icp, identity=None):
+        out = real(sig, model_post, terms, icp, identity)
+        return out if (out.get("_exclude") or identity is not None) else dict(out, **labels)
+    monkeypatch.setattr(ai, "classify_post", wrapped)
+
+
+BUYER_C = ("[synthetic] Looking for a CRM for tenants",
+           "[synthetic] Looking for a CRM for our property management firm. The budget is approved by finance and we "
+           "will subscribe this quarter.")
+
+
+def _scenario(n):
+    """(sigs, posts) with exactly n qualified rows: n=0 one vendor; n=1 matched buyer + unmatched buyer + vendor; n=2 two matched + vendor."""
+    s = _sigs(BUYER_A, BUYER_C, VENDOR)
+    if n == 0:
+        return [s[2]], [_own(s[2])]
+    if n == 1:
+        return s, [_own(s[0]), _foreign(s[1]), _own(s[2])]
+    return s, [_own(s[0]), _own(s[1]), _own(s[2])]
+
+
+@pytest.mark.parametrize("key,labels,expected", [
+    ("relevant", dict(relevance="relevant", role="buyer"), 1),
+    ("buyers", dict(relevance="relevant", role="buyer"), 1),
+    ("qualified", dict(relevance="relevant", role="buyer", qualified=True, intent="High"), 1),
+    ("researching", dict(relevance="relevant", role="buyer", intent="Medium", qualified=False), 0),
+    ("uncertain", dict(relevance="relevant", role="buyer"), 1),
+])
+def test_counts_use_only_analysis_matched_rows(monkeypatch, key, labels, expected):
+    _force(monkeypatch, **labels)
+    s = _sigs(BUYER_A, BUYER_C)
+    out = _go(s, [_own(s[0]), _foreign(s[1])])
+    assert out["counts"][key] == expected
+    c = out["counts"]
+    assert c["shown"] == c["relevant"] + c["uncertain"] + c["unverified"]
+
+
+@pytest.mark.parametrize("evidence_type", ["Buyer", "Contextual"])
+def test_a_finding_is_not_supported_by_an_unmatched_row(monkeypatch, evidence_type):
+    _force(monkeypatch, relevance="relevant", role="buyer", qualified=True, intent="High")
+    s = _sigs(BUYER_A, BUYER_C)
+    f = {"finding": "Teams want a CRM", "evidence_type": evidence_type, "signal_strength": "Moderate",
+         "supporting_post_indices": [1, 2], "impact": "Teams in two posts want a CRM."}
+    out = _go(s, [_own(s[0]), _foreign(s[1])], findings=[f])
+    assert out["key_findings"][0]["supporting_post_indices"] == [1]
+    only_unmatched = dict(f, supporting_post_indices=[2])
+    assert _go(s, [_own(s[0]), _foreign(s[1])], findings=[only_unmatched])["key_findings"] == []
+
+
+def test_a_strong_finding_needs_a_qualified_supporting_row():
+    s = _sigs(("[synthetic] Any good CRM?", "[synthetic] Can anyone recommend a CRM for our small team?"))
+    out = _go(s, [_own(s[0])], findings=[_finding([1], strength="Strong", text="Post 1 asks for a CRM.")])
+    row = _rows(out)[0]
+    assert row["intent"] == "Medium" and not row["qualified"]
+    assert out["key_findings"][0]["signal_strength"] != "Strong"
+
+
+def test_unmatched_analysis_gets_unconfirmed_relevance():
+    s = _sigs(BUYER_A)[0]
+    terms = ai.product_terms(CRM_QUERY)
+    assert ai.classify_post(s, {}, terms, False, identity=None)["relevance"] == "uncertain"
+    assert ai.classify_post(s, {}, terms, False, identity="title")["relevance"] == "relevant"
+
+
+@pytest.mark.parametrize("status,analysis,expected", [
+    ("verified", True, True), ("verified", False, False), ("verified", None, False),
+    ("unverified", True, False), ("removed", True, False), ("inaccessible", True, False)])
+def test_only_a_retrieved_source_with_a_matched_analysis_is_evidence(status, analysis, expected):
+    assert ai.is_evidence_row({"verification_status": status, "analysis_verified": analysis}) is expected
+
+
+def test_source_and_analysis_verification_are_reported_separately():
+    s = _sigs(BUYER_A, BUYER_C)
+    out = _go(s, [_own(s[0]), _foreign(s[1])])
+    assert out["analysis_check"] == {"source_verified": 2, "analysis_verified": 1, "analysis_unverified": 1}
+    assert out["counts"]["verified"] == 2                                  # the existing key still means: source retrieved
+    assert [p["verification_status"] for p in _rows(out)] == ["verified", "verified"]
+    assert [p["analysis_status"] for p in _rows(out)] == ["matched", "unmatched"]
+    assert "kept with a source link only" in out["verified_summary"]
+
+
+# numeric evidence: a figure that appears only in an unmatched row supports nothing
+FIGURE_POST = ("[synthetic] Looking for a CRM with a big budget",
+               "[synthetic] Looking for a CRM. Our approved budget is $5000 per month and we will sign this week.")
+
+
+@pytest.mark.parametrize("make_row,kept", [(_foreign, False), (_own, True)])
+def test_a_figure_only_in_an_unmatched_row_cannot_support_a_claim(make_row, kept):
+    s = _sigs(BUYER_A, FIGURE_POST)
+    out = _go(s, [_own(s[0]), make_row(s[1])], summary="Buyers mention a $5000 budget.")
+    assert ("$5000" in out["executive_summary"]) is kept
+    assert _rows(out)[1]["link"] == s[1]["post_url"]                       # the source record is kept either way
+
+
+def test_a_figure_that_no_row_states_is_still_dropped():
+    s = _sigs(BUYER_A)
+    out = _go(s, [_own(s[0])], summary="Buyers mention a $9000 budget.")
+    assert "$9000" not in out["executive_summary"]
+
+
+# claim reconciliation: exact expected sentences, zero / one / several qualifying rows
+CLAIMS = [   # (claim, expected for 0 / 1 / 2 qualifying rows)
+    ("Flintel found 7 high-intent buyers.", ("Flintel found no high-intent buyers.", _S("one"), "Flintel found two high-intent buyers.")),
+    ("Seven hot leads were identified.", ("No hot leads were identified.", _S("one"), "Two hot leads were identified.")),
+    ("7 buyers are high-intent.", (_S("none"), _S("one"), _S("two"))),
+    ("High-intent buyers: 7.", (_S("none"), _S("one"), _S("two"))),
+    ("Seven potential buyers are ready to purchase.", (_S("none"), _S("one"), _S("two"))),
+    ("7 of the 10 posts are high-intent.", (_S("none"), _S("one"), _S("two"))),
+    ("All 3 posts are qualified leads.", (_S("none"), _S("one"), _S("two"))),
+    ("The top 3 high-intent buyers are listed below.", (_S("none"), _S("one"), _S("two"))),
+    ("There are no high-intent buyers here.", ("There are no high-intent buyers here.", _S("one"), _S("two"))),
+    ("Not seven qualified leads.", ("Not seven qualified leads.", _S("one"), _S("two"))),
+    ("Several high-intent buyers appear.", ("No high-intent buyers appear.", _S("one"), "Several high-intent buyers appear.")),
+    ("Qualified leads appear in r/CRM threads.", (_S("none"), "Qualified leads appear in r/CRM threads.",
+                                                  "Qualified leads appear in r/CRM threads.")),     # no number: needs >= 1 row
+    # unrelated narrative is never touched
+    ("Buyers in 2026 prefer simple CRMs.", ("Buyers in 2026 prefer simple CRMs.",) * 3),
+    ("We reviewed the last 3 days of posts.", ("We reviewed the last 3 days of posts.",) * 3),
+]
+
+
+@pytest.mark.parametrize("n", [0, 1, 2])
+@pytest.mark.parametrize("claim,expected", CLAIMS, ids=[c[0] for c in CLAIMS])
+def test_headline_claims_match_the_qualifying_rows(n, claim, expected):
+    sigs, posts = _scenario(n)
+    out = _go(sigs, posts, summary="", headline=claim)
+    assert out["counts"]["qualified"] == n
+    assert out["headline"] == expected[n]
+
+
+@pytest.mark.parametrize("n,expected", [(0, "No hot leads were found."), (1, _S("one")), (2, "Two hot leads were found.")])
+def test_claims_in_nested_fields_and_lists_are_reconciled(n, expected):
+    sigs, posts = _scenario(n)
+    out = _go(sigs, posts, summary="", overview={"summary": "Seven hot leads were found.", "note": "Keep this note."},
+              highlights=["Seven hot leads were found.", "Keep this line."],
+              sections=[{"title": "Demand", "body": "Seven hot leads were found.", "other": "Keep this too."}])
+    assert out["overview"] == {"summary": expected, "note": "Keep this note."}
+    kept = [] if n == 1 else [expected]                              # a list item is dropped, never replaced by new text
+    assert out["highlights"] == kept + ["Keep this line."]
+    assert out["sections"][0]["body"] == ("" if n == 1 else expected) and out["sections"][0]["other"] == "Keep this too."
+
+
+def test_a_negated_claim_is_kept_only_when_it_is_true_and_never_rewritten():
+    zero, two = _scenario(0), _scenario(2)
+    claim = "There are no qualified leads among the vendor posts."
+    assert _go(*zero, summary="", headline=claim)["headline"] == claim                 # true with 0 qualifying rows
+    assert _go(*two, summary="", headline=claim)["headline"] == _S("two")             # false with 2: removed, not inverted
+    assert _go(*zero, summary="", headline="Not seven qualified leads.")["headline"] == "Not seven qualified leads."
+    assert "Not no" not in _go(*two, summary="", headline="Not seven qualified leads.")["headline"]
+
+
+def test_a_finding_cannot_claim_more_buyers_than_its_own_supporting_rows():
+    s = _sigs(BUYER_A, BUYER_C, VENDOR)
+    posts = [_own(s[0]), _own(s[1]), _own(s[2])]
+
+    def finding(indices, claim):
+        return {"finding": "Teams want a CRM", "evidence_type": "Buyer", "signal_strength": "Moderate",
+                "supporting_post_indices": indices, "impact": claim}
+    out = _go(s, posts, findings=[finding([1], "Two high-intent buyers want a CRM."),
+                                  finding([1, 2], "Seven high-intent buyers want a CRM.")])
+    assert out["counts"]["qualified"] == 2                               # two qualify overall ...
+    assert len(out["key_findings"]) == 1                                  # ... but the finding resting on ONE of them is removed
+    f = out["key_findings"][0]
+    assert f["supporting_post_indices"] == [1, 2] and f["impact"] == "Two high-intent buyers want a CRM."
+
+
+def test_finding_title_text_is_reconciled_too():
+    s = _sigs(BUYER_A, BUYER_C)
+    f = {"finding": "Seven high-intent buyers want a CRM", "evidence_type": "Buyer", "signal_strength": "Moderate",
+         "supporting_post_indices": [1, 2], "impact": "They ask for a CRM."}
+    out = _go(s, [_own(s[0]), _own(s[1])], findings=[f])
+    assert out["key_findings"][0]["finding"] == "Two high-intent buyers want a CRM"
+
+
+def test_comparison_subjects_are_reconciled_against_their_own_rows():
+    s = _sigs(BUYER_A, BUYER_C)
+    posts = [dict(_own(s[0]), index=1), dict(_own(s[1]), index=2)]
+    posts = [dict(p, title=s[i]["title"]) for i, p in enumerate(posts)]
+    data = {"format": "comparison", "executive_summary": "",
+            "subjects": [{"name": "A", "summary": "Seven hot leads were found.",
+                          "platforms": [{"platform": "reddit", "total_analyzed": 1, "shown_count": 1, "posts": posts[:1]}]},
+                         {"name": "B", "summary": "Seven hot leads were found.",
+                          "platforms": [{"platform": "reddit", "total_analyzed": 1, "shown_count": 1, "posts": posts[1:]}]}]}
+    out = ai.enforce_answer_integrity(data, s, s, CRM_QUERY)
+    assert [sj["summary"] for sj in out["subjects"]] == [_S("one")] * 2
+
+
+def test_no_results_output_is_compatible():
+    s = _sigs(BUYER_A)
+    out = _go(s, [_own(s[0], role="irrelevant")])
+    assert out["format"] == "no_results" and "analysis_check" not in out and "verified_summary" not in out
+    assert set(out["counts"]) == {"retrieved", "unique", "analyzed", "listed", "excluded", "excluded_reasons", "shown",
+                                  "relevant", "uncertain", "unverified", "verified", "buyers", "qualified", "researching",
+                                  "competitor", "categories"}
+
+
+def test_non_report_answers_are_left_alone():
+    plain = {"format": "plain", "executive_summary": "Seven hot leads were found."}
+    assert ai.enforce_answer_integrity(dict(plain), [], [], CRM_QUERY) == plain
+
+
+def test_a_summary_claim_is_corrected_before_the_generic_number_check_can_blank_it():
+    # "7" is not a figure in any post, so the generic number check alone would blank the whole sentence
+    for n, expected in ((1, _S("one")), (2, "Flintel found two high-intent buyers.")):
+        sigs, posts = _scenario(n)
+        assert _go(sigs, posts, summary="Flintel found 7 high-intent buyers.")["executive_summary"] == expected
+
+
+def test_a_claim_citing_posts_is_checked_against_those_posts_only():
+    sigs, posts = _scenario(2)                                    # two qualify overall; Post 3 is a vendor
+    claim = "Two high-intent buyers (Posts 1 and 3) are listed."
+    assert _go(sigs, posts, summary=claim)["executive_summary"] == _S("two")
+    ok = "Two high-intent buyers (Posts 1 and 2) are listed."
+    assert _go(sigs, posts, summary=ok)["executive_summary"] == ok
+
+
+def test_all_N_claims_are_checked_but_a_plain_all_is_left_alone():
+    s = _sigs(BUYER_A, BUYER_C)
+    rows = [_own(s[0]), _own(s[1])]
+    assert _go(s, rows, summary="", headline="All 2 posts are qualified leads.")["headline"] == "All two posts are qualified leads."
+    assert _go(s, rows, summary="", headline="All 3 posts are qualified leads.")["headline"] == _S("two")
+    sigs, posts = _scenario(2)                                    # three rows shown, two qualify
+    assert _go(sigs, posts, summary="", headline="All 3 posts are qualified leads.")["headline"] == _S("two")
+    plain = "All qualified leads are listed in the table."          # no number: a statement about the list, not a count
+    assert _go(sigs, posts, summary="", headline=plain)["headline"] == plain
+
+
+# ── final Phase 1 correction ──────────────────────────────────────────────────────────────────────────────────────────
+# SYNTHETIC FIXTURES again: every post is invented and labelled "[synthetic]".
+def _subject(name, posts, summary):
+    return {"name": name, "summary": summary,
+            "platforms": [{"platform": "reddit", "total_analyzed": len(posts), "shown_count": len(posts), "posts": posts}]}
+
+
+def test_a_numeric_claim_in_a_comparison_subject_is_reconciled_before_the_number_check():
+    # "7" is a figure no post contains, so the generic number check alone would blank this sentence
+    s, rows = _many(3)
+    p = [dict(r, index=i + 1, title=s[i]["title"]) for i, r in enumerate(rows)]
+    data = {"format": "comparison", "executive_summary": "",
+            "subjects": [_subject("A", p[:1], "We found 7 hot leads."), _subject("B", p[1:], "We found 7 hot leads.")]}
+    out = ai.enforce_answer_integrity(data, s, s, CRM_QUERY)
+    assert [sj["summary"] for sj in out["subjects"]] == [_S("one"), "We found two hot leads."]
+
+
+def test_a_citing_claim_in_a_comparison_subject_is_checked_against_the_cited_rows():
+    s, rows = _many(3)
+    p = [dict(r, index=i + 1, title=s[i]["title"]) for i, r in enumerate(rows)]
+    data = {"format": "comparison", "executive_summary": "",
+            "subjects": [_subject("A", p[:1], "Seven hot leads (Post 1) were found."),
+                         _subject("B", p[1:], "Seven hot leads (Posts 2 and 3) were found.")]}
+    out = ai.enforce_answer_integrity(data, s, s, CRM_QUERY)
+    assert [sj["summary"] for sj in out["subjects"]] == [_S("one"), "Two hot leads (Posts 2 and 3) were found."]
+
+
+# counts of eleven or more: spelled in words, so they are neither blanked nor validated by a figure in some post
+_NAMES = ("alpha", "bravo", "cedar", "delta", "ember", "fjord", "garnet", "harbor", "indigo", "juniper", "kestrel", "lagoon")
+
+
+def _many(count, unmatched_text=None):
+    sigs = [sig_ for sig_ in _sigs(*[(f"[synthetic] Team {nm} needs a CRM",
+                                      f"[synthetic] Looking for a CRM for team {nm}. The budget is approved by finance and we "
+                                      "will subscribe this quarter.") for nm in _NAMES[:count]])]
+    posts = [_own(x) for x in sigs]
+    if unmatched_text:
+        extra = _sig(count + 1, "[synthetic] Another team needs a CRM", unmatched_text, sub="CRM")
+        sigs, posts = sigs + [extra], posts + [_foreign(extra)]
+    return sigs, posts
+
+
+@pytest.mark.parametrize("count,claim,expected", [
+    (11, "We found 11 high-intent buyers.", "We found eleven high-intent buyers."),         # correct claim: preserved (in words)
+    (11, "We found 7 high-intent buyers.", "We found eleven high-intent buyers."),          # wrong claim: corrected
+    (12, "We found 12 hot leads.", "We found twelve hot leads."),
+])
+def test_claims_about_eleven_or_more_qualified_rows(count, claim, expected):
+    sigs, posts = _many(count)
+    out = _go(sigs, posts, summary=claim)
+    assert out["counts"]["qualified"] == count and out["executive_summary"] == expected
+
+
+def test_an_unmatched_row_cannot_validate_a_large_count():
+    # the unmatched row's text contains "12": it must not make a wrong "12" claim look supported
+    sigs, posts = _many(11, unmatched_text="[synthetic] Looking for a CRM for 12 agents. Budget approved, we will sign this week.")
+    out = _go(sigs, posts, summary="We found 12 high-intent buyers.")
+    assert out["counts"]["qualified"] == 11 and out["counts"]["shown"] == 12
+    assert out["executive_summary"] == "We found eleven high-intent buyers."
+    assert _rows(out)[-1]["analysis_status"] == "unmatched" and _rows(out)[-1]["link"] == _url(12)
+
+
+def test_a_count_in_words_above_twelve_is_read_and_a_large_server_count_is_spelled():
+    sigs, posts = _many(12)
+    assert _go(sigs, posts, summary="We found fifteen hot leads.")["executive_summary"] == "We found twelve hot leads."
+    assert ai._spell(21) == "twenty-one" and ai._spell(40) == "forty" and ai._spell(100) == "100"
+
+
+# negation: only a negation right in front of the claim counts, and "no" only counts as zero directly in front of it
+def test_an_unrelated_no_does_not_turn_a_claim_into_zero():
+    text = "There is no doubt that hot leads were found. Keep this sentence."
+    sigs, posts = _scenario(2)
+    assert _go(sigs, posts, summary="", headline=text)["headline"] == text                  # read as a plain claim: two qualify
+    sigs, posts = _scenario(0)
+    assert _go(sigs, posts, summary="", headline=text)["headline"] == "Keep this sentence."   # no row qualifies: the claim goes
+
+
+@pytest.mark.parametrize("n,expected", [
+    (0, "I did not expect it, but no hot leads were found."),
+    (2, "I did not expect it, but two hot leads were found."),
+])
+def test_an_unrelated_not_earlier_in_the_sentence_is_not_a_negated_claim(n, expected):
+    sigs, posts = _scenario(n)
+    assert _go(sigs, posts, summary="", headline="I did not expect it, but seven hot leads were found.")["headline"] == expected
+
+
+def test_a_negation_directly_in_front_of_the_claim_still_counts():
+    zero, two = _scenario(0), _scenario(2)
+    claim = "The search does not show seven hot leads."
+    assert _go(*zero, summary="", headline=claim)["headline"] == claim
+    assert _go(*two, summary="", headline=claim)["headline"] == _S("two")
+
+
+# aggregate claims about the share of posts that are high-intent: removed unless the shown rows support them
+def _four(n_qualified):
+    s = _sigs(BUYER_A, BUYER_C, VENDOR, ("[synthetic] CRM chat", "[synthetic] People talk about CRMs a lot these days."))
+    rows = [_own(s[0]), _own(s[1]) if n_qualified >= 2 else _foreign(s[1]), _own(s[2]), _own(s[3], role="discussion")]
+    return s, rows
+
+
+AGGREGATES = [   # (claim, kept when 0 / 2 of 4 / 4 of 4 shown rows qualify)  -- "4 of 4" uses a separate all-qualified fixture
+    ("Most posts are high-intent.", (False, False, True)),
+    ("The majority of these posts are qualified leads.", (False, False, True)),
+    ("Nearly all posts are qualified leads.", (False, False, True)),
+    ("Half of the posts are high-intent.", (False, True, False)),
+    ("All posts are qualified leads.", (False, False, True)),
+]
+
+
+@pytest.mark.parametrize("claim,kept", AGGREGATES, ids=[a[0] for a in AGGREGATES])
+def test_share_of_posts_claims_need_the_shown_rows_to_support_them(claim, kept):
+    s0, r0 = _scenario(0)                                        # one row shown, none qualifies
+    out0 = _go(s0, r0, summary="", headline=claim)["headline"]
+    assert out0 == (claim if kept[0] else _S("none"))
+    s2, r2 = _four(2)                                            # four rows shown, two qualify (and one is unmatched-free)
+    out2 = _go(s2, r2, summary="", headline=claim)
+    assert out2["counts"]["qualified"] == 2 and out2["counts"]["shown"] == 4
+    assert out2["headline"] == (claim if kept[1] else _S("two"))
+    s4 = _sigs(BUYER_A, BUYER_C)                                  # two rows shown, both qualify
+    out4 = _go(s4, [_own(s4[0]), _own(s4[1])], summary="", headline=claim)
+    assert out4["counts"]["qualified"] == out4["counts"]["shown"] == 2
+    assert out4["headline"] == (claim if kept[2] else _S("two"))
+
+
+def test_a_share_claim_cannot_count_an_unmatched_row_as_qualified():
+    s = _sigs(BUYER_A, BUYER_C)
+    out = _go(s, [_own(s[0]), _foreign(s[1])], summary="", headline="All posts are qualified leads.")
+    assert out["counts"]["qualified"] == 1 and out["counts"]["shown"] == 2
+    assert out["headline"] == _S("one")                            # the unmatched row does not make it "all"
+
+
+def test_a_plain_all_in_a_list_statement_and_unrelated_narrative_are_kept():
+    for n in (1, 2):
+        sigs, posts = _scenario(n)
+        for text in ("All qualified leads are listed in the table.", "Some posts are high-intent.",
+                     "Buyers in 2026 prefer simple CRMs.", "We reviewed the last 3 days of posts."):
+            assert _go(sigs, posts, summary="", headline=text)["headline"] == text
+
+
+# ── universal and "none of" claims about the shown posts (synthetic fixtures) ───────────────────────────────────────
+UNIVERSAL = ["Every post here is a hot lead.", "Each post is a qualified lead.", "All of the posts are hot leads."]
+NONE_OF = ["None of the posts are high-intent.", "Not one of the posts is a qualified lead.", "None of these posts are hot leads."]
+
+
+def _all_qualified():
+    s = _sigs(BUYER_A, BUYER_C)
+    return s, [_own(s[0]), _own(s[1])]
+
+
+@pytest.mark.parametrize("claim", UNIVERSAL)
+def test_a_universal_claim_survives_only_when_every_shown_post_qualifies(claim):
+    for n, expected in ((0, _S("none")), (1, _S("one")), (2, _S("two"))):          # 0 of 1, 1 of 3, 2 of 3 shown rows qualify
+        sigs, posts = _scenario(n)
+        assert _go(sigs, posts, summary="", headline=claim)["headline"] == expected, n
+    sigs, posts = _all_qualified()                                                  # 2 of 2 shown rows qualify
+    out = _go(sigs, posts, summary="", headline=claim)
+    assert out["counts"]["qualified"] == out["counts"]["shown"] == 2 and out["headline"] == claim
+
+
+@pytest.mark.parametrize("claim", NONE_OF)
+def test_a_none_of_claim_survives_only_when_no_shown_post_qualifies(claim):
+    sigs, posts = _scenario(0)
+    assert _go(sigs, posts, summary="", headline=claim)["headline"] == claim       # true: nothing qualifies
+    for n, expected in ((1, _S("one")), (2, _S("two"))):
+        sigs, posts = _scenario(n)
+        assert _go(sigs, posts, summary="", headline=claim)["headline"] == expected, n
+    sigs, posts = _all_qualified()
+    assert _go(sigs, posts, summary="", headline=claim)["headline"] == _S("two")
+
+
+def test_a_universal_claim_in_nested_fields_and_findings_is_checked_too():
+    sigs, posts = _scenario(2)                                                      # three rows shown, two qualify
+    out = _go(sigs, posts, summary="Every post here is a hot lead. Pricing is the main concern.",
+              overview={"summary": "None of the posts are high-intent.", "note": "Keep this note."},
+              highlights=["Each post is a qualified lead.", "Keep this line."])
+    assert out["executive_summary"] == "Pricing is the main concern."
+    assert out["overview"] == {"summary": _S("two"), "note": "Keep this note."}
+    assert out["highlights"] == ["Keep this line."]
+
+
+def test_a_share_claim_cannot_count_an_unmatched_row_as_qualifying():
+    s = _sigs(BUYER_A, BUYER_C)
+    out = _go(s, [_own(s[0]), _foreign(s[1])], summary="", headline="Each post is a qualified lead.")
+    assert out["counts"]["qualified"] == 1 and out["counts"]["shown"] == 2 and out["headline"] == _S("one")
+
+
+def test_universal_and_none_wording_without_a_high_intent_term_is_left_alone():
+    for n in (0, 1, 2):
+        sigs, posts = _scenario(n)
+        for text in ("Every post here mentions pricing.", "None of the posts mention a competitor.",
+                     "Each post is from a different subreddit.", "Not one of the posts is older than a month."):
+            assert _go(sigs, posts, summary="", headline=text)["headline"] == text
