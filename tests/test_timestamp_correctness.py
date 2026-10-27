@@ -210,7 +210,7 @@ class _Coll:
             def limit(s, n): return Cur(s[:n])
         return Cur(dict(d) for d in sel)
 
-
+ 
 def _flintel_docs():
     base = {"post_text": "body", "platform": "reddit", "subreddit": "t"}
     return [dict(base, title="recent", post_url="https://www.reddit.com/r/t/comments/1/a/", created_utc=NOW - D(days=1)),
