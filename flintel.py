@@ -35,6 +35,7 @@ import json
 from datetime import datetime, timedelta, timezone
 
 import timerange   # (DATE/TIME) publication time on result posts
+import platforms   # (PLATFORM REGISTRY) shared platform detection
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -192,16 +193,8 @@ def _infer_platform_from_url(url: str):
     direction index.py -> flintel.py, never the reverse."""
     if not url or not isinstance(url, str):
         return None
-    domain = url.lower()
-    if "twitter.com" in domain or "x.com" in domain:
-        return "twitter"
-    if "reddit.com" in domain:
-        return "reddit"
-    if "facebook.com" in domain or "fb.com" in domain:
-        return "facebook"
-    if "linkedin.com" in domain:
-        return "linkedin"
-    return None
+    key = platforms.from_url(url)           # (PLATFORM REGISTRY) same detection as logics.py, now shared
+    return "twitter" if key == "x_twitter" else key
 
 
 def _default_platform_matches(doc: dict, targeting_platform: str) -> bool:
@@ -300,7 +293,9 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
     clamped_days = min(since_days, effective_max_window)
     cutoff = datetime.now(timezone.utc) - timedelta(days=clamped_days)
 
-    mongo_query = {"created_utc": {"$gte": cutoff}}
+    # (TIMESTAMP CORRECTNESS) upper bound: a future-dated post is not inside a "last N days" window
+    cutoff_end = datetime.now(timezone.utc) + timerange.FUTURE_TOLERANCE
+    mongo_query = {"created_utc": {"$gte": cutoff, "$lt": cutoff_end}}
 
     # Same headroom spirit as index.py's own fetch-more-than-limit approach,
     # since per-platform caps and dedup still narrow this further below.
@@ -380,7 +375,7 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
             continue
         if doc_created.tzinfo is None:
             doc_created = doc_created.replace(tzinfo=timezone.utc)
-        if doc_created < cutoff:
+        if doc_created < cutoff or doc_created >= cutoff_end:
             continue
 
         if not matcher(doc, targeting_platform):
