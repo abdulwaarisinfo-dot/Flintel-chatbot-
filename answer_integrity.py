@@ -2,7 +2,7 @@
 answer_integrity.py — deterministic guardrails on a structured research answer.
 
 The model writes the report; this module checks it against the stored posts
-before anyone sees it. It can only remove, downgrade or relabel — it never
+before anyone sees it. It can only remove, downgrade or relabel — it never 
 upgrades a post or a finding. Pure Python, no I/O, safe to import anywhere.
 
 Per listed post it reports separate dimensions — role, purchase_intent,
