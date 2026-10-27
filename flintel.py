@@ -928,7 +928,7 @@ def generate_search_progress_content(query: str, keywords: list, targeting_platf
 
 
 def calculate_search_progress_percent(elapsed_seconds: float, trigger_seconds: float, timeout_seconds: float) -> int:
-    """Pure calculation, no side effects: maps elapsed time within the
+    """Pure calculation, no side effects: maps elapsed time within the 
     [trigger_seconds, timeout_seconds] window onto a 0-100 display
     percentage for the search-progress bar, so the bar visibly advances
     as time passes rather than showing a static number. Clamped to
