@@ -1,6 +1,6 @@
 """Editorial content for the public /discover page.
 
-Everything here is written by hand and describes only what Flintel actually does today:
+Everything here is written by hand and describes only what Flintel actually does today: 
   * it searches Reddit (no other platform is searched yet);
   * it labels the posts it finds by buying intent and sentiment and links every result to its source post;
   * a search can be limited to a time range, and only covers posts Flintel has already stored;
