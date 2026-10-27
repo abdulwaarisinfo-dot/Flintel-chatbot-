@@ -69,9 +69,10 @@ import google as google_search   # the new google.py module — needed here
     # for the Google-fallback stub-results read-back at RESPONSE_TIMEOUT
     # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
-from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence
+from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence, usable_cached_posts
 from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
 from logics import exploratory_target, exploratory_reply, scope_reply, is_confirmation, is_business_question, CHAT_UNAVAILABLE_REPLY   # (GROUNDED ANSWERS)
+from answer_integrity import validate_plain_text   # (GATE 2) plain-text replies may not state time-dependent facts about the data
 from logics import build_guidance_note   # (DATA-BACKED GUIDANCE)
 from logics import platform_display_value   # (PLATFORM PERSISTENCE)
 from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
@@ -119,6 +120,8 @@ from index import (
     _extract_near_match_confidence,     # <-- CLOSEST-MATCHES TIER-3 REFINEMENT: needed in stream_answer()
     _NO_DATA_CLAUDE_FORMATS,
     _patch_post_urls_into_answer,
+    build_time_scope,                   # (RECENCY) the message's effective publication window, for the answer checks
+    time_scope_context,
     _usage_attribution,
     _usage_request_id,                  # (GUEST GATE) the per-request id that owns a guest reservation
     _inject_website_context_into_answer,
@@ -432,6 +435,23 @@ def _save_plain_reply_and_redirect(chat_id: str, owner_key: str, query: str, ans
     except Exception as exc:
         log.warning(f"Saving reply failed for query={query!r}: {exc}")
     return RedirectResponse(url=f"/chat/{redirect_chat_id}" if redirect_chat_id else "/", status_code=303)
+
+
+OPTION_A_DISABLED_REPLY = ("Drafting outreach notes from the earlier results isn't available in this version, so I haven't "
+                           "generated anything. You can run a new search, or open any result's source link to read the post.")
+
+
+def _option_a_enabled() -> bool:
+    """(PILOT SAFETY) Option A (outreach notes from the previous result) is OFF unless config.OPTION_A_ENABLED is set; read live."""
+    return bool(getattr(config, "OPTION_A_ENABLED", False))
+
+
+def _checked_chat_reply(text: str) -> str:
+    """(GATE 2) A model-written plain-text reply may not state a time-dependent fact about Flintel's data (answer_integrity.
+    validate_plain_text). If nothing is left, the fixed unavailable reply is used. Fixed, server-written replies are not
+    passed through here."""
+    checked = validate_plain_text(text)
+    return checked if (checked or "").strip() else CHAT_UNAVAILABLE_REPLY
 
 
 def _build_referenced_post_context(flat_posts: list, query: str):
@@ -1389,7 +1409,7 @@ def search(
                         latest_result = _get_latest_search_result(existing_chat)
                         # Only when the last answer offered options, or the message is
                         # about the posts already shown — plain refinements never get it.
-                        if latest_result and (latest_result["offer"]["options"] or mentions_previous_results(query)):
+                        if _option_a_enabled() and latest_result and (latest_result["offer"]["options"] or mentions_previous_results(query)):
                             previous_results_context = build_previous_results_router_block(
                                 latest_result["original_query"], latest_result["offered"], latest_result["posts"])
                     except Exception as exc:
@@ -1440,12 +1460,18 @@ def search(
                     active_chat_id, owner_key, query,
                     "I couldn't load the previous result just now, so I haven't started anything — "
                     "please send your choice again in a moment.")
+        if not _option_a_enabled() and intent == "previous_results":
+            # (PILOT SAFETY) a previous-results route can only come from a router that was never offered the option, but if it
+            # does arrive nothing is generated: an honest reply instead.
+            return _save_plain_reply_and_redirect(active_chat_id, owner_key, query, OPTION_A_DISABLED_REPLY)
         offer_choice = None
         if intent != "blocked" and not _extract_first_url(query):
             try:
                 offer_choice = detect_offer_selection(query, (latest_result or {}).get("offered"))
             except Exception as exc:
                 log.warning(f"Option-A guard: offer detection failed for query={query!r}: {exc}")
+        if offer_choice and not _option_a_enabled() and offer_choice["kind"] in ("previous_results", "both"):
+            return _save_plain_reply_and_redirect(active_chat_id, owner_key, query, OPTION_A_DISABLED_REPLY)
         if offer_choice:
             kind = offer_choice["kind"]
             if kind in ("previous_results", "both"):
@@ -1799,9 +1825,9 @@ def search(
                 # consultant-style clarifying question is enough if the
                 # router's own reply text was missing/unusable for some
                 # reason.
-                answer = (chat_reply or "").strip() or CLAUDE_CLARIFY_FALLBACK_REPLY
+                answer = _checked_chat_reply((chat_reply or "").strip()) if (chat_reply or "").strip() else CLAUDE_CLARIFY_FALLBACK_REPLY
             else:
-                answer = (chat_reply or "").strip()
+                answer = _checked_chat_reply((chat_reply or "").strip()) if (chat_reply or "").strip() else ""
                 if not answer:
                     # (GROUNDED ANSWERS) No second, general-purpose LLM call: a
                     # missing router reply gets an honest, fixed message.
@@ -2197,6 +2223,32 @@ def search(
         if isinstance(_parsed_range, timerange.TimeRange):
             time_range_obj = _parsed_range
             routed_time_window_days = None
+
+        # (RECENCY, Phase 2 Step 2) "latest / recent / current" with no stated period becomes a real lookback (default
+        # config.RECENT_DEFAULT_WINDOW_DAYS); a period or calendar range the user gave always wins; a follow-up that
+        # refines an earlier search keeps the constraint that search already had. The result is stored on the message,
+        # so retrieval (get_matched_signals), ranking and the answer checks all see the same window.
+        try:
+            _resolved_q = routed.get("resolved_query") if intent == "search" else None
+            _resolved_range = None
+            if _resolved_q and _resolved_q != query and time_range_obj is None and not routed_time_window_days:
+                try:                          # a period the router carried into its restatement of a follow-up
+                    _rr = timerange.parse_time_range(_resolved_q, reference_utc, _request_timezone(request, tz))
+                    _resolved_range = _rr if isinstance(_rr, timerange.TimeRange) else None
+                except Exception:
+                    _resolved_range = None
+            _lb_days, _lb_range, _lb_source = timerange.effective_lookback(
+                query, _resolved_q, routed_time_window_days, time_range_obj, _resolved_range,
+                default_days=getattr(config, "RECENT_DEFAULT_WINDOW_DAYS", 30),
+                max_days=getattr(config, "MAX_TIME_WINDOW_DAYS", 3650))
+            if _lb_source == "restated_range":
+                time_range_obj = _lb_range
+            elif _lb_source in ("default_recent", "explicit_period"):
+                routed_time_window_days = _lb_days
+            if _lb_source != "none":
+                log.info(f"Lookback | query={query!r} | source={_lb_source} | days={routed_time_window_days} | range={bool(time_range_obj)}")
+        except Exception as exc:
+            log.warning(f"Lookback resolution failed for query={query!r} (searching as routed): {exc}")
 
         time_window_days = routed_time_window_days
 
@@ -3155,7 +3207,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     try:
                         _cached_ev = get_cached_topic_evidence(chat_id, topic_key)
                         if _cached_ev and (not _strict_wait or _cached_ev.get("strict_mode")):
-                            matched = list(_cached_ev.get("posts") or [])[:effective_evidence_limit]
+                            # (PLATFORM / WINDOW) only what this request's platform selection and window allow
+                            matched = usable_cached_posts(_cached_ev, msg.get("targeting_platform"), msg.get("time_window_days"),
+                                                          msg.get("time_range"))[:effective_evidence_limit]
                     except Exception as exc:
                         log.warning(f"Cached-evidence fallback after scan deadline failed for topic_key={topic_key}: {exc}")
                 else:
@@ -3315,8 +3369,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
                                         request_id=msg.get("request_id")):
                     full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
-                full_answer = (_patch_post_urls_into_answer((full_answer or "").strip(), merged_pool, query=msg.get("query"))
-                               if full_answer else full_answer)
+                with time_scope_context(build_time_scope(msg.get("time_window_days"), msg.get("time_range"),
+                                                         msg.get("requested_at"),
+                                                         targeting_platform=msg.get("targeting_platform", "all"))):   # (RECENCY) the message's own window
+                    full_answer = (_patch_post_urls_into_answer((full_answer or "").strip(), merged_pool,
+                                                                query=msg.get("query"))
+                                   if full_answer else full_answer)
                 if full_answer and msg.get("website_context"):
                     full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
                 if full_answer:
