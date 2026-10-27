@@ -22,7 +22,7 @@ argument so Experiment 4 can sweep them without touching this file.
 import json
 import math
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 _WEIGHTS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "weights.json")
 
@@ -35,8 +35,16 @@ def load_weights(path=None):
 
 # ── shared sub-scores (also used by ranker.py) ────────────────────────
 
+# A publication time is trusted only between these bounds (same rule as timerange.publication_time; kept local because this
+# package does not import the application): a future date or a pre-Reddit placeholder (epoch 0, 1970) is treated as MISSING,
+# never as "brand new" and never as "ancient".
+_PUBLICATION_FLOOR = datetime(2005, 6, 1, tzinfo=timezone.utc)
+_FUTURE_TOLERANCE = timedelta(minutes=10)
+
+
 def recency_score(created_utc, cfg):
-    """Exponential decay on document age. 1.0 today, 0.5 at one half-life."""
+    """Exponential decay on document age. 1.0 today, 0.5 at one half-life.
+    Missing, unreadable, future or pre-2005 dates score cfg["missing_date_score"]."""
     half = float(cfg.get("half_life_days", 30)) or 30.0
     if not created_utc:
         return float(cfg.get("missing_date_score", 0.35))
@@ -50,9 +58,10 @@ def recency_score(created_utc, cfg):
             dt = dt.replace(tzinfo=timezone.utc)
     except (ValueError, TypeError):
         return float(cfg.get("missing_date_score", 0.35))
-    age_days = (datetime.now(timezone.utc) - dt).total_seconds() / 86400.0
-    if age_days < 0:
-        age_days = 0.0
+    now = datetime.now(timezone.utc)
+    if dt < _PUBLICATION_FLOOR or dt >= now + _FUTURE_TOLERANCE:      # exclusive upper bound, as timerange.publication_time
+        return float(cfg.get("missing_date_score", 0.35))
+    age_days = max(0.0, (now - dt).total_seconds() / 86400.0)           # up to 10 minutes of clock skew counts as "now"
     return max(float(cfg.get("floor", 0.0)), 0.5 ** (age_days / half))
 
 
