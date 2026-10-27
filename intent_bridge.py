@@ -53,6 +53,7 @@ DESIGN CONSTRAINTS
     flintel.py, or index.py.  Those files import from here, not the reverse.
 """
 
+import copy
 import logging
 import threading
 import time
@@ -314,6 +315,14 @@ def _rank_passing(passing: list, qi: dict, strict: bool = False) -> List[dict]:
     try:
         from intent_prototype import ranker, opportunity, schemas  # noqa: PLC0415
         weights = opportunity.load_weights()
+        # (RECENCY, STEP 2.1) An unknown publication date earns NO recency credit here, exactly like the default retrieval
+        # ranking (logics._recency_bonus). The shared weights.json missing_date_score (0.35) would otherwise rank an undated
+        # post above a dated one a few months old. Applied to a private copy: the file and the prototype keep their values.
+        try:
+            weights = copy.deepcopy(weights)
+            weights.setdefault("recency", {})["missing_date_score"] = 0.0
+        except Exception:
+            pass
 
         triples = []
         for cand, sim, cls in passing:
@@ -325,6 +334,10 @@ def _rank_passing(passing: list, qi: dict, strict: bool = False) -> List[dict]:
                 "post_text": cand.get("post_text", ""),
                 "post_url":  url,
                 "platform":  cand.get("platform", ""),
+                # (RECENCY) the VALIDATED publication time the matcher attached (timerange.publication_time); the ranker's
+                # recency term and max_age_days filter read it. Absent/unknown stays absent: the ranker then scores it as
+                # missing, it is never replaced by retrieval time.
+                "created_utc": cand.get("published_at"),
             }
             if strict:
                 classification = schemas.normalize_classification({
