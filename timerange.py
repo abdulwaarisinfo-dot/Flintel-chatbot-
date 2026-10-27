@@ -32,6 +32,8 @@ import re
 from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone, tzinfo
 
+import platforms   # the platform registry (earliest valid date per platform); has no imports of its own
+
 try:                                    # stdlib; needs the system tz database (or the tzdata package)
     from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 except Exception:                       # pragma: no cover
@@ -141,10 +143,80 @@ def to_utc(value):
     return None
 
 
+# A stored publication time is trusted only between these bounds. Before the floor (epoch 0, 1970, 1900 placeholders) a
+# post cannot exist on Reddit; after "now + tolerance" the value is a future date. Either is treated exactly like a missing
+# or unreadable date: unknown, never fresh and never a date shown to the user. Ingestion/scan time is never substituted.
+PUBLICATION_FLOOR = platforms.DEFAULT_EARLIEST_DATE             # shared default floor (platforms.py: a platform may have its own)
+FUTURE_TOLERANCE = timedelta(minutes=10)                            # clock skew between collector and app
+
+
+def publication_time(value, now=None, platform=None):
+    """Aware UTC datetime of a stored PUBLICATION time, or None when it is missing, unreadable, before the platform's
+    earliest valid date (default PUBLICATION_FLOOR) or NOT BEFORE now + FUTURE_TOLERANCE. (to_utc stays a plain parser: it is
+    also used for range endpoints.)
+
+    The upper bound is EXCLUSIVE — the same half-open convention as every retrieval window [start, now + tolerance) — so a
+    time exactly at the limit is unknown, never valid. (Phase 2.2: it was inclusive, which disagreed with the window by one
+    instant.) Pass `now` to validate against one shared clock reading; without it the current time is read once per call."""
+    t = to_utc(value)
+    if t is None:
+        return None
+    ref = to_utc(now) or datetime.now(timezone.utc)
+    return t if platforms.earliest_date(platform) <= t < ref + FUTURE_TOLERANCE else None
+
+
+# ── time intent: "latest / recent / current" with no stated period ────────────────────────────────────────────────────
+# Deterministic, conservative reading of the user's words. Explicit periods ("last 7 days") and calendar ranges are parsed
+# elsewhere (router window / parse_time_range) and always win; this only decides whether a bare recency word should
+# activate the documented default lookback (config.RECENT_DEFAULT_WINDOW_DAYS). Bounded on purpose: "current" counts only in
+# a demand/discussion sense ("current demand for X"), never as "their current CRM"; "latest iPhone" names a product.
+_RECENT_PLAIN = re.compile(r"\b(?:latest|newest|most\s+recent|recent(?:ly)?|lately|freshest|right\s+now|these\s+days|nowadays|"
+                           r"as\s+of\s+now)\b", re.I)
+_NOT_A_TIME_FILTER_AFTER = re.compile(r"^\s+(?:version|release|model|edition|generation|iteration|update|upgrade|iphone|android|ios|"
+                                      r"graduates?|grads?|hires?|immigrants?|college|retirees?)\b", re.I)
+_CURRENT_AS_TIME = re.compile(
+    r"\bcurrent\s+(?:demand|trends?|state|situation|interest|buyers?|leads?|opportunit(?:y|ies)|discussions?|conversations?|"
+    r"complaints?|needs?|pain\s+points?|sentiment|activity|mentions?|posts?|threads?|requests?|chatter|market\s+(?:demand|"
+    r"sentiment|trends?))\b", re.I)
+_CURRENTLY_AS_TIME = re.compile(r"\bcurrently\s+(?:looking|searching|seeking|asking|evaluating|comparing|switching|shopping|"
+                                r"hiring|trying|needing|wanting|discussing|complaining)\b", re.I)
+
+
+def recency_intent(text) -> bool:
+    """True when the wording asks for the newest posts ("latest buyer-intent discussions", "recent complaints about X",
+    "current demand for Y", "people currently looking for a CRM"). "their current CRM" and "latest iPhone" are not."""
+    if not isinstance(text, str) or not text.strip():
+        return False
+    for m in _RECENT_PLAIN.finditer(text):
+        if m.group(0).lower() in ("latest", "newest") or m.group(0).lower().startswith("recent"):
+            if _NOT_A_TIME_FILTER_AFTER.match(text[m.end():]):
+                continue
+        return True
+    return bool(_CURRENT_AS_TIME.search(text) or _CURRENTLY_AS_TIME.search(text))
+
+
+def effective_lookback(query, resolved_query=None, routed_days=None, time_range=None, resolved_range=None,
+                       default_days=30, max_days=3650):
+    """(days, time_range, source) — the lookback this message is searched over. Precedence:
+      explicit calendar range/period in the message > the router's period (from the user's own words) >
+      a constraint the router carried into its standalone restatement of a follow-up (`resolved_range`, parsed from
+      resolved_query: "now only agencies" after "... last 14 days") > the documented default for a bare recency word
+      (in the message or in that restatement) > none (an ordinary, unbounded search)."""
+    if time_range is not None:
+        return None, time_range, "explicit_range"
+    if isinstance(routed_days, int) and not isinstance(routed_days, bool) and routed_days > 0:
+        return min(routed_days, max_days), None, "explicit_period"
+    if resolved_range is not None:
+        return None, resolved_range, "restated_range"
+    if isinstance(default_days, int) and default_days > 0 and (recency_intent(query) or recency_intent(resolved_query)):
+        return min(default_days, max_days), None, "default_recent"
+    return None, None, "none"
+
+
 def published_iso(doc):
     """ISO-8601 UTC string of a stored signal's ORIGINAL publication time
     (its created_utc), or None — used to carry the date onto result posts."""
-    t = to_utc((doc or {}).get("created_utc")) if isinstance(doc, dict) else None
+    t = publication_time((doc or {}).get("created_utc")) if isinstance(doc, dict) else None
     return t.isoformat() if t is not None else None
 
 
@@ -167,26 +239,28 @@ def range_from_doc(doc):
                      phrase=str(doc.get("phrase") or ""), capped=bool(doc.get("capped")), note=str(doc.get("note") or ""))
 
 
-def post_published_at(post):
-    """The ORIGINAL publication instant of a post, or None. Never ingestion time."""
+def post_published_at(post, now=None):
+    """The ORIGINAL publication instant of a post, or None. Never ingestion time. `now`: one shared clock reading."""
     if not isinstance(post, dict):
         return None
+    platform = platforms.of(post)
     for key in ("published_at", "created_utc"):
-        t = to_utc(post.get(key))
+        t = publication_time(post.get(key), now=now, platform=platform)
         if t is not None:
             return t
     return None
 
 
-def filter_posts(posts, time_range):
+def filter_posts(posts, time_range, now=None):
     """(kept, stats) — posts published inside the half-open range. Posts with no
-    usable publication time are excluded and counted, never assumed to match."""
+    usable publication time are excluded and counted, never assumed to match. One clock reading validates every post."""
     stats = {"kept": 0, "outside": 0, "no_timestamp": 0}
     if time_range is None:
         return list(posts or []), stats
+    now = to_utc(now) or datetime.now(timezone.utc)
     kept = []
     for p in posts or []:
-        t = post_published_at(p)
+        t = post_published_at(p, now=now)
         if t is None:
             stats["no_timestamp"] += 1
         elif time_range.start <= t < time_range.end:
