@@ -527,7 +527,7 @@ def test_case4_existing_owner_lookup_failure_still_counts_as_started(app_env, mo
 
 def test_case5_get_owner_raising_follows_the_visitor_kind(app_env, monkeypatch):
     idx, rts, _ = app_env
-    def boom(request):
+    def boom(request): 
         raise RuntimeError("secret-detail")
     monkeypatch.setattr(rts, "get_owner", boom)
     ctx = lambda fresh: {"request": types.SimpleNamespace(state=types.SimpleNamespace(fresh_visitor=fresh))}
