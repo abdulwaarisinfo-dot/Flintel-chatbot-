@@ -157,7 +157,7 @@ from logics import (
     extract_keywords_from_website, _extract_claude_format,
     _extract_near_match_confidence, _NO_DATA_CLAUDE_FORMATS,
     _patch_post_urls_into_answer, _inject_website_context_into_answer, _usage_attribution, _usage_request_id,
-    _finalize_answer_and_results, _timeout_fallback_answer,
+    _finalize_answer_and_results, _timeout_fallback_answer, build_time_scope, time_scope_context,
     get_evidence_with_topup, _resolved_request_note,
     strict_intent_mode, strict_wait_done, get_scan_status,
     CLAUDE_BLOCKED_FALLBACK_REPLY, CLAUDE_CLARIFY_FALLBACK_REPLY,
@@ -1640,7 +1640,10 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
                                     request_id=msg.get("request_id")):
                 answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
-            answer = _patch_post_urls_into_answer(answer, merged_pool, query=msg.get("query"))
+            with time_scope_context(build_time_scope(msg.get("time_window_days"), msg.get("time_range"),
+                                                     msg.get("requested_at"),
+                                                     targeting_platform=msg.get("targeting_platform", "all"))):   # (RECENCY) the message's own window
+                answer = _patch_post_urls_into_answer(answer, merged_pool, query=msg.get("query"))
             if msg.get("website_context"):
                 answer = _inject_website_context_into_answer(answer, msg["website_context"])
             answer = enrich_no_results_answer(answer, msg.get("query"), msg.get("targeting_platform"),   # (NO-RESULTS UI)
@@ -2016,6 +2019,8 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                             **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
                             request_id=msg.get("request_id"),
                             gate_owner=guest_gate.gate_owner(owner_key, msg),
+                            time_window_days=msg.get("time_window_days"), requested_at=msg.get("requested_at"),
+                            targeting_platform=msg.get("targeting_platform"),   # (GATE 2) the request's own platform selection,   # (RECENCY)
                         )
                     else:
                         _timeout_fallback_answer(
@@ -2025,6 +2030,8 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                             **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
                             request_id=msg.get("request_id"),
                             gate_owner=guest_gate.gate_owner(owner_key, msg),
+                            time_window_days=msg.get("time_window_days"), requested_at=msg.get("requested_at"),
+                            targeting_platform=msg.get("targeting_platform"),   # (GATE 2) the request's own platform selection,   # (RECENCY)
                         )
             continue
 
