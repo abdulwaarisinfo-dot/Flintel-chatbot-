@@ -135,6 +135,8 @@ import hashlib
 import hmac
 import secrets
 import heapq
+import contextlib
+import contextvars
 import inspect
 import threading
 import concurrent.futures
@@ -146,6 +148,7 @@ import httpx
 
 import flintel
 import timerange   # (DATE/TIME) natural-language search ranges
+import platforms   # (PLATFORM REGISTRY) platform identity, URL hosts, labels, earliest valid date
 import answer_integrity   # (ANSWER INTEGRITY) deterministic checks on the listed posts
 import website_intelligence
 import google as google_search   # the new google.py module
@@ -681,7 +684,7 @@ def unsupported_requested(raw) -> tuple:
 
 # (PLATFORM PERSISTENCE) The platform dropdown's display value for a stored
 # selection — only ever built from known labels (never echoes user input).
-_PLATFORM_LABELS = {"x_twitter": "X / Twitter", "reddit": "Reddit", "linkedin": "LinkedIn", "facebook": "Facebook"}
+_PLATFORM_LABELS = {k: p.label for k, p in platforms.REGISTRY.items()}      # (PLATFORM REGISTRY)
 
 
 def platform_display_value(key_or_raw) -> str:
@@ -703,7 +706,7 @@ def platform_display_value(key_or_raw) -> str:
 # or the terms this search really used. Platforms that are only "Coming soon"
 # in the selector are reported as not collected yet, never as searched.
 # ─────────────────────────────────────────────────────────────────────────────
-LIVE_PLATFORM_KEYS = ("reddit",)
+LIVE_PLATFORM_KEYS = platforms.enabled_keys()      # (PLATFORM REGISTRY) today: ("reddit",)
 _BUYER_QUERY_RE = re.compile(r"\b(?:buy|buying|buyers?|purchas\w*|leads?|customers?|clients?|prospects?|looking for|"
                              r"need(?:s|ing)?|pay(?:ing)? for|hire|hiring|license|upgrade|demand)\b", re.IGNORECASE)
 
@@ -1670,16 +1673,8 @@ def _infer_platform_from_url(url: str):
     platform field is missing — never overrides an actual platform value."""
     if not url or not isinstance(url, str):
         return None
-    domain = url.lower()
-    if "twitter.com" in domain or "x.com" in domain:
-        return "twitter"
-    if "reddit.com" in domain:
-        return "reddit"
-    if "facebook.com" in domain or "fb.com" in domain:
-        return "facebook"
-    if "linkedin.com" in domain:
-        return "linkedin"
-    return None
+    key = platforms.from_url(url)           # (PLATFORM REGISTRY) host match, not a substring of the whole URL
+    return "twitter" if key == "x_twitter" else key     # the token this helper has always returned for X
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2067,6 +2062,125 @@ def _compute_query_signature(keywords: list, match_phrases: list) -> str:
     return hashlib.sha256(combined.encode("utf-8")).hexdigest()
 
 
+def _recency_bonus(doc, now=None) -> float:
+    """RECENCY_RANK_WEIGHT * freshness(0..1) of one candidate, from its validated publication time (published_at, else
+    created_utc, through timerange.publication_time: future / pre-2005 / unreadable = unknown = 0)."""
+    try:
+        weight = float(_cfg_value("RECENCY_RANK_WEIGHT", 0.05) or 0)
+        if weight <= 0 or not isinstance(doc, dict):
+            return 0.0
+        when = timerange.post_published_at(doc)
+        if when is None:
+            return 0.0
+        half = float(_cfg_value("RECENCY_HALF_LIFE_DAYS", 30) or 30) or 30.0
+        age_days = max(0.0, ((now or datetime.now(timezone.utc)) - when).total_seconds() / 86400.0)
+        return weight * (0.5 ** (age_days / half))
+    except Exception:
+        return 0.0
+
+
+_TIME_SCOPE = contextvars.ContextVar("flintel_time_scope", default=None)
+
+
+@contextlib.contextmanager
+def time_scope_context(scope):
+    """Makes `scope` (from build_time_scope) the publication window that _patch_post_urls_into_answer() applies to the answer
+    it post-processes in this thread/context. A context, not a new argument, so every existing call (and test double of
+    _patch_post_urls_into_answer) keeps its signature."""
+    token = _TIME_SCOPE.set(scope)
+    try:
+        yield
+    finally:
+        _TIME_SCOPE.reset(token)
+
+
+# ── newest stored post (Gate 2) ──────────────────────────────────────────────────────────────────────────────────────────
+# What the user may be told about the age of the data: the PUBLICATION time of the newest valid post stored for the searched
+# platform selection. It is a lower bound on how stale the stored data is, nothing more: it is not when anything was
+# collected or stored, and it says nothing about collector health or coverage (a quiet community has an old newest post
+# even when collection is perfect). Computed from the same sources a search reads (primary + read-only mirrors; MySQL is
+# never used: its time columns are unverified), bounded above by now + the future tolerance so a future-dated record can
+# never be "newest", validated like every other publication time, cached for a few minutes, and never raises.
+_NEWEST_TTL_SECONDS = 300
+_NEWEST_MAX_TIME_MS = 3000
+_NEWEST_CACHE = {}
+
+
+def _newest_platform_clause(selection: str):
+    keys = [k for k in selection.split(",") if k in platforms.REGISTRY] if selection != "all" else []
+    if not keys:
+        return None
+    values = sorted({v for k in keys for v in _PLATFORM_DOC_VALUES.get(k, [k])})
+    hosts = sorted({h for k in keys for h in platforms.REGISTRY[k].hosts})
+    return {"$or": [{"platform": {"$regex": "^(" + "|".join(re.escape(v) for v in values) + ")$", "$options": "i"}},
+                    {"platform": {"$in": [None, ""]}, "post_url": {"$regex": "(" + "|".join(re.escape(h) for h in hosts) + ")", "$options": "i"}}]}
+
+
+def newest_stored_post(targeting_platform=None, now=None) -> dict:
+    """{"status": found|empty|partial|unavailable, "published_at": ISO UTC or None, "scope": canonical selection,
+    "sources_read": n, "sources_failed": n}. `partial`: some source could not be read, the date is the newest of the others."""
+    sel = platforms.selection_key(targeting_platform)
+    if now is None:
+        hit = _NEWEST_CACHE.get(sel)
+        if hit and time.monotonic() - hit[0] < _NEWEST_TTL_SECONDS:
+            return dict(hit[1])
+    ref = now or datetime.now(timezone.utc)
+    query = {"created_utc": {"$lt": ref + timerange.FUTURE_TOLERANCE}}
+    clause = _newest_platform_clause(sel)
+    if clause:
+        query = {"$and": [query, clause]}
+    single = sel if "," not in sel and sel != "all" else None
+    newest, ok, failed = None, 0, 0
+    for coll in (signals_collection, signals_collection_2, signals_collection_4):
+        if coll is None:
+            continue
+        try:
+            docs = list(coll.find(query, {"created_utc": 1, "_id": 0}).sort("created_utc", -1).limit(1).max_time_ms(_NEWEST_MAX_TIME_MS))
+            ok += 1
+            when = timerange.publication_time(docs[0].get("created_utc"), now=ref, platform=single) if docs else None
+            if when is not None and (newest is None or when > newest):
+                newest = when
+        except Exception as exc:
+            failed += 1
+            log.warning(f"newest_stored_post: a source could not be read ({type(exc).__name__})")
+    status = "unavailable" if ok == 0 else ("empty" if newest is None else ("partial" if failed else "found"))
+    result = {"status": status, "published_at": newest.isoformat() if newest else None, "scope": sel,
+              "sources_read": ok, "sources_failed": failed}
+    if now is None and status != "unavailable":
+        _NEWEST_CACHE[sel] = (time.monotonic(), dict(result))
+    return result
+
+
+def build_time_scope(time_window_days=None, time_range=None, requested_at=None, targeting_platform=None):
+    """The effective publication window of one message, for the answer checks and the UI: {"start","end","label","days"}
+    (ISO UTC) or None when the search is not time-bounded. A window is measured at the REQUEST time, so a reopened chat is
+    judged against the moment it was asked, not today. With `targeting_platform` (the production callers) the scope also
+    carries "newest_stored" (newest_stored_post() for that selection) — even for an unbounded search, which then has
+    no start / end."""
+    scope = _build_window_scope(time_window_days, time_range, requested_at)
+    if targeting_platform is None:
+        return scope
+    try:
+        return dict(scope or {}, newest_stored=newest_stored_post(targeting_platform))
+    except Exception:
+        return scope
+
+
+def _build_window_scope(time_window_days=None, time_range=None, requested_at=None):
+    try:
+        tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+        if tr is not None:
+            return {"start": tr.start.isoformat(), "end": tr.end.isoformat(), "label": tr.describe(), "days": None}
+        if isinstance(time_window_days, int) and not isinstance(time_window_days, bool) and time_window_days > 0:
+            days = min(time_window_days, MAX_TIME_WINDOW_DAYS)
+            ref = timerange.to_utc(requested_at) or datetime.now(timezone.utc)
+            return {"start": (ref - timedelta(days=days)).isoformat(), "end": (ref + timerange.FUTURE_TOLERANCE).isoformat(),
+                    "label": f"last {days} day{'s' if days != 1 else ''}", "days": days}
+    except Exception as exc:
+        log.warning(f"build_time_scope failed (treating the search as unbounded): {exc}")
+    return None
+
+
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
                          match_phrases: list = None, loose: bool = False,
@@ -2335,11 +2449,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # the exact same way this function always behaved before this
     # feature.
     cutoff = None
+    cutoff_end = None
     if isinstance(since_days, int) and since_days > 0:
         clamped_days = min(since_days, MAX_TIME_WINDOW_DAYS)
         cutoff = datetime.now(timezone.utc) - timedelta(days=clamped_days)
-        mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff}}]}
-    cutoff_end = None
+        # (TIMESTAMP CORRECTNESS) a "last N days" window has an upper bound too: a post dated in the future is not
+        # inside any past window (cutoff_end is honoured by every scan path below, as for an explicit time range).
+        cutoff_end = datetime.now(timezone.utc) + timerange.FUTURE_TOLERANCE
+        mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff, "$lt": cutoff_end}}]}
     if _tr is not None:
         cutoff, cutoff_end = _tr.start, _tr.end
         mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff, "$lt": cutoff_end}}]}
@@ -3222,7 +3339,11 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
     # Sort by similarity, highest first, BEFORE per-platform cap / overall
     # limit are applied — so the best-matching posts are always kept.
-    scored_docs.sort(key=lambda pair: pair[0], reverse=True)
+    # (RECENCY) Similarity stays the primary key; a small freshness bonus from the post's validated PUBLICATION time lets a
+    # recent post overtake an older one of comparable similarity BEFORE the per-platform cap / evidence limit / intent-bridge
+    # candidate cap can drop it. Unknown dates get no bonus (never "fresh"). RECENCY_RANK_WEIGHT=0 = the old ordering.
+    _rk_now = datetime.now(timezone.utc)
+    scored_docs.sort(key=lambda pair: pair[0] + _recency_bonus(pair[1], _rk_now), reverse=True)
 
     # (EMBEDDING-MATCH QUERY/LOGGING CLEANUP) Purely additive, observability-
     # only debug logging — guarded by log.isEnabledFor() so the extra
@@ -3729,6 +3850,59 @@ def _persist_scan_state(chat_id, topic_key, scan_state, merged, cached, elapsed)
         log.warning(f"incremental scan: persisting watermark failed (next poll = full scan): {exc}")
 
 
+def _since_days_window(since_days, now=None):
+    """(start, end) UTC of a `since_days` lookback measured at `now` (default: the current time, read once), or None when the
+    search is not bounded. The window is half-open: start <= t < end, end = now + the Step 1 future tolerance."""
+    if isinstance(since_days, bool) or not isinstance(since_days, (int, float)) or since_days <= 0:
+        return None
+    now = now or datetime.now(timezone.utc)
+    return now - timedelta(days=min(since_days, MAX_TIME_WINDOW_DAYS)), now + timerange.FUTURE_TOLERANCE
+
+
+def _in_window(post, window, now=None) -> bool:
+    """True only for a post whose VALIDATED publication time (Step 1 contract) lies inside the half-open `window`; undated,
+    unreadable, future and pre-floor dates are unknown and never inside a bounded window. The post is validated against the
+    SAME clock reading as the window (`now`, default: the window's own end minus the tolerance), so validation and window
+    cannot disagree about a boundary instant."""
+    ref = now or (window[1] - timerange.FUTURE_TOLERANCE)
+    when = timerange.post_published_at(post, now=ref)
+    return when is not None and window[0] <= when < window[1]
+
+
+def google_stubs_apply(targeting_platform) -> bool:
+    """Google-discovered stubs are Reddit records: they may be merged into an answer only when the request's platform selection
+    includes Reddit ("all" or a list containing it)."""
+    sel = platforms.selection_key(targeting_platform)
+    return sel == "all" or "reddit" in sel.split(",")
+
+
+def _cache_platform_ok(cached, targeting_platform) -> bool:
+    """(Phase 2.2) A topic-evidence cache record may only serve the platform selection it was collected for. New records
+    store `platform_key` (platforms.selection_key). A record without one predates the registry, when Reddit was the only
+    platform ever collected: it is accepted for "reddit" and "all" selections only."""
+    want = platforms.selection_key(targeting_platform)
+    stored = (cached or {}).get("platform_key")
+    if stored is None:
+        return want in ("all", "reddit")
+    return stored == want
+
+
+def usable_cached_posts(cached, targeting_platform=None, since_days=None, time_range=None) -> list:
+    """The posts of a topic-evidence cache record that may be served for THIS request: right platform selection, and, for a
+    bounded request, inside its window (same rules as get_evidence_with_topup). Never raises."""
+    try:
+        if not cached or not _cache_platform_ok(cached, targeting_platform):
+            return []
+        posts = list(cached.get("posts") or [])
+        tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+        if tr is not None:
+            return timerange.filter_posts(posts, tr)[0]
+        window = _since_days_window(since_days)
+        return [p for p in posts if _in_window(p, window)] if window is not None else posts
+    except Exception:
+        return []
+
+
 def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
                               keywords: list, evidence_required: int,
                               matcher_fn, match_phrases: list = None,
@@ -3801,6 +3975,10 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         # Evidence cached before strict mode was switched on was never
         # intent-filtered; it must not be served as "qualified" posts.
         cached = None
+    if cached is not None and not _cache_platform_ok(cached, targeting_platform):
+        # (PLATFORM) the same text and keywords asked for another platform selection: that evidence belongs to a different
+        # search. It is neither served nor merged (the next save overwrites it with this selection's posts).
+        cached = None
     if (cached is not None and cached.get("posts") and "keywords" in cached
             and _compute_query_signature(cached.get("keywords"), cached.get("match_phrases"))
             != _compute_query_signature(keywords, match_phrases)):
@@ -3813,6 +3991,18 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         # recorded its keywords is left to the old behaviour.
         cached = None
     cached_posts = (cached or {}).get("posts") or []
+    # (RECENCY, STEP 2.1) A bounded lookback (since_days: an explicit period or the documented default) applies to CACHED
+    # posts exactly as it does to a fresh scan: only posts with a VALIDATED publication time inside the window survive.
+    # Without this a cache hit that merely met `evidence_required` bypassed the window and served stale / undated posts.
+    # Fewer valid posts than required -> the normal top-up below runs; the result is never padded with out-of-window posts.
+    _window = _since_days_window(since_days)
+    if _window is not None and cached_posts:
+        _kept = [p for p in cached_posts if _in_window(p, _window)]
+        if len(_kept) != len(cached_posts):
+            log.info(f"Topic cache window filter | topic_key={topic_key} | kept={len(_kept)} dropped={len(cached_posts) - len(_kept)} "
+                     f"since_days={since_days}")
+            cached = dict(cached or {}, posts=_kept)     # the scan state's carried posts follow the same filter
+            cached_posts = _kept
     cached_count = len(cached_posts)
 
     if cached_count >= (evidence_required or MIN_ANALYSIS_EVIDENCE):
@@ -3880,13 +4070,16 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     if len(merged) > cached_count:
         save_topic_evidence_cache(
             chat_id, owner_key, topic_key, merged, keywords, match_phrases,
-            extra_fields=({"strict_mode": True} if strict else None),
+            extra_fields=dict({"platform_key": platforms.selection_key(targeting_platform)},
+                              **({"strict_mode": True} if strict else {})),
         )
     if scan_state is not None:
         scan_state["_fetch_limit"] = fetch_limit
         _persist_scan_state(
             chat_id, topic_key, scan_state, merged, cached, time.monotonic() - _t_scan,
         )
+    if _window is not None:        # (RECENCY, STEP 2.1) nothing outside the active window leaves this function
+        merged = [p for p in merged if _in_window(p, _window)]
     return merged
 
 
@@ -8532,7 +8725,8 @@ def _resolved_request_note(query: str, resolved_query: str):
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
                               match_phrases: list = None, evidence_required: int = None, website_note: str = None,
                               resolved_query: str = None, time_range=None, request_id: str = None,
-                              gate_owner: str = None):
+                              gate_owner: str = None, time_window_days: int = None, requested_at=None,
+                              targeting_platform: str = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -8655,6 +8849,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         # matcher_fn) otherwise — same wiring as _fill_in_message_
         # outputs()'s own call site in index.py.
         _fresh_prov = {} if freshness_enabled() else None      # (FRESHNESS) per-request provenance; None = off
+        _fb_platform = targeting_platform or "all"            # missing selection = all enabled platforms, as for every other path
         try:
             _strict_fb = strict_intent_mode()
             _fb_kwargs = {"user_query": query} if _strict_fb else {}
@@ -8665,15 +8860,16 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
                     chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
                     keywords=keywords or [], evidence_required=evidence_required,
                     matcher_fn=get_matched_signals, match_phrases=match_phrases,
-                    targeting_platform="all", **_fb_kwargs,
+                    targeting_platform=_fb_platform, **_fb_kwargs,       # (PILOT SAFETY) the request's own selection, never a hard-coded "all"
                     **({"time_range": time_range} if time_range else {}),   # (DATE/TIME)
+                    **({"since_days": time_window_days} if time_window_days else {}),   # (RECENCY) the message's own window
                 )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
             matched = []
         try:
             # STRICT: Google stubs never pad the count, so don't even fetch.
-            stub_docs = ([] if strict_intent_mode() else
+            stub_docs = ([] if (strict_intent_mode() or not google_stubs_apply(_fb_platform)) else
                          google_search.get_stub_results_for_keywords(
                              google_posts_collection, keywords or []))
         except Exception as exc:
@@ -8707,7 +8903,8 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             return                  # (GUEST GATE) this runner was taken over: no model call, nothing saved or shown
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
             answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
-        answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
+        with time_scope_context(build_time_scope(time_window_days, time_range, requested_at, targeting_platform=_fb_platform)):   # (RECENCY)
+            answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
         answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
         answer = enrich_freshness_answer(answer, merged_pool, time_range=time_range, provenance=_fresh_prov,   # (FRESHNESS)
                                          matched_count=len(matched), evidence_limit=effective_evidence_limit)
@@ -8751,7 +8948,7 @@ _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 
 # (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
 # made only of these renders as an EMPTY answer on the page.
-_ANSWER_META_KEYS = {"format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness"}
+_ANSWER_META_KEYS = {"format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness", "time_scope"}
 
 
 def _answer_has_content(data) -> bool:
@@ -9496,7 +9693,8 @@ def _resolve_answer_post_strict(post: dict, aligned: list):
     return None, None
 
 
-def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str, query=None, post_records=None) -> str:
+def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str, query=None, post_records=None,
+                         time_scope=None) -> str:
     """Strict replacement for the permissive link/source/title patching."""
     fmt = data.get("format")
     if fmt not in ("source_list", "comparison"):
@@ -9586,7 +9784,8 @@ def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str, qu
             "suggested_actions": [],
         }
     elif query is not None:
-        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query, post_records)
+        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query, post_records,
+                                                         time_scope=time_scope)
     return json.dumps(data, ensure_ascii=False)
 
 
@@ -9623,7 +9822,7 @@ def _strict_cards_for_answer(answer_text: str, matched: list) -> list:
     return cards if listed else matched
 
 
-def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=None) -> str:
+def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=None, time_scope=None) -> str:
     """(POST_URL FIX) CLAUDE_ANALYSIS_SYSTEM_PROMPT asks for a "link"
     field with "the real post URL if available" on every post it lists —
     but Claude is deliberately NEVER shown post_url (see
@@ -9676,7 +9875,9 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=
     Claude's values such as "unknown" / "(no title)". "summary" and
     "sentiment" are never touched. No confident match -> no link/source
     is ever added."""
-    if not answer_text or not matched_signals:
+    if not answer_text:
+        return answer_text
+    if not matched_signals and query is None:
         return answer_text
 
     cleaned = answer_text.strip()
@@ -9687,8 +9888,25 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=
     try:
         data = json.loads(cleaned)
     except (ValueError, TypeError):
+        # (GATE 2) a plain-text answer (not JSON, not a cut-off JSON object): no evidence rows exist to check it against, so it
+        # may not state a time-dependent fact about the data. Only when the production caller passes the query.
+        if query is not None and not cleaned.lstrip().startswith(("{", "[")):
+            checked = answer_integrity.validate_plain_text(answer_text)
+            return checked if (checked or "").strip() else CHAT_UNAVAILABLE_REPLY
         return answer_text
     if not isinstance(data, dict):
+        return answer_text
+    if data.get("format") not in ("source_list", "comparison"):
+        # (STEP 2.1 / GATE 2) every other structured answer — trend_report, no_results, not_available, disallowed AND a missing
+        # or unrecognised format: temporal claims are validated and the time scope is stated server-side
+        if query is None:
+            return answer_text
+        if time_scope is None:
+            time_scope = _TIME_SCOPE.get()
+        return json.dumps(answer_integrity.enforce_temporal_claims(
+            data, matched_signals, time_scope, generic=data.get("format") not in answer_integrity.TEMPORAL_ONLY_FORMATS),
+            ensure_ascii=False)
+    if not matched_signals:
         return answer_text
     # (POST RECORDS) removed here whoever wrote it, so no return below can
     # carry it into the saved answer; kept only when signed by this process.
@@ -9699,9 +9917,12 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=
         post_records = None
 
     fmt = data.get("format")
+    if time_scope is None:
+        time_scope = _TIME_SCOPE.get()        # (RECENCY) set by the caller through time_scope_context()
     if strict_intent_mode():
         # Strict: identity must be confirmed; unconfirmed posts are removed.
-        return _strict_patch_answer(data, matched_signals, answer_text, query=query, post_records=post_records)
+        return _strict_patch_answer(data, matched_signals, answer_text, query=query, post_records=post_records,
+                                    time_scope=time_scope)
     changed = False
 
     # (POST ENRICHMENT) Index i (1-based) in Claude's answer == i-th entry
@@ -9787,7 +10008,8 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=
     # posts are then classified, filtered, renumbered and counted against the
     # stored posts (answer_integrity.py). Without it, only the patch above runs.
     if query is not None:
-        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query, post_records)
+        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query, post_records,
+                                                         time_scope=time_scope)
         return json.dumps(data, ensure_ascii=False)
 
     if not changed:
@@ -9817,8 +10039,37 @@ def _inject_website_context_into_answer(answer_text: str, website_context: dict)
         return answer_text
     if not isinstance(data, dict):
         return answer_text
-    new_data = {"website_context": website_context, **data}
+    new_data = {"website_context": _clean_website_context(website_context), **data}
     return json.dumps(new_data, ensure_ascii=False)
+
+
+def _clean_website_context(ctx):
+    """(GATE 2) The model-written website overview may describe the user's site freely, but a sentence that speaks about
+    Flintel / Reddit / the stored data may not claim live monitoring, freshness, trends or counts (answer_integrity.
+    validate_data_claims). Same shape in, same shape out; anything unexpected is returned unchanged."""
+    try:
+        if not isinstance(ctx, dict):
+            return ctx
+        out = dict(ctx)
+        if isinstance(out.get("overview"), str):
+            out["overview"] = answer_integrity.validate_data_claims(out["overview"])
+        if isinstance(out.get("sections"), list):
+            secs = []
+            for sec in out["sections"]:
+                if not isinstance(sec, dict):
+                    secs.append(sec)
+                    continue
+                sec = dict(sec)
+                if isinstance(sec.get("title"), str):
+                    sec["title"] = answer_integrity.validate_data_claims(sec["title"])
+                if isinstance(sec.get("bullets"), list):
+                    sec["bullets"] = [b2 for b2 in (answer_integrity.validate_data_claims(b) if isinstance(b, str) else b
+                                                    for b in sec["bullets"]) if not (isinstance(b2, str) and not b2.strip())]
+                secs.append(sec)
+            out["sections"] = secs
+        return out
+    except Exception:
+        return ctx
 
 
 # ─────────────────────────────────────────────────────────────────────────────
