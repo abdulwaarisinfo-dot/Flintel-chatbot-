@@ -366,7 +366,7 @@ def test_the_streaming_route_validates_temporal_claims_and_saves_the_message_win
     monkeypatch.setattr(rt, "get_evidence_with_topup", lambda **kw: [dict(s) for s in sigs])
     monkeypatch.setattr(rt, "analyze_with_claude", lambda *a, **k: json.dumps(claims), raising=False)
     events = []
-    for chunk in nb._stream(f, monkeypatch, "c21", topic_key=CRM_Q.lower()): 
+    for chunk in nb._stream(f, monkeypatch, "c21", topic_key=CRM_Q.lower()):
         events.append(chunk.decode() if isinstance(chunk, bytes) else str(chunk))
         if '"done"' in events[-1] or '"error"' in events[-1]:
             break
