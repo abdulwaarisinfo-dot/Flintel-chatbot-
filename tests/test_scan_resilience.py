@@ -385,7 +385,8 @@ def test_e_client_disconnect_cancels_the_scan(routes_env, monkeypatch):
     env = routes_env
     env.scan_seconds = 10
     _set_cfg(monkeypatch, NONBLOCKING_STREAM_ENABLED=True, SINGLE_FLIGHT_SCAN_ENABLED=True,
-             STRICT_INTENT_MODE=False)
+             STRICT_INTENT_MODE=False,
+             SCAN_DISCONNECT_GRACE_SECONDS=0)   # 0 = cancel at once (the grace period has its own tests)
     gen = iter(env.routes.stream_answer(MagicMock(), "chat-e2", "tk").body_iterator)
     next(gen); next(gen)
     next(gen)          # 3rd step: acquire_scan + Google trigger + progress thread have started
@@ -459,7 +460,8 @@ def test_f_failed_scan_clears_registry_entry(lg, monkeypatch):
 
 
 def test_f_first_release_keeps_scan_alive_last_release_cancels(lg, monkeypatch):
-    _set_cfg(monkeypatch, SINGLE_FLIGHT_SCAN_ENABLED=True, SINGLE_FLIGHT_STALE_SECONDS=600)
+    _set_cfg(monkeypatch, SINGLE_FLIGHT_SCAN_ENABLED=True, SINGLE_FLIGHT_STALE_SECONDS=600,
+             SCAN_DISCONNECT_GRACE_SECONDS=0)   # 0 = cancel at once (the grace period has its own tests)
     gate = threading.Event()
     def scan(ev):
         gate.wait(5)
@@ -494,7 +496,8 @@ def test_f_stale_entry_is_not_reused(lg, monkeypatch):
 
 
 def test_f_cancelled_entry_is_not_reused(lg, monkeypatch):
-    _set_cfg(monkeypatch, SINGLE_FLIGHT_SCAN_ENABLED=True, SINGLE_FLIGHT_STALE_SECONDS=600)
+    _set_cfg(monkeypatch, SINGLE_FLIGHT_SCAN_ENABLED=True, SINGLE_FLIGHT_STALE_SECONDS=600,
+             SCAN_DISCONNECT_GRACE_SECONDS=0)   # 0 = cancel at once (the grace period has its own tests)
     gate = threading.Event()
     def parked(ev):
         gate.wait(5)
