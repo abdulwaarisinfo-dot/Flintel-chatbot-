@@ -219,6 +219,7 @@ __all__ = [
     "SIGNAL_EMBEDDING_FETCH_BATCH",
     "SIGNAL_EMBEDDING_MONGO_SCORE_BATCH",
     "SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH",
+    "SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH_MIN",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
     # Tertiary MongoDB (everything except flintel_signals)
@@ -772,31 +773,48 @@ SIGNAL_EMBEDDING_FETCH_BATCH = int(os.getenv("SIGNAL_EMBEDDING_FETCH_BATCH", "50
 # SIGNAL_EMBEDDING_FETCH_BATCH (above) is how many rows are READ per round trip: the pymongo cursor batch and the MySQL
 # keyset batch / SQL LIMIT. The two variables below are how many already-fetched rows are SCORED per NumPy operation. They never
 # affect each other, a fetch batch, a similarity threshold, a score, the result order or which rows are kept.
-#   SIGNAL_EMBEDDING_MONGO_SCORE_BATCH  default 2000  MongoDB streaming scorer: rows buffered before each flush. (Before this
-#       variable the buffer was min(SIGNAL_EMBEDDING_FETCH_BATCH, 2000); that cap is gone.)
-#   SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH  default = the effective SIGNAL_EMBEDDING_FETCH_BATCH. MySQL has always scored each
-#       fetched batch in one operation, so the default keeps exactly that; a smaller value scores each fetched batch in chunks
-#       of this size (same rows, same order), a larger one changes nothing because a scoring chunk cannot exceed one fetched batch.
-# Invalid values (not an integer, zero or negative) are NOT errors: a warning is logged and the default above is used, so a
-# bad value can never produce an empty-batch loop. Only the two scoring variables are validated this way; the existing
-# SIGNAL_EMBEDDING_FETCH_BATCH keeps its original parsing.
-def _positive_int_env(name: str, default: int) -> int:
+#   SIGNAL_EMBEDDING_MONGO_SCORE_BATCH  MongoDB streaming scorer: rows buffered before each flush. EXPLICIT (any integer >= 1):
+#       used as given, independent of the fetch batch. UNSET (or invalid, see below): the legacy effective value
+#       max(1, min(int(SIGNAL_EMBEDDING_FETCH_BATCH or 2000), 2000)), i.e. 2000 at the default fetch batch of 5000. That legacy
+#       value is resolved at scan time in logics._mongo_score_batch(), so a fetch batch changed at runtime is still followed.
+#       Here the attribute is the explicit validated value, or None when there is none.
+#   SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH  default = the effective SIGNAL_EMBEDDING_FETCH_BATCH (never below the 500 minimum).
+#       MySQL has always scored each fetched batch in one operation, so the default keeps exactly that; a smaller value scores
+#       each fetched batch in chunks of this size (same rows, same order), a larger one changes nothing because a scoring chunk
+#       cannot exceed one fetched batch. MINIMUM 500: very small float32 matrix products take a different BLAS path whose scores
+#       can differ by ~1e-7, enough to flip a row sitting exactly on the similarity threshold. A value from 1 to 499 is raised
+#       to 500 with a warning. (If the fetch batch itself is below 500, a fetched batch is simply scored in one operation, as before.)
+# Invalid values (not an integer, zero or negative) are NOT errors: a warning is logged and the default above is used (for the
+# Mongo variable: the legacy min(fetch batch, 2000) default), so a bad value can never produce an empty-batch loop. Only the two
+# scoring variables are validated this way; the existing SIGNAL_EMBEDDING_FETCH_BATCH keeps its original parsing.
+SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH_MIN = 500
+
+
+def _positive_int_env(name: str, default, minimum: int = 1):
+    """Validated integer >= minimum from the environment; `default` (None = "no explicit value") when unset or invalid."""
+    fallback = default if default is None else max(minimum, default)
     raw = os.getenv(name)
     if raw is None or not str(raw).strip():
-        return default
+        return fallback
     try:
         value = int(str(raw).strip())
-        if value > 0:
+        if value >= minimum:
             return value
+        if value > 0:
+            _logging.getLogger("flintel.config").warning(
+                "%s=%d is below the minimum %d; using %d", name, value, minimum, minimum)
+            return minimum
     except (TypeError, ValueError):
         pass
     _logging.getLogger("flintel.config").warning(
-        "%s=%r is not a positive integer; using the default %d", name, raw, default)
-    return default
+        "%s=%r is not a positive integer; using the default %s", name, raw,
+        fallback if fallback is not None else "(the legacy min(SIGNAL_EMBEDDING_FETCH_BATCH, 2000))")
+    return fallback
 
 
-SIGNAL_EMBEDDING_MONGO_SCORE_BATCH = _positive_int_env("SIGNAL_EMBEDDING_MONGO_SCORE_BATCH", 2000)
-SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH = _positive_int_env("SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH", max(1, SIGNAL_EMBEDDING_FETCH_BATCH))
+SIGNAL_EMBEDDING_MONGO_SCORE_BATCH = _positive_int_env("SIGNAL_EMBEDDING_MONGO_SCORE_BATCH", None)    # None = not set / invalid
+SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH = _positive_int_env(
+    "SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH", SIGNAL_EMBEDDING_FETCH_BATCH, SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH_MIN)
 
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
