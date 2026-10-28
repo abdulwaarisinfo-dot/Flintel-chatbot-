@@ -43,3 +43,27 @@ def integrity_browser():
     b.close()
     p.stop()
 
+
+
+@pytest.fixture(autouse=True)
+def _no_scan_state_leaks_between_tests():
+    """A scan whose last waiter left now lives on for SCAN_DISCONNECT_GRACE_SECONDS (a page refresh re-attaches to it), and a finished
+    scan / unsaved answer is kept for a short time. Tests reuse the same chat/topic keys, so none of that may outlive its test."""
+    import sys
+
+    def reset():
+        lg = sys.modules.get("logics")
+        if lg is not None and hasattr(lg, "_SCAN_REGISTRY"):
+            with lg._SCAN_REGISTRY_LOCK:
+                for entry in list(lg._SCAN_REGISTRY.values()):
+                    try:
+                        entry["cancel_event"].set()
+                        t = entry.pop("grace_timer", None)
+                        if t is not None:
+                            t.cancel()
+                    except Exception:
+                        pass
+                lg._SCAN_REGISTRY.clear()
+    reset()
+    yield
+    reset()
