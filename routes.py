@@ -11,13 +11,17 @@ import re
 import time
 import threading
 import logging
+import uuid
 
 from concurrent.futures import wait as _futures_wait   # <-- SCAN FIX step 4: non-blocking scan wait
 
 from fastapi import Request, Form, BackgroundTasks
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.responses import StreamingResponse as _StarletteStreamingResponse   # (STREAM DISCONNECT FIX)
 import inspect   # (STREAM DISCONNECT FIX)
+
+
+_STOP_POLL_SECONDS = 1.0     # (STOP) how often a running stream re-reads the durable stop flag (the in-process event is instant)
 
 
 def _close_stream_generator_when_idle(gen):
@@ -69,7 +73,7 @@ import google as google_search   # the new google.py module — needed here
     # for the Google-fallback stub-results read-back at RESPONSE_TIMEOUT
     # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
-from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence, usable_cached_posts
+from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence, usable_cached_posts, cancel_scan, scan_in_progress_locally, done_scan_handle
 from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
 from logics import exploratory_target, exploratory_reply, scope_reply, is_confirmation, is_business_question, CHAT_UNAVAILABLE_REPLY   # (GROUNDED ANSWERS)
 from answer_integrity import validate_plain_text   # (GATE 2) plain-text replies may not state time-dependent facts about the data
@@ -81,6 +85,7 @@ from logics import freshness_enabled, enrich_freshness_answer   # (FRESHNESS DIS
 import os   # (DATE/TIME) DEFAULT_USER_TIMEZONE env var
 import timerange   # (DATE/TIME)
 import turn_finisher   # (STREAM LEASE) the stream holds its turn's lease while it runs
+import turn_control    # (STOP) in-process stop signal of a running research turn
 from index import get_user_chat_list, chat_exists, set_chat_platform   # (FAST NAVIGATION / FAST PATH)
 from index import set_chat_research_offer   # (GROUNDED ANSWERS)
 from logics import build_outreach_report, build_previous_results_router_block   # (OPTION A)
@@ -159,6 +164,12 @@ from index import (
     _is_owner_busy,
     _set_owner_busy,                    # <-- FIX: was missing, used in stream_answer()
     _clear_owner_busy,                  # <-- FIX: was missing, used in stream_answer()
+    busy_scope_key,                     # (CONCURRENT CHATS) busy flag key = owner + chat
+    count_owner_busy,                   # (CONCURRENT CHATS) owner-wide cap on running searches
+    reserve_search_slot, store_is_degraded, start_lease_heartbeat, acquire_owner_busy, _release_search_slot, transfer_search_slot, clear_busy_flag_only,   # (CONCURRENT CHATS) atomic cap + per-chat flag
+    mark_turn_cancelled, is_turn_cancelled, mark_turn_failed, finalize_pending_answer,   # (STOP) / (FAILED TURN)
+    claim_scan_lease, mark_scan_done, clear_scan_lease, start_scan_lease_heartbeat, save_pending_answer, read_run_state,   # (WORKER-INDEPENDENT REFRESH)
+    CANCEL_CANCELLED, CANCEL_ALREADY_CANCELLED, CANCEL_ALREADY_COMPLETE, CANCEL_NOT_FOUND,
     _fill_in_message_outputs,
     schedule_unfinished_turns,          # (NON-BLOCKING CHAT PAGE)
     CLAUDE_BLOCKED_FALLBACK_REPLY,
@@ -1137,6 +1148,39 @@ def _usage_attributed(endpoint):
     return wrapper
 
 
+def _finish_search_submission(request, owner_key, busy_key):
+    """End of POST /search: the submission's busy flag is cleared, but if it left a turn waiting to be streamed in the
+    chat it redirects to, the owner's search slot is handed to that chat's stream (index.transfer_search_slot) instead of
+    being freed - the cap then holds across the redirect. Anything else frees the slot."""
+    keep = False
+    target = None
+    try:
+        from index import chats_collection as chats_collection
+        chat = request.session.get("active_chat_id")
+        if chat:
+            doc = chats_collection.find_one({"chat_id": chat, "owner_key": owner_key}, {"messages": 1})
+            for m in reversed((doc or {}).get("messages") or []):
+                if m.get("topic_key"):
+                    keep = not turn_control.is_closed(m) and (m.get("claude_answer") in (None, ""))
+                    break
+            target = busy_scope_key(owner_key, str(chat)[:80])
+    except Exception as exc:
+        log.warning(f"Slot hand-over lookup failed (slot released): {exc}")
+    if keep and target:
+        clear_busy_flag_only(busy_key)
+        transfer_search_slot(busy_key, target)
+    else:
+        _clear_owner_busy(busy_key)
+
+
+def _release_scan_handle(handle, cancel_now: bool) -> None:
+    """handle.release(cancel_now=...), tolerating a handle whose release() takes no argument (older/stub handles)."""
+    try:
+        handle.release(cancel_now=cancel_now)
+    except TypeError:
+        handle.release()
+
+
 @app.post("/search")
 @_usage_attributed
 def search(
@@ -1157,25 +1201,37 @@ def search(
     # a chat message for a declined request. Every other owner_key is
     # completely unaffected — this only ever reads/writes a document keyed
     # to the current request's own owner_key.
-    busy_owner_key = None
+    # (CONCURRENT CHATS) An EXPLICIT blank chat_id (the new-chat form posts chat_id="") means "start a new chat". It must never
+    # fall back to the session's active_chat_id: that pointer is shared by every tab of this browser, so another tab's chat
+    # could swallow this message and its busy state. Only a request that omits chat_id entirely keeps the session fallback.
+    if chat_id is not None and not str(chat_id).strip():
+        request.session.pop("active_chat_id", None)
+        chat_id = None
+
+    busy_owner_key = None          # the owner (what the owner-wide cap counts)
+    busy_key = None                # the busy flag of THIS owner's THIS chat
     try:
         busy_owner_key, _busy_owner_type = get_owner(request)
     except Exception as exc:
         log.warning(f"Owner lookup failed during busy-check (treating as not busy): {exc}")
+    if busy_owner_key:
+        _scope_chat = chat_id or request.session.get("active_chat_id")
+        # an existing chat: its own flag (a duplicate submission in the SAME chat is still declined). A chat that does not
+        # exist yet gets a one-off key, so it can never collide with, or be blocked by, another chat's flag.
+        busy_key = busy_scope_key(busy_owner_key, str(_scope_chat)[:80] if _scope_chat else "new-" + uuid.uuid4().hex)
 
-    if busy_owner_key and _is_owner_busy(busy_owner_key):
+    def _decline_busy(message):
         chats_safe, chat_id_safe = [], None
         try:
             chats_safe = get_user_chat_list(busy_owner_key)
             chat_id_safe = request.session.get("active_chat_id")
         except Exception as exc:
             log.warning(f"Chat lookup failed while rendering busy-decline: {exc}")
-
         return templates.TemplateResponse(
             request,
             "index.html",
             {
-                "error": "Please wait for your current request to finish first.",
+                "error": message,
                 "query": query,
                 "user": get_current_user(request),
                 "chats": chats_safe,
@@ -1183,8 +1239,23 @@ def search(
             },
         )
 
-    if busy_owner_key:
-        _set_owner_busy(busy_owner_key)
+    if busy_key and _is_owner_busy(busy_key):
+        return _decline_busy("Please wait for your current request to finish first.")
+
+    # (CONCURRENT CHATS) Owner-wide safety cap, enforced ATOMICALLY: a search slot is reserved with one insert under a unique
+    # index (index.reserve_search_slot), so simultaneous submissions - in any worker process - can never exceed the cap.
+    # Then the chat's own busy flag is taken atomically too (acquire_owner_busy), so a simultaneous duplicate submission in
+    # the SAME chat is declined. Nothing is queued, charged or saved for a declined request.
+    _slot_held = False
+    if busy_key:
+        if reserve_search_slot(busy_owner_key, busy_key) is False:
+            if store_is_degraded() is True:          # the store is failing: the bounded in-memory fallback is full
+                return _decline_busy("Flintel is handling a lot of searches right now. Please try again in a moment.")
+            return _decline_busy(f"You already have {count_owner_busy(busy_owner_key)} searches running. Wait for one to finish, or stop one, then try again.")
+        _slot_held = True
+        if acquire_owner_busy(busy_key) is False:
+            _release_search_slot(busy_key)
+            return _decline_busy("Please wait for your current request to finish first.")
 
     try:
         topic_key = normalize_topic_key(query)
@@ -2368,8 +2439,8 @@ def search(
             return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
         return RedirectResponse(url="/", status_code=303)
     finally:
-        if busy_owner_key:
-            _clear_owner_busy(busy_owner_key)
+        if busy_key:
+            _finish_search_submission(request, busy_owner_key, busy_key)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2464,8 +2535,8 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks,
     messages = chat.get("messages") or []
     if messages:
         latest_msg = messages[-1]
-        if latest_msg.get("topic_key") and latest_msg.get("claude_answer") is None:
-            pending_stream_topic_key = latest_msg["topic_key"]
+        if latest_msg.get("topic_key") and latest_msg.get("claude_answer") is None and not turn_control.is_closed(latest_msg):
+            pending_stream_topic_key = latest_msg["topic_key"]       # (STOP) a stopped turn is never streamed again
 
     # (NON-BLOCKING CHAT PAGE) Older SEARCH-type messages still missing their
     # post cards / answer are no longer filled in here (that ran a full posts
@@ -2489,6 +2560,7 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks,
             # While one of its searches is still unanswered (e.g. a refresh after a crash between the count and the
             # stored answer) the modal waits: the stream delivers the answer first and then opens it.
             "guest_gate_state": (None if any(m.get("message_type") != "chat" and m.get("claude_answer") is None
+                                             and not turn_control.is_closed(m)
                                              for m in (chat.get("messages") or []))
                                  else guest_gate.auth_required_for(owner_key, chat_id)),
             "guest_auth_error": GUEST_AUTH_ERRORS.get(auth_error or ""),
@@ -2591,7 +2663,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     change to that already-working case.
 
     (DUPLICATE-REFRESH FIX) Before doing any of its own work,
-    event_generator() now checks `_is_owner_busy(owner_key)`. If a
+    event_generator() now checks `_is_owner_busy(_busy_key)`. If a
     Claude call for this SAME owner is already in flight — e.g. this
     exact SSE connection got dropped and the browser's EventSource
     reconnected, or the chat page was refreshed while the very first
@@ -2651,6 +2723,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         MAX_ANALYSIS_EVIDENCE,
     )
     _gk = guest_gate.gate_owner(owner_key, msg)      # (GUEST GATE) the identity the gate knows this search by
+    _busy_key = busy_scope_key(owner_key, chat_id)   # (CONCURRENT CHATS) this chat's busy flag, not the owner's
+    _turn_id = msg.get("request_id") or f"topic:{topic_key}"     # (STOP) which running turn a stop signal is for
 
     # Already generated/cached earlier (via the normal blocking path, or
     # a previous call to this same route) — replay it instead of ever
@@ -2680,6 +2754,57 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # untouched for any client that doesn't read it.
             yield f"data: {json.dumps({'done': True, 'results': msg.get('results') or [], **_guest_done_extra(_gk, chat_id)})}\n\n"
         return StreamingResponse(_cached(), media_type="text/event-stream")
+
+    # (STOP) A turn the user already stopped is never worked on again — not by a reload, a reconnect or a second tab. It
+    # answers at once with the stopped event; nothing is scanned, no model is called, nothing is saved.
+    # A turn whose analysis genuinely FAILED is not silently run again by a refresh: the stream reports the stored state.
+    if msg.get("failed_at") and not msg.get("claude_answer") and not msg.get("cancelled_at"):
+        def _failed_turn():
+            yield "retry: 86400000\n\n"
+            yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
+        return StreamingResponse(_failed_turn(), media_type="text/event-stream")
+
+    if msg.get("cancelled_at"):
+        def _stopped_turn():
+            yield "retry: 86400000\n\n"
+            yield f"data: {json.dumps({'cancelled': True})}\n\n"
+        return StreamingResponse(_stopped_turn(), media_type="text/event-stream")
+
+    # (STOP) helpers shared by both generators below
+    def _make_stop_checker(stop_evt):
+        last = {"t": 0.0}
+
+        def stopped():
+            if stop_evt.is_set():
+                return True
+            now = time.monotonic()
+            if now - last["t"] >= _STOP_POLL_SECONDS:          # a stop that arrived through another request / process
+                last["t"] = now
+                if is_turn_cancelled(chat_id, owner_key, topic_key, msg.get("request_id")) is True:   # strictly True: never a truthy stub
+                    stop_evt.set()
+                    return True
+            return False
+        return stopped
+
+    def _stopped_events():
+        """The stopped notice. A stopped search is an INCOMPLETE one for the guest gate (the visitor keeps the allowance
+        unless the answer was already counted), exactly like a dropped connection."""
+        guest_gate.on_search_incomplete(_gk, msg.get("request_id"))
+        yield f"data: {json.dumps({'cancelled': True})}\n\n"
+
+    _lease_hb = {}                      # the heartbeat of THIS stream's busy flag + slot (stopped in _release_busy)
+
+    def _release_busy(stop_evt):
+        """End of a generator: give this chat's busy flag back — unless the turn was stopped. The stop route already cleared
+        it so that a retry can start at once, and the retry may own the flag now; this (older) generator must not clear it."""
+        try:
+            if _lease_hb.get("stop"):
+                _lease_hb["stop"]()                      # no more heartbeats once this generator ends (completion, stop, failure)
+            stopped = stop_evt.is_set() or is_turn_cancelled(chat_id, owner_key, topic_key, msg.get("request_id")) is True
+            if not stopped:
+                _clear_owner_busy(_busy_key)
+        finally:
+            turn_control.discard(owner_key, chat_id, _turn_id, stop_evt)
 
     # (WEBSITE INTELLIGENCE) A website-only message (BEHAVIOR 1 in
     # search()) never goes through signal matching at all — it is served
@@ -2717,7 +2842,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # independent build_website_insight_answer() call — wait
             # (bounded by RESPONSE_TIMEOUT) for the in-flight call to
             # finish and cache the answer, then replay it.
-            if _is_owner_busy(owner_key) or turn_lease["token"] is None:   # (STREAM LEASE) or a worker is on it
+            if _is_owner_busy(_busy_key) or turn_lease["token"] is None:   # (STREAM LEASE) or a worker is on it
                 wait_deadline = time.time() + RESPONSE_TIMEOUT
                 resolved_answer = None
                 resolved_results = None
@@ -2731,11 +2856,14 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     except Exception as exc:
                         log.warning(f"Polling for in-flight website-only answer failed for topic_key={topic_key}: {exc}")
                         fresh_msg = None
+                    if fresh_msg and fresh_msg.get("cancelled_at") and not fresh_msg.get("claude_answer"):   # (STOP) the turn being waited for was stopped
+                        yield f"data: {json.dumps({'cancelled': True})}\n\n"
+                        return
                     if fresh_msg and fresh_msg.get("claude_answer"):
                         resolved_answer = fresh_msg["claude_answer"]
                         resolved_results = fresh_msg.get("results") or []
                         break
-                    if not _is_owner_busy(owner_key) and not turn_finisher.worker_holds(chat_id, owner_key, topic_key):
+                    if not _is_owner_busy(_busy_key) and not turn_finisher.worker_holds(chat_id, owner_key, topic_key):
                         # Owner no longer busy but still no answer saved —
                         # the in-flight call likely failed/cleared without
                         # saving; stop waiting and fall through to running
@@ -2751,9 +2879,15 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 if turn_lease["token"] is None:   # (STREAM LEASE) the worker let go (or stalled): take the turn
                     turn_lease["token"] = turn_finisher.hold_for_stream(chat_id, owner_key, topic_key, force=True)
 
-            _set_owner_busy(owner_key)
+            _set_owner_busy(_busy_key)
+            _lease_hb["stop"] = start_lease_heartbeat(_busy_key)       # a live search keeps its lease however long it runs
+            stop_evt = turn_control.register(owner_key, chat_id, _turn_id)       # (STOP)
+            _stopped = _make_stop_checker(stop_evt)
             _lease = {}                                      # (GUEST GATE) this runner's work lease (see guest_gate)
             try:
+                if _stopped():                               # (STOP) stopped before any work started
+                    yield from _stopped_events()
+                    return
                 # (GUEST GATE) ask the gate BEFORE any model call: a background retry or a superseded search
                 # produces nothing while another search of this visitor is admitted
                 _verdict = guest_gate.on_work_start(_gk, msg.get("request_id"), topic_key, chat_id, _lease)
@@ -2767,7 +2901,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 # answer itself arrives immediately. Search-progress
                 # generation is deliberately NOT triggered on this branch —
                 # there's no waiting/loading period here for it to fill.
-                if flintel.should_trigger_immediately(msg.get("google_fallback_triggered", False)):
+                if not _stopped() and flintel.should_trigger_immediately(msg.get("google_fallback_triggered", False)):
                     mark_google_fallback_triggered(chat_id, owner_key, topic_key)
                     threading.Thread(
                         target=_trigger_google_fallback_search,
@@ -2777,6 +2911,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     msg["google_fallback_triggered"] = True
 
                 ev = msg.get("website_evidence") or {}
+                if _stopped():                               # (STOP) before the model call
+                    yield from _stopped_events()
+                    return
                 if not guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease, force=True):
                     # taken over by another runner: no model call, nothing saved or shown by this one
                     yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, _gk, msg.get("request_id"))
@@ -2792,10 +2929,15 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 except Exception as exc:
                     log.warning(f"Website-insight answer generation failed for topic_key={topic_key}: {exc}")
                     guest_gate.on_search_incomplete(_gk, msg.get("request_id"))   # (GUEST GATE) not completed
+                    mark_turn_failed(chat_id, owner_key, topic_key, msg.get("request_id"))   # a refresh shows this state, it does not re-run
                     yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
                     return
 
                 answer = (answer or "").strip()
+
+                if _stopped():                               # (STOP) the model call finished after the stop: discard its answer
+                    yield from _stopped_events()
+                    return
 
                 # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
                 if answer:
@@ -2849,7 +2991,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 yield f"data: {json.dumps({'done': True, 'results': [], **_guest_done_extra(_gk, chat_id)})}\n\n"
             finally:
                 guest_gate.on_work_end(_gk, msg.get("request_id"), _lease)    # give the work lease back (any exit)
-                _clear_owner_busy(owner_key)
+                _release_busy(stop_evt)
 
         return StreamingResponse(_with_turn_lease(_website_only_generator()), media_type="text/event-stream")
 
@@ -2887,6 +3029,48 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
                                 request_id=msg.get("request_id")):
             return get_evidence_with_topup(**kwargs)
+
+    _rid = msg.get("request_id")
+
+    def _run_state():
+        """What this turn's own message (MongoDB, shared by every worker) says about work already done; {} if unknown."""
+        st = read_run_state(chat_id, owner_key, topic_key, _rid)
+        return st if isinstance(st, dict) else {}
+
+    def _reusable_scan_result():
+        """The evidence of a scan that already finished for this turn, read back from the durable per-chat topic cache. None when
+        the cache cannot vouch for it (then the turn simply scans)."""
+        try:
+            cached = get_cached_topic_evidence(chat_id, topic_key)
+            if not cached:
+                return None
+            return usable_cached_posts(cached, msg.get("targeting_platform"), msg.get("time_window_days"),
+                                       msg.get("time_range"))[:effective_evidence_limit]
+        except Exception as exc:
+            log.warning(f"Reusing the finished scan failed for topic_key={topic_key}: {exc}")
+            return None
+
+    _scan_lease_id = {}                 # the id of the scan lease THIS stream claimed (None: unknown / not claimed here)
+
+    def _scan_job(cancel_event):
+        """The background scan of this turn, with its lease on the turn's message: renewed while it runs (by a thread of its
+        own, so it outlives the stream that started it), cleared if it fails or is cancelled, replaced by scan_done_at on success.
+        A refresh served by ANOTHER worker waits for / reuses it through that message."""
+        _lid = _scan_lease_id.get("v")
+        stop_hb = start_scan_lease_heartbeat(chat_id, owner_key, topic_key, _rid, _lid)
+        ok = False
+        try:
+            result = _topup(cancel_event)
+            ok = not cancel_event.is_set()
+            return result
+        finally:
+            try:
+                stop_hb()
+            finally:
+                if ok:
+                    mark_scan_done(chat_id, owner_key, topic_key, _rid, _lid)
+                else:
+                    clear_scan_lease(chat_id, owner_key, topic_key, _rid, _lid)
 
     matched = []
     if not nonblocking:
@@ -2937,7 +3121,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         # the busy flag itself is also self-healing via
         # BUSY_FLAG_TIMEOUT_SECONDS in _is_owner_busy(), so a truly
         # abandoned flag clears on its own regardless.
-        if _is_owner_busy(owner_key) or turn_lease["token"] is None:   # (STREAM LEASE) or a worker is on it
+        if _is_owner_busy(_busy_key) or turn_lease["token"] is None:   # (STREAM LEASE) or a worker is on it
             wait_deadline = time.time() + RESPONSE_TIMEOUT
             resolved_answer = None
             resolved_results = None
@@ -2951,11 +3135,14 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 except Exception as exc:
                     log.warning(f"Polling for in-flight answer failed for topic_key={topic_key}: {exc}")
                     fresh_msg = None
+                if fresh_msg and fresh_msg.get("cancelled_at") and not fresh_msg.get("claude_answer"):   # (STOP) the turn being waited for was stopped
+                    yield f"data: {json.dumps({'cancelled': True})}\n\n"
+                    return
                 if fresh_msg and fresh_msg.get("claude_answer"):
                     resolved_answer = fresh_msg["claude_answer"]
                     resolved_results = fresh_msg.get("results") or []
                     break
-                if not _is_owner_busy(owner_key) and not turn_finisher.worker_holds(chat_id, owner_key, topic_key):
+                if not _is_owner_busy(_busy_key) and not turn_finisher.worker_holds(chat_id, owner_key, topic_key):
                     # Owner is no longer busy but still no answer saved —
                     # the in-flight call likely failed/cleared without
                     # saving; stop waiting and fall through to running
@@ -2989,7 +3176,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         # path (the early error-return, and the normal completion path
         # after the answer is saved) exactly once, so the flag is never
         # left set no matter how this generator ends.
-        _set_owner_busy(owner_key)
+        _set_owner_busy(_busy_key)
+        _lease_hb["stop"] = start_lease_heartbeat(_busy_key)         # a live search keeps its lease however long it runs
+        stop_evt = turn_control.register(owner_key, chat_id, _turn_id)       # (STOP)
+        _stopped = _make_stop_checker(stop_evt)
         _lease = {}                                          # (GUEST GATE) this runner's work lease (see guest_gate)
         try:
             # (SSE RECONNECT-LOOP FIX) Same "retry:" safety net as the
@@ -3004,6 +3194,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 yield from _guest_stop_events(chat_id, owner_key, topic_key, _verdict, _gk, msg.get("request_id"))
                 return
 
+            if _stopped():                                   # (STOP) stopped before the scan started: start nothing
+                yield from _stopped_events()
+                return
+
             # (SCAN FIX, STEP 4 — NON-BLOCKING) Show 0% right away, then start
             # the evidence scan in the BACKGROUND via acquire_scan() instead of
             # blocking the whole response on it. The Google fallback trigger and
@@ -3012,10 +3206,30 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if nonblocking:
                 yield f"data: {json.dumps({'progress_percent': 0})}\n\n"
                 try:
-                    handle = acquire_scan(
-                        chat_id, topic_key,
-                        lambda cancel_event: _topup(cancel_event),
-                    )
+                    handle = None
+                    # (WORKER-INDEPENDENT REFRESH) What the turn's message says about the scan - not this process's memory - decides
+                    # whether to join a running scan, reuse a finished one, wait for another worker's, or scan.
+                    if scan_in_progress_locally(chat_id, topic_key):
+                        handle = acquire_scan(chat_id, topic_key, _scan_job)               # join the live scan of this process
+                    else:
+                        _wait_until = time.time() + RESPONSE_TIMEOUT
+                        while handle is None:
+                            _st = _run_state()
+                            _reuse = _reusable_scan_result() if _st.get("scan_done") else None
+                            if _reuse is not None:
+                                handle = done_scan_handle(_reuse)                          # finished (here or on another worker)
+                            elif (_claim := claim_scan_lease(chat_id, owner_key, topic_key, _rid)) is not False:
+                                _scan_lease_id["v"] = _claim if isinstance(_claim, str) else None
+                                handle = acquire_scan(chat_id, topic_key, _scan_job)       # this stream scans
+                            elif time.time() >= _wait_until:
+                                _scan_lease_id["v"] = "unclaimed"                          # scans without a lease: its run-state writes no-op
+                                handle = acquire_scan(chat_id, topic_key, _scan_job)
+                            else:
+                                if _stopped():
+                                    yield from _stopped_events()
+                                    return
+                                yield ": waiting for the running scan\n\n"                 # another worker's scan is running
+                                stop_evt.wait(1.0)
                 except Exception as exc:
                     log.warning(f"acquire_scan failed for topic_key={topic_key}: {exc}")
                     handle = None  # polling loop below still does its own top-up
@@ -3041,6 +3255,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 # exactly mirroring _trigger_google_fallback_search()'s
                 # own post-race-fix shape.
                 try:
+                    if is_turn_cancelled(chat_id, owner_key, msg.get("topic_key"), msg.get("request_id")) is True:
+                        return                           # (STOP) no progress copy for a stopped turn
                     with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
                                             request_id=msg.get("request_id")):
                         content = flintel.generate_search_progress_content(
@@ -3106,7 +3322,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # spanning up to RESPONSE_TIMEOUT) — search_progress_sent
             # prevents this from ever being sent twice.
             search_progress_wait_deadline = time.time() + 3
-            while not search_progress_sent and time.time() < search_progress_wait_deadline:
+            while not search_progress_sent and time.time() < search_progress_wait_deadline and not stop_evt.is_set():   # (STOP)
                 if search_progress_holder.get("content"):
                     try:
                         save_search_progress_to_chat(chat_id, owner_key, topic_key, search_progress_holder["content"])
@@ -3115,7 +3331,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     yield f"data: {json.dumps({'search_progress': search_progress_holder['content']})}\n\n"
                     search_progress_sent = True
                     break
-                time.sleep(0.3)
+                stop_evt.wait(0.3)                           # (STOP) same 0.3 s tick, cut short by a stop
 
             # (GOOGLE-FALLBACK POLLING FIX) `matched` here starts as the
             # ONE initial get_matched_signals() call already made above,
@@ -3161,6 +3377,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         getattr(config, "STRICT_WAIT_SECONDS", RESPONSE_TIMEOUT),
                     )
                 while not handle.future.done():
+                    if _stopped():                           # (STOP) release (below, in finally) cancels the scan thread
+                        yield from _stopped_events()
+                        return
                     waited = (
                         time.time() - _wait_started if _strict_wait
                         else _elapsed_seconds(msg.get("requested_at"))
@@ -3186,7 +3405,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         search_progress_sent = True
 
                     guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease)    # keeps a legitimate long wait leased
-                    _futures_wait([handle.future], timeout=1.5)
+                    _slice_end = time.monotonic() + 1.5      # (STOP) same 1.5 s cadence, but a stop ends the wait within 0.25 s
+                    while time.monotonic() < _slice_end and not handle.future.done() and not stop_evt.is_set():
+                        _futures_wait([handle.future], timeout=0.25)
 
                 if scan_timed_out:
                     log.warning(
@@ -3196,7 +3417,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     if not handle_released:
                         handle_released = True
                         try:
-                            handle.release()
+                            _release_scan_handle(handle, True)     # the deadline passed: no grace period
                         except Exception as exc:
                             log.warning(f"handle.release() failed for topic_key={topic_key}: {exc}")
                     # Honest "less evidence" path: carry on with whatever
@@ -3227,6 +3448,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # handle's cancel_event so a disconnect still stops them.
             if (not scan_timed_out) and len(matched) < effective_evidence_limit and not (_strict_wait and _strict_done()):
                 while True:
+                    if _stopped():                           # (STOP) no further top-up scans
+                        yield from _stopped_events()
+                        return
                     elapsed = _elapsed_seconds(msg.get("requested_at"))
 
                     # (PROGRESS-PERCENTAGE STREAMING) Placed BEFORE the
@@ -3274,7 +3498,11 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         break
 
                     guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease)    # keeps a legitimate long wait leased
-                    time.sleep(2)
+                    stop_evt.wait(2)                         # (STOP) same 2 s poll, cut short by a stop
+
+                    if _stopped():                           # (STOP) woke because of a stop: do not start another scan
+                        yield from _stopped_events()
+                        return
 
                     try:
                         matched = _topup(handle.cancel_event if handle is not None else None)
@@ -3362,13 +3590,22 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         flintel.build_combined_source_context(len(matched), len(google_results))
                     )
                 extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
+                if _stopped():                               # (STOP) the last point before the model call
+                    yield from _stopped_events()
+                    return
                 if not guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease, force=True):
                     # taken over by another runner: no model call, nothing saved or shown by this one
                     yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, _gk, msg.get("request_id"))
                     return
-                with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
-                                        request_id=msg.get("request_id")):
-                    full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+                # A stream closed right after the model call (a refresh, possibly served by another worker) leaves the model's raw
+                # answer on the turn's message: finish THIS turn with it instead of paying for a second call.
+                _st = _run_state()
+                full_answer = _st.get("pending_answer")
+                if not full_answer:
+                    with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
+                                            request_id=msg.get("request_id")):
+                        full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+                    save_pending_answer(chat_id, owner_key, topic_key, _rid, full_answer)    # durable before any post-processing
                 with time_scope_context(build_time_scope(msg.get("time_window_days"), msg.get("time_range"),
                                                          msg.get("requested_at"),
                                                          targeting_platform=msg.get("targeting_platform", "all"))):   # (RECENCY) the message's own window
@@ -3394,10 +3631,15 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             except Exception as exc:
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
                 guest_gate.on_search_incomplete(_gk, msg.get("request_id"))   # (GUEST GATE) not completed
+                mark_turn_failed(chat_id, owner_key, topic_key, msg.get("request_id"))   # a refresh shows this state, it does not re-run
                 yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
                 return
 
             full_answer = (full_answer or "").strip()
+
+            if _stopped():                                   # (STOP) the model call (not abortable mid-flight) ended after the
+                yield from _stopped_events()                 # stop: its answer is discarded, never counted, saved or shown
+                return
 
             # (GUEST GATE) Counting is the commit. A scan-deadline / timeout answer is built from partial evidence
             # and is never counted (only ownership is checked); every other answer is counted HERE, before a single
@@ -3426,6 +3668,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     yield f"data: {json.dumps({'error': 'temporarily unavailable'})}\n\n"
                     return
                 if not _won:
+                    if _stopped():                           # (STOP) the compare-and-set lost to a stop, not to another runner
+                        yield from _stopped_events()
+                        return
                     yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, _gk, msg.get("request_id"))
                     return
                 saved_first = True
@@ -3435,9 +3680,14 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if full_answer:
                 for i in range(0, len(full_answer), STREAM_CHUNK_CHARS):
                     piece = full_answer[i:i + STREAM_CHUNK_CHARS]
+                    if stop_evt.is_set():                    # (STOP) a stop while the answer is being typed out
+                        break
                     yield f"data: {json.dumps({'delta': piece})}\n\n"
                     if STREAM_CHUNK_DELAY_SECONDS > 0:
                         time.sleep(STREAM_CHUNK_DELAY_SECONDS)
+            if _stopped():                                   # (STOP) nothing is cached for a stopped turn (the saves are
+                yield from _stopped_events()                 # also conditional on it), and no "done" is sent
+                return
 
             # Caching — identical calls/behavior to before, just now operating
             # on the same already-patched, already-finalized string the user
@@ -3445,11 +3695,21 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             guest_answer_saved = saved_first
             if full_answer:
                 try:
+                    _lost_finalization = False
                     if not saved_first:
-                        save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
-                        guest_answer_saved = True
-                    append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer, keywords=msg.get("keywords"),
-                                           resolved_query=msg.get("resolved_query"))
+                        # a turn with durable pending state is finalized by compare-and-set: of two concurrent finalizers only
+                        # the winner stores the answer and appends the chat summary (anything else = legacy, unconditional)
+                        _fin = finalize_pending_answer(chat_id, owner_key, topic_key, msg.get("request_id"), full_answer)
+                        if _fin is False:
+                            _lost_finalization = True
+                        elif _fin is True:
+                            guest_answer_saved = True
+                        else:
+                            save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
+                            guest_answer_saved = True
+                    if not _lost_finalization:
+                        append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer, keywords=msg.get("keywords"),
+                                               resolved_query=msg.get("resolved_query"))
                 except Exception as exc:
                     log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
 
@@ -3478,13 +3738,56 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if handle is not None and not handle_released:
                 handle_released = True
                 try:
-                    handle.release()
+                    # a user's Stop cancels the scan at once; a refresh / dropped connection only starts the grace period
+                    _release_scan_handle(handle, bool(stop_evt.is_set() or is_turn_cancelled(chat_id, owner_key, topic_key, msg.get("request_id")) is True))
                 except Exception as exc:
                     log.warning(f"handle.release() failed for topic_key={topic_key}: {exc}")
             guest_gate.on_work_end(_gk, msg.get("request_id"), _lease)    # give the work lease back (any exit)
-            _clear_owner_busy(owner_key)
+            _release_busy(stop_evt)
 
     return StreamingResponse(_with_turn_lease(event_generator()), media_type="text/event-stream")
+
+
+@app.post("/chat/{chat_id}/cancel")
+def cancel_turn(request: Request, chat_id: str, topic_key: str = Form(None), request_id: str = Form(None)):
+    """(STOP) The Stop button. Stops ONE running search of the CURRENT owner's chat `chat_id` — identified by `request_id`
+    (unique per search; preferred) or, failing that, by `topic_key` (the newest message with it). No other chat is touched.
+
+    What it does, in order:
+      1. marks the message stopped, atomically and only while it has no answer yet (index.mark_turn_cancelled). From this
+         moment every save onto that message is refused, a page reload / reconnect / second tab shows it as stopped instead
+         of working on it again, and the turn-finisher queue drops it;
+      2. signals the running stream of this turn in this process (turn_control) so it stops at its next checkpoint — within a
+         fraction of a second while scanning; a stream on another process notices the durable mark on its next poll;
+      3. gives this chat's busy flag back so the user can retry at once (the stopped generator will not clear it again).
+
+    Idempotent and race-safe: stopping twice answers "already_cancelled"; stopping after the answer was saved answers
+    "already_complete" and changes nothing (completion and stop are decided by one atomic update, so exactly one wins).
+    NOTHING about credits is touched: a stopped search keeps the charge it already incurred (no refund, no new charge); a retry
+    is a new search with its own submit_key and its own normal accounting."""
+    try:
+        owner_key, _owner_type = get_owner(request)
+        chat = get_chat_session(chat_id, owner_key)
+        if not chat:
+            return JSONResponse({"status": CANCEL_NOT_FOUND}, status_code=404)
+        status = mark_turn_cancelled(chat_id, owner_key, topic_key=topic_key, request_id=request_id)
+        if status in (CANCEL_CANCELLED, CANCEL_ALREADY_CANCELLED):
+            msgs = chat.get("messages") or []
+            target = (next((m for m in reversed(msgs) if m.get("request_id") == request_id), None) if request_id
+                      else next((m for m in reversed(msgs) if topic_key and m.get("topic_key") == topic_key), None)) or {}
+            turn_id = target.get("request_id") or (f"topic:{topic_key}" if topic_key else None)
+            if turn_id:
+                turn_control.signal(owner_key, chat_id, turn_id)
+            try:                                # cancel the scan itself at once, even when no stream is attached any more
+                cancel_scan(chat_id, target.get("topic_key") or topic_key)
+            except Exception as exc:
+                log.warning(f"Cancelling the scan failed for chat_id={chat_id}: {exc}")
+            if status == CANCEL_CANCELLED:
+                _clear_owner_busy(busy_scope_key(owner_key, chat_id))
+        return JSONResponse({"status": status, "chat_id": chat_id, "topic_key": topic_key, "request_id": request_id})
+    except Exception as exc:
+        log.warning(f"Stopping a search failed for chat_id={chat_id}: {exc}")
+        return JSONResponse({"status": "error"}, status_code=500)
 
 
 @app.post("/chat/{chat_id}/delete")
