@@ -382,7 +382,10 @@ class ScanHandle:
         self.future = entry["future"]
         self.cancel_event = entry["cancel_event"]
 
-    def release(self) -> None:
+    def release(self, cancel_now: bool = False) -> None:
+        """cancel_now=True (the user's Stop, a deadline) cancels the scan at once when no waiter is left. Otherwise a scan whose
+        last waiter left (a page refresh, a dropped connection) is kept for SCAN_DISCONNECT_GRACE_SECONDS so that the
+        reconnecting stream joins the SAME run instead of the run being cancelled and started again."""
         with _SCAN_REGISTRY_LOCK:
             if self._released:
                 return
@@ -390,7 +393,16 @@ class ScanHandle:
             entry = self._entry
             entry["waiters"] = max(0, entry["waiters"] - 1)
             if entry["waiters"] == 0 and not entry["future"].done():
+                grace = _scan_grace_seconds() if (self._registry_enabled and not cancel_now) else 0
+                if grace > 0:
+                    if entry.get("grace_timer") is None:
+                        t = threading.Timer(grace, _expire_orphaned_scan, args=(self._key, entry))
+                        t.daemon = True
+                        entry["grace_timer"] = t
+                        t.start()
+                    return
                 entry["cancel_event"].set()
+                _drop_grace_timer(entry)
                 # Nobody wants this scan any more: a later request must start a
                 # fresh one rather than join a cancelled scan.
                 if self._registry_enabled and _SCAN_REGISTRY.get(self._key) is entry:
@@ -406,6 +418,74 @@ class ScanHandle:
 
 _SCAN_REGISTRY: dict = {}
 _SCAN_REGISTRY_LOCK = threading.Lock()
+
+
+def _scan_grace_seconds() -> float:
+    try:
+        return max(0.0, float(_cfg_value("SCAN_DISCONNECT_GRACE_SECONDS", 10) or 0))
+    except (TypeError, ValueError):
+        return 10.0
+
+
+def _drop_grace_timer(entry) -> None:
+    t = entry.pop("grace_timer", None)
+    if t is not None:
+        t.cancel()
+
+
+def _expire_orphaned_scan(key, entry) -> None:
+    """The grace period ended: cancel the scan only if still nobody is waiting for it (a reconnect re-attaches and the
+    waiter count is then > 0)."""
+    with _SCAN_REGISTRY_LOCK:
+        entry.pop("grace_timer", None)
+        if entry["waiters"] == 0 and not entry["future"].done() and not entry["cancel_event"].is_set():
+            entry["cancel_event"].set()
+            if _SCAN_REGISTRY.get(key) is entry:
+                _SCAN_REGISTRY.pop(key, None)
+
+
+def scan_in_progress_locally(chat_id, topic_key) -> bool:
+    """True if THIS process has a live scan for (chat_id, topic_key) a new stream can simply join."""
+    with _SCAN_REGISTRY_LOCK:
+        e = _SCAN_REGISTRY.get((chat_id, topic_key))
+        return bool(e is not None and not e["future"].done() and not e["cancel_event"].is_set())
+
+
+class _DoneScanHandle:
+    """A handle on a scan that already FINISHED (possibly on another worker): its future holds the evidence read back from the
+    durable topic cache. Same surface as ScanHandle, nothing to cancel or release."""
+    started_here = False
+
+    def __init__(self, result):
+        self.future = concurrent.futures.Future()
+        self.future.set_result(result)
+        self.cancel_event = threading.Event()
+
+    def release(self, cancel_now: bool = False) -> None:
+        return None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+def done_scan_handle(result) -> "_DoneScanHandle":
+    return _DoneScanHandle(list(result or []))
+
+
+def cancel_scan(chat_id, topic_key) -> bool:
+    """Cancels the running scan of (chat_id, topic_key) at once, whoever is waiting for it (the user's Stop, also when no
+    stream is attached any more). True if a live scan was cancelled in this process."""
+    with _SCAN_REGISTRY_LOCK:
+        entry = _SCAN_REGISTRY.get((chat_id, topic_key))
+        if entry is None or entry["future"].done():
+            return False
+        entry["cancel_event"].set()
+        _drop_grace_timer(entry)
+        _SCAN_REGISTRY.pop((chat_id, topic_key), None)
+        return True
 
 
 def _start_scan_thread(key, entry, scan_fn, registry_enabled: bool) -> None:
@@ -465,6 +545,7 @@ def acquire_scan(chat_id, topic_key, scan_fn) -> "ScanHandle":
             fresh = (stale_s <= 0 or (time.monotonic() - existing["started"]) < stale_s)
             if (not existing["future"].done()) and (not existing["cancel_event"].is_set()) and fresh:
                 existing["waiters"] += 1
+                _drop_grace_timer(existing)            # re-attached within the grace period: the same run goes on
                 return ScanHandle(key, existing, False, True)
             _SCAN_REGISTRY.pop(key, None)      # finished / cancelled / stale -> replace
         entry = {"future": concurrent.futures.Future(), "cancel_event": threading.Event(),
@@ -8737,7 +8818,7 @@ def _resolved_request_note(query: str, resolved_query: str):
             "location, count, and filter it names, and nothing it has dropped): " + resolved)
 
 
-def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
+def _timeout_fallback_answer_impl(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
                               match_phrases: list = None, evidence_required: int = None, website_note: str = None,
                               resolved_query: str = None, time_range=None, request_id: str = None,
                               gate_owner: str = None, time_window_days: int = None, requested_at=None,
@@ -8809,7 +8890,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     finished importing logics.py, so this local import resolves fine."""
     from index import (
         get_chat_session, save_claude_answer_to_chat, save_answer_for_gate,
-        save_signal_results_to_chat, append_to_chat_summary, _clear_owner_busy,
+        save_signal_results_to_chat, append_to_chat_summary, _clear_owner_busy, busy_scope_key,
     )
     import guest_gate
     gate_key = gate_owner or owner_key       # (GUEST GATE) the identity the gate knows this search by
@@ -8916,8 +8997,15 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
 
         if not guest_gate.on_work_renew(gate_key, request_id, gate_lease, force=True):
             return                  # (GUEST GATE) this runner was taken over: no model call, nothing saved or shown
-        with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
-            answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
+        # (WORKER-INDEPENDENT REFRESH) the raw answer an earlier run of THIS turn left on its message finishes the turn; a fresh
+        # model answer is written there before any post-processing, so a task that dies after the call never costs a second one
+        from index import read_run_state, save_pending_answer
+        _st = read_run_state(chat_id, owner_key, topic_key, request_id)
+        answer = _st.get("pending_answer") if isinstance(_st, dict) else None
+        if not answer:
+            with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
+                answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
+            save_pending_answer(chat_id, owner_key, topic_key, request_id, answer)
         with time_scope_context(build_time_scope(time_window_days, time_range, requested_at, targeting_platform=_fb_platform)):   # (RECENCY)
             answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
         answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
@@ -8952,7 +9040,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         guest_gate.on_search_incomplete(gate_key, request_id)   # (GUEST GATE) nothing usable was saved
     finally:
         guest_gate.on_work_end(gate_key, request_id, gate_lease)   # give the work lease back (any exit)
-        _clear_owner_busy(owner_key)
+        _clear_owner_busy(busy_scope_key(owner_key, chat_id))      # (CONCURRENT CHATS) this chat's flag only
 # (BUGFIX PACK #1) Formats CLAUDE_ANALYSIS_SYSTEM_PROMPT can return that
 # mean "no real grounded data to show" — when claude_answer parses to one
 # of these, the matching message's post-card `results` are treated as
@@ -8964,6 +9052,20 @@ _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 # (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
 # made only of these renders as an EMPTY answer on the page.
 _ANSWER_META_KEYS = {"format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness", "time_scope"}
+
+
+
+def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, *args, **kwargs):
+    """_timeout_fallback_answer_impl() under a lease heartbeat, so a long background answer keeps its busy flag and slot."""
+    try:
+        from index import start_lease_heartbeat, busy_scope_key
+        stop = start_lease_heartbeat(busy_scope_key(owner_key, chat_id))
+    except Exception:
+        stop = (lambda: None)
+    try:
+        return _timeout_fallback_answer_impl(chat_id, owner_key, topic_key, query, *args, **kwargs)
+    finally:
+        stop()
 
 
 def _answer_has_content(data) -> bool:
