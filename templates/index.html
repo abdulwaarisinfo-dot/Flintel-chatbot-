@@ -453,6 +453,16 @@
 
   /* ---------- Submit-button loading spinner (additive only, same as chat.html) ---------- */
   .spinner-icon { display: none; }
+
+  /* ---------- (STOP) Stop control, stopped chip + note ---------- */
+  .submit-btn.is-stop { background: #2b2a28; }
+  .submit-btn.is-stop:hover { background: #3a3937; }
+  .submit-btn.is-stop:disabled { opacity: .6; }
+  .submit-btn.is-stop svg { display: none; }
+  .submit-btn.is-stop::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: #e8e6e3; }
+  .turn-chip.status-stopped { color: #8a8986; }
+  .turn-chip.status-stopped .status-dot { display: none; }
+  .turn-stopped-note { color: #8a8986; font-size: 14px; padding: 4px 0 8px 0; }
   /* (SEND-LOCK) While a search runs the button is simply disabled/greyed (same look as
      :disabled above) — arrow stays visible, no spinner; the turn's own loading row shows progress. */
   @keyframes submitSpinnerRotate {
@@ -4474,10 +4484,7 @@
     // (Bug 1 fix) Close any still-open SSE connection from the page we're
     // leaving BEFORE doing anything else — otherwise a mid-stream answer
     // left behind by a chat switch keeps its connection open indefinitely.
-    if (activeEventSource) {
-      activeEventSource.close();
-      activeEventSource = null;
-    }
+    detachActiveStream();   // (CONCURRENT CHATS) the chat being left keeps searching on the server: its stream is not closed
     try {
       // (New, optional `body` param — undefined for every existing caller,
       // so fetch()'s behavior is 100% unchanged for all of them. Only a
@@ -5272,14 +5279,155 @@
   // (SEND-LOCK) true from the moment a search is submitted until its stream finishes/fails.
   // Typing is always allowed; SENDING (button, Enter, submit event) is blocked while true.
   let searchRunning = false;
+
+  // ---- (STOP) Stop / stopped / retry — state shared with the stream wiring below ----
+  // currentRunning: the research turn of the chat ON SCREEN that the Stop control acts on (null when none).
+  // backgroundSources: streams of chats the user navigated away from. They are NOT closed on a chat switch: closing one
+  // would end that chat's search on the server. They finish on their own (the answer is saved server-side) or are closed
+  // once more than MAX_BACKGROUND_STREAMS are open (the server also caps running searches per owner).
+  // pendingStopRequested: Stop was pressed while the request was still being routed (no turn exists yet); it is carried
+  // out the moment the turn arrives. stopPromise: the last stop's POST /chat/<id>/cancel — a new send waits for it so the
+  // retry can never run into the busy flag of the search that was just stopped.
+  let currentRunning = null;
+  const backgroundSources = new Set();
+  const MAX_BACKGROUND_STREAMS = 3;
+  let pendingStopRequested = false;
+  let stopPromise = null;
+  // The send control turns into the Stop control the instant a search starts: a double click on "send" must not land on it as
+  // a "stop". Stop clicks are ignored for STOP_ARM_MS after the control changed.
+  const STOP_ARM_MS = 600;
+  let stopArmedAt = 0;
+
+  // ---- (STOP) Stop control + stopped state + prompt restore ----
+  function releaseSource(src) {
+    if (activeEventSource === src) activeEventSource = null;
+    backgroundSources.delete(src);
+  }
+  // A chat switch keeps the old chat's stream open (that search keeps running) and only detaches it from the page.
+  function detachActiveStream() {
+    pendingStopRequested = false;
+    const src = activeEventSource;
+    activeEventSource = null;
+    currentRunning = null;
+    if (!src) return;
+    backgroundSources.add(src);
+    while (backgroundSources.size > MAX_BACKGROUND_STREAMS) {
+      const oldest = backgroundSources.values().next().value;
+      backgroundSources.delete(oldest);
+      try { oldest.close(); } catch (e) { /* ignore */ }
+    }
+  }
+  function stopAvailable() {
+    return !pendingStopRequested && !(currentRunning && currentRunning.stopping);
+  }
+  function setStopMode(btn, on) {
+    btn.classList.toggle('is-stop', !!on);
+    if (on) {
+      btn.setAttribute('aria-label', 'Stop searching');
+      btn.setAttribute('title', 'Stop');
+    } else {
+      btn.setAttribute('aria-label', 'Submit search');
+      btn.removeAttribute('title');
+    }
+  }
+  function restorePromptIntoComposer(query) {
+    const input = document.getElementById('search-input');
+    if (!input || !query) return;
+    if (input.value.trim() === '') {
+      input.value = query;
+      input.dispatchEvent(new Event('input', { bubbles: true }));   // auto-grow + send-button state, same as typing it
+    } else {
+      // the user already typed the next prompt: never overwrite it
+      showSearchInlineError('Search stopped. Your stopped prompt was: "' + String(query).slice(0, 80) + '"');
+    }
+    try { input.focus(); input.setSelectionRange(input.value.length, input.value.length); } catch (e) { /* ignore */ }
+  }
+  function applyStoppedState(stream, opts) {
+    const turn = stream && stream.turnEl;
+    if (turn && turn.isConnected) {
+      finishTurnTimer(turn, 'stopped');
+      const pendingVisual = turn.querySelector('.search-progress-block, .loading-row');
+      const note = document.createElement('div');
+      note.className = 'turn-stopped-note';
+      note.setAttribute('role', 'status');
+      note.textContent = 'Search stopped. Edit your prompt below and send it again when you’re ready.';
+      if (pendingVisual) pendingVisual.replaceWith(note); else turn.appendChild(note);
+      turn.removeAttribute('data-pending-stream');
+    }
+    if (opts && opts.restorePrompt) restorePromptIntoComposer(stream && stream.query);
+  }
+  async function sendCancel(stream) {
+    const body = new FormData();
+    body.append('topic_key', stream.topicKey || '');
+    if (stream.requestId) body.append('request_id', stream.requestId);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const r = await fetch('/chat/' + encodeURIComponent(stream.chatId) + '/cancel', {
+          method: 'POST', body, credentials: 'same-origin', keepalive: true,
+        });
+        if (r.ok || r.status === 404) return r.ok ? await r.json().catch(() => ({})) : {};
+      } catch (e) { /* network error: retry */ }
+      await new Promise((resolve) => setTimeout(resolve, 700 * (attempt + 1)));
+    }
+    // sendBeacon() only says the request was QUEUED, never that the server stopped the search: it is a last best-effort
+    // delivery, and the user is still told that the stop could not be confirmed.
+    try {
+      if (navigator.sendBeacon) navigator.sendBeacon('/chat/' + encodeURIComponent(stream.chatId) + '/cancel', body);
+    } catch (e) { /* best effort */ }
+    markStopUnconfirmed(stream);
+    showSearchInlineError('Couldn’t confirm that the search was stopped. It may still be running. Reload this page to check its state.');
+    return null;
+  }
+  // The immediate "Stopped" feedback stays, but once the server has not confirmed the stop it must not read as a confirmed one.
+  function markStopUnconfirmed(stream) {
+    const turn = stream && stream.turnEl;
+    if (!turn || !turn.isConnected) return;
+    const label = turn.querySelector('.turn-chip .turn-status-label');
+    if (label) label.textContent = 'Stop not confirmed';
+    const note = turn.querySelector('.turn-stopped-note');
+    if (note) note.textContent = 'Stop requested, but the server did not confirm it. The search may still be running - reload this page to check its state.';
+  }
+  // Stops the turn: closes its stream, shows the stopped state, puts the original prompt back into the composer and asks
+  // the server to stop the real work. Only the turn of the chat on screen is affected.
+  function stopTurn(stream) {
+    if (!stream || stream.stopping) return;
+    stream.stopping = true;
+    if (currentRunning === stream) currentRunning = null;
+    if (stream.source) {
+      try { stream.source.close(); } catch (e) { /* ignore */ }
+      releaseSource(stream.source);
+    }
+    applyStoppedState(stream, { restorePrompt: true });
+    setSubmitLoading(false);                       // the composer gets its normal send control back
+    stopPromise = sendCancel(stream);
+  }
+  function stopCurrentSearch() {
+    if (currentRunning) { stopTurn(currentRunning); return; }
+    if (searchRunning && !pendingStopRequested) {  // request still being routed: stop it as soon as the turn exists
+      pendingStopRequested = true;
+      const btn = document.getElementById('submit-btn');
+      if (btn) { btn.disabled = true; btn.setAttribute('aria-label', 'Stopping'); }
+    }
+  }
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('#submit-btn.is-stop');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (Date.now() < stopArmedAt) return;          // a double click on "send" is not a stop
+    stopCurrentSearch();
+  }, true);
   const SUBMIT_LOADING_TIMEOUT_MS = 380000; // (SEND-LOCK) just above the server's 360s RESPONSE_TIMEOUT: the lock must outlive any legitimate scan, but a dead stream can never lock sending forever
   function setSubmitLoading(isLoading) {
+    if (isLoading && !searchRunning) stopArmedAt = Date.now() + STOP_ARM_MS;
     searchRunning = !!isLoading;
+    if (!isLoading) pendingStopRequested = false;
     const submitBtn = document.getElementById('submit-btn');
     const searchInput = document.getElementById('search-input');
     if (submitBtn) {
       submitBtn.classList.toggle('loading', isLoading);
-      submitBtn.disabled = isLoading ? true : (searchInput ? searchInput.value.trim().length === 0 : false);
+      setStopMode(submitBtn, !!isLoading);               // (STOP) while a search runs the send control is the Stop control
+      submitBtn.disabled = isLoading ? !stopAvailable() : (searchInput ? searchInput.value.trim().length === 0 : false);
     }
     // (SEND-LOCK) The input is never disabled any more: the user may type the NEXT prompt
     // while this one runs. Only sending is locked (button disabled above + guards below).
@@ -5453,10 +5601,10 @@
     const label = chip.querySelector('.turn-timer');
     const statusLabel = chip.querySelector('.turn-status-label');
     chip.dataset.timerState = state;
-    chip.classList.remove('status-pending', 'status-completed', 'status-failed');
-    chip.classList.add(state === 'failed' ? 'status-failed' : 'status-completed');
-    if (statusLabel) statusLabel.textContent = state === 'failed' ? 'Failed' : 'Researched';
-    if (label) label.textContent = (state === 'failed' || isNaN(secs)) ? '' : formatTurnDuration(secs);
+    chip.classList.remove('status-pending', 'status-completed', 'status-failed', 'status-stopped');
+    chip.classList.add(state === 'failed' ? 'status-failed' : (state === 'stopped' ? 'status-stopped' : 'status-completed'));
+    if (statusLabel) statusLabel.textContent = state === 'failed' ? 'Failed' : (state === 'stopped' ? 'Stopped' : 'Researched');
+    if (label) label.textContent = (state === 'failed' || state === 'stopped' || isNaN(secs)) ? '' : formatTurnDuration(secs);
     if (!runningTurnChips().length && turnTimerInterval) {
       clearInterval(turnTimerInterval);
       turnTimerInterval = null;
@@ -5829,6 +5977,14 @@
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
+    // (STOP) Stop was pressed while this request was still being routed: do not start a stream, stop the new turn.
+    if (pendingStopRequested) {
+      pendingStopRequested = false;
+      stopTurn({ source: null, chatId, topicKey, turnEl: pendingTurn, requestId: pendingTurn.dataset.requestId || '',
+                 query: pendingTurn.dataset.query || '', stopping: false });
+      return;
+    }
+
     // (RACE-CONDITION FIX — parity with chat.html) Snapshot the
     // generation counter for THIS stream — checked again in the "done"
     // branch before injecting the finished answer into the DOM, so a
@@ -5862,6 +6018,9 @@
     let accumulated = '';
     const source = new EventSource(`/chat/${chatId}/stream?topic_key=${encodeURIComponent(topicKey)}`);
     activeEventSource = source;
+    const stream = { source, chatId, topicKey, turnEl: pendingTurn, requestId: pendingTurn.dataset.requestId || '',
+                     query: pendingTurn.dataset.query || '', stopping: false };
+    currentRunning = stream;                        // (STOP) the turn the Stop control acts on
     // (LOADING STATE) A stream starting means an answer is actively being
     // generated for this chat — lock the submit box for the duration.
     setSubmitLoading(true);
@@ -5884,7 +6043,7 @@
       pendingTurn._streamReconnects = tries + 1;
       console.warn('[stream-stall] no data for ' + (STREAM_STALL_MS / 1000) + 's — reconnecting (' + (tries + 1) + '/2)');
       source.close();
-      activeEventSource = null;
+      releaseSource(source); if (currentRunning === stream) currentRunning = null;
       if (phraseTimer) clearInterval(phraseTimer);
       wireUpStream(pendingTurn, chatId);
     }, 5000);
@@ -5945,9 +6104,24 @@
         return;
       }
 
+      if (payload.cancelled) {
+        // (STOP) the server says this turn was stopped (stopped from another tab, or a stopped turn was reopened)
+        source.close();
+        releaseSource(source);
+        if (currentRunning === stream) currentRunning = null;
+        if (phraseTimer) clearInterval(phraseTimer);
+        if (myGen !== softNavGeneration) return;        // a chat the user has left: nothing on screen belongs to it
+        if (!stream.stopping) {
+          stream.stopping = true;
+          applyStoppedState(stream, { restorePrompt: true });
+          setSubmitLoading(false);
+        }
+        return;
+      }
+
       if (payload.done) {
         source.close();
-        activeEventSource = null;
+        releaseSource(source); if (currentRunning === stream) currentRunning = null;
         if (phraseTimer) clearInterval(phraseTimer);
         // (RACE-CONDITION FIX) A navigation may have happened while this
         // stream was still running — if so, its finished answer must
@@ -6013,7 +6187,7 @@
 
       if (payload.error) {
         source.close();
-        activeEventSource = null;
+        releaseSource(source); if (currentRunning === stream) currentRunning = null;
         if (phraseTimer) clearInterval(phraseTimer);
         // (LOADING STATE) Never leave the user locked out forever.
         if (myGen === softNavGeneration) setSubmitLoading(false);
@@ -6023,7 +6197,7 @@
 
     source.onerror = () => {
       source.close();
-      activeEventSource = null;
+      releaseSource(source); if (currentRunning === stream) currentRunning = null;
       if (phraseTimer) clearInterval(phraseTimer);
       // (BUG 2 FIX) Unconditional, unlike the payload.error branch above —
       // a dropped/failed SSE connection is exactly the scenario that can
@@ -6032,6 +6206,7 @@
       // since navigated away from) is a much smaller problem than a
       // search box stuck disabled forever, so this always fires as a
       // last resort regardless of the myGen check.
+      if (myGen !== softNavGeneration) return;   // (CONCURRENT CHATS) a chat the user has left must not touch this page
       setSubmitLoading(false);
       finishTurnTimer(pendingTurn, 'failed');
     };
@@ -6063,6 +6238,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (searchRunning) return; // (SEND-LOCK) a search is still running — do not send, keep the typed text
+      if (stopPromise) { try { await stopPromise; } catch (err) { /* ignore */ } stopPromise = null; }   // (STOP) retry only after the stop reached the server
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
