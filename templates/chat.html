@@ -1039,6 +1039,16 @@
 
   /* ---------- Submit-button loading spinner (additive only) ---------- */
   .spinner-icon { display: none; }
+
+  /* ---------- (STOP) Stop control, stopped chip + note ---------- */
+  .submit-btn.is-stop { background: #2b2a28; }
+  .submit-btn.is-stop:hover { background: #3a3937; }
+  .submit-btn.is-stop:disabled { opacity: .6; }
+  .submit-btn.is-stop svg { display: none; }
+  .submit-btn.is-stop::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: #e8e6e3; }
+  .turn-chip.status-stopped { color: #8a8986; }
+  .turn-chip.status-stopped .status-dot { display: none; }
+  .turn-stopped-note { color: #8a8986; font-size: 14px; padding: 4px 0 8px 0; }
   /* (SEND-LOCK) While a search runs the button is simply disabled/greyed (same look as
      :disabled above) — arrow stays visible, no spinner; the turn's own loading row shows progress. */
   @keyframes submitSpinnerRotate {
@@ -1726,7 +1736,7 @@
 
         {% if chat.messages %}
           {% for msg in chat.messages %}
-          <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}" data-message-type="{{ 'chat' if msg.message_type == 'chat' else 'search' }}" data-msg-index="{{ loop.index0 }}" data-query="{{ msg.query | e }}" data-msg-feedback="{{ msg.msg_feedback or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
+          <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}" data-message-type="{{ 'chat' if msg.message_type == 'chat' else 'search' }}" data-msg-index="{{ loop.index0 }}" data-request-id="{{ msg.request_id or '' }}" data-query="{{ msg.query | e }}" data-msg-feedback="{{ msg.msg_feedback or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
             {# Inline prompt editor — hidden until user clicks "Edit prompt" #}
             <div class="prompt-editor" aria-label="Edit prompt" role="region">
@@ -1751,10 +1761,16 @@
             </div>
             <div class="turn-meta">
               {% if msg.message_type != 'chat' %}
+              {% if msg.cancelled_at and msg.claude_answer is none %}
+              <span class="turn-chip status-stopped"><span class="turn-status-label">Stopped</span></span>
+              {% elif msg.failed_at and msg.claude_answer is none %}
+              <span class="turn-chip status-stopped"><span class="turn-status-label">Failed</span></span>
+              {% else %}
               {% if msg.claude_answer is none %}
               <span class="turn-chip status-pending" data-turn-timer data-requested-at="{{ msg.requested_at.isoformat() if msg.requested_at else '' }}"><span class="turn-status-label">Researching</span> <span class="turn-timer" aria-live="off"></span></span>
               {% else %}
               <span class="turn-chip status-completed" data-requested-at="{{ msg.requested_at.isoformat() if msg.requested_at else '' }}" data-answered-at="{{ msg.answered_at.isoformat() if msg.answered_at else '' }}"><span class="turn-status-label">Researched</span> <span class="turn-timer"></span></span>
+              {% endif %}
               {% endif %}
               {% endif %}
             </div>
@@ -1823,6 +1839,12 @@
                 <svg width="15" height="15" viewBox="0 0 17 18" fill="none" aria-hidden="true"><path d="M2.69657 5.01162C2.59032 4.98351 2.49154 4.93239 2.40724 4.86189C2.32293 4.79139 2.25515 4.70321 2.20868 4.60361C2.16222 4.50401 2.13822 4.39542 2.13837 4.28552C2.13852 4.17561 2.16283 4.06709 2.20957 3.96762L3.86957 0.432616C3.93003 0.303165 4.02621 0.193677 4.14679 0.117036C4.26737 0.0403949 4.40733 -0.000209299 4.5502 8.11308e-07C4.69308 0.000210921 4.83292 0.0412268 4.95327 0.118222C5.07363 0.195217 5.16949 0.304987 5.22957 0.434616L5.96157 2.00362L6.04157 1.97662C7.76857 1.51409 9.59975 1.63228 11.253 2.31298C12.9062 2.99368 14.2897 4.19912 15.1904 5.74356C16.091 7.28801 16.4588 9.08576 16.2371 10.8598C16.0154 12.6339 15.2165 14.2858 13.9634 15.5611C12.7104 16.8364 11.0728 17.6643 9.30286 17.9172C7.53297 18.1701 5.72902 17.834 4.16896 16.9607C2.6089 16.0874 1.3793 14.7253 0.669602 13.0843C-0.0400913 11.4433 -0.190494 9.6145 0.241567 7.87962C0.265467 7.78401 0.307964 7.69406 0.366631 7.61488C0.425297 7.5357 0.498985 7.46885 0.583486 7.41815C0.667987 7.36745 0.761648 7.33389 0.859119 7.31938C0.95659 7.30488 1.05596 7.30972 1.15157 7.33362C1.24717 7.35752 1.33713 7.40001 1.41631 7.45868C1.49548 7.51735 1.56233 7.59103 1.61303 7.67554C1.66373 7.76004 1.69729 7.8537 1.7118 7.95117C1.7263 8.04864 1.72147 8.14801 1.69757 8.24362C1.34718 9.65175 1.467 11.1358 2.03873 12.4695C2.61047 13.8032 3.60275 14.9133 4.86421 15.6304C6.12568 16.3476 7.58709 16.6325 9.02555 16.4416C10.464 16.2507 11.8006 15.5946 12.8313 14.5732C13.8621 13.5519 14.6305 12.2215 14.7347 10.7848C14.9388 9.34818 14.6674 7.8842 13.9619 6.61618C13.2564 5.34816 12.1555 4.3457 10.8272 3.7617C9.49879 3.1777 8.01587 3.04422 6.60457 3.38162L7.34457 4.96462C7.40514 5.0939 7.42756 5.23779 7.40918 5.37938C7.39081 5.52096 7.3324 5.65436 7.24082 5.7639C7.14924 5.87343 7.0283 5.95455 6.89221 5.99773C6.75612 6.0409 6.61054 6.04433 6.47257 6.00762L2.69657 5.01162Z" fill="currentColor"/></svg>
               </button>
             </div>
+            {% elif msg.failed_at and msg.claude_answer is none %}
+            {#- (FAILED TURN) the analysis failed: shown as it is, never silently run again by a refresh; send the prompt again to retry -#}
+            <div class="turn-stopped-note turn-failed-note" role="status">This search failed. Send your prompt again to retry.</div>
+            {% elif msg.cancelled_at %}
+            {#- (STOP) the user stopped this search: no loading state, never streamed again; the prompt can be edited and sent again from the composer -#}
+            <div class="turn-stopped-note" role="status">Search stopped. Edit your prompt below and send it again when you’re ready.</div>
             {% elif msg.results %}
             <div class="loading-row" id="loading-row-{{ msg.topic_key }}">
               <span class="loading-logo"><img src="data:image/png;base64,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" alt="" /></span>
@@ -2142,10 +2164,7 @@
     // (Bug 1 fix) Close any still-open SSE connection from the page we're
     // leaving BEFORE doing anything else — otherwise a mid-stream answer
     // left behind by a chat switch keeps its connection open indefinitely.
-    if (activeEventSource) {
-      activeEventSource.close();
-      activeEventSource = null;
-    }
+    detachActiveStream();   // (CONCURRENT CHATS) the chat being left keeps searching on the server: its stream is not closed
     try {
       const response = await fetch(url, {
         method,
@@ -2375,6 +2394,144 @@
   // (SEND-LOCK) true from the moment a search is submitted until its stream finishes/fails.
   // Typing is always allowed; SENDING (button, Enter, submit event) is blocked while true.
   let searchRunning = false;
+
+  // ---- (STOP) Stop / stopped / retry — state shared with the stream wiring below ----
+  // currentRunning: the research turn of the chat ON SCREEN that the Stop control acts on (null when none).
+  // backgroundSources: streams of chats the user navigated away from. They are NOT closed on a chat switch: closing one
+  // would end that chat's search on the server. They finish on their own (the answer is saved server-side) or are closed
+  // once more than MAX_BACKGROUND_STREAMS are open (the server also caps running searches per owner).
+  // pendingStopRequested: Stop was pressed while the request was still being routed (no turn exists yet); it is carried
+  // out the moment the turn arrives. stopPromise: the last stop's POST /chat/<id>/cancel — a new send waits for it so the
+  // retry can never run into the busy flag of the search that was just stopped.
+  let currentRunning = null;
+  const backgroundSources = new Set();
+  const MAX_BACKGROUND_STREAMS = 3;
+  let pendingStopRequested = false;
+  let stopPromise = null;
+  // The send control turns into the Stop control the instant a search starts: a double click on "send" must not land on it as
+  // a "stop". Stop clicks are ignored for STOP_ARM_MS after the control changed.
+  const STOP_ARM_MS = 600;
+  let stopArmedAt = 0;
+
+  // ---- (STOP) Stop control + stopped state + prompt restore ----
+  function releaseSource(src) {
+    if (activeEventSource === src) activeEventSource = null;
+    backgroundSources.delete(src);
+  }
+  // A chat switch keeps the old chat's stream open (that search keeps running) and only detaches it from the page.
+  function detachActiveStream() {
+    pendingStopRequested = false;
+    const src = activeEventSource;
+    activeEventSource = null;
+    currentRunning = null;
+    if (!src) return;
+    backgroundSources.add(src);
+    while (backgroundSources.size > MAX_BACKGROUND_STREAMS) {
+      const oldest = backgroundSources.values().next().value;
+      backgroundSources.delete(oldest);
+      try { oldest.close(); } catch (e) { /* ignore */ }
+    }
+  }
+  function stopAvailable() {
+    return !pendingStopRequested && !(currentRunning && currentRunning.stopping);
+  }
+  function setStopMode(btn, on) {
+    btn.classList.toggle('is-stop', !!on);
+    if (on) {
+      btn.setAttribute('aria-label', 'Stop searching');
+      btn.setAttribute('title', 'Stop');
+    } else {
+      btn.setAttribute('aria-label', 'Submit search');
+      btn.removeAttribute('title');
+    }
+  }
+  function restorePromptIntoComposer(query) {
+    const input = document.getElementById('search-input');
+    if (!input || !query) return;
+    if (input.value.trim() === '') {
+      input.value = query;
+      input.dispatchEvent(new Event('input', { bubbles: true }));   // auto-grow + send-button state, same as typing it
+    } else {
+      // the user already typed the next prompt: never overwrite it
+      showSearchInlineError('Search stopped. Your stopped prompt was: "' + String(query).slice(0, 80) + '"');
+    }
+    try { input.focus(); input.setSelectionRange(input.value.length, input.value.length); } catch (e) { /* ignore */ }
+  }
+  function applyStoppedState(stream, opts) {
+    const turn = stream && stream.turnEl;
+    if (turn && turn.isConnected) {
+      finishTurnTimer(turn, 'stopped');
+      const pendingVisual = turn.querySelector('.search-progress-block, .loading-row');
+      const note = document.createElement('div');
+      note.className = 'turn-stopped-note';
+      note.setAttribute('role', 'status');
+      note.textContent = 'Search stopped. Edit your prompt below and send it again when you’re ready.';
+      if (pendingVisual) pendingVisual.replaceWith(note); else turn.appendChild(note);
+      turn.removeAttribute('data-pending-stream');
+    }
+    if (opts && opts.restorePrompt) restorePromptIntoComposer(stream && stream.query);
+  }
+  async function sendCancel(stream) {
+    const body = new FormData();
+    body.append('topic_key', stream.topicKey || '');
+    if (stream.requestId) body.append('request_id', stream.requestId);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const r = await fetch('/chat/' + encodeURIComponent(stream.chatId) + '/cancel', {
+          method: 'POST', body, credentials: 'same-origin', keepalive: true,
+        });
+        if (r.ok || r.status === 404) return r.ok ? await r.json().catch(() => ({})) : {};
+      } catch (e) { /* network error: retry */ }
+      await new Promise((resolve) => setTimeout(resolve, 700 * (attempt + 1)));
+    }
+    // sendBeacon() only says the request was QUEUED, never that the server stopped the search: it is a last best-effort
+    // delivery, and the user is still told that the stop could not be confirmed.
+    try {
+      if (navigator.sendBeacon) navigator.sendBeacon('/chat/' + encodeURIComponent(stream.chatId) + '/cancel', body);
+    } catch (e) { /* best effort */ }
+    markStopUnconfirmed(stream);
+    showSearchInlineError('Couldn’t confirm that the search was stopped. It may still be running. Reload this page to check its state.');
+    return null;
+  }
+  // The immediate "Stopped" feedback stays, but once the server has not confirmed the stop it must not read as a confirmed one.
+  function markStopUnconfirmed(stream) {
+    const turn = stream && stream.turnEl;
+    if (!turn || !turn.isConnected) return;
+    const label = turn.querySelector('.turn-chip .turn-status-label');
+    if (label) label.textContent = 'Stop not confirmed';
+    const note = turn.querySelector('.turn-stopped-note');
+    if (note) note.textContent = 'Stop requested, but the server did not confirm it. The search may still be running - reload this page to check its state.';
+  }
+  // Stops the turn: closes its stream, shows the stopped state, puts the original prompt back into the composer and asks
+  // the server to stop the real work. Only the turn of the chat on screen is affected.
+  function stopTurn(stream) {
+    if (!stream || stream.stopping) return;
+    stream.stopping = true;
+    if (currentRunning === stream) currentRunning = null;
+    if (stream.source) {
+      try { stream.source.close(); } catch (e) { /* ignore */ }
+      releaseSource(stream.source);
+    }
+    applyStoppedState(stream, { restorePrompt: true });
+    setSubmitLoading(false);                       // the composer gets its normal send control back
+    stopPromise = sendCancel(stream);
+  }
+  function stopCurrentSearch() {
+    if (currentRunning) { stopTurn(currentRunning); return; }
+    if (searchRunning && !pendingStopRequested) {  // request still being routed: stop it as soon as the turn exists
+      pendingStopRequested = true;
+      const btn = document.getElementById('submit-btn');
+      if (btn) { btn.disabled = true; btn.setAttribute('aria-label', 'Stopping'); }
+    }
+  }
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('#submit-btn.is-stop');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (Date.now() < stopArmedAt) return;          // a double click on "send" is not a stop
+    stopCurrentSearch();
+  }, true);
   const SUBMIT_LOADING_TIMEOUT_MS = 380000; // just above the server's 360s RESPONSE_TIMEOUT
 
   // (AUTO-EXPANDING TEXTAREA) #search-input is a <textarea rows="1"> so
@@ -2589,10 +2746,10 @@
     const label = chip.querySelector('.turn-timer');
     const statusLabel = chip.querySelector('.turn-status-label');
     chip.dataset.timerState = state;
-    chip.classList.remove('status-pending', 'status-completed', 'status-failed');
-    chip.classList.add(state === 'failed' ? 'status-failed' : 'status-completed');
-    if (statusLabel) statusLabel.textContent = state === 'failed' ? 'Failed' : 'Researched';
-    if (label) label.textContent = (state === 'failed' || isNaN(secs)) ? '' : formatTurnDuration(secs);
+    chip.classList.remove('status-pending', 'status-completed', 'status-failed', 'status-stopped');
+    chip.classList.add(state === 'failed' ? 'status-failed' : (state === 'stopped' ? 'status-stopped' : 'status-completed'));
+    if (statusLabel) statusLabel.textContent = state === 'failed' ? 'Failed' : (state === 'stopped' ? 'Stopped' : 'Researched');
+    if (label) label.textContent = (state === 'failed' || state === 'stopped' || isNaN(secs)) ? '' : formatTurnDuration(secs);
     if (!runningTurnChips().length && turnTimerInterval) {
       clearInterval(turnTimerInterval);
       turnTimerInterval = null;
@@ -4861,6 +5018,14 @@
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
+    // (STOP) Stop was pressed while this request was still being routed: do not start a stream, stop the new turn.
+    if (pendingStopRequested) {
+      pendingStopRequested = false;
+      stopTurn({ source: null, chatId, topicKey, turnEl: pendingTurn, requestId: pendingTurn.dataset.requestId || '',
+                 query: pendingTurn.dataset.query || '', stopping: false });
+      return;
+    }
+
     // (Race-condition fix) Snapshot the generation counter for THIS stream
     // — checked again in the "done" branch before injecting the finished
     // answer into the DOM, so a stream still running for a chat the user
@@ -4897,6 +5062,9 @@
     let accumulated = '';
     const source = new EventSource(`/chat/${chatId}/stream?topic_key=${encodeURIComponent(topicKey)}`);
     activeEventSource = source;
+    const stream = { source, chatId, topicKey, turnEl: pendingTurn, requestId: pendingTurn.dataset.requestId || '',
+                     query: pendingTurn.dataset.query || '', stopping: false };
+    currentRunning = stream;                        // (STOP) the turn the Stop control acts on
     // (LOADING STATE) A stream starting means an answer is actively being
     // generated for this chat — lock the submit box for the duration,
     // same as the moment the search was first submitted.
@@ -4920,7 +5088,7 @@
       pendingTurn._streamReconnects = tries + 1;
       console.warn('[stream-stall] no data for ' + (STREAM_STALL_MS / 1000) + 's — reconnecting (' + (tries + 1) + '/2)');
       source.close();
-      activeEventSource = null;
+      releaseSource(source); if (currentRunning === stream) currentRunning = null;
       if (phraseTimer) clearInterval(phraseTimer);
       wireUpStream(pendingTurn, chatId);
     }, 5000);
@@ -4982,9 +5150,24 @@
         return;
       }
 
+      if (payload.cancelled) {
+        // (STOP) the server says this turn was stopped (stopped from another tab, or a stopped turn was reopened)
+        source.close();
+        releaseSource(source);
+        if (currentRunning === stream) currentRunning = null;
+        if (phraseTimer) clearInterval(phraseTimer);
+        if (myGen !== softNavGeneration) return;        // a chat the user has left: nothing on screen belongs to it
+        if (!stream.stopping) {
+          stream.stopping = true;
+          applyStoppedState(stream, { restorePrompt: true });
+          setSubmitLoading(false);
+        }
+        return;
+      }
+
       if (payload.done) {
         source.close();
-        activeEventSource = null;
+        releaseSource(source); if (currentRunning === stream) currentRunning = null;
         if (phraseTimer) clearInterval(phraseTimer);
         // (Race-condition fix) A navigation may have happened while this
         // stream was still running — if so, its finished answer must never
@@ -5076,7 +5259,7 @@
 
       if (payload.error) {
         source.close();
-        activeEventSource = null;
+        releaseSource(source); if (currentRunning === stream) currentRunning = null;
         if (phraseTimer) clearInterval(phraseTimer);
         // (LOADING STATE) Never leave the user locked out forever because
         // of a failed analysis — same generation-guard as the done branch,
@@ -5093,7 +5276,7 @@
 
     source.onerror = () => {
       source.close();
-      activeEventSource = null;
+      releaseSource(source); if (currentRunning === stream) currentRunning = null;
       if (phraseTimer) clearInterval(phraseTimer);
       // (BUG 2 FIX) Unconditional, unlike the payload.error branch above —
       // a dropped/failed SSE connection is exactly the scenario that can
@@ -5103,6 +5286,7 @@
       // since navigated away from) is a much smaller problem than a
       // search box stuck disabled forever, so this always fires as a
       // last resort regardless of the myGen check.
+      if (myGen !== softNavGeneration) return;   // (CONCURRENT CHATS) a chat the user has left must not touch this page
       setSubmitLoading(false);
       finishTurnTimer(pendingTurn, 'failed');
       // Same as the explicit {"error": ...} case above — leave the existing
@@ -5148,18 +5332,21 @@
   // (BUG 2 FIX) Tracks the pending watchdog timeout below, so any call to
   // setSubmitLoading(false) — from ANY code path — always cancels it.
   function setSubmitLoading(isLoading) {
+    if (isLoading && !searchRunning) stopArmedAt = Date.now() + STOP_ARM_MS;
     searchRunning = !!isLoading;
+    if (!isLoading) pendingStopRequested = false;
     const submitBtn = document.getElementById('submit-btn');
     const searchInput = document.getElementById('search-input');
     if (submitBtn) {
       submitBtn.classList.toggle('loading', isLoading);
+      setStopMode(submitBtn, !!isLoading);               // (STOP) while a search runs the send control is the Stop control
       // While loading, always disabled regardless of input content. Once
       // loading ends, fall back to the exact same empty-input check
       // syncSubmitButtonState() already does — that function itself is
       // never modified; disabling search-input during loading (below)
       // means it can't fire 'input' events anyway, so this is the only
       // place that needs to account for the loading state at all.
-      submitBtn.disabled = isLoading ? true : (searchInput ? searchInput.value.trim().length === 0 : false);
+      submitBtn.disabled = isLoading ? !stopAvailable() : (searchInput ? searchInput.value.trim().length === 0 : false);
     }
     // (SEND-LOCK) The input is never disabled any more: the user may type the NEXT prompt
     // while this one runs. Only sending is locked (button disabled above + guards below).
@@ -5222,6 +5409,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (searchRunning) return; // (SEND-LOCK) a search is still running — do not send, keep the typed text
+      if (stopPromise) { try { await stopPromise; } catch (err) { /* ignore */ } stopPromise = null; }   // (STOP) retry only after the stop reached the server
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
