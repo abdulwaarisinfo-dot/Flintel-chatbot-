@@ -80,6 +80,8 @@ __all__ = [
     "NONBLOCKING_STREAM_ENABLED",
     "SINGLE_FLIGHT_SCAN_ENABLED",
     "SINGLE_FLIGHT_STALE_SECONDS",
+    "SCAN_DISCONNECT_GRACE_SECONDS",
+    "SCAN_RESULT_TTL_SECONDS",
     "STREAMING_SCORE_ENABLED",
     "MONGO_SERVER_SELECTION_TIMEOUT_MS",
     "MONGO_CONNECT_TIMEOUT_MS",
@@ -146,6 +148,8 @@ __all__ = [
     "RESPONSE_TIMEOUT",
     # Busy-lock config
     "BUSY_FLAG_TIMEOUT_SECONDS",
+    "MAX_CONCURRENT_SEARCHES_PER_OWNER",
+    "DEGRADED_MAX_CONCURRENT_SEARCHES",
     # Search credits (search_credits.py)
     "FREE_MONTHLY_CREDITS_DEFAULT",
     "FREE_MONTHLY_CREDITS_EFFECTIVE",
@@ -816,6 +820,19 @@ SIGNAL_EMBEDDING_MONGO_SCORE_BATCH = _positive_int_env("SIGNAL_EMBEDDING_MONGO_S
 SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH = _positive_int_env(
     "SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH", SIGNAL_EMBEDDING_FETCH_BATCH, SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH_MIN)
 
+# ── Concurrent searches (per-chat busy lock) ─────────────────────────────────────────────────────────────────────────────
+# The busy flag that stops a duplicate submission is scoped to ONE CHAT (see index.busy_scope_key): a search running in chat A
+# no longer blocks a search in chat B. This is the owner-wide safety cap on how many searches one owner (a registered user, or
+# a guest) may have running at the same time across all of their chats; a request beyond it is declined with a plain message
+# (nothing is queued, charged or saved). Invalid / zero / negative values fall back to 3 with a warning. It is a soft cap:
+# two requests that arrive in the same instant can overshoot it by one, because count-then-set is not one atomic step.
+MAX_CONCURRENT_SEARCHES_PER_OWNER = _positive_int_env("MAX_CONCURRENT_SEARCHES_PER_OWNER", 3)
+# While MongoDB (the store that enforces the cap across workers) is failing, each process falls back to its own in-memory
+# bookkeeping: the per-owner cap above is still enforced inside the process, and this is the most searches the PROCESS admits
+# in total during such an outage. Beyond it new submissions are declined with a "try again" notice instead of running
+# unbounded. Invalid values fall back to 20 with a warning.
+DEGRADED_MAX_CONCURRENT_SEARCHES = _positive_int_env("DEGRADED_MAX_CONCURRENT_SEARCHES", 20)
+
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
 
@@ -966,6 +983,21 @@ SINGLE_FLIGHT_SCAN_ENABLED = os.getenv("SINGLE_FLIGHT_SCAN_ENABLED", "true").low
 # own, so a hung scan can never block that (chat_id, topic_key) forever.
 # 0 = never expire (not recommended).
 SINGLE_FLIGHT_STALE_SECONDS = int(os.getenv("SINGLE_FLIGHT_STALE_SECONDS", "600"))
+# A page refresh (or a dropped connection) closes the stream that is waiting on a running scan. Cancelling the scan the moment
+# its last waiter leaves made a refresh INTERRUPT the run and start it again from scratch. The scan now survives this many
+# seconds without a waiter, so the reconnecting stream re-attaches to the SAME run. A user's Stop always cancels at once.
+# 0 = the previous behaviour (cancel immediately). Invalid values fall back to 10.
+# A scan that FINISHED successfully is recorded on the turn's own message (scan_done_at; its evidence is in the per-chat topic cache,
+# also in MongoDB). A reconnecting stream - on ANY worker - uses it instead of scanning the same query again for this many seconds.
+# 0 = never reuse a finished scan. Invalid values fall back to 120.
+try:
+    SCAN_RESULT_TTL_SECONDS = max(0, int(os.getenv("SCAN_RESULT_TTL_SECONDS", "120")))
+except ValueError:
+    SCAN_RESULT_TTL_SECONDS = 120
+try:
+    SCAN_DISCONNECT_GRACE_SECONDS = max(0, int(os.getenv("SCAN_DISCONNECT_GRACE_SECONDS", "10")))
+except ValueError:
+    SCAN_DISCONNECT_GRACE_SECONDS = 10
 
 # Score documents while streaming them from the cursor, so docs below the
 # similarity threshold are dropped immediately instead of all being held in
