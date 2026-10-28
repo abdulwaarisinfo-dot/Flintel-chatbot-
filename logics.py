@@ -182,6 +182,7 @@ from config import (
     SIGNAL_EMBEDDING_RECENCY_POOL, ROUTER_MAX_MATCH_PHRASES,
     SIGNAL_EMBEDDING_MAX_SCAN,
     SIGNAL_EMBEDDING_FETCH_BATCH,
+    SIGNAL_EMBEDDING_MONGO_SCORE_BATCH, SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH,
     LAZY_EMBED_ENABLED, LAZY_EMBED_MAX_DOCS_PER_QUERY,
     LAZY_EMBED_BATCH_SIZE, LAZY_EMBED_MIN_TEXT_CHARS,
 )
@@ -2576,13 +2577,17 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                         docs = [docs[k] for k in keep]
                         M = M[keep]
                 if docs:
-                    scores = _np_max_scores(M, _st["Q"])
-                    for sc, dd in zip(scores, docs):
-                        if float(sc) >= SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
-                            if known and dd.get("post_url") in known:
-                                continue               # already carried (delta dedupe)
-                            pairs.append((float(sc), dd))
-                            new += 1
+                    # score the fetched batch in chunks of SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH rows (default = the fetch
+                    # batch, i.e. one chunk, as before). Rows stay in order, so the result is the same for any chunk size.
+                    _sb = max(1, int(SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH or 1))
+                    for _i in range(0, len(docs), _sb):
+                        scores = _np_max_scores(M[_i:_i + _sb], _st["Q"])
+                        for sc, dd in zip(scores, docs[_i:_i + _sb]):
+                            if float(sc) >= SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
+                                if known and dd.get("post_url") in known:
+                                    continue               # already carried (delta dedupe)
+                                pairs.append((float(sc), dd))
+                                new += 1
                 if _cancelled():
                     raise _ScanCancelled()
         except (_ScanCancelled, mysql_signals.ScanCancelled):
@@ -2612,7 +2617,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             _stream_out[label] = {"pairs": pairs, "consumed": consumed, "new": new}
         log.info(
             f"{label} streamed-score: scanned={consumed} kept={len(pairs)} "
-            f"batch={SIGNAL_EMBEDDING_FETCH_BATCH} elapsed={elapsed:.2f}s"
+            f"batch={SIGNAL_EMBEDDING_FETCH_BATCH} score_batch={SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH} elapsed={elapsed:.2f}s"
         )
         return []
 
@@ -3012,9 +3017,9 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             _Qs = _Qs / _qn_s
             _stream_ctx = {
                 "Q": _Qs, "dim": _Qs.shape[1],
-                # same 2000-doc NumPy batch as the non-streaming scorer (capped
-                # by SIGNAL_EMBEDDING_FETCH_BATCH if that is set lower)
-                "batch": max(1, min(int(SIGNAL_EMBEDDING_FETCH_BATCH or 2000), 2000)),
+                # rows buffered per NumPy scoring flush: SIGNAL_EMBEDDING_MONGO_SCORE_BATCH (default 2000), independent of
+                # the cursor fetch batch (SIGNAL_EMBEDDING_FETCH_BATCH)
+                "batch": max(1, int(SIGNAL_EMBEDDING_MONGO_SCORE_BATCH or 2000)),
             }
         except Exception as exc:
             log.warning(f"streaming score unavailable (numpy query matrix failed), using fetch-then-score: {exc}")
