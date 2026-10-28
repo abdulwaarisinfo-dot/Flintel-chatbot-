@@ -57,6 +57,7 @@ falls back to a short-lived thread for the turns a page just enqueued;
 other turns wait until a process with the worker is running.
 """
 
+import turn_control    # (STOP / FAILED) is_closed()
 import asyncio
 import hashlib
 import logging
@@ -368,7 +369,8 @@ def unfinished_turns(messages: list) -> dict:
         tk = m.get("topic_key")
         if tk:
             latest[tk] = m
-    return {tk: m for tk, m in latest.items() if m.get("results") is None or m.get("claude_answer") is None}
+    return {tk: m for tk, m in latest.items()
+            if not turn_control.is_closed(m) and (m.get("results") is None or m.get("claude_answer") is None)}   # (STOP) stopped = finished
 
 
 def ondemand_topic_keys(messages: list, now=None) -> list:
@@ -864,7 +866,8 @@ def unfinished_topic_keys(messages: list) -> list:
         tk = m.get("topic_key")
         if tk:
             latest[tk] = m
-    return [tk for tk, m in latest.items() if m.get("results") is None or m.get("claude_answer") is None]
+    return [tk for tk, m in latest.items()
+            if not turn_control.is_closed(m) and (m.get("results") is None or m.get("claude_answer") is None)]   # (STOP) stopped = finished
 
 
 # ── worker loop (FastAPI startup) ────────────────────────────────────────────
