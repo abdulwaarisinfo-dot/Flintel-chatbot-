@@ -69,32 +69,42 @@ def test_setSubmitLoading_behaviour(name):
     a = s.index("function setSubmitLoading(")
     b = s.index("// ---- Small inline warning row")
     code = s[a:b]
+    # (STOP) while a search runs the send control IS the Stop control: setSubmitLoading() relies on these two helpers
+    helpers = s[s.index("function stopAvailable()"):s.index("function restorePromptIntoComposer")]
+    code = helpers + code
     js = r"""
 const store={};
-const mk=()=>({disabled:false,value:'',classList:{s:new Set(),toggle(c,on){on?this.s.add(c):this.s.delete(c)},contains(c){return this.s.has(c)}}});
+const mk=()=>({disabled:false,value:'',attrs:{},setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k]},classList:{s:new Set(),toggle(c,on){on?this.s.add(c):this.s.delete(c)},contains(c){return this.s.has(c)}}});
 const btn=mk(), input=mk();
 const document={getElementById:id=>id==='submit-btn'?btn:id==='search-input'?input:null};
 const timers=[]; const setTimeout=(f,ms)=>{timers.push(ms);return timers.length}; const clearTimeout=()=>{};
 function showSearchInlineError(){}
 let submitLoadingWatchdogId=null; let searchRunning=false; const SUBMIT_LOADING_TIMEOUT_MS=380000;
+let currentRunning=null, pendingStopRequested=false, stopArmedAt=0; const STOP_ARM_MS=600;
 %s
 const out={};
 setSubmitLoading(true);
 out.running=searchRunning; out.btnDisabledWhileRunning=btn.disabled; out.inputDisabledWhileRunning=input.disabled;
+out.stopWhileRunning=btn.classList.contains('is-stop'); out.labelWhileRunning=btn.attrs['aria-label'];
 input.value='prompt 2';                       // typing while running
-out.btnStillDisabledAfterTyping=btn.disabled;
+out.btnStillEnabledAfterTyping=!btn.disabled;
 out.wd=timers[0];
 setSubmitLoading(false);
-out.runningAfter=searchRunning; out.btnEnabledAfterFinish=!btn.disabled;
+out.runningAfter=searchRunning; out.btnEnabledAfterFinish=!btn.disabled; out.stopAfter=btn.classList.contains('is-stop');
+out.labelAfter=btn.attrs['aria-label'];
 input.value=''; setSubmitLoading(false); out.btnDisabledWhenEmpty=btn.disabled;
+setSubmitLoading(true); pendingStopRequested=true; setSubmitLoading(true); out.stopRequestedDisablesIt=btn.disabled;
+setSubmitLoading(false); out.stopRequestResetByFinish=pendingStopRequested;
 console.log(JSON.stringify(out));
 """ % code
     r = subprocess.run([NODE, "-e", js], capture_output=True, text=True, timeout=30)
     assert r.returncode == 0, r.stderr
     o = json.loads(r.stdout.strip().splitlines()[-1])
-    assert o == {"running": True, "btnDisabledWhileRunning": True, "inputDisabledWhileRunning": False,
-                 "btnStillDisabledAfterTyping": True, "wd": 380000, "runningAfter": False,
-                 "btnEnabledAfterFinish": True, "btnDisabledWhenEmpty": True}
+    assert o == {"running": True, "btnDisabledWhileRunning": False, "inputDisabledWhileRunning": False,   # the Stop control is clickable
+                 "stopWhileRunning": True, "labelWhileRunning": "Stop searching",
+                 "btnStillEnabledAfterTyping": True, "wd": 380000, "runningAfter": False,
+                 "btnEnabledAfterFinish": True, "stopAfter": False, "labelAfter": "Submit search", "btnDisabledWhenEmpty": True,
+                 "stopRequestedDisablesIt": True, "stopRequestResetByFinish": False}
 
 
 # ---- HERO DOCK FIX: search box visible (typing ok, send disabled) while the first prompt runs ----
