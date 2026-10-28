@@ -605,13 +605,13 @@ def test_owner_busy_defers_without_scanning(fin):
     f = fin
     tf, idx = f["tf"], f["idx"]
     _seed(f["chats"], "c10", [_turn("Find people looking for a CRM", 60), _chat_turn("Hello", "Hi!")])
-    idx._set_owner_busy(OWNER)                                    # e.g. a stream for this owner is running
+    idx._set_owner_busy(idx.busy_scope_key(OWNER, "c10"))         # e.g. a stream for THIS chat is running (busy is per chat)
     tf.enqueue("c10", OWNER, "find people looking for a crm")
     assert tf.process_due() == 1
     assert f["calls"]["scan"] == 0
     job = f["queue"].find_one({})
     assert job["attempts"] == 0 and job["lease_owner"] is None
-    idx._clear_owner_busy(OWNER)
+    idx._clear_owner_busy(idx.busy_scope_key(OWNER, "c10"))
     f["knobs"]["scan_seconds"] = 0.05
     f["queue"].update_one({}, {"$set": {"due_at": datetime.now(timezone.utc)}})
     assert tf.process_due() == 1 and _finished(f, "c10", "Find people looking for a CRM")
@@ -680,7 +680,7 @@ def test_real_disconnect_releases_the_stream_and_the_worker_finishes_promptly(fi
     jid = tf.job_id("cd", OWNER, TK)
     assert _wait(lambda: ((f["queue"].find_one({"_id": jid}) or {}).get("lease_owner") or "").startswith(
         tf.STREAM_LEASE_PREFIX), 5)
-    assert f["busy"].count_documents({"owner_key": OWNER}) == 1
+    assert f["busy"].count_documents({"owner_key": idx.busy_scope_key(OWNER, "cd")}) == 1     # busy flag is per chat
     time.sleep(0.5)
     t0 = time.perf_counter()
     conn.sock.shutdown(2)
