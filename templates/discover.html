@@ -75,22 +75,9 @@
   .dsc-intro h1 { font-size: 30px; font-weight: 700; color: #fff; letter-spacing: -0.015em; line-height: 1.15; }
   .dsc-intro p { margin-top: 8px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 640px; }
 
-  /* artwork (decorative gradients) */
-  .dsc-art { position: relative; overflow: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.88); background: linear-gradient(135deg, #2a3d63, #1c2540); }
-  .dsc-art::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 85% 0%, rgba(255,255,255,.14), transparent 55%); pointer-events: none; }
-  .dsc-art svg { width: 34%; max-width: 72px; height: auto; position: relative; z-index: 1; }
-  .dsc-art-signal { background: linear-gradient(135deg, #1f4d7a, #12263f); }
-  .dsc-art-switch { background: linear-gradient(135deg, #5b3a7a, #2a1c44); }
-  .dsc-art-labels { background: linear-gradient(135deg, #1d5a52, #102a2b); }
-  .dsc-art-source { background: linear-gradient(135deg, #3b4a6b, #1b2234); }
-  .dsc-art-complaint { background: linear-gradient(135deg, #7a3a3a, #3a1a1c); }
-  .dsc-art-price { background: linear-gradient(135deg, #7a5b2a, #3a2a12); }
-  .dsc-art-pain { background: linear-gradient(135deg, #7a4a2a, #3a2012); }
-  .dsc-art-question { background: linear-gradient(135deg, #2a5a7a, #12303f); }
-  .dsc-art-check { background: linear-gradient(135deg, #2a6a4a, #123a28); }
-  .dsc-art-time { background: linear-gradient(135deg, #4a4a7a, #20203f); }
-  .dsc-art-compare { background: linear-gradient(135deg, #3a6a6a, #163030); }
-  .dsc-art-limits { background: linear-gradient(135deg, #4a4a48, #232321); }
+  /* artwork: temporary solid-black placeholder (photography to be supplied). Size, radius and per-card classes unchanged. */
+  .dsc-art { position: relative; overflow: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #000; }
+  .dsc-art svg { display: none; }
 
   /* cards */
   .dsc-meta { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--faint); margin-bottom: 8px; }
