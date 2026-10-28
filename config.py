@@ -217,6 +217,8 @@ __all__ = [
     "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD",
     "SIGNAL_EMBEDDING_MAX_SCAN",
     "SIGNAL_EMBEDDING_FETCH_BATCH",
+    "SIGNAL_EMBEDDING_MONGO_SCORE_BATCH",
+    "SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
     # Tertiary MongoDB (everything except flintel_signals)
@@ -765,6 +767,36 @@ SIGNAL_EMBEDDING_MAX_SCAN = int(os.getenv("SIGNAL_EMBEDDING_MAX_SCAN", "0"))
 # Larger values reduce round-trips at the cost of more memory per batch.
 # Applies per-collection cursor. Default 5000 (raised from hard-coded 2000).
 SIGNAL_EMBEDDING_FETCH_BATCH = int(os.getenv("SIGNAL_EMBEDDING_FETCH_BATCH", "5000"))
+
+# ── Scoring batch sizes (independent of the fetch batch above) ───────────────────────────────────────────────────────────
+# SIGNAL_EMBEDDING_FETCH_BATCH (above) is how many rows are READ per round trip: the pymongo cursor batch and the MySQL
+# keyset batch / SQL LIMIT. The two variables below are how many already-fetched rows are SCORED per NumPy operation. They never
+# affect each other, a fetch batch, a similarity threshold, a score, the result order or which rows are kept.
+#   SIGNAL_EMBEDDING_MONGO_SCORE_BATCH  default 2000  MongoDB streaming scorer: rows buffered before each flush. (Before this
+#       variable the buffer was min(SIGNAL_EMBEDDING_FETCH_BATCH, 2000); that cap is gone.)
+#   SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH  default = the effective SIGNAL_EMBEDDING_FETCH_BATCH. MySQL has always scored each
+#       fetched batch in one operation, so the default keeps exactly that; a smaller value scores each fetched batch in chunks
+#       of this size (same rows, same order), a larger one changes nothing because a scoring chunk cannot exceed one fetched batch.
+# Invalid values (not an integer, zero or negative) are NOT errors: a warning is logged and the default above is used, so a
+# bad value can never produce an empty-batch loop. Only the two scoring variables are validated this way; the existing
+# SIGNAL_EMBEDDING_FETCH_BATCH keeps its original parsing.
+def _positive_int_env(name: str, default: int) -> int:
+    raw = os.getenv(name)
+    if raw is None or not str(raw).strip():
+        return default
+    try:
+        value = int(str(raw).strip())
+        if value > 0:
+            return value
+    except (TypeError, ValueError):
+        pass
+    _logging.getLogger("flintel.config").warning(
+        "%s=%r is not a positive integer; using the default %d", name, raw, default)
+    return default
+
+
+SIGNAL_EMBEDDING_MONGO_SCORE_BATCH = _positive_int_env("SIGNAL_EMBEDDING_MONGO_SCORE_BATCH", 2000)
+SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH = _positive_int_env("SIGNAL_EMBEDDING_MYSQL_SCORE_BATCH", max(1, SIGNAL_EMBEDDING_FETCH_BATCH))
 
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
