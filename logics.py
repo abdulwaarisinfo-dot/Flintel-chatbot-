@@ -10174,7 +10174,7 @@ def _clean_website_context(ctx):
             secs = []
             for sec in out["sections"]:
                 if not isinstance(sec, dict):
-                    secs.append(sec)
+                    secs.append(sec) 
                     continue
                 sec = dict(sec)
                 if isinstance(sec.get("title"), str):
