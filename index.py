@@ -103,6 +103,7 @@ future readers.
 import re
 import json
 import time
+import threading
 import uuid
 import logging
 from datetime import datetime, timedelta, timezone
@@ -120,6 +121,7 @@ from authlib.integrations.starlette_client import OAuth
 import flintel
 import scheduler as trending_keywords_scheduler   # 12-hourly trending-keywords background job
 import guest_gate      # (GUEST GATE) server-side limit on a visitor's genuine searches
+import turn_control    # (STOP) is_closed(): stopped / failed turns are never worked on again
 import turn_finisher   # (NON-BLOCKING CHAT PAGE) durable finishing of older unfinished research turns
 import google as google_search   # the new google.py module
     # (renamed on import to `google_search` to avoid any ambiguity
@@ -1010,7 +1012,7 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
     increment_message_count(owner_key)
 
 
-def _set_on_latest_message(chat_id: str, owner_key: str, topic_key: str, fields: dict):
+def _set_on_latest_message(chat_id: str, owner_key: str, topic_key: str, fields: dict, unless_cancelled: bool = False):
     """(BUG 3 FIX — REFRESH/DUPLICATE-PROMPT HIDES ANSWER) `topic_key` is
     derived only from the query text, so re-sending the exact same prompt
     in the same chat produces a second message with the SAME topic_key.
@@ -1035,7 +1037,265 @@ def _set_on_latest_message(chat_id: str, owner_key: str, topic_key: str, fields:
         return
     update = {f"messages.{idx}.{k}": v for k, v in fields.items()}
     update["updated_at"] = datetime.now(timezone.utc)
-    chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key}, {"$set": update})
+    flt = {"chat_id": chat_id, "owner_key": owner_key}
+    if unless_cancelled:
+        # (STOP) The write is conditional on the SAME message not being stopped, in the one atomic update: a stop that
+        # landed first wins and this save becomes a no-op; a save that landed first makes the stop report "already complete".
+        flt[f"messages.{idx}.cancelled_at"] = {"$exists": False}
+    ops = {"$set": update}
+    if "claude_answer" in fields:
+        # the turn is finished: its durable run state (scan lease / done marker / raw model answer) is no longer needed
+        ops["$unset"] = {f"messages.{idx}.{k}": "" for k in RUN_STATE_FIELDS}
+    chats_collection.update_one(flt, ops)
+
+
+CANCEL_CANCELLED, CANCEL_ALREADY_CANCELLED, CANCEL_ALREADY_COMPLETE, CANCEL_NOT_FOUND = (
+    "cancelled", "already_cancelled", "already_complete", "not_found")
+
+
+def mark_turn_cancelled(chat_id: str, owner_key: str, topic_key: str = None, request_id: str = None) -> str:
+    """(STOP) Atomically marks ONE running search turn of this owner's chat as stopped by the user: sets `cancelled_at` on the
+    message, but only while it has no answer yet and is not already stopped — a single conditional update, so a stop racing
+    the completion of the same turn has exactly one winner (the save helpers refuse to write onto a stopped message, and this
+    refuses to stop one whose answer is already saved). The message is found by its `request_id` (unique per search) when
+    given, else it is the newest message with `topic_key`. Idempotent: stopping twice, or after completion, changes nothing.
+    Returns CANCEL_CANCELLED / CANCEL_ALREADY_CANCELLED / CANCEL_ALREADY_COMPLETE / CANCEL_NOT_FOUND. Nothing about credits is
+    touched here: a stopped search keeps the charge it already incurred."""
+    chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
+    msgs = (chat or {}).get("messages") or []
+    if request_id:
+        idx = next((i for i in range(len(msgs) - 1, -1, -1) if msgs[i].get("request_id") == request_id), None)
+    elif topic_key:
+        idx = next((i for i in range(len(msgs) - 1, -1, -1) if msgs[i].get("topic_key") == topic_key), None)
+    else:
+        idx = None
+    if idx is None or msgs[idx].get("message_type") == "chat":
+        return CANCEL_NOT_FOUND
+    if msgs[idx].get("cancelled_at"):
+        return CANCEL_ALREADY_CANCELLED
+    if msgs[idx].get("claude_answer"):
+        return CANCEL_ALREADY_COMPLETE
+    now = datetime.now(timezone.utc)
+    result = chats_collection.update_one(
+        {"chat_id": chat_id, "owner_key": owner_key,
+         f"messages.{idx}.cancelled_at": {"$exists": False},
+         f"messages.{idx}.claude_answer": {"$in": [None, ""]}},
+        {"$set": {f"messages.{idx}.cancelled_at": now, "updated_at": now}},
+    )
+    if result.matched_count == 1:
+        return CANCEL_CANCELLED
+    # lost a race: re-read to say which side won
+    fresh = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key}) or {}
+    fmsgs = fresh.get("messages") or []
+    fm = fmsgs[idx] if idx < len(fmsgs) else {}
+    if fm.get("cancelled_at"):
+        return CANCEL_ALREADY_CANCELLED
+    return CANCEL_ALREADY_COMPLETE if fm.get("claude_answer") else CANCEL_NOT_FOUND
+
+
+def mark_turn_failed(chat_id: str, owner_key: str, topic_key: str = None, request_id: str = None) -> bool:
+    """(FAILED TURN) Records that the analysis of ONE turn genuinely FAILED (`failed_at` on the message), atomically and only
+    while the turn has no answer, is not stopped and is not already marked. A refresh or the background finisher then shows the
+    failure instead of silently running the turn again; the user retries explicitly (a new request, normal credit rules). Nothing
+    about credits is touched. Best effort: never raises. True if this call recorded the failure."""
+    try:
+        chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
+        msgs = (chat or {}).get("messages") or []
+        idx = _turn_position(msgs, topic_key, request_id)         # (a caller without an id never lands on an identified retry)
+        if idx is None or msgs[idx].get("message_type") == "chat":
+            return False
+        now = datetime.now(timezone.utc)
+        res = chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key,
+             f"messages.{idx}.failed_at": {"$exists": False},
+             f"messages.{idx}.cancelled_at": {"$exists": False},
+             f"messages.{idx}.claude_answer": {"$in": [None, ""]}},
+            {"$set": {f"messages.{idx}.failed_at": now, "updated_at": now}},
+        )
+        return res.matched_count == 1
+    except Exception as exc:
+        log.warning(f"Recording the failed turn failed for chat_id={chat_id}: {exc}")
+        return False
+
+
+# ── (WORKER-INDEPENDENT REFRESH) durable run state of a turn, stored ON ITS OWN MESSAGE ─────────────────────────────────────
+# A page refresh closes the stream that was working on a turn, and the new stream may be served by ANOTHER worker process, which
+# shares nothing with the old one but MongoDB. So what the old stream had already paid for is recorded on the turn's message
+# (keyed by its request id, so a retry - a new message - never inherits it):
+#   scan_lease_at   heartbeat of the scan THREAD (not the stream): a scan is running for this turn right now
+#   scan_done_at    the scan finished successfully (its evidence is in the per-chat topic cache, also in MongoDB)
+#   pending_answer  the model's raw answer, written the moment the model call returns, before any post-processing
+# All three are written conditionally (the turn has no answer, is not stopped and has not failed) and are removed when the real
+# answer is stored. Every helper is best effort and never raises: without them a refresh simply behaves as it did before.
+RUN_STATE_FIELDS = ("scan_lease_at", "scan_lease_id", "scan_done_at", "pending_answer")
+SCAN_LEASE_HEARTBEAT_SECONDS = 10
+SCAN_LEASE_STALE_SECONDS = 45
+
+
+def _turn_position(msgs, topic_key, request_id):
+    if request_id:
+        return next((i for i in range(len(msgs) - 1, -1, -1) if msgs[i].get("request_id") == request_id), None)
+    idx = next((i for i in range(len(msgs) - 1, -1, -1) if topic_key and msgs[i].get("topic_key") == topic_key), None)
+    if idx is not None and msgs[idx].get("request_id"):
+        # A caller WITHOUT a request id (a worker still running a legacy message that never had one) must not resolve to the newest
+        # message of the topic when that is an identified turn - a retry - or it would write that attempt's state onto the retry.
+        return None
+    return idx
+
+
+def _set_run_state(chat_id, owner_key, topic_key, request_id, set_fields=None, unset_fields=(), lease_id=None,
+                   only_if_absent=None) -> bool:
+    """lease_id: the write only lands while the turn's scan lease still carries THIS id (a stale scan thread whose lease was taken
+    over cannot touch the newer holder's state). only_if_absent: the write only lands while that field does not exist yet."""
+    try:
+        chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key},
+                                         {"messages.topic_key": 1, "messages.request_id": 1})
+        idx = _turn_position((chat or {}).get("messages") or [], topic_key, request_id)
+        if idx is None:
+            return False
+        ops = {}
+        if set_fields:
+            ops["$set"] = {f"messages.{idx}.{k}": v for k, v in set_fields.items()}
+        if unset_fields:
+            ops["$unset"] = {f"messages.{idx}.{k}": "" for k in unset_fields}
+        if not ops:
+            return False
+        flt = {"chat_id": chat_id, "owner_key": owner_key,
+               f"messages.{idx}.cancelled_at": {"$exists": False},
+               f"messages.{idx}.failed_at": {"$exists": False},
+               f"messages.{idx}.claude_answer": {"$in": [None, ""]}}
+        if lease_id:
+            flt[f"messages.{idx}.scan_lease_id"] = lease_id
+        if only_if_absent:
+            flt[f"messages.{idx}.{only_if_absent}"] = {"$exists": False}
+        res = chats_collection.update_one(flt, ops)
+        return res.matched_count == 1
+    except Exception as exc:
+        log.warning(f"Recording the run state failed for chat_id={chat_id}: {exc}")
+        return False
+
+
+def mark_scan_lease(chat_id, owner_key, topic_key, request_id, lease_id=None) -> bool:
+    return _set_run_state(chat_id, owner_key, topic_key, request_id, {"scan_lease_at": datetime.now(timezone.utc)}, lease_id=lease_id)
+
+
+def claim_scan_lease(chat_id, owner_key, topic_key, request_id):
+    """ATOMICALLY takes the right to scan this turn: one conditional update that succeeds only if no scan lease exists or the
+    existing one went stale. Of any number of streams / workers asking at once, exactly one gets True; the others wait for its
+    scan_done_at instead of scanning the same query too. Returns the new lease's ID (a string; every later write of that scan - heartbeat,
+    done, clear - must carry it, so a stale scan thread cannot touch a newer holder's lease), False if somebody else holds the lease,
+    and True (no id: scan, never block the search) when the store fails or the turn is not found."""
+    try:
+        chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key},
+                                         {"messages.topic_key": 1, "messages.request_id": 1})
+        idx = _turn_position((chat or {}).get("messages") or [], topic_key, request_id)
+        if idx is None:
+            return True
+        now = datetime.now(timezone.utc)
+        lease_id = uuid.uuid4().hex
+        cutoff = now - timedelta(seconds=SCAN_LEASE_STALE_SECONDS)
+        res = chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key,
+             f"messages.{idx}.cancelled_at": {"$exists": False},
+             f"messages.{idx}.failed_at": {"$exists": False},
+             f"messages.{idx}.claude_answer": {"$in": [None, ""]},
+             "$or": [{f"messages.{idx}.scan_lease_at": {"$exists": False}},
+                     {f"messages.{idx}.scan_lease_at": None},
+                     {f"messages.{idx}.scan_lease_at": {"$lt": cutoff}}]},
+            {"$set": {f"messages.{idx}.scan_lease_at": now, f"messages.{idx}.scan_lease_id": lease_id}})
+        return lease_id if res.matched_count == 1 else False
+    except Exception as exc:
+        log.warning(f"Claiming the scan lease failed for chat_id={chat_id} (scanning anyway): {exc}")
+        return True
+
+
+def mark_scan_done(chat_id, owner_key, topic_key, request_id, lease_id=None) -> bool:
+    return _set_run_state(chat_id, owner_key, topic_key, request_id, {"scan_done_at": datetime.now(timezone.utc)},
+                          ("scan_lease_at", "scan_lease_id"), lease_id=lease_id)
+
+
+def clear_scan_lease(chat_id, owner_key, topic_key, request_id, lease_id=None) -> bool:
+    return _set_run_state(chat_id, owner_key, topic_key, request_id, None, ("scan_lease_at", "scan_lease_id"), lease_id=lease_id)
+
+
+def save_pending_answer(chat_id, owner_key, topic_key, request_id, answer) -> bool:
+    if not isinstance(answer, str) or not answer.strip():
+        return False
+    # first writer wins: a stale worker finishing its model call later cannot replace the answer a newer one already kept
+    return _set_run_state(chat_id, owner_key, topic_key, request_id, {"pending_answer": answer}, only_if_absent="pending_answer")
+
+
+def read_run_state(chat_id, owner_key, topic_key, request_id) -> dict:
+    """What the turn's message says about work already done. {} when unknown. `scan_running` / `scan_done` are already judged
+    against the lease / TTL rules (a lease nobody renews goes stale, a finished scan is only reused while its evidence is fresh)."""
+    try:
+        chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
+        msgs = (chat or {}).get("messages") or []
+        idx = _turn_position(msgs, topic_key, request_id)
+        if idx is None:
+            return {}
+        m = msgs[idx]
+        ttl = _scan_result_ttl()
+        return {
+            "scan_running": bool(m.get("scan_lease_at")) and _elapsed_seconds(m.get("scan_lease_at")) < SCAN_LEASE_STALE_SECONDS,
+            "scan_done": bool(m.get("scan_done_at")) and ttl > 0 and _elapsed_seconds(m.get("scan_done_at")) < ttl,
+            "pending_answer": m.get("pending_answer") if isinstance(m.get("pending_answer"), str) else None,
+            "answered": bool(m.get("claude_answer")),
+            "closed": turn_control.is_closed(m),
+        }
+    except Exception as exc:
+        log.warning(f"Reading the run state failed for chat_id={chat_id}: {exc}")
+        return {}
+
+
+def _scan_result_ttl() -> float:
+    try:
+        import config as _cfg
+        return max(0.0, float(getattr(_cfg, "SCAN_RESULT_TTL_SECONDS", 120) or 0))
+    except (TypeError, ValueError):
+        return 120.0
+
+
+def start_scan_lease_heartbeat(chat_id, owner_key, topic_key, request_id, lease_id=None):
+    """Heartbeat of a running scan (a thread of its own, stopped by the returned function): the lease is renewed while the scan
+    runs, whichever worker holds it, and simply goes stale if that worker dies."""
+    stop = threading.Event()
+
+    def beat():
+        while not stop.wait(SCAN_LEASE_HEARTBEAT_SECONDS):
+            try:
+                mark_scan_lease(chat_id, owner_key, topic_key, request_id, lease_id)
+            except Exception:                                    # pragma: no cover - never let the heartbeat die
+                pass
+    threading.Thread(target=beat, name="scan-lease", daemon=True).start()
+    return stop.set
+
+
+
+def is_turn_cancelled(chat_id: str, owner_key: str, topic_key: str = None, request_id: str = None) -> bool:
+    """(STOP) True once the user stopped this turn (its message carries `cancelled_at`). Read by the running stream to notice a
+    stop that arrived through ANOTHER request or process. A read failure counts as "not stopped" — a stop is never assumed."""
+    try:
+        chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key}, {"messages.topic_key": 1,
+                                         "messages.request_id": 1, "messages.cancelled_at": 1})
+        msgs = (chat or {}).get("messages") or []
+        if request_id:
+            msg = next((m for m in reversed(msgs) if m.get("request_id") == request_id), None)
+        else:
+            msg = next((m for m in reversed(msgs) if topic_key and m.get("topic_key") == topic_key), None)
+        return bool(msg and msg.get("cancelled_at"))
+    except Exception as exc:
+        log.warning(f"Reading the stop flag failed for chat_id={chat_id}: {exc}")
+        return False
+
+
+
+def _turn_stopped_now(chat_id: str, owner_key: str, msg: dict) -> bool:
+    """(STOP) True only when the user's Stop is recorded for this message's turn. `is True` so a stubbed index never counts."""
+    try:
+        return is_turn_cancelled(chat_id, owner_key, msg.get("topic_key"), msg.get("request_id")) is True
+    except Exception:
+        return False
 
 
 def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, results: list):
@@ -1064,7 +1324,7 @@ def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, re
     operator — see that helper's docstring for why."""
     if results is None:
         return
-    _set_on_latest_message(chat_id, owner_key, topic_key, {"results": results})
+    _set_on_latest_message(chat_id, owner_key, topic_key, {"results": results}, unless_cancelled=True)
 
 
 def save_last_website_context_to_chat(chat_id: str, owner_key: str, context: dict):
@@ -1114,7 +1374,7 @@ def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, ans
     operator — see that helper's docstring for why."""
     if not answer:
         return
-    _set_on_latest_message(chat_id, owner_key, topic_key, {"claude_answer": answer})
+    _set_on_latest_message(chat_id, owner_key, topic_key, {"claude_answer": answer}, unless_cancelled=True)
     _mark_answered_at(chat_id, owner_key, topic_key)
 
 
@@ -1211,7 +1471,7 @@ def save_search_progress_to_chat(chat_id: str, owner_key: str, topic_key: str, p
     if not progress_content:
         return
     try:
-        _set_on_latest_message(chat_id, owner_key, topic_key, {"search_progress": progress_content})
+        _set_on_latest_message(chat_id, owner_key, topic_key, {"search_progress": progress_content}, unless_cancelled=True)
     except Exception as exc:
         log.warning(f"Saving search_progress failed for topic_key={topic_key}: {exc}")
 
@@ -1240,11 +1500,17 @@ def _is_owner_busy(owner_key: str) -> bool:
     per-user concern, exactly like the feature spec requires."""
     if not owner_key:
         return False
-    doc = busy_owners_collection.find_one({"owner_key": owner_key})
+    if _local_flag_live(owner_key):
+        return True                              # a flag taken while the store was down (see the degraded policy below)
+    try:
+        doc = busy_owners_collection.find_one({"owner_key": owner_key})
+    except Exception as exc:
+        _mark_store_degraded("busy check", exc)
+        return False                             # the in-memory flags above are the only evidence left
     if not doc:
         return False
-    if _elapsed_seconds(doc.get("started_at")) >= BUSY_FLAG_TIMEOUT_SECONDS:
-        # Stale (a crash or restart left this behind) — clear it
+    if _slot_is_stale(doc):
+        # Stale (a crash or restart left this behind; a live search keeps beating its lease) — clear it
         # defensively right now and treat this request as not busy,
         # rather than leaving the user locked out forever.
         busy_owners_collection.delete_one({"owner_key": owner_key})
@@ -1267,6 +1533,8 @@ def _set_owner_busy(owner_key: str):
         )
     except Exception as exc:
         log.warning(f"Setting busy flag failed for owner_key={owner_key}: {exc}")
+        return
+    _ensure_search_slot(owner_key)
 
 
 def _clear_owner_busy(owner_key: str):
@@ -1275,10 +1543,363 @@ def _clear_owner_busy(owner_key: str):
     user's very next request goes through normally right away."""
     if not owner_key:
         return
+    _local_flag_drop(owner_key)
     try:
         busy_owners_collection.delete_one({"owner_key": owner_key})
     except Exception as exc:
         log.warning(f"Clearing busy flag failed for owner_key={owner_key}: {exc}")
+    _release_search_slot(owner_key)
+
+
+def clear_busy_flag_only(owner_key: str):
+    """Clears just the chat's busy flag and keeps its search slot (the hand-over of an accepted search to its stream)."""
+    if not owner_key:
+        return
+    _local_flag_drop(owner_key)
+    try:
+        busy_owners_collection.delete_one({"owner_key": owner_key})
+    except Exception as exc:
+        log.warning(f"Clearing busy flag failed for owner_key={owner_key}: {exc}")
+
+
+BUSY_SCOPE_SEPARATOR = "::"
+
+
+def busy_scope_key(owner_key: str, chat_id: str = None) -> str:
+    """(CONCURRENT CHATS) The key the busy flag is kept under for ONE CHAT of ONE owner: "<owner_key>::<chat_id>".
+    The busy flag used to be keyed by the owner alone, so a search running in chat A made every other chat of the same
+    owner answer "Please wait for your current request to finish first." Scoped to the chat, a duplicate submission in the
+    SAME chat is still declined while a different chat is free to search. With no chat_id the plain owner_key is returned
+    (the legacy key). _is_owner_busy/_set_owner_busy/_clear_owner_busy treat the key as an opaque string; the unique index
+    on busy_owners.owner_key keeps working unchanged, so no index or schema migration is needed."""
+    if not owner_key or not chat_id:
+        return owner_key
+    return f"{owner_key}{BUSY_SCOPE_SEPARATOR}{chat_id}"
+
+
+def acquire_owner_busy(owner_key: str) -> bool:
+    """(CONCURRENT CHATS) ATOMIC version of "is this chat busy? no -> mark it busy": one insert under the unique
+    busy_owners.owner_key index, so two simultaneous submissions in the SAME chat cannot both pass (the check-then-set
+    pair could). A stale leftover (BUSY_FLAG_TIMEOUT_SECONDS) is reclaimed with a conditional delete. False = really busy.
+    A store failure fails open (True), like _is_owner_busy."""
+    if not owner_key:
+        return True
+    try:
+        from pymongo.errors import DuplicateKeyError
+    except Exception:                                                  # pragma: no cover
+        DuplicateKeyError = ()
+    try:
+        for _ in range(2):
+            try:
+                busy_owners_collection.insert_one({"owner_key": owner_key, "started_at": datetime.now(timezone.utc)})
+                return True
+            except DuplicateKeyError:
+                doc = busy_owners_collection.find_one({"owner_key": owner_key})
+                if doc is not None and not _slot_is_stale(doc):
+                    return False
+                if doc is not None:
+                    busy_owners_collection.delete_one({"owner_key": owner_key, "started_at": doc.get("started_at")})
+        return False
+    except Exception as exc:
+        _mark_store_degraded("acquire busy flag", exc)
+        return _local_flag_take(owner_key)                           # in-process duplicate protection only
+
+
+# ── (CONCURRENT CHATS) FAILURE POLICY while MongoDB is failing ─────────────────────────────────────────────────────────────
+# The cap and the per-chat flag live in MongoDB so they hold across worker processes. If MongoDB errors, they must neither
+# silently allow unbounded searches (fail open) nor lock every user out (fail closed). Policy: BOUNDED DEGRADED MODE. Each
+# process keeps its own in-memory slots/flags (below). While the store is failing:
+#   * the per-owner cap is still enforced, per process (so an owner can run at most cap x workers searches);
+#   * the process as a whole admits at most DEGRADED_MAX_CONCURRENT_SEARCHES searches, then declines with a "try again" notice;
+#   * a duplicate submission in the same chat is still declined (in-process);
+#   * entries expire after BUSY_FLAG_TIMEOUT_SECONDS and are dropped whenever the search ends, so nothing is stuck forever.
+# When MongoDB recovers the normal path is used again at once; the in-memory entries simply drain as their searches end.
+_LOCAL_LOCK = threading.Lock()
+_local_slots = {}              # holder ("<owner>::<chat>") -> (owner_key, monotonic start)
+_local_flags = {}              # busy-flag key -> monotonic start
+_degraded = {"until": 0.0, "since": 0.0, "events": 0}
+DEGRADED_WINDOW_SECONDS = 30
+
+
+def _mark_store_degraded(what: str, exc: Exception):
+    now = time.monotonic()
+    with _LOCAL_LOCK:
+        was = now < _degraded["until"]
+        _degraded["until"] = now + DEGRADED_WINDOW_SECONDS
+        _degraded["events"] += 1
+        if not was:
+            _degraded["since"] = now
+    if not was:
+        log.warning(f"Busy/cap store failed ({what}): {type(exc).__name__}: {exc} - using the bounded in-memory fallback")
+
+
+def store_is_degraded() -> bool:
+    return time.monotonic() < _degraded["until"]
+
+
+def _local_prune(now: float):
+    limit = BUSY_FLAG_TIMEOUT_SECONDS
+    for k in [k for k, (_o, t) in _local_slots.items() if now - t >= limit]:
+        _local_slots.pop(k, None)
+    for k in [k for k, t in _local_flags.items() if now - t >= limit]:
+        _local_flags.pop(k, None)
+
+
+def _local_flag_live(key: str) -> bool:
+    with _LOCAL_LOCK:
+        _local_prune(time.monotonic())
+        return key in _local_flags
+
+
+def _local_flag_take(key: str) -> bool:
+    with _LOCAL_LOCK:
+        now = time.monotonic()
+        _local_prune(now)
+        if key in _local_flags:
+            return False
+        _local_flags[key] = now
+        return True
+
+
+def _local_flag_drop(key: str):
+    with _LOCAL_LOCK:
+        _local_flags.pop(key, None)
+
+
+def _local_slot_reserve(owner_key: str, holder_key: str, cap: int) -> bool:
+    with _LOCAL_LOCK:
+        now = time.monotonic()
+        _local_prune(now)
+        if holder_key in _local_slots:
+            _local_slots[holder_key] = (owner_key, now)
+            return True
+        try:
+            import config as _cfg
+            ceiling = max(1, int(getattr(_cfg, "DEGRADED_MAX_CONCURRENT_SEARCHES", 20) or 20))
+        except (TypeError, ValueError):
+            ceiling = 20
+        if sum(1 for o, _t in _local_slots.values() if o == owner_key) >= cap or len(_local_slots) >= ceiling:
+            return False
+        _local_slots[holder_key] = (owner_key, now)
+        return True
+
+
+def _local_slot_drop(holder_key: str):
+    with _LOCAL_LOCK:
+        _local_slots.pop(holder_key, None)
+
+
+def _local_slot_count(owner_key: str) -> int:
+    with _LOCAL_LOCK:
+        _local_prune(time.monotonic())
+        return sum(1 for o, _t in _local_slots.values() if o == owner_key)
+
+
+def _local_reset_for_tests():
+    with _LOCAL_LOCK:
+        _local_slots.clear()
+        _local_flags.clear()
+        _degraded.update(until=0.0, since=0.0, events=0)
+
+
+SEARCH_SLOT_MARK = "#slot"
+
+
+def _slot_key(owner_key: str, n: int) -> str:
+    return f"{owner_key}{SEARCH_SLOT_MARK}{n}"
+
+
+def _owner_cap() -> int:
+    try:
+        import config as _cfg    # read live, so a changed value (and the tests) take effect without a re-import
+        return max(1, int(getattr(_cfg, "MAX_CONCURRENT_SEARCHES_PER_OWNER", 3) or 3))
+    except (TypeError, ValueError):
+        return 3
+
+
+SLOT_HANDOVER_SECONDS = 60
+
+
+# (LEASE) A live search keeps its busy flag and its slot by HEARTBEAT: its stream refreshes `started_at` every
+# LEASE_HEARTBEAT_SECONDS (and marks the documents `lease`). A holder that stops beating - a crash, a restart, a hung worker -
+# is stale LEASE_STALE_SECONDS after its last beat (several missed beats, so one slow database call does not lose a live
+# search), however long its search had been running. Documents nobody ever beat for keep the old fixed rule
+# (BUSY_FLAG_TIMEOUT_SECONDS), and a slot only handed over by POST /search expires after SLOT_HANDOVER_SECONDS.
+LEASE_HEARTBEAT_SECONDS = 20
+LEASE_STALE_SECONDS = 120
+
+
+def _slot_is_stale(doc) -> bool:
+    d = doc or {}
+    if d.get("lease"):
+        limit = LEASE_STALE_SECONDS
+    elif d.get("handover"):
+        limit = SLOT_HANDOVER_SECONDS
+    else:
+        limit = BUSY_FLAG_TIMEOUT_SECONDS
+    return _elapsed_seconds(d.get("started_at")) >= limit
+
+
+def refresh_busy_lease(holder_key: str) -> bool:
+    """One heartbeat for the busy flag + slot of `holder_key` ("<owner>::<chat>"). Only refreshes documents that STILL exist,
+    so a lease that was reclaimed in the meantime is not resurrected (False is returned and the caller may re-acquire). Because
+    the stale-reclaim delete matches the exact `started_at` it read, a refresh that lands first makes that delete miss: a live
+    holder is never reclaimed. A store failure is reported (False) and never raised; the in-memory entries are refreshed too."""
+    owner_key, sep, _chat = (holder_key or "").partition(BUSY_SCOPE_SEPARATOR)
+    if not sep or not owner_key:
+        return False
+    now_m = time.monotonic()
+    with _LOCAL_LOCK:                                   # entries taken while the store was down stay alive as well
+        if holder_key in _local_flags:
+            _local_flags[holder_key] = now_m
+        if holder_key in _local_slots:
+            _local_slots[holder_key] = (_local_slots[holder_key][0], now_m)
+    try:
+        now = datetime.now(timezone.utc)
+        f = busy_owners_collection.update_one({"owner_key": holder_key}, {"$set": {"started_at": now, "lease": True}})
+        s = busy_owners_collection.update_many(
+            {"owner_key": {"$regex": "^" + re.escape(owner_key + SEARCH_SLOT_MARK) + r"\d+$"}, "holder": holder_key},
+            {"$set": {"started_at": now, "lease": True}, "$unset": {"handover": ""}})
+        return bool(f.matched_count)              # the FLAG is what protects the chat; a missing flag is re-taken by the caller
+    except Exception as exc:
+        _mark_store_degraded("lease heartbeat", exc)
+        return False
+
+
+def start_lease_heartbeat(holder_key: str):
+    """Starts the heartbeat of a live search and returns the function that stops it (idempotent; call it in a `finally`). One
+    daemon thread per live search, bounded by the concurrency cap; it ends by itself when stopped or when the process exits."""
+    stop = threading.Event()
+    if not holder_key:
+        return stop.set
+
+    def beat():
+        while not stop.wait(LEASE_HEARTBEAT_SECONDS):
+            try:
+                if not refresh_busy_lease(holder_key) and not stop.is_set():
+                    _set_owner_busy(holder_key)         # the documents are gone (reclaimed / cleared): this live search takes them again
+            except Exception as exc:                    # pragma: no cover - never let the heartbeat die
+                log.warning(f"Lease heartbeat failed for {holder_key}: {exc}")
+    threading.Thread(target=beat, name="busy-lease", daemon=True).start()
+    return stop.set
+
+
+def reserve_search_slot(owner_key: str, holder_key: str, cap: int = None) -> bool:
+    """(CONCURRENT CHATS) ATOMICALLY reserves one of this owner's `cap` search slots for the chat flag `holder_key`.
+
+    A slot is a document in busy_owners whose owner_key is "<owner>#slot<n>" (n in 0..cap-1). The EXISTING unique index on
+    busy_owners.owner_key makes the insert atomic in MongoDB itself: of any number of simultaneous submissions - in this
+    process or in other worker processes - at most `cap` can hold a slot, because a slot number can only be inserted once.
+    (The earlier count-then-set check was not atomic: N simultaneous submissions all counted below the cap.) A slot whose
+    started_at is older than BUSY_FLAG_TIMEOUT_SECONDS is a crashed run's leftover and is reclaimed with a conditional
+    delete (it only deletes the exact stale document). The holder already owning a slot is idempotent. Returns False only
+    when every slot is genuinely held. A store failure switches to the bounded in-memory fallback (see FAILURE POLICY)."""
+    if not owner_key or not holder_key:
+        return True
+    cap = cap or _owner_cap()
+    if holder_key in _local_slots:
+        return _local_slot_reserve(owner_key, holder_key, cap)     # already admitted during a store outage
+    # slots this process admitted while the store was down still count against the cap after it recovers
+    full_cap = cap
+    cap = cap - _local_slot_count(owner_key)
+    if cap <= 0:
+        return False
+    try:
+        from pymongo.errors import DuplicateKeyError
+    except Exception:                                                  # pragma: no cover
+        DuplicateKeyError = ()
+    try:
+        for attempt in range(2):
+            for n in range(cap):
+                key = _slot_key(owner_key, n)
+                try:
+                    busy_owners_collection.insert_one(
+                        {"owner_key": key, "holder": holder_key, "started_at": datetime.now(timezone.utc)})
+                    return True
+                except DuplicateKeyError:
+                    doc = busy_owners_collection.find_one({"owner_key": key})
+                    if doc is None:
+                        continue                                       # released between the insert and the read
+                    if doc.get("holder") == holder_key and not _slot_is_stale(doc):
+                        # the holder is (re)starting its work: refresh the slot and make it a normal running slot
+                        busy_owners_collection.update_one(
+                            {"owner_key": key, "holder": holder_key},
+                            {"$set": {"started_at": datetime.now(timezone.utc)}, "$unset": {"handover": ""}})
+                        return True
+                    if _slot_is_stale(doc):
+                        busy_owners_collection.delete_one({"owner_key": key, "started_at": doc.get("started_at")})
+            # the first pass may have freed stale/released slots: one more pass, then decline
+        return False
+    except Exception as exc:
+        _mark_store_degraded("reserve slot", exc)
+        return _local_slot_reserve(owner_key, holder_key, full_cap)  # bounded degraded mode, NOT unbounded
+
+
+def _ensure_search_slot(holder_key: str):
+    """The busy flag `holder_key` ("<owner>::<chat>") is being set from a background/stream path that must not be refused:
+    make sure it holds a slot if one is free (the cap itself is enforced at submission by reserve_search_slot)."""
+    owner_key, sep, _chat = (holder_key or "").partition(BUSY_SCOPE_SEPARATOR)
+    if not sep or not owner_key:
+        return
+    try:
+        reserve_search_slot(owner_key, holder_key)
+    except Exception as exc:                                           # pragma: no cover
+        log.warning(f"Ensuring a search slot failed for {holder_key}: {exc}")
+
+
+def _release_search_slot(holder_key: str):
+    """Frees the slot(s) held by the busy flag `holder_key` (called whenever that flag is cleared)."""
+    owner_key, sep, _chat = (holder_key or "").partition(BUSY_SCOPE_SEPARATOR)
+    if not sep or not owner_key:
+        return
+    _local_slot_drop(holder_key)
+    try:
+        busy_owners_collection.delete_many({
+            "owner_key": {"$regex": "^" + re.escape(owner_key + SEARCH_SLOT_MARK) + r"\d+$"},
+            "holder": holder_key,
+        })
+    except Exception as exc:
+        log.warning(f"Releasing the search slot of {holder_key} failed: {exc}")
+
+
+def transfer_search_slot(old_holder: str, new_holder: str):
+    """The accepted search hands its slot to the chat's stream: submission (POST /search) and streaming
+    (GET /chat/<id>/stream) are two requests, and a new chat only gets its id in between. Without the hand-over the slot
+    would be free for a moment and a simultaneous submission could take it (cap + 1). If new_holder already holds a slot,
+    the old one is released instead."""
+    if not old_holder or not new_holder or old_holder == new_holder:
+        return
+    owner_key = old_holder.partition(BUSY_SCOPE_SEPARATOR)[0]
+    with _LOCAL_LOCK:                                   # an in-memory slot (taken during an outage) moves too
+        if old_holder in _local_slots:
+            _local_slots[new_holder] = (owner_key, time.monotonic())
+            _local_slots.pop(old_holder, None)
+    try:
+        pat = {"$regex": "^" + re.escape(owner_key + SEARCH_SLOT_MARK) + r"\d+$"}
+        if busy_owners_collection.find_one({"owner_key": pat, "holder": new_holder}) is not None:
+            _release_search_slot(old_holder)
+        else:
+            busy_owners_collection.update_many({"owner_key": pat, "holder": old_holder},
+                                               {"$set": {"holder": new_holder, "started_at": datetime.now(timezone.utc), "handover": True}})
+    except Exception as exc:
+        log.warning(f"Transferring the search slot {old_holder} -> {new_holder} failed: {exc}")
+
+
+def count_owner_busy(owner_key: str) -> int:
+    """(CONCURRENT CHATS) How many search slots of THIS owner are live (not stale) right now = searches the owner has
+    running. A lookup failure returns the in-memory count of this process."""
+    if not owner_key:
+        return 0
+    try:
+        prefix = f"{owner_key}{SEARCH_SLOT_MARK}"
+        live = 0
+        for doc in busy_owners_collection.find({"owner_key": {"$regex": "^" + re.escape(prefix) + r"\d+$"}}):
+            if not _slot_is_stale(doc):
+                live += 1
+        return live
+    except Exception as exc:
+        _mark_store_degraded("count", exc)
+        return _local_slot_count(owner_key)                 # what this process knows, not 0
 
 
 def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
@@ -1298,6 +1919,8 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
     Wrapped in try/except, never raises — a failure here just means this
     message doesn't get any Google-sourced stub links, exactly like
     before this feature existed."""
+    if _turn_stopped_now(chat_id, owner_key, msg):
+        return                                   # (STOP) the user stopped this turn: no new external search is started
     try:
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
                                 request_id=msg.get("request_id")):
@@ -1358,6 +1981,8 @@ def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
     zero-post wait — not merely best-effort. save_search_progress_to_chat()
     itself is still the thing that actually persists it, and it already
     degrades gracefully (own try/except) on any storage failure."""
+    if _turn_stopped_now(chat_id, owner_key, msg):
+        return                                   # (STOP) no progress copy is generated or saved for a stopped turn
     try:
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
                                     request_id=msg.get("request_id")):
@@ -1390,13 +2015,51 @@ def save_claude_answer_if_unset(chat_id: str, owner_key: str, topic_key: str, an
     if idx is None:
         return False
     field = f"messages.{idx}.claude_answer"
-    result = chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key, field: None},
-                                         {"$set": {field: answer, "updated_at": datetime.now(timezone.utc)}})
+    result = chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key, field: None,
+                                           f"messages.{idx}.cancelled_at": {"$exists": False}},   # (STOP) never onto a stopped turn
+                                         {"$set": {field: answer, "updated_at": datetime.now(timezone.utc)},
+                                          "$unset": {f"messages.{idx}.{k}": "" for k in RUN_STATE_FIELDS}})
     matched = getattr(result, "matched_count", None)
     won = True if matched is None else matched == 1      # (a bare test double returns no result object)
     if won:
         _mark_answered_at(chat_id, owner_key, topic_key)
     return won
+
+
+def finalize_pending_answer(chat_id: str, owner_key: str, topic_key: str, request_id: str, answer: str):
+    """(WORKER-INDEPENDENT REFRESH, D4) Compare-and-set finalization for a turn that carries the durable `pending_answer` state
+    (or was already finalized that way: `answer_cas`). Found by REQUEST ID, so a stale attempt cannot land on a retry. Exactly one
+    of any number of concurrent finalizers stores the answer and gets True; the others get False and must neither show their own
+    answer as the stored one nor append the chat summary again. Never onto a stopped turn.
+    Returns None for a turn without that state (a legacy turn, no request id, unknown turn, store error): the caller then keeps
+    its existing unconditional save, exactly as before."""
+    if not answer or not request_id:
+        return None
+    try:
+        chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
+        msgs = (chat or {}).get("messages") or []
+        idx = _turn_position(msgs, topic_key, request_id)
+        if idx is None:
+            return None
+        m = msgs[idx]
+        if not (m.get("pending_answer") or m.get("answer_cas")):
+            return None
+        if m.get("claude_answer"):
+            return False
+        now = datetime.now(timezone.utc)
+        res = chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key,
+             f"messages.{idx}.claude_answer": {"$in": [None, ""]},
+             f"messages.{idx}.cancelled_at": {"$exists": False}},
+            {"$set": {f"messages.{idx}.claude_answer": answer, f"messages.{idx}.answer_cas": True, "updated_at": now},
+             "$unset": {f"messages.{idx}.{k}": "" for k in RUN_STATE_FIELDS}})
+        if res.matched_count != 1:
+            return False
+        _mark_answered_at(chat_id, owner_key, topic_key)
+        return True
+    except Exception as exc:
+        log.warning(f"Finalizing the pending answer failed for chat_id={chat_id}: {exc}")
+        return None
 
 
 def save_answer_for_gate(chat_id: str, owner_key: str, topic_key: str, answer: str, gate_key, token) -> bool:
@@ -1405,7 +2068,10 @@ def save_answer_for_gate(chat_id: str, owner_key: str, topic_key: str, answer: s
     unconditional save exactly as before. Returns True when this call's answer is the stored one."""
     if token and guest_gate.is_guest_owner(gate_key) and guest_gate.default_gate() is not None:
         return save_claude_answer_if_unset(chat_id, owner_key, topic_key, answer)
-    save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
+    _fin = finalize_pending_answer(chat_id, owner_key, topic_key, token, answer)       # a turn with durable pending state: CAS
+    if _fin is True or _fin is False:
+        return _fin
+    save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)                  # legacy turn: unconditional, as before
     return True
 
 
@@ -1425,6 +2091,32 @@ def _abandon_guest_message(chat_id: str, owner_key: str, msg: dict, gate_key=Non
         log.warning(f"Saving the superseded-search notice failed for topic_key={msg.get('topic_key')}: {exc}")
 
 
+def _take_busy(key: str) -> bool:
+    """(BACKGROUND PATH) Takes this chat's busy flag for background work, ATOMICALLY: the old "is it busy? no -> set it" pair let
+    two workers both pass the check. False = somebody else is already working on this chat: skip, the next view retries."""
+    if _is_owner_busy(key):
+        return False
+    if acquire_owner_busy(key) is False:
+        return False
+    _set_owner_busy(key)                       # also takes the owner's search slot / refreshes the flag
+    return True
+
+
+def _with_lease_heartbeat(fn):
+    """Runs a background answer task under a lease heartbeat, so a long task keeps its busy flag and slot like a live stream."""
+    import functools
+
+    @functools.wraps(fn)
+    def wrapper(chat_id, owner_key, *args, **kwargs):
+        stop = start_lease_heartbeat(busy_scope_key(owner_key, chat_id))
+        try:
+            return fn(chat_id, owner_key, *args, **kwargs)
+        finally:
+            stop()
+    return wrapper
+
+
+@_with_lease_heartbeat
 def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict, matched: list,
                                          freshness_prov: dict = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic — this is exactly what
@@ -1485,7 +2177,7 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     # exactly like the results-list bug did. claude_answer already
     # initializes to None (never "") at message creation, so this check
     # is the only piece that needed to change.
-    needs_answer = msg.get("claude_answer") is None
+    needs_answer = msg.get("claude_answer") is None and not turn_control.is_closed(msg)   # (STOP / FAILED) a closed turn needs no answer
     answer_for_format_check = msg.get("claude_answer")
 
     if needs_answer:
@@ -1522,6 +2214,9 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 website_evidence = msg.get("website_evidence") or {}
                 if not guest_gate.on_work_renew(gate_key, gate_token, gate_lease, force=True):
                     return          # (GUEST GATE) this runner was taken over: no model call, nothing saved or shown
+                if _turn_stopped_now(chat_id, owner_key, msg):
+                    guest_gate.on_search_incomplete(gate_key, gate_token)   # (STOP) no model call for a stopped turn
+                    return
                 answer = build_website_insight_answer(
                     url=website_evidence.get("url") or msg.get("query"),
                     query=msg.get("query"),
@@ -1637,9 +2332,20 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
             if not guest_gate.on_work_renew(gate_key, gate_token, gate_lease, force=True):
                 return              # (GUEST GATE) this runner was taken over: no model call, nothing saved or shown
-            with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
-                                    request_id=msg.get("request_id")):
-                answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+            if _turn_stopped_now(chat_id, owner_key, msg):
+                guest_gate.on_search_incomplete(gate_key, gate_token)       # (STOP) no model call for a stopped turn
+                return
+            # (WORKER-INDEPENDENT REFRESH) the raw answer of an earlier run of THIS turn (its stream or task died after the model
+            # call), kept on the message, finishes the turn instead of a second billed call
+            _st = read_run_state(chat_id, owner_key, msg.get("topic_key"), msg.get("request_id"))
+            if isinstance(_st, dict) and _st.get("answered"):
+                return                  # another runner stored this turn's answer since `msg` was read: no second model call
+            answer = _st.get("pending_answer") if isinstance(_st, dict) else None
+            if not answer:
+                with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
+                                        request_id=msg.get("request_id")):
+                    answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+                save_pending_answer(chat_id, owner_key, msg.get("topic_key"), msg.get("request_id"), answer)
             with time_scope_context(build_time_scope(msg.get("time_window_days"), msg.get("time_range"),
                                                      msg.get("requested_at"),
                                                      targeting_platform=msg.get("targeting_platform", "all"))):   # (RECENCY) the message's own window
@@ -1675,7 +2381,7 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 guest_gate.on_search_incomplete(gate_key, gate_token)
         finally:
             guest_gate.on_work_end(gate_key, gate_token, gate_lease)     # give the work lease back (any exit)
-            _clear_owner_busy(owner_key)
+            _clear_owner_busy(busy_scope_key(owner_key, chat_id))        # (CONCURRENT CHATS) this chat's flag only
 
     # (RESULTS-RECOMPUTE FIX) `is None`, not falsy — a genuine, already-
     # saved empty list must not be treated as "still needs computing" and
@@ -1845,6 +2551,8 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # claude_answer for full consistency (see the docstring note in
         # _complete_message_answer_and_results()).
         needs_answer = msg.get("claude_answer") is None
+        if turn_control.is_closed(msg):
+            continue                                  # (STOP / FAILED) stopped or failed: never finished silently in the background
         if not needs_results and not needs_answer:
             continue
 
@@ -1922,8 +2630,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 # while one is already in flight (DUPLICATE-REFRESH FIX),
                 # and mark busy synchronously BEFORE scheduling
                 # (BUSY-LOCK RACE FIX).
-                if not _is_owner_busy(owner_key):
-                    _set_owner_busy(owner_key)
+                if _take_busy(busy_scope_key(owner_key, chat_id)):
                     if background_tasks is not None:
                         background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
                     else:
@@ -2009,8 +2716,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 # before scheduling/running the work — not inside the
                 # scheduled function itself, which could run after the
                 # response has already gone out to the browser.
-                if not _is_owner_busy(owner_key):
-                    _set_owner_busy(owner_key)
+                if _take_busy(busy_scope_key(owner_key, chat_id)):
                     if background_tasks is not None:
                         background_tasks.add_task(
                             _timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"],
@@ -2068,8 +2774,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # second request from the same owner could arrive between "the
         # response is sent" and "the background task actually starts",
         # since the flag document wouldn't exist yet during that window.
-        if not _is_owner_busy(owner_key):
-            _set_owner_busy(owner_key)
+        if _take_busy(busy_scope_key(owner_key, chat_id)):
             _fp_kw = {"freshness_prov": _fresh_prov} if _fresh_prov is not None else {}   # (FRESHNESS) off = call unchanged
             if background_tasks is not None:
                 background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched, **_fp_kw)
@@ -2103,6 +2808,8 @@ def _finish_turn_job(chat_id: str, owner_key: str, topic_key: str):
     if pos is None:
         return "done", None
     msg = messages[pos]
+    if turn_control.is_closed(msg):
+        return "done", None                           # (STOP / FAILED) a closed turn leaves the queue and is never processed
     if msg.get("results") is not None and msg.get("claude_answer") is not None:
         return "done", None
 
@@ -2112,10 +2819,17 @@ def _finish_turn_job(chat_id: str, owner_key: str, topic_key: str):
     # Another answer call (or a stream) for this owner is in flight — the
     # same rule _fill_in_message_outputs() applies before calling the LLM.
     # Checked first so the scan is not repeated while it runs.
-    if _is_owner_busy(owner_key):
+    if _is_owner_busy(busy_scope_key(owner_key, chat_id)):
+        return "busy", None
+    # (CONCURRENT CHATS) the owner-wide cap on running searches applies to background work too
+    if count_owner_busy(owner_key) >= _owner_cap():
         return "busy", None
 
-    _fill_in_message_outputs(chat_id, owner_key, [msg], background_tasks=None)
+    _stop_lease = start_lease_heartbeat(busy_scope_key(owner_key, chat_id))      # a long finisher job keeps its lease too
+    try:
+        _fill_in_message_outputs(chat_id, owner_key, [msg], background_tasks=None)
+    finally:
+        _stop_lease()
 
     fresh = get_chat_session(chat_id, owner_key) or {}
     fresh_msgs = fresh.get("messages") or []
