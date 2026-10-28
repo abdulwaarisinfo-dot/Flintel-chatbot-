@@ -4452,7 +4452,7 @@ def discover(request: Request):
 
 @app.api_route("/robots.txt", methods=["GET", "HEAD"], include_in_schema=False)
 def robots_txt(request: Request):
-    lines = ["User-agent: *", "Allow: /"]
+    lines = ["User-agent: *", "Allow: /"] 
     lines += [f"Disallow: {path}" for path in _ROBOTS_DISALLOW]
     lines.append(f"Sitemap: {_site_base_url(request)}/sitemap.xml")
     return _SeoPlainTextResponse("\n".join(lines) + "\n", headers=_SEO_CACHE)
