@@ -6365,7 +6365,9 @@ search JSON: "request_kind" and "subject".
                      that is "lead_discovery" instead.
   "mention_search" - the user wants the posts that LITERALLY MENTION a named brand, company, product or exact phrase. No buyer
                      intent is involved. e.g. "find Reddit posts mentioning Acme", "Acme ka zikr kahan hua".
-                     "subject" = the exact name or phrase, nothing else.
+                     "subject" = the exact name or phrase, nothing else: a NAME or short term (1 to 4 words). A quoted QUESTION or
+                     sentence ("Any good habit tracking apps?") is NOT a mention search: the user wants posts ABOUT that
+                     topic, so use "research" (or "lead_discovery" if they want people to sell to).
   "research"       - the user wants to UNDERSTAND a topic, product or market from what people write: complaints, pain points,
                      sentiment, a summary of discussions, comparisons, or a factual question about what the posts say. They do
                      NOT want leads. e.g. "research complaints about Shopify abandoned carts", "summarize the discussions about
@@ -6559,6 +6561,22 @@ def request_kind_note(request_kind, subject) -> str:
                 "shows purchase intent. Keep only posts that are genuinely about the topic.")
     return ""
 
+
+
+_SENTENCE_STARTERS = {"any", "anyone", "anybody", "is", "are", "was", "were", "who", "what", "how", "why", "where", "which", "when",
+                      "best", "good", "can", "could", "should", "would", "looking", "need", "needs", "want", "recommend", "does", "do"}
+
+
+def _subject_is_a_sentence(subject) -> bool:
+    """A quoted QUESTION or sentence ("Any good habit tracking apps?") is a topic to search, not a name or term to find verbatim."""
+    if not isinstance(subject, str):
+        return False
+    text = subject.strip(" \t\r\n\"'`\u201c\u201d")
+    words = re.findall(r"[^\W_]+", text, flags=re.UNICODE)
+    if not words:
+        return False
+    return (text.endswith(("?", "!")) or len(words) >= 6
+            or (len(words) >= 3 and words[0].lower() in _SENTENCE_STARTERS))
 
 
 def _parse_router_json(raw: str, allow_previous_results: bool = False):
@@ -6786,6 +6804,18 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
             match_phrases = None
             if not keywords:       # offer-side phrasing, never the buyer-style fallback
                 keywords = [f"{subject} for hire", f"freelance {subject} available"]
+        elif _rk in MENTION_KINDS and _subject_is_a_sentence(data.get("subject")):
+            # a question or sentence is a TOPIC, not a name: searching it verbatim finds almost nothing. A brand/term request
+            # becomes a topic search (research); a "person" request with a sentence is not a name request at all, so it keeps the
+            # unchanged pipeline.
+            if _rk == "mention_search":
+                request_kind = "research"
+                _raw = data.get("subject").strip(" \t\r\n\"'`\u201c\u201d?!")
+                subject = clean_subject(_raw)            # None for a long question: research needs no subject
+                if subject:
+                    keywords = [subject]
+                elif not keywords and _raw:
+                    keywords = [_raw[:120]]
         elif _rk in MENTION_KINDS and subject:
             request_kind = _rk
             keywords = [subject]            # the literal subject IS the search; buyer-style phrasing is meaningless here
