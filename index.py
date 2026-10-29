@@ -121,6 +121,7 @@ from authlib.integrations.starlette_client import OAuth
 import flintel
 import scheduler as trending_keywords_scheduler   # 12-hourly trending-keywords background job
 import guest_gate      # (GUEST GATE) server-side limit on a visitor's genuine searches
+import answer_integrity  # (REQUEST KIND) what was asked decides how posts are kept and the empty state is worded
 import turn_control    # (STOP) is_closed(): stopped / failed turns are never worked on again
 import turn_finisher   # (NON-BLOCKING CHAT PAGE) durable finishing of older unfinished research turns
 import google as google_search   # the new google.py module
@@ -151,6 +152,7 @@ def _cfg_strict_wait() -> float:
 from logics import (
     normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, unsupported_requested, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
+    matcher_for_kind, request_kind_note,   # (REQUEST KIND)
     freshness_enabled, enrich_freshness_answer,   # (FRESHNESS DISCLOSURE)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
@@ -808,7 +810,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         evidence_required: int = None,
                         website_only: bool = False, website_evidence: dict = None,
                         website_note: str = None, resolved_query: str = None, time_range: dict = None,
-                        credit_request_id: str = None, late_delivery: tuple = None):
+                        credit_request_id: str = None, late_delivery: tuple = None,
+                        request_kind: str = None, subject: str = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -946,6 +949,9 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
 
     if credit_request_id:
         message["credit_request_id"] = credit_request_id
+    if request_kind:                       # (REQUEST KIND) only a non-lead request records its kind; every other message is unchanged
+        message["request_kind"] = request_kind
+        message["subject"] = subject
 
     chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
     update = {"$push": {"messages": message}, "$set": {"updated_at": now}}
@@ -2324,6 +2330,9 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             # website-classification note (own-business/related/unrelated),
             # if any, is folded in last so analyze_with_claude() can
             # account for how the shared website relates to the query.
+            _kind_note = request_kind_note(msg.get("request_kind"), msg.get("subject"))     # (REQUEST KIND) '' for a lead request
+            if _kind_note:
+                extra_ctx_parts.append(_kind_note)
             if msg.get("website_note"):
                 extra_ctx_parts.append(msg["website_note"])
             _rq_note = _resolved_request_note(msg.get("query"), msg.get("resolved_query"))   # (MULTI-TURN CONTEXT)
@@ -2346,17 +2355,18 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                                         request_id=msg.get("request_id")):
                     answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
                 save_pending_answer(chat_id, owner_key, msg.get("topic_key"), msg.get("request_id"), answer)
-            with time_scope_context(build_time_scope(msg.get("time_window_days"), msg.get("time_range"),
-                                                     msg.get("requested_at"),
-                                                     targeting_platform=msg.get("targeting_platform", "all"))):   # (RECENCY) the message's own window
-                answer = _patch_post_urls_into_answer(answer, merged_pool, query=msg.get("query"))
-            if msg.get("website_context"):
-                answer = _inject_website_context_into_answer(answer, msg["website_context"])
-            answer = enrich_no_results_answer(answer, msg.get("query"), msg.get("targeting_platform"),   # (NO-RESULTS UI)
-                                              msg.get("time_range"), msg.get("time_window_days"), msg.get("keywords"))
-            answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement; no-op when off
-                answer, merged_pool, time_range=msg.get("time_range"), time_window_days=msg.get("time_window_days"),
-                provenance=freshness_prov, matched_count=len(matched), evidence_limit=effective_evidence_limit)
+            with answer_integrity.request_kind_context(msg.get("request_kind"), msg.get("subject"), len(merged_pool)):   # (REQUEST KIND)
+                with time_scope_context(build_time_scope(msg.get("time_window_days"), msg.get("time_range"),
+                                                         msg.get("requested_at"),
+                                                         targeting_platform=msg.get("targeting_platform", "all"))):   # (RECENCY) the message's own window
+                    answer = _patch_post_urls_into_answer(answer, merged_pool, query=msg.get("query"))
+                if msg.get("website_context"):
+                    answer = _inject_website_context_into_answer(answer, msg["website_context"])
+                answer = enrich_no_results_answer(answer, msg.get("query"), msg.get("targeting_platform"),   # (NO-RESULTS UI)
+                                                  msg.get("time_range"), msg.get("time_window_days"), msg.get("keywords"))
+                answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement; no-op when off
+                    answer, merged_pool, time_range=msg.get("time_range"), time_window_days=msg.get("time_window_days"),
+                    provenance=freshness_prov, matched_count=len(matched), evidence_limit=effective_evidence_limit)
             # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
             verdict = guest_gate.on_answer_ready(gate_key, chat_id, msg["topic_key"], gate_token, answer, lease=gate_lease)
             if verdict != guest_gate.DELIVER:
@@ -2576,7 +2586,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                     topic_key=msg["topic_key"],
                     keywords=msg.get("keywords", []),
                     evidence_required=effective_evidence_limit,
-                    matcher_fn=get_matched_signals,
+                    matcher_fn=matcher_for_kind(msg.get("request_kind"), msg.get("subject"), get_matched_signals),   # (REQUEST KIND)
                     match_phrases=msg.get("match_phrases"),
                     targeting_platform=msg.get("targeting_platform", "all"),
                     since_days=msg.get("time_window_days"),
@@ -2727,6 +2737,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                             gate_owner=guest_gate.gate_owner(owner_key, msg),
                             time_window_days=msg.get("time_window_days"), requested_at=msg.get("requested_at"),
                             targeting_platform=msg.get("targeting_platform"),   # (GATE 2) the request's own platform selection,   # (RECENCY)
+                            **({"request_kind": msg["request_kind"], "subject": msg.get("subject")} if msg.get("request_kind") else {}),
                         )
                     else:
                         _timeout_fallback_answer(
@@ -2738,6 +2749,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                             gate_owner=guest_gate.gate_owner(owner_key, msg),
                             time_window_days=msg.get("time_window_days"), requested_at=msg.get("requested_at"),
                             targeting_platform=msg.get("targeting_platform"),   # (GATE 2) the request's own platform selection,   # (RECENCY)
+                            **({"request_kind": msg["request_kind"], "subject": msg.get("subject")} if msg.get("request_kind") else {}),
                         )
             continue
 
