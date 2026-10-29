@@ -73,9 +73,10 @@ import google as google_search   # the new google.py module — needed here
     # for the Google-fallback stub-results read-back at RESPONSE_TIMEOUT
     # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
-from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence, usable_cached_posts, cancel_scan, scan_in_progress_locally, done_scan_handle
+from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence, usable_cached_posts, cancel_scan, scan_in_progress_locally, done_scan_handle, matcher_for_kind, request_kind_note
 from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
 from logics import exploratory_target, exploratory_reply, scope_reply, is_confirmation, is_business_question, CHAT_UNAVAILABLE_REPLY   # (GROUNDED ANSWERS)
+import answer_integrity
 from answer_integrity import validate_plain_text   # (GATE 2) plain-text replies may not state time-dependent facts about the data
 from logics import build_guidance_note   # (DATA-BACKED GUIDANCE)
 from logics import platform_display_value   # (PLATFORM PERSISTENCE)
@@ -1395,6 +1396,8 @@ def search(
         routed_match_phrases = None
         routed_time_window_days = None
         routed_unfiltered = False
+        routed_request_kind = None         # (REQUEST KIND) None = lead discovery (the unchanged pipeline)
+        routed_subject = None
         # (WEBSITE INTELLIGENCE — VAGUE FOLLOW-UP REUSE) True only when this
         # message's keywords were reused from a previously stored
         # last_website_context instead of being freshly generated — used
@@ -1495,6 +1498,8 @@ def search(
             routed_match_phrases = routed.get("match_phrases")
             routed_time_window_days = routed.get("time_window_days")
             routed_unfiltered = routed.get("unfiltered") or False
+            routed_request_kind = routed.get("request_kind") if intent == "search" else None
+            routed_subject = routed.get("subject") if routed_request_kind else None
         except Exception as exc:
             log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
             intent = "search"
@@ -2330,6 +2335,10 @@ def search(
         # keywords under this NEW topic_key would be redundant work with no
         # benefit, so it's skipped. Every other case enqueues exactly as
         # before this feature.
+        # (REQUEST KIND) A request that names a PERSON only searches the posts Flintel has ALREADY stored: it never queues a new
+        # collection job for that name (no proactive gathering of posts about an individual). Every other request is unchanged.
+        _skip_collector_job = bool(reuse_website_keywords) or routed_request_kind == "person_mentions"
+
         if credit_store is not None:
             # (SEARCH CREDITS) reserve before any enqueue; the legacy path below is unchanged
             def _save_main_ctx(saved_chat_id):
@@ -2358,11 +2367,12 @@ def search(
                                                         build_time_range_note(time_range_obj)) if n) or None,
                 "resolved_query": routed.get("resolved_query") if intent == "search" else None,
                 **({"time_range": time_range_obj.to_doc(reference_utc)} if time_range_obj is not None else {}),
+                **({"request_kind": routed_request_kind, "subject": routed_subject} if routed_request_kind else {}),
             }
             return _run_credited_search(
                 request, credit_store, credit_rid, query, topic_key, owner_key, owner_type,
                 active_chat_id, chat_id, keywords, targeting_platform, credit_message,
-                expects_job=not reuse_website_keywords, time_range_obj=time_range_obj,
+                expects_job=not _skip_collector_job, time_range_obj=time_range_obj,
                 after_save=_save_main_ctx, routed=routed,
             )
 
@@ -2370,7 +2380,7 @@ def search(
         guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id, routed=routed)
         if guest_denial is not None:
             return _guest_gate_denial_response(request, guest_denial, query, _gate_owner(request, owner_key))
-        if not reuse_website_keywords:
+        if not _skip_collector_job:
             try:
                 enqueue_search_job(topic_key, keywords, targeting_platform)
                 if time_range_obj is not None:
@@ -2405,6 +2415,7 @@ def search(
                                                         build_time_range_note(time_range_obj)) if n) or None,
                 resolved_query=routed.get("resolved_query") if intent == "search" else None,   # (MULTI-TURN CONTEXT)
                 **({"time_range": time_range_obj.to_doc(reference_utc)} if time_range_obj is not None else {}),
+                **({"request_kind": routed_request_kind, "subject": routed_subject} if routed_request_kind else {}),
             )
             # (WEBSITE INTELLIGENCE) Whenever this message's keywords came
             # from the website (BEHAVIOR 2, or a BEHAVIOR 3 confirmed
@@ -3013,7 +3024,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             topic_key=topic_key,
             keywords=msg.get("keywords", []),
             evidence_required=effective_evidence_limit,
-            matcher_fn=get_matched_signals,
+            matcher_fn=matcher_for_kind(msg.get("request_kind"), msg.get("subject"), get_matched_signals),   # (REQUEST KIND)
             match_phrases=msg.get("match_phrases"),
             targeting_platform=msg.get("targeting_platform", "all"),
             since_days=msg.get("time_window_days"),
@@ -3575,6 +3586,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             msg["query"], msg.get("time_window_days")
                         )
                     )
+                _kind_note = request_kind_note(msg.get("request_kind"), msg.get("subject"))     # (REQUEST KIND) '' for a lead request
+                if _kind_note:
+                    extra_ctx_parts.append(_kind_note)
                 if msg.get("website_note"):
                     extra_ctx_parts.append(msg["website_note"])
                 if continuity_ctx:
@@ -3606,6 +3620,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                                             request_id=msg.get("request_id")):
                         full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
                     save_pending_answer(chat_id, owner_key, topic_key, _rid, full_answer)    # durable before any post-processing
+                # (REQUEST KIND) from here to the end of the post-processing the integrity layer and the empty state know what was
+                # asked (set and reset within this one synchronous stretch, no yield in between)
+                _kind_token = answer_integrity.set_request_kind(msg.get("request_kind"), msg.get("subject"), len(merged_pool))
                 with time_scope_context(build_time_scope(msg.get("time_window_days"), msg.get("time_range"),
                                                          msg.get("requested_at"),
                                                          targeting_platform=msg.get("targeting_platform", "all"))):   # (RECENCY) the message's own window
@@ -3628,7 +3645,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     _finalize_answer_and_results(full_answer, merged_pool, seed=msg.get("query", ""))
                     if full_answer else (full_answer, merged_pool)
                 )
+                answer_integrity.reset_request_kind(_kind_token)
             except Exception as exc:
+                try:
+                    answer_integrity.reset_request_kind(_kind_token)
+                except NameError:
+                    pass
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
                 guest_gate.on_search_incomplete(_gk, msg.get("request_id"))   # (GUEST GATE) not completed
                 mark_turn_failed(chat_id, owner_key, topic_key, msg.get("request_id"))   # a refresh shows this state, it does not re-run
