@@ -2,7 +2,7 @@
 FLINTEL — WEB SERVICE (app wiring + chat/session/Mongo orchestration)
 ============================================================================
 This module owns: the FastAPI app itself (middleware, no-cache headers,
-session setup, Google OAuth registration), password hashing, and every
+session setup, Google OAuth registration), password hashing, and every 
 `flintel_users` / `flintel_users_chat` Mongo-backed function (user
 accounts, chat sessions, message bookkeeping, the busy-lock, the  
 background-trigger orchestration for Google-fallback/search-progress,
