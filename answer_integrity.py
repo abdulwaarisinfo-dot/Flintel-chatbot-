@@ -18,6 +18,8 @@ subreddit) live in PlatformRules subclasses; everything else is shared.
 """
 
 import bisect
+import contextlib
+import contextvars
 import json
 import re
 from datetime import datetime, timedelta, timezone
@@ -29,7 +31,84 @@ ROLES = ("buyer", "discussion", "competitor_promo", "testimonial", "irrelevant")
 NON_DEMAND_ROLES = ("competitor_promo", "testimonial")
 _INTENT_ORDER = {"none": 0, "research": 1, "explicit": 2}
 _FIT_ORDER = {"unrelated": 0, "partial": 1, "fits": 2}
-_LABEL_ORDER = {"High": 3, "Medium": 2, "Uncertain": 1, "Low": 0}
+_LABEL_ORDER = {"High": 3, "Medium": 2, "Uncertain": 1, "Low": 0, "": -1}   # "" = no lead rating (a mention / research row)
+
+# ── (REQUEST KIND) what the user asked for decides how a post may be kept, dropped and labelled ──────────────────────────────
+# "lead_discovery" (and a missing kind) keeps every rule of this module exactly as it was. The mention kinds keep a post only if its
+# text literally contains the searched subject and never rate it as a lead; "research" keeps the topical-relevance rules but
+# never rates a post as a lead. The kind is carried in a context variable (set by the caller around the answer and its
+# post-processing, like logics.time_scope_context) so no function signature changes.
+MENTION_KINDS = ("mention_search", "person_mentions")
+_REQUEST_KIND = contextvars.ContextVar("flintel_request_kind", default=(None, None, None))
+
+
+@contextlib.contextmanager
+def request_kind_context(kind, subject=None, retrieved=None):
+    """`retrieved` = how many posts were retrieved for this request (None = unknown), so an empty answer can say whether nothing
+    was retrieved or what was retrieved was not relevant."""
+    token = _REQUEST_KIND.set((kind or None, subject, retrieved))
+    try:
+        yield
+    finally:
+        _REQUEST_KIND.reset(token)
+
+
+def set_request_kind(kind, subject=None, retrieved=None):
+    """Sets the request kind for the CURRENT context and returns a token for reset_request_kind(). For code that cannot be
+    wrapped in a `with` (a long block between two yields of a stream); set and reset happen in the same synchronous stretch."""
+    return _REQUEST_KIND.set((kind or None, subject, retrieved))
+
+
+def reset_request_kind(token) -> None:
+    try:
+        _REQUEST_KIND.reset(token)
+    except (ValueError, RuntimeError):          # the token belongs to another context: that context was already discarded
+        pass
+
+
+def current_request_kind():
+    """(kind, subject) of the request being processed; (None, None) = lead discovery."""
+    return _REQUEST_KIND.get()[:2]
+
+
+def current_retrieved_count():
+    return _REQUEST_KIND.get()[2]
+
+
+_SUBJECT_TOKEN_RE = re.compile(r"[^\W_]+", re.UNICODE)
+
+
+def clean_subject(raw):
+    """The literal subject of a mention request, or None. 1-6 alphanumeric words, at most 80 characters."""
+    if not isinstance(raw, str):
+        return None
+    text = " ".join(raw.replace("\u201c", '"').replace("\u201d", '"').strip(" \t\r\n\"'`").split())
+    if not text or len(text) > 80:
+        return None
+    tokens = _SUBJECT_TOKEN_RE.findall(text)
+    if not 1 <= len(tokens) <= 6 or len("".join(tokens)) < 2:
+        return None
+    return text
+
+
+def subject_pattern(subject):
+    """Case-insensitive, word-bounded regex source for a subject: its words in order, separated by anything that is not a letter
+    or digit or by nothing (HamzaAli, hamza_ali), plus the reversed order for a two-word name ("Ali, Hamza"). "Aliyev" does not
+    match "Ali". None for an unusable subject. The same source is used in MongoDB ($regex) and in Python (re)."""
+    subject = clean_subject(subject)
+    if not subject:
+        return None
+    toks = [re.escape(t) for t in _SUBJECT_TOKEN_RE.findall(subject)]
+    sep = r"[\W_]*"
+    forward = r"\b" + sep.join(toks) + r"\b"
+    if len(toks) == 2:
+        return "(?:" + forward + "|" + r"\b" + toks[1] + r"[\W_]+" + toks[0] + r"\b)"
+    return forward
+
+
+def mentions_subject(subject, *texts) -> bool:
+    pat = subject_pattern(subject)
+    return bool(pat) and bool(re.search(pat, " ".join(t for t in texts if isinstance(t, str)), re.IGNORECASE))
 
 
 # ── platform-specific rules ──────────────────────────────────────────────────
@@ -860,7 +939,52 @@ def _pick_evidence(title: str, text: str, role, trigger, sg=None):
     return _clip(sents[0]) if sents else None
 
 
+def _classify_mention_post(sig: dict, identity, kind: str, subject) -> dict:
+    """A row of a mention request: kept only if the stored post literally contains the subject; never rated as a lead. The
+    model's analysis is used only when it is provably about THIS post (identity), exactly as for every other row."""
+    title = (sig.get("title") or "").strip()
+    text = (sig.get("post_text") or "").strip()
+    status = verification_status(sig)
+    if status != "verified":
+        return _classify_lead_post(sig, {}, set(), False, identity)         # unverifiable rows are labelled as before
+    if not mentions_subject(subject, title, text):
+        return {"_exclude": "irrelevant"}
+    matched = identity is not None
+    pat = re.compile(subject_pattern(subject), re.IGNORECASE)
+    evidence = next((_clip(s) for s in _sentences(title) + _sentences(text) if pat.search(s)), None)
+    note = ("Contains the searched name. A matching name does not show the post is about any particular person."
+            if kind == "person_mentions" else "Contains the searched term.")
+    uncertainty = [] if matched else ["Flintel could not confirm that the analysis for this row was written about this post, "
+                                      "so its summary was not used."]
+    return {"role": "discussion", "purchase_intent": "none", "product_fit": "fits",
+            "relevance": "relevant" if matched else "uncertain", "analysis_status": "matched" if matched else "unmatched",
+            "intent": "", "qualified": False, "evidence": evidence, "evidence_source": "excerpt" if evidence else None,
+            "verification_status": status, "intent_reason": note + " Shown as a mention; buyer intent is not assessed for this request.",
+            "uncertainty": uncertainty, "analysis_identity": identity, "analysis_verified": matched, "_exclude": None,
+            "purchase_signals": None}
+
+
+def _as_research_row(out: dict) -> dict:
+    """A research row keeps the topical-relevance decision of the lead rules but is never rated as a lead or a buyer."""
+    if out.get("_exclude") or out.get("verification_status") != "verified":
+        return out
+    out = dict(out)
+    if out.get("role") == "buyer":
+        out["role"] = "discussion"
+    out.update(intent="", qualified=False, purchase_intent="none", purchase_signals=None,
+               intent_reason="Shown as part of the research on this topic; buyer intent is not assessed for this request.")
+    return out
+
+
 def classify_post(sig: dict, model_post: dict, terms: set, icp: bool, identity: str = None) -> dict:
+    kind, subject = current_request_kind()
+    if kind in MENTION_KINDS:
+        return _classify_mention_post(sig, identity, kind, subject)
+    out = _classify_lead_post(sig, model_post, terms, icp, identity)
+    return _as_research_row(out) if kind == "research" else out
+
+
+def _classify_lead_post(sig: dict, model_post: dict, terms: set, icp: bool, identity: str = None) -> dict:
     """Final labels for one listed post. Each dimension is computed from the
     stored post; the model's own labels (if any) can only lower it. A model
     label alone never makes a post relevant or high intent."""
@@ -1993,13 +2117,27 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
     }
 
     if listed and not rows:
+        _kind, _subject = current_request_kind()
+        if _kind in MENTION_KINDS:
+            _msg = (f"{listed} post{'s were' if listed != 1 else ' was'} retrieved, but none contains "
+                    f"\u201c{_subject}\u201d in its text, so none is shown as a mention.")
+            _why = "Only posts whose text actually contains the searched term are shown as mentions."
+        elif _kind == "research":
+            _msg = (f"{listed} post{'s were' if listed != 1 else ' was'} retrieved, but none was about this topic, "
+                    "so none is shown.")
+            _why = "The posts found shared words with the request but were not about the topic."
+        else:
+            _msg = (f"This search surfaced {listed} post{'s' if listed != 1 else ''}, but none was "
+                    "relevant to the request with supporting evidence, so none are shown as results.")
+            _why = "The posts found matched keywords but were not about what the request is looking for."
         return {
             "format": "no_results",
             "no_results_reason": "empty",
+            "no_results_detail": "none_relevant",       # posts WERE retrieved; every one was left out as not relevant
+            **({"request_kind": _kind} if _kind else {}),
             "searched": {"query": "", "platforms": [], "time_window": ""},
-            "message": (f"This search surfaced {listed} post{'s' if listed != 1 else ''}, but none was "
-                        "relevant to the request with supporting evidence, so none are shown as results."),
-            "likely_reason": "The posts found matched keywords but were not about what the request is looking for.",
+            "message": _msg,
+            "likely_reason": _why,
             "suggested_actions": [],
             "counts": counts,
             "excluded_posts": excluded_posts,
@@ -2223,6 +2361,15 @@ def verified_summary(counts: dict, analysis_check: dict = None, time_scope: dict
 
     def n(v, one, many):
         return f"{v} {one if v == 1 else many}"
+    if current_request_kind()[0] is not None and current_request_kind()[0] != "lead_discovery":
+        # not a lead request: no lead count and no lead definition (nothing here was assessed as a lead)
+        text = f"Checked against the stored posts: {n(counts.get('shown', 0), 'post shown', 'posts shown')}"
+        if counts.get("excluded"):
+            text += f"; {counts['excluded']} of {n(counts.get('listed', 0), 'listed post', 'listed posts')} excluded"
+        ts = time_scope or {}
+        if ts.get("window"):
+            text += f"; counted for the {ts['window']['label']} only"
+        return text + "."
     parts = [n(cats.get("qualified", 0), "qualified lead", "qualified leads")]
     parts += [n(cats[k], one, many) for k, one, many in _CATEGORY_WORDS if cats.get(k)]
     text = "Checked against the stored posts: " + ", ".join(parts)
