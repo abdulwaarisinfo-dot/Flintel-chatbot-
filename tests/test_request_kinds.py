@@ -76,7 +76,6 @@ def test_research_is_parsed_and_keeps_its_keywords(env):
     _router("mention_search", None, keywords=["k"]),                                 # a mention kind without a subject -> lead pipeline
     _router("person_mentions", "  ", keywords=["k"]),
     _router("mention_search", "x" * 200, keywords=["k"]),                            # unusable subject
-    _router("mention_search", "a b c d e f g h", keywords=["k"]),
 ])
 def test_everything_else_is_exactly_the_unchanged_lead_result(env, raw):
     lg, _, _ = env
@@ -600,3 +599,25 @@ def test_the_page_shows_an_offer_column_and_no_lead_columns_for_provider_rows(in
         assert errors == []
     finally:
         ctx.close()
+
+
+# ---- a quoted question is a topic, not a name ("Any good Habit Tracking apps?") ----
+@pytest.mark.parametrize("subject", ["Any good Habit Tracking apps?", "“what is the best habit tracker for adhd”", "best habit tracker", "a b c d e f g h"])
+def test_a_quoted_question_is_searched_as_a_topic_not_verbatim(env, subject):
+    lg, _, _ = env
+    out = lg._parse_router_json(json.dumps(_router("mention_search", subject, [subject])))
+    assert out["request_kind"] == "research" and "?" not in (out["subject"] or "")
+    assert out["keywords"] and "?" not in out["keywords"][0]
+
+
+@pytest.mark.parametrize("subject", ["Acme", "Hamza Ali", "Any Distance", "Notion Calendar", "r/habitica", "Magic: The Gathering"])
+def test_names_and_short_terms_stay_literal_mention_requests(env, subject):
+    lg, _, _ = env
+    out = lg._parse_router_json(json.dumps(_router("mention_search", subject, ["x"])))
+    assert out["request_kind"] == "mention_search" and out["keywords"] == [lg.clean_subject(subject)]
+
+
+def test_a_sentence_given_as_a_person_request_keeps_the_unchanged_pipeline(env):
+    lg, _, _ = env
+    out = lg._parse_router_json(json.dumps(_router("person_mentions", "Is Hamza Ali a good designer?", ["x"])))
+    assert "request_kind" not in out
