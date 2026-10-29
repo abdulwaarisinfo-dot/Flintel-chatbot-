@@ -552,7 +552,7 @@ def _answer_with(fmt, status, when, window=None):
     ns = {"status": status, "published_at": when, "scope": "reddit"}
     scope = dict(window or {}, newest_stored=ns)
     if fmt == "source_list":
-        sigs = [_sig(1, "alpha", NOW - D(days=2))]
+        sigs = [_sig(1, "alpha", NOW - D(days=5))]          # a listed post is never newer than the newest stored post (the old fixture was impossible)
         return ai.enforce_answer_integrity(_answer(sigs), sigs, sigs, CRM_Q, time_scope=scope)
     return ai.enforce_temporal_claims({"format": fmt, "message": "Nothing to report.", "searched": {"time_window": "all posts"}}, [], scope)
 
