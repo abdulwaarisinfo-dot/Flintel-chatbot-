@@ -3279,9 +3279,11 @@
   function apNewestStoredLine(container, scope) {
     const ns = scope && typeof scope === 'object' ? scope.newest_stored : null;
     if (!ns || typeof ns !== 'object') return;
-    const when = ns.published_at ? formatPostedDate(ns.published_at) : '';
+    // a post listed in this very report can be newer than the server's lookup (it may not read every source): never state an older date
+    const listed = scope.newest_listed ? formatPostedDate(scope.newest_listed) : '';
+    const when = listed || (ns.published_at ? formatPostedDate(ns.published_at) : '');
     let text;
-    if (ns.status === 'unavailable') {
+    if (ns.status === 'unavailable' && !listed) {
       text = 'Newest stored post: unavailable. Flintel does not record when posts were collected.';
     } else if (!when) {
       text = 'Newest stored post: none found for this search scope. Flintel does not record when posts were collected.';
@@ -3328,12 +3330,15 @@
     const anyIntent = groups.some((p) => p.posts.some((x) => x && x.intent));
     const multi = groups.length > 1;
     const anySentiment = groups.some((p) => p.posts.some((x) => x && x.sentiment));
+    // (PROVIDER SEARCH) rows of a "find someone to hire" request carry the offer read from the post; they replace the lead columns
+    const anyOffer = groups.some((p) => p.posts.some((x) => x && x.offer && typeof x.offer === 'object'));
     // (GROUNDED ANSWERS) original publication date — set by the server only from
     // the matched stored post; the column appears only when at least one is known.
     const postedText = (post) => formatPostedDate(post && post.published_at);
     // the column also appears when a row is known to be undated, so an unknown date is stated, not hidden
     const anyPosted = groups.some((p) => p.posts.some((x) => postedText(x) || (x && x.date_status === 'undated')));
     const headers = ['#', multi ? 'Source' : (groups[0].community_label || (normalizePlatform(groups[0].platform) === 'reddit' ? 'Subreddit' : 'Source')), 'Post', 'Summary'];
+    if (anyOffer) headers.push('Offer');
     if (anyIntent) headers.push('Intent');
     if (anyPosted) headers.push('Posted');
     if (anySentiment) headers.push('Sentiment');
@@ -3376,6 +3381,33 @@
         }
         const num = Number.isInteger(post.index) && post.index > 0 ? post.index : n;
         const row = [String(num), source, postCell, summaryCell];
+        if (anyOffer) {
+          const cell = document.createElement('div');
+          const o = post.offer && typeof post.offer === 'object' ? post.offer : {};
+          const line = (label, value) => {
+            const d = cell.appendChild(document.createElement('div'));
+            d.textContent = `${label}: ${value}`;
+            return d;
+          };
+          line('Price', Array.isArray(o.price) && o.price.length ? o.price.join(' \u00B7 ') : 'not stated in the post');
+          if (Array.isArray(o.availability) && o.availability.length) line('Availability', o.availability.join(' \u00B7 '));
+          const links = (Array.isArray(o.links) ? o.links : []).filter((u) => typeof u === 'string' && /^https?:\/\//i.test(u));
+          if (links.length) {
+            const d = cell.appendChild(document.createElement('div'));
+            d.appendChild(document.createTextNode('Links in the post: '));
+            links.forEach((u, i) => {
+              if (i) d.appendChild(document.createTextNode(' \u00B7 '));
+              const a = document.createElement('a');
+              a.href = u; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow';
+              a.textContent = u.replace(/^https?:\/\//i, '');
+              d.appendChild(a);
+            });
+          }
+          const how = cell.appendChild(document.createElement('div'));
+          how.className = 'ap-post-note';
+          how.textContent = typeof o.how_to_reach === 'string' ? o.how_to_reach : '';
+          row.push(cell);
+        }
         if (anyIntent) {
           // Overall rating, then each dimension on its own: purchase intent, fit, source.
           const cell = document.createElement('div');
