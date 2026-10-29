@@ -461,3 +461,142 @@ def test_person_kind_retrieval_without_embeddings_feeds_storage_and_post_process
     assert "These are not leads" in ks.analysis_calls[-1]["extra"]
     ans = json.loads(msg["claude_answer"])
     assert ans["counts"]["qualified"] == 0 and all(p["intent"] == "" for p in _rows(ans))
+
+
+# ══ provider_search: "find me a graphic designer" (the user is the buyer; the answer is people OFFERING the service) ══════════
+def test_provider_kind_is_parsed_with_a_subject_and_offer_side_keywords(env):
+    lg, _, _ = env
+    assert "provider_search" in lg.REQUEST_KINDS and '"provider_search"' in lg.CLAUDE_ROUTER_SYSTEM_PROMPT
+    out = lg._parse_router_json(json.dumps(_router("provider_search", "graphic designer", ["graphic designer for hire"])))
+    assert out["request_kind"] == "provider_search" and out["subject"] == "graphic designer" and out["match_phrases"] is None
+    assert out["keywords"] == ["graphic designer for hire"]
+    bare = lg._parse_router_json(json.dumps(dict(_router("provider_search", "graphic designer", None), keywords=None)))
+    assert bare["keywords"] and all("graphic designer" in k for k in bare["keywords"])             # never the buyer-style fallback
+    nosubject = lg._parse_router_json(json.dumps(_router("provider_search", None, ["x"])))
+    assert "request_kind" not in nosubject                                                          # no role named: the unchanged pipeline
+    assert "provider_search" not in lg.request_kind_note(None, None)
+    note = lg.request_kind_note("provider_search", "graphic designer")
+    assert "not leads" in note and "never score purchase intent or sentiment" in note and "ONLY if the post states it" in note
+
+
+@pytest.mark.parametrize("q", ["Find me Graphic Designer", "Find me a Graphic Designer on Reddit", "find Video Editor", "Search Logo Designer", "Find me Web Developer", "Find me Marketing Agency"])
+def test_a_capitalised_role_is_not_mistaken_for_a_person_name(env, q):
+    lg, _, _ = env
+    assert lg._person_guard(q) is None
+
+
+def _dated(n, title, text, days_ago):
+    return {"title": title, "post_text": text, "post_url": f"https://www.reddit.com/r/x/comments/{n}/t/", "platform": "reddit",
+            "subreddit": "x", "created_utc": NOW - timedelta(days=days_ago)}
+
+
+PROVIDER_POOL = [
+    _dated(1, "[For Hire] Freelance Graphic Designer - Branding, Logos", "Logo packages from $520. Limited slots open, 3 day turnaround. "
+           "Portfolio: https://www.behance.net/someone and https://www.reddit.com/r/x/comments/9/t/. DM me.", 9),
+    _dated(2, "[FOR HIRE] Professional Logo & Graphic Designer", "Taking commissions this week.", 2),
+    _dated(3, "[Hiring] Need a graphic designer for my startup", "Looking for a graphic designer for a logo. Budget $300.", 1),
+    _dated(4, "Looking for a graphic designer to redo our packaging", "Can anyone recommend a good graphic designer?", 3),
+    _dated(5, "[For Hire] Python developer available", "Backend work, APIs. Open for new projects.", 4),
+    _dated(6, "Graphic design is a hard career", "Discussion about the industry in general.", 5),
+]
+
+
+def _mismatched(pool):                     # the model's rows do not match the stored titles/numbers: the identity check must fail
+    return {"format": "source_list", "headline": "Designers", "executive_summary": "Offers found.", "key_findings": [],
+            "platforms": [{"platform": "reddit", "total_analyzed": len(pool), "shown_count": len(pool), "posts": [
+                {"index": 99, "link": p["post_url"], "title": p["title"], "summary": "Great portfolio and 5 star reviews",
+                 "role": "buyer", "purchase_intent": "explicit", "product_fit": "fits", "sentiment": "positive"} for p in pool]}]}
+
+
+def test_e2e_provider_search_keeps_only_offers_and_shows_offer_details_not_lead_labels(ks):
+    ks.model_reply = _mismatched
+    routed, msg = ks.run("Find me a graphic designer on Reddit.", _router("provider_search", "graphic designer", ["graphic designer for hire"]), PROVIDER_POOL)
+    assert msg["request_kind"] == "provider_search" and msg["subject"] == "graphic designer"
+    assert "REQUEST KIND: provider search" in ks.analysis_calls[-1]["extra"]
+    ans = json.loads(msg["claude_answer"])
+    rows = _rows(ans)
+    assert [r["title"] for r in rows] == ["[FOR HIRE] Professional Logo & Graphic Designer",           # newest first
+                                          "[For Hire] Freelance Graphic Designer - Branding, Logos"]
+    assert ans["counts"]["offers"] == 2 and ans["counts"]["qualified"] == 0 and ans["counts"]["excluded"] == 4
+    for r in rows:
+        assert r["intent"] == "" and not r["qualified"] and not r.get("sentiment") and r["purchase_intent"] == "none"
+        assert r["summary"] != ai.SUMMARY_UNAVAILABLE and "5 star" not in r["summary"]                 # the model's unmatched text is never shown
+        assert r["offer"]["how_to_reach"]
+    first, second = rows
+    assert second["offer"]["price"] == ["from $520"] and "Limited slots" in " ".join(second["offer"]["availability"]).capitalize() \
+        and "3 day turnaround" in second["offer"]["availability"]
+    assert second["offer"]["links"] == ["https://www.behance.net/someone"]                             # the reddit.com link is not a portfolio
+    assert first["offer"]["price"] == [] and first["offer"]["links"] == []                             # nothing is invented
+    assert "Taking commissions" in first["summary"] or first["summary"].startswith("The offer is in the post title")
+
+
+def test_provider_rows_use_a_matched_model_summary_only_when_it_is_about_the_post(ks):
+    def good(pool):
+        return {"format": "source_list", "headline": "Designers", "executive_summary": "Offers.", "key_findings": [],
+                "platforms": [{"platform": "reddit", "total_analyzed": 1, "shown_count": 1, "posts": [
+                    {"index": 1, "link": pool[0]["post_url"], "title": pool[0]["title"],
+                     "summary": "Offers logo packages from $520 with limited slots.", "role": "buyer", "sentiment": "positive"}]}]}
+    ks.model_reply = good
+    _, msg = ks.run("Find me a graphic designer.", _router("provider_search", "graphic designer", ["graphic designer for hire"]), PROVIDER_POOL[:1])
+    row = _rows(json.loads(msg["claude_answer"]))[0]
+    assert row["summary"] == "Offers logo packages from $520 with limited slots." and row["role"] == "discussion"
+    assert row["intent"] == "" and not row.get("sentiment")                                           # the model's lead labels never survive
+
+
+def test_a_lead_request_about_the_same_posts_is_unchanged(ks):
+    ks.model_reply = _mismatched
+    _, msg = ks.run("Find founders who need a graphic designer.", _router(None, None, ["graphic designer"]), PROVIDER_POOL)
+    assert "request_kind" not in msg
+    assert all("offer" not in r for r in _rows(json.loads(msg["claude_answer"])))
+
+
+def test_provider_empty_states_are_about_offers_not_demand(env):
+    lg, _, _ = env
+    for retrieved, detail, head in ((0, "none_retrieved", "No one offering \u201cgraphic designer\u201d found"),
+                                    (4, "none_relevant", "Posts retrieved, none offering \u201cgraphic designer\u201d")):
+        with ai.request_kind_context("provider_search", "graphic designer", retrieved):
+            out = json.loads(lg.enrich_no_results_answer(_no_results(), "Find me a graphic designer", "reddit"))
+        assert out["headline"] == head and out["request_kind"] == "provider_search" and out["no_results_detail"] == detail
+        low = json.dumps(out).lower()
+        assert "demand" not in low and "purchase intent" not in low
+
+
+def test_a_listed_post_newer_than_the_newest_stored_record_is_reported_beside_it_not_over_it():
+    row = {"date_status": "dated", "published_at": "2026-10-21T00:00:00+00:00"}
+    scope = {"newest_stored": {"status": "found", "published_at": "2026-10-03T00:00:00+00:00", "scope": "reddit"}}
+    out = ai._time_scope_summary([row], None, scope)
+    assert out["newest_stored"]["published_at"].startswith("2026-10-03")                   # the server's record is untouched
+    assert out["newest_listed"].startswith("2026-10-21")                                   # and the UI is told about the newer listed post
+    older = {"date_status": "dated", "published_at": "2026-09-01T00:00:00+00:00"}
+    assert "newest_listed" not in ai._time_scope_summary([older], None, scope)
+    assert "newest_stored" not in ai._time_scope_summary([row], None, None)                # no record from the server: still no line
+
+
+@pytest.mark.parametrize("name", ["chat.html", "index.html"])
+def test_the_ui_never_states_a_newest_stored_date_older_than_a_listed_post(name):
+    html = (ROOT / "templates" / name).read_text(encoding="utf-8")
+    assert "scope.newest_listed" in html and "unavailable' && !listed" in html
+
+
+@pytest.mark.parametrize("name", ["chat.html", "index.html"])
+def test_the_page_shows_an_offer_column_and_no_lead_columns_for_provider_rows(integrity_browser, name):
+    from tests.test_gate2_pilot_safety import _open_any
+    sigs = [dict(p, platform="reddit") for p in PROVIDER_POOL]
+    with ai.request_kind_context("provider_search", "graphic designer", len(sigs)):
+        data = ai.enforce_answer_integrity(_mismatched(sigs), sigs, sigs, "Find me a graphic designer",
+                                           time_scope={"newest_stored": {"status": "found", "published_at": (NOW - timedelta(days=30)).isoformat(), "scope": "reddit"}})
+    page, ctx, errors = _open_any(integrity_browser, name, data)
+    try:
+        heads = [h.strip() for h in page.locator(".answer-rendered table.ap-sources-table th").all_inner_texts()]
+        assert "Offer" in heads and "Intent" not in heads and "Sentiment" not in heads and "Posted" in heads
+        cell = page.inner_text(".answer-rendered table.ap-sources-table tbody tr:nth-child(2)")
+        assert "from $520" in cell and "behance.net/someone" in cell and "Reply to the post" in cell
+        link = page.locator(".answer-rendered table.ap-sources-table a[href='https://www.behance.net/someone']")
+        assert link.count() == 1 and "noopener" in link.first.get_attribute("rel")
+        assert "Summary unavailable" not in page.inner_text(".answer-rendered")
+        newest = page.inner_text(".answer-rendered .ap-newest-stored")
+        d = NOW - timedelta(days=2)
+        assert f"{d.strftime('%b')} {d.day}, {d.year} UTC" in newest                      # the newest LISTED post, never the older record's date
+        assert errors == []
+    finally:
+        ctx.close()
