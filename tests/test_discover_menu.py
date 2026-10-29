@@ -131,7 +131,7 @@ def test_the_homepage_head_and_seo_basics_are_unchanged(app_env, monkeypatch):
     idx, rts, _ = app_env
     head = _head_of(_logged_out(idx, rts, monkeypatch))
     assert '<link rel="canonical" href="http://testserver/">' in head
-    assert '<meta name="description" content="Search a brand, product or topic and see what people say about it on Reddit' in head
+    assert '<meta name="description" content="Ask in plain words for anything you want to find on social media, starting with Reddit' in head
     assert "application/ld+json" in head and "noindex" not in head.lower()
 
 
