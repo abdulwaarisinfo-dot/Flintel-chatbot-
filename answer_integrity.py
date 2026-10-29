@@ -39,6 +39,7 @@ _LABEL_ORDER = {"High": 3, "Medium": 2, "Uncertain": 1, "Low": 0, "": -1}   # ""
 # never rates a post as a lead. The kind is carried in a context variable (set by the caller around the answer and its
 # post-processing, like logics.time_scope_context) so no function signature changes.
 MENTION_KINDS = ("mention_search", "person_mentions")
+PROVIDER_KIND = "provider_search"     # the user wants to HIRE / BUY from someone who offers a service: sellers' posts are the answer
 _REQUEST_KIND = contextvars.ContextVar("flintel_request_kind", default=(None, None, None))
 
 
@@ -976,8 +977,123 @@ def _as_research_row(out: dict) -> dict:
     return out
 
 
+# ── provider_search: "find me a graphic designer" ────────────────────────────────────────────────────────────────────────────
+# The user is the buyer; the posts that answer are people OFFERING the service ("[For Hire] ...", "taking commissions"). Nothing
+# here is a lead: no buyer intent, no purchase rating, no sentiment. A post is kept only if (a) its own text offers the service
+# (b) it concerns the requested role/service and (c) it is not a post from someone who wants to HIRE that role. Every shown
+# detail (price, availability, links, summary excerpt) is read from the stored post text; nothing is inferred or invented, and
+# no contact detail beyond a link the author published in the post is shown.
+_OFFER_STRONG = re.compile(
+    r"\[\s*for\s*hire\s*\]|\bfor\s+hire\b|\bhire\s+me\b|"
+    r"\bavailable\s+(?:now\s+)?(?:for|to)\s+(?:hire|work|freelance|projects?|commissions?|new\s+(?:clients?|projects?))|"
+    r"\b(?:open|taking|accepting)\s+(?:for\s+)?(?:new\s+)?(?:commissions?|clients?|projects?|orders?|work)\b|"
+    r"\b(?:commissions?|slots?|spots?)\s+(?:are\s+)?open\b|\bi\s+offer\b|\bmy\s+services\b|"
+    r"\bstarting\s+(?:at|from)\s+[$\u20ac\u00a3]|"
+    r"\b(?:looking|searching)\s+for\s+(?:freelance\s+|new\s+|more\s+)*(?:clients?|work|projects?|gigs?|commissions?|customers)\b|"
+    r"\bseeking\s+(?:freelance\s+|new\s+)*(?:work|clients?|projects?|gigs?)\b|\bfreelance\s+\w+\s+available\b",
+    re.IGNORECASE)
+_OFFER_WEAK = re.compile(
+    r"\bdm\s+me\b|\bmy\s+(?:portfolio|rates|work)\b|\bi(?:'m|\s+am)\s+(?:a|an)\s+(?:\w+\s+){0,3}(?:freelanc\w+|professional)\b|"
+    r"\b(?:portfolio|rates?|pricing)\s*:|\bfreelanc\w+\b", re.IGNORECASE)
+_PRICE = re.compile(
+    r"(?:\b(?:from|starting\s+(?:at|from)|only)\s*)?(?:[$\u20ac\u00a3]|(?:USD|EUR|GBP|PKR|INR|Rs\.?)\s?)\s?\d[\d,]*(?:\.\d+)?(?:\s?[kK]\b)?"
+    r"(?:\s?(?:/|per\s)\s?(?:hr|hour|project|logo|day|week|month|page|word|design)\b)?|"
+    r"\b\d[\d,]*\s?(?:USD|EUR|GBP|PKR)\b(?:\s?(?:/|per\s)\s?(?:hr|hour|project|logo|day|week|month)\b)?", re.IGNORECASE)
+_AVAILABILITY = re.compile(
+    r"\blimited\s+(?:slots?|spots?|availability)\b|\b\d+\s+(?:slots?|spots?)\s+(?:left|open|available)\b|"
+    r"\b(?:slots?|spots?|commissions?)\s+(?:are\s+)?open\b|\bavailable\s+(?:now|immediately|today|this\s+week)\b|"
+    r"\b\d+\s*[-\u2013]?\s*(?:hour|day|week)s?\s+(?:turnaround|delivery)\b|\b(?:fast|quick|rush)\s+(?:turnaround|delivery)\b|"
+    r"\bsame[-\s]day\s+delivery\b", re.IGNORECASE)
+_URL = re.compile(r"https?://[^\s)\]>\"']+", re.IGNORECASE)
+_URL_SKIP_HOST = re.compile(r"^(?:[\w-]+\.)*(?:reddit\.com|redd\.it|redditmedia\.com|redditstatic\.com)$", re.IGNORECASE)
+_PROVIDER_STOP = {"the", "and", "for", "with", "find", "looking", "need", "some", "good", "best", "who", "can", "someone", "please",
+                  "hire", "show", "get", "any", "from", "reddit", "post", "posts"}
+
+
+def _subject_stems(subject) -> list:
+    return sorted({_stem(t) for t in _tokens(subject) if len(t) >= 3 and t not in _PROVIDER_STOP and not t.isdigit()})
+
+
+def _hiring_pattern(stems):
+    """A post from someone who wants to HIRE the requested role ("[Hiring] designer", "looking for a graphic designer")."""
+    role = "|".join(re.escape(st) + r"\w*" for st in stems) or r"\b\B"
+    return re.compile(r"\[\s*hiring\s*\]|\bwe(?:'re|\s+are)\s+hiring\b|"
+                      r"\b(?:looking\s+for|in\s+need\s+of|need|needs|seeking|searching\s+for|want|wanted|hiring|"
+                      r"anyone\s+know|recommend\w*)\s+(?:an?\s+|some\s+|the\s+|good\s+|experienced\s+|freelance\s+)*(?:\w+\s+){0,3}(?:" + role + r")",
+                      re.IGNORECASE)
+
+
+def provider_offer(title: str, text: str) -> dict:
+    """The offer details that are literally in the post: {"price": [..], "availability": [..], "links": [..]}."""
+    blob = f"{title or ''}\n{text or ''}"
+    price, avail, links = [], [], []
+    for m in _PRICE.finditer(blob):
+        v = " ".join(m.group(0).split()).strip(" :,.")
+        if v and v not in price:
+            price.append(v[:40])
+        if len(price) == 2:
+            break
+    for m in _AVAILABILITY.finditer(blob):
+        v = " ".join(m.group(0).split())
+        if v.lower() not in {a.lower() for a in avail}:
+            avail.append(v[:40])
+        if len(avail) == 3:
+            break
+    for m in _URL.finditer(blob):
+        url = m.group(0).rstrip(".,;:!?)")
+        host = re.sub(r"^https?://", "", url, flags=re.IGNORECASE).split("/")[0].split(":")[0].split("@")[-1]
+        if len(url) <= 120 and host and not _URL_SKIP_HOST.match(host) and url not in links:
+            links.append(url)
+        if len(links) == 2:
+            break
+    return {"price": price, "availability": avail, "links": links,
+            "how_to_reach": "Reply to the post or message the author on Reddit."}
+
+
+def provider_excerpt(title: str, text: str) -> str:
+    """A summary made only of the post's own words: its first sentence that is not just the title or a link."""
+    t = " ".join(str(title or "").split()).lower()
+    for s in _sentences(text):
+        flat = " ".join(s.split())
+        if flat and flat.lower() != t and not re.fullmatch(r"https?://\S+", flat):
+            return _clip(flat, 200)
+    return "The offer is in the post title; the post has no further text."
+
+
+def _classify_provider_post(sig: dict, model_post: dict, identity, subject, terms, icp) -> dict:
+    """A row of a provider request. Kept only for a post that offers the service, concerns the requested role and is not itself
+    a hiring post. Never rated as a lead; the model's analysis is used only where it is provably about THIS post."""
+    title = (sig.get("title") or "").strip()
+    text = (sig.get("post_text") or "").strip()
+    status = verification_status(sig)
+    if status != "verified":
+        return _classify_lead_post(sig, {}, set(), False, identity)         # unverifiable rows are labelled as before
+    blob = f"{title}\n{text}"
+    stems = _subject_stems(subject)
+    if stems and not any(_stem(t) in stems for t in _tokens(blob)):
+        return {"_exclude": "irrelevant"}                                    # not about the requested role / service
+    strong = bool(_OFFER_STRONG.search(blob))
+    offers = strong or len(_OFFER_WEAK.findall(blob)) >= 2
+    if not offers or (not strong and _hiring_pattern(stems).search(blob)):
+        return {"_exclude": "irrelevant"}                                    # a request FOR the service, or no offer at all
+    if _hiring_pattern(stems).search(title) and not _OFFER_STRONG.search(title):
+        return {"_exclude": "irrelevant"}
+    evidence = next((_clip(x) for x in _sentences(title) + _sentences(text) if _OFFER_STRONG.search(x)), None) \
+        or next((_clip(x) for x in _sentences(title) if x), None)
+    offer = provider_offer(title, text)
+    return {"role": "discussion", "purchase_intent": "none", "product_fit": "fits", "relevance": "relevant",
+            "analysis_status": "matched" if identity is not None else "unmatched", "intent": "", "qualified": False,
+            "evidence": evidence, "evidence_source": "excerpt" if evidence else None, "verification_status": status,
+            "intent_reason": "Shown as someone offering this service. Price, availability and links are read from the post; "
+                             "buyer intent and sentiment are not assessed for this request.",
+            "uncertainty": [], "analysis_identity": identity, "analysis_verified": True, "_exclude": None,
+            "purchase_signals": None, "offer": offer, "sentiment": ""}
+
+
 def classify_post(sig: dict, model_post: dict, terms: set, icp: bool, identity: str = None) -> dict:
     kind, subject = current_request_kind()
+    if kind == PROVIDER_KIND:
+        return _classify_provider_post(sig, model_post, identity, subject, terms, icp)
     if kind in MENTION_KINDS:
         return _classify_mention_post(sig, identity, kind, subject)
     out = _classify_lead_post(sig, model_post, terms, icp, identity)
@@ -1375,6 +1491,11 @@ def _map_indices(values, gmap):
 _FINDING_TEXT = ("impact", "what_evidence_shows", "why_it_matters")
 
 
+def _neg_iso(iso):
+    """Sort key that puts the NEWEST ISO timestamp first (ISO UTC strings sort chronologically)."""
+    return tuple(-ord(c) for c in str(iso or ""))
+
+
 def is_evidence_row(p: dict) -> bool:
     """True only for a row that may support a conclusion: its source was retrieved (verification_status "verified") AND the
     displayed analysis was matched to that source (analysis_verified). Two different checks: the first says the post exists
@@ -1653,6 +1774,15 @@ def _time_scope_summary(rows: list, window, time_scope=None) -> dict:
         out["not_counted"] = sum(1 for p in rows if p.get("in_window") is False)
     newest = _newest_from_scope(time_scope)
     if newest is not None:
+        # The scope's newest-stored lookup may not read every source a search reads, so it can be OLDER than a post listed in this very
+        # report. The record itself stays exactly as the server built it; the newest LISTED publication date is added beside it, only
+        # when it is newer, so the UI never states a "newest stored post" that is older than a post it is showing.
+        shown = [w for w in (timerange.publication_time(p.get("published_at")) for p in rows) if w is not None]
+        if shown:
+            top = max(shown)
+            cur = timerange.publication_time(newest.get("published_at"))
+            if cur is None or top > cur:
+                out["newest_listed"] = top.isoformat()
         out["newest_stored"] = newest
     return out
 
@@ -1973,6 +2103,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
         if isinstance(s, dict) and s.get("post_url"):
             global_pos.setdefault(s["post_url"], i)
     window = _window_bounds(time_scope)
+    _kind0 = current_request_kind()[0]
     terms = product_terms(query)
     icp = bool(_ICP_MARKERS.search(str(query or "")))
 
@@ -2046,6 +2177,12 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
                         or (_summary_claims(summary, sig)
                             and not summary_supported(summary, sig.get("title"), sig.get("post_text")))):
                     new["summary"] = SUMMARY_UNAVAILABLE           # unverified analysis, or not supported by this post
+                if _kind0 == PROVIDER_KIND and new["verification_status"] == "verified":
+                    # the shown summary is the model's only where it is provably about this post, else the post's own words
+                    _ms = post.get("summary")
+                    new["summary"] = (_ms.strip() if identity is not None and isinstance(_ms, str) and _ms.strip()
+                                      and summary_supported(_ms, sig.get("title"), sig.get("post_text"))
+                                      else provider_excerpt(sig.get("title"), sig.get("post_text")))
                 new["platform"] = platform_of(sig)
                 new["source_id"] = rules_for(sig).source_id(sig)
                 if new["verification_status"] == "removed":
@@ -2055,8 +2192,12 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
                 new["_global"] = global_pos.get(sig["post_url"])
                 new["_pos"] = pos
                 kept.append(new)
-            kept.sort(key=lambda p: (-_LABEL_ORDER[p["intent"]], p["verification_status"] != "verified",
-                                     p["role"] in NON_DEMAND_ROLES, p["_pos"]))
+            if _kind0 == PROVIDER_KIND:      # newest offers first: an old "for hire" post is the most likely to be stale
+                kept.sort(key=lambda p: (p["verification_status"] != "verified", not p.get("published_at"),
+                                         _neg_iso(p.get("published_at")), p["_pos"]))
+            else:
+                kept.sort(key=lambda p: (-_LABEL_ORDER[p["intent"]], p["verification_status"] != "verified",
+                                         p["role"] in NON_DEMAND_ROLES, p["_pos"]))
             entry = dict(entry, posts=kept)
             # (Phase 2.2) how this table names a post's community ("Subreddit" / "r/"): from the registry, not the page
             _label, _prefix = platforms.community_display(platforms.canonical_key(kept[0]["platform"] if kept else entry.get("platform")))
@@ -2113,6 +2254,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
         "qualified": sum(1 for p in evidence_rows if p["qualified"]),
         "researching": sum(1 for p in evidence_rows if p["role"] == "buyer" and p["intent"] == "Medium"),
         "competitor": sum(1 for p in rows if p["role"] in NON_DEMAND_ROLES),
+        **({"offers": sum(1 for p in rows if p.get("offer"))} if _kind0 == PROVIDER_KIND else {}),
         "categories": {k: sum(1 for p in rows if _row_category(p) == k) for k in CATEGORY_ORDER},
     }
 
@@ -2122,6 +2264,10 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
             _msg = (f"{listed} post{'s were' if listed != 1 else ' was'} retrieved, but none contains "
                     f"\u201c{_subject}\u201d in its text, so none is shown as a mention.")
             _why = "Only posts whose text actually contains the searched term are shown as mentions."
+        elif _kind == PROVIDER_KIND:
+            _msg = (f"{listed} post{'s were' if listed != 1 else ' was'} retrieved, but none is someone offering "
+                    f"{('\u201c' + _subject + '\u201d') if _subject else 'this service'}, so none is shown.")
+            _why = "The posts found were requests for the service, or did not offer it."
         elif _kind == "research":
             _msg = (f"{listed} post{'s were' if listed != 1 else ' was'} retrieved, but none was about this topic, "
                     "so none is shown.")
@@ -2363,7 +2509,9 @@ def verified_summary(counts: dict, analysis_check: dict = None, time_scope: dict
         return f"{v} {one if v == 1 else many}"
     if current_request_kind()[0] is not None and current_request_kind()[0] != "lead_discovery":
         # not a lead request: no lead count and no lead definition (nothing here was assessed as a lead)
-        text = f"Checked against the stored posts: {n(counts.get('shown', 0), 'post shown', 'posts shown')}"
+        text = (f"Checked against the stored posts: {n(counts.get('offers', counts.get('shown', 0)), 'offer shown', 'offers shown')}"
+                if current_request_kind()[0] == PROVIDER_KIND
+                else f"Checked against the stored posts: {n(counts.get('shown', 0), 'post shown', 'posts shown')}")
         if counts.get("excluded"):
             text += f"; {counts['excluded']} of {n(counts.get('listed', 0), 'listed post', 'listed posts')} excluded"
         ts = time_scope or {}
