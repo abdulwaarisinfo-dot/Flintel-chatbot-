@@ -853,6 +853,13 @@ def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_r
                 data["message"] = (f"No stored post contains {_quoted}. This is about the posts Flintel has collected, "
                                    "not about whether the name or term is used elsewhere.")
                 data["likely_reason"] = "Flintel only searches the posts it has collected so far."
+        elif _kind == "provider_search":
+            data["headline"] = (f"Posts retrieved, none offering {_quoted}" if _detail == "none_relevant"
+                                else f"No one offering {_quoted} found")
+            if _detail == "none_retrieved":
+                data["message"] = (f"No stored post matched {_quoted}. This is about the posts Flintel has collected, "
+                                   "not about whether people offer this service on Reddit.")
+                data["likely_reason"] = "Flintel only searches the posts it has collected so far."
         elif _kind == "research":
             data["headline"] = ("Posts retrieved, none relevant to this topic" if _detail == "none_relevant"
                                 else "No relevant discussion found")
@@ -881,6 +888,8 @@ def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_r
                 steps.append("Check the spelling, or try another form of the name or term.")
             elif _kind == "research":
                 steps.append("Try broader or different wording for the topic.")
+            elif _kind == "provider_search":
+                steps.append("Try a broader role (for example \u201cdesigner\u201d instead of a narrow specialty) or another platform.")
             else:
                 steps.append("Try broader or different wording for the same need.")
             if alternative and _kind not in answer_integrity.MENTION_KINDS:
@@ -6336,16 +6345,24 @@ Extended search JSON shape:
 # whatever the user was actually asking for. The router now also says WHAT KIND of request it is; everything downstream (what
 # is retrieved, how a post may be kept or dropped, what the answer and the empty state say) follows from that. Only
 # "lead_discovery" keeps the lead pipeline; a missing or unknown kind IS lead_discovery, so nothing changes by default.
-REQUEST_KINDS = ("lead_discovery", "mention_search", "research", "person_mentions")
+REQUEST_KINDS = ("lead_discovery", "mention_search", "research", "person_mentions", "provider_search")
 MENTION_KINDS = ("mention_search", "person_mentions")
 
 CLAUDE_ROUTER_REQUEST_KIND_ADDENDUM = """
 REQUEST KIND (for intent "search" ONLY). Decide what the user is actually asking for, then ALSO return two fields in the
 search JSON: "request_kind" and "subject".
 
-  "lead_discovery" - the DEFAULT. The user wants PEOPLE or BUSINESSES to sell to, hire, partner with or reach: someone with a
-                     need, demand or buying intent, or who sells/offers something. e.g. "find founders looking for an AI
-                     customer-support tool", "who needs a CRM", "log jo WhatsApp bot dhoondh rahe hain".
+  "lead_discovery" - the DEFAULT. The user wants PEOPLE or BUSINESSES to sell to or partner with: someone with a need, demand
+                     or buying intent for what THE USER offers. e.g. "find founders looking for an AI customer-support tool",
+                     "who needs a CRM", "log jo WhatsApp bot dhoondh rahe hain", "find clients for my design agency".
+  "provider_search"- the user wants to HIRE or BUY FROM someone: find people who OFFER a service or skill (a designer, developer,
+                     editor, writer, translator, freelancer, agency). The user is the buyer; the answer is posts where people
+                     offer that service ("[For Hire]", "taking commissions", "available for projects"). e.g. "find me a graphic
+                     designer", "I need a freelance video editor", "Urdu translator dhoondo", "who can build me a Shopify store".
+                     "subject" = the role or service, short (e.g. "graphic designer"). "keywords" = OFFER-side phrases, not the
+                     user's own need: e.g. ["graphic designer for hire", "freelance graphic designer available", "graphic
+                     designer taking clients"]; set "match_phrases" to null. If the user sells that service and wants CLIENTS,
+                     that is "lead_discovery" instead.
   "mention_search" - the user wants the posts that LITERALLY MENTION a named brand, company, product or exact phrase. No buyer
                      intent is involved. e.g. "find Reddit posts mentioning Acme", "Acme ka zikr kahan hua".
                      "subject" = the exact name or phrase, nothing else.
@@ -6366,7 +6383,8 @@ Use other intents (not a request kind) for these:
     matching name does not show the posts are about the same person and that Flintel cannot identify people.
   - Everything else that is a search stays "lead_discovery".
 
-For "lead_discovery" and "research" the keyword rules above apply as before. For "mention_search" and "person_mentions" set
+For "lead_discovery" and "research" the keyword rules above apply as before. For "provider_search" the subject is required; if you
+cannot name the role or service, ask with intent "clarify" instead. For "mention_search" and "person_mentions" set
 "keywords" to [the exact subject]; "match_phrases" may be null. Example of the extra fields:
 {"intent": "search", ..., "request_kind": "mention_search", "subject": "Acme"}
 """
@@ -6527,6 +6545,13 @@ def request_kind_note(request_kind, subject) -> str:
                 "summarise personal details (location, employer, contact details, accounts, appearance, relationships) across "
                 "posts. These are not leads: no buyer intent, no prospects. Do not use the \"no_results\" format while posts "
                 "were given.")
+    if request_kind == "provider_search":
+        return (f"REQUEST KIND: provider search. The user wants to HIRE someone: \"{subject}\". The posts you were given are people "
+                "offering that service. List the ones that genuinely offer it with a one-line neutral summary of what they offer, "
+                "taken from the post. These are not leads and not buyers: never score purchase intent or sentiment, never call a "
+                "poster a prospect. Mention a price, turnaround or availability ONLY if the post states it; never invent skills, "
+                "reviews, quality or contact details, and do not recommend one person over another. Posts from people who are "
+                "themselves looking to hire are not results. Do not use the \"no_results\" format while posts were given.")
     if request_kind == "research":
         return ("REQUEST KIND: research. The user wants to understand what people write about this topic (complaints, pain points, "
                 "sentiment, discussions, comparisons, facts the posts state). It is NOT lead discovery: buyer intent is not "
@@ -6756,6 +6781,11 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
         subject = clean_subject(data.get("subject"))
         if _rk == "research":
             request_kind = _rk
+        elif _rk == "provider_search" and subject:
+            request_kind = _rk
+            match_phrases = None
+            if not keywords:       # offer-side phrasing, never the buyer-style fallback
+                keywords = [f"{subject} for hire", f"freelance {subject} available"]
         elif _rk in MENTION_KINDS and subject:
             request_kind = _rk
             keywords = [subject]            # the literal subject IS the search; buyer-style phrasing is meaningless here
@@ -8028,6 +8058,18 @@ _BARE_NAME_RE = re.compile(
     r"[\s,]+(?:(?:a|the|me|for)\s+)*(?:(?:person|user|guy|girl|someone)\s+)?(?:(?:named|name|called)\s+)?)"
     r"[A-Z][a-z]+(?: [A-Z][a-z]+){1,2}"
     r"(?i:(?:\s+(?:name\s+)?(?:person|user|guy|girl))?(?:\s+(?:on|in|from|at)\s+(?:reddit|there|here))?)\W*$")
+# A capitalised two-word phrase can be a role ("Graphic Designer"), not a person. Without an explicit person cue ("named", "person",
+# "user"...) the find-verbs clarify only when the phrase does NOT end in a role-like word; a doubtful case goes to the router
+# (which clarifies a bare name itself) rather than blocking a legitimate paid search on a false match.
+_ROLE_END_RE = re.compile(r"(?:er|or|ist|ian|eer|ant|ers|ors|ists|ians)$|^(?:agency|studio|team|expert|experts|freelance|company)$", re.IGNORECASE)
+
+
+def _names_a_role(q: str) -> bool:
+    m = re.findall(r"[A-Z][a-z]+", re.sub(r"(?i)\s+(?:on|in|from|at)\s+(?:reddit|there|here)\W*$", "", q))
+    return bool(m) and bool(_ROLE_END_RE.search(m[-1]))
+
+
+_PERSON_CUE_RE = re.compile(r"\b(?:named|name|called|person|user|guy|girl|someone)\b", re.IGNORECASE)
 _PERSON_BLOCKED_REPLY = (
     "I can't help identify, track, or build a profile on a specific person. "
     "I can search for public posts that mention a topic, company, or product instead."
@@ -8048,7 +8090,8 @@ def _person_guard(query: str):
     if _PROFILING_RE.search(q):
         return {"intent": "blocked", "reply": _PERSON_BLOCKED_REPLY, "keywords": None,
                 "time_window_days": None, "match_phrases": None, "evidence_required": None}
-    if _BARE_NAME_RE.match(q):
+    if _BARE_NAME_RE.match(q) and (_PERSON_CUE_RE.search(q) or re.match(r"^\W*(?i:who(?:'s|\s+is))\b", q)
+                                   or not _names_a_role(q)):
         return {"intent": "clarify", "reply": _PERSON_CLARIFY_REPLY, "keywords": None,
                 "time_window_days": None, "match_phrases": None, "evidence_required": None}
     return None
