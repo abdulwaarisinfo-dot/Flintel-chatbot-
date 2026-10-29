@@ -197,9 +197,9 @@ def test_home_page_has_description_canonical_og_and_valid_jsonld(app_env):
     r = _client(idx).get("/")
     assert r.status_code == 200
     head = _head_of(r.text)
-    assert '<meta name="description" content="Search a brand, product or topic and see what people say about it on Reddit' in head
+    assert '<meta name="description" content="Ask in plain words for anything you want to find on social media, starting with Reddit' in head
     assert '<link rel="canonical" href="http://testserver/">' in head
-    assert '<meta property="og:title" content="Flintel — Find Reddit conversations about your brand, product or market">' in head
+    assert '<meta property="og:title" content="Flintel — Find anything you want on social media">' in head
     assert '<meta property="og:image" content="http://testserver/og-card.png">' in head
     assert '<meta property="og:url" content="http://testserver/">' in head
     assert '<meta property="og:type" content="website">' in head and '<meta name="twitter:card" content="summary_large_image">' in head
@@ -221,7 +221,7 @@ def test_description_names_only_platforms_flintel_really_searches(app_env):
         for name in ("X / Twitter", "Twitter", "LinkedIn", "Facebook", "Hacker News"):     # only Reddit is live
             assert name not in desc, (tag, name)
     title = re.search(r"<title>([^<]*)</title>", head).group(1)
-    assert "Reddit" in title and not any(n in title for n in ("Twitter", "LinkedIn", "Facebook"))
+    assert not any(n in title for n in ("Twitter", "LinkedIn", "Facebook"))        # the title is the broad promise; the description says Reddit
 
 
 def _fresh_visitor_home(idx, rts, monkeypatch):
