@@ -831,12 +831,34 @@ def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_r
         data["searched"] = {"query": query or "", "platforms": searched, "time_window": window,
                             "not_collected": not_collected}
         data["no_results_reason"] = reason
+        _kind, _subject = answer_integrity.current_request_kind()
+        _retrieved = answer_integrity.current_retrieved_count()
+        if _kind:
+            data["request_kind"] = _kind
+        if reason == "empty" and not data.get("no_results_detail") and _retrieved is not None:
+            # what actually happened: nothing was retrieved, or what was retrieved was not relevant (never conflated)
+            data["no_results_detail"] = "none_retrieved" if _retrieved == 0 else "none_relevant"
+        _detail = data.get("no_results_detail")
+        _quoted = f"\u201c{_subject}\u201d" if _subject else "this request"
         if reason == "error":
             data["headline"] = "The answer couldn't be completed"
         elif reason == "unverified":
             data["headline"] = "No verifiable posts to show"
         elif data.get("near_match_confidence") == "high":
             data["headline"] = "No exact match — closest posts below"
+        elif _kind in answer_integrity.MENTION_KINDS:
+            data["headline"] = (f"Posts retrieved, none mention {_quoted}" if _detail == "none_relevant"
+                                else f"No posts found mentioning {_quoted}")
+            if _detail == "none_retrieved" or _detail is None:
+                data["message"] = (f"No stored post contains {_quoted}. This is about the posts Flintel has collected, "
+                                   "not about whether the name or term is used elsewhere.")
+                data["likely_reason"] = "Flintel only searches the posts it has collected so far."
+        elif _kind == "research":
+            data["headline"] = ("Posts retrieved, none relevant to this topic" if _detail == "none_relevant"
+                                else "No relevant discussion found")
+            if _detail == "none_retrieved":
+                data["message"] = "No stored post matched this topic."
+                data["likely_reason"] = "Flintel only searches the posts it has collected so far."
         else:
             data["headline"] = ("No verified purchase intent found" if _BUYER_QUERY_RE.search(query or "")
                                 else "No qualifying posts found")
@@ -855,8 +877,13 @@ def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_r
                 steps.append(f"Search Reddit instead — {', '.join(not_collected)} {verb} not collected yet (coming soon).")
             if tr is not None or days:
                 steps.append("Search a wider time window, for example the last 30 days.")
-            steps.append("Try broader or different wording for the same need.")
-            if alternative:
+            if _kind in answer_integrity.MENTION_KINDS:
+                steps.append("Check the spelling, or try another form of the name or term.")
+            elif _kind == "research":
+                steps.append("Try broader or different wording for the topic.")
+            else:
+                steps.append("Try broader or different wording for the same need.")
+            if alternative and _kind not in answer_integrity.MENTION_KINDS:
                 steps.append(f"Try a close alternative: {alternative}.")
         data["next_steps"] = steps
         suggested = None
@@ -866,7 +893,9 @@ def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_r
                 base = re.sub(re.escape(tr.phrase), " ", base, flags=re.IGNORECASE)
                 base = " ".join(re.sub(r"\b(?:from|in|during|for|over|within)\s*$", "", base.strip(" ,.?!")).split())
             kw = [k.strip() for k in (keywords or []) if isinstance(k, str) and k.strip()][:3]
-            if alternative:
+            if _kind in answer_integrity.MENTION_KINDS:
+                suggested = None             # a mention search is for exactly the name or term given; no reworded search is offered
+            elif alternative:
                 suggested = f"Find Reddit posts about {alternative}"
             elif (tr is not None or days) and base:
                 suggested = f"{base} from the last 30 days"
@@ -6303,8 +6332,48 @@ Extended search JSON shape:
 {"intent":"search", ...all the search keys above..., "effort":"standard"|"complex"|"deep","cost":<int>,"reason":"<=15 words"|null}
 """ % (_CREDIT_COST_RANGES["standard"] + _CREDIT_COST_RANGES["complex"] + _CREDIT_COST_RANGES["deep"])
 
+# (REQUEST KIND) Flintel used to push every search through the lead pipeline (buyer intent, pain points, qualified leads),
+# whatever the user was actually asking for. The router now also says WHAT KIND of request it is; everything downstream (what
+# is retrieved, how a post may be kept or dropped, what the answer and the empty state say) follows from that. Only
+# "lead_discovery" keeps the lead pipeline; a missing or unknown kind IS lead_discovery, so nothing changes by default.
+REQUEST_KINDS = ("lead_discovery", "mention_search", "research", "person_mentions")
+MENTION_KINDS = ("mention_search", "person_mentions")
+
+CLAUDE_ROUTER_REQUEST_KIND_ADDENDUM = """
+REQUEST KIND (for intent "search" ONLY). Decide what the user is actually asking for, then ALSO return two fields in the
+search JSON: "request_kind" and "subject".
+
+  "lead_discovery" - the DEFAULT. The user wants PEOPLE or BUSINESSES to sell to, hire, partner with or reach: someone with a
+                     need, demand or buying intent, or who sells/offers something. e.g. "find founders looking for an AI
+                     customer-support tool", "who needs a CRM", "log jo WhatsApp bot dhoondh rahe hain".
+  "mention_search" - the user wants the posts that LITERALLY MENTION a named brand, company, product or exact phrase. No buyer
+                     intent is involved. e.g. "find Reddit posts mentioning Acme", "Acme ka zikr kahan hua".
+                     "subject" = the exact name or phrase, nothing else.
+  "research"       - the user wants to UNDERSTAND a topic, product or market from what people write: complaints, pain points,
+                     sentiment, a summary of discussions, comparisons, or a factual question about what the posts say. They do
+                     NOT want leads. e.g. "research complaints about Shopify abandoned carts", "summarize the discussions about
+                     <product>". "subject" may be a short topic or null.
+  "person_mentions"- the user NAMES A PERSON and asks only for the posts that mention that name. Flintel lists posts whose text
+                     contains the name; it does not say who the person is, does not link posts to one individual and does not
+                     collect personal details. "subject" = the exact name.
+
+Use other intents (not a request kind) for these:
+  - Asking to IDENTIFY, PROFILE or DIG UP a person ("who is X", "where does X live or work", "X's real identity, contact
+    details, accounts or photos", "who is behind u/handle") -> intent "blocked" with a short, calm reply: Flintel does not
+    identify or profile individuals; it can list the posts that mention a name if they ask for exactly that.
+  - A name or handle with NO clear instruction ("Hamza Ali", "can you find out Hamza Ali on Reddit", "kya Hamza Ali Reddit par
+    hai") -> intent "clarify" with ONE short question: do they want the posts that literally mention that name? Add that a
+    matching name does not show the posts are about the same person and that Flintel cannot identify people.
+  - Everything else that is a search stays "lead_discovery".
+
+For "lead_discovery" and "research" the keyword rules above apply as before. For "mention_search" and "person_mentions" set
+"keywords" to [the exact subject]; "match_phrases" may be null. Example of the extra fields:
+{"intent": "search", ..., "request_kind": "mention_search", "subject": "Acme"}
+"""
+
 CLAUDE_ROUTER_SYSTEM_PROMPT = (
     CLAUDE_ROUTER_SYSTEM_PROMPT
+    + "\n" + CLAUDE_ROUTER_REQUEST_KIND_ADDENDUM
     + "\n" + flintel.ROUTER_UNFILTERED_ADDENDUM
     + "\n" + flintel.GENERIC_PAIN_POINT_INFERENCE_ADDENDUM
     + "\n" + CLAUDE_ROUTER_WEBSITE_CONTEXT_ADDENDUM
@@ -6357,6 +6426,114 @@ CLAUDE_CLARIFY_FALLBACK_REPLY = (
     "Agar apni website ka link bhi share kar dein, main us se directly "
     "aap ke business se related conversations nikaal dunga."
 )
+
+
+# ─────────────────────────────────────────────────�
+# (REQUEST KIND) Retrieval and answer notes for requests that are NOT lead discovery.
+# A mention request ("posts mentioning Acme", "posts mentioning Hamza Ali") is answered from the stored posts whose text
+# LITERALLY contains the subject - not from an embedding score against buyer-style phrases, which is how a post that names
+# the subject can still be missed. Nothing here qualifies, scores or labels a post as a lead.
+# ─────────────────────────────────────────────────�
+MENTION_SCAN_CAP = 400            # raw documents read per collection for one mention search (bounded, newest first)
+MENTION_SCAN_MAX_MS = 8000        # server-side time limit of each such read
+clean_subject = answer_integrity.clean_subject          # one definition, shared with the integrity layer
+subject_pattern = answer_integrity.subject_pattern
+mentions_subject = answer_integrity.mentions_subject
+
+
+def literal_mention_matcher(subject):
+    """A matcher_fn for get_evidence_with_topup() that returns the stored posts whose title or text literally mentions `subject`.
+    Same signature as get_matched_signals() for the keywords it receives; no embedding is involved and no incremental scan state
+    is kept (it does not accept `scan_state`). Honours the platform selection, a "last N days" window or an explicit time range,
+    the result limit and cancellation. A failed read of a collection is reported as an incomplete scan, never as "no posts"."""
+    pattern = subject_pattern(subject)
+
+    def _matcher(topic_key, keywords, targeting_platform="all", since_days=None, unfiltered=False, match_phrases=None,
+                 limit=None, signals_collection_2=None, chat_id=None, signals_collection_4=None, user_query=None,
+                 time_range=None, cancel_event=None):
+        if not pattern:
+            return []
+        limit = limit or MAX_MATCHED_RESULTS
+        compiled = re.compile(pattern, re.IGNORECASE)
+        _tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+        query = {"$or": [{f: {"$regex": pattern, "$options": "i"}} for f in _LEXICAL_SEARCH_FIELDS]}
+        bounds = {}
+        if _tr is not None:
+            bounds = {"$gte": _tr.start, "$lt": _tr.end}
+        elif isinstance(since_days, int) and since_days > 0:
+            bounds = {"$gte": datetime.now(timezone.utc) - timedelta(days=min(since_days, MAX_TIME_WINDOW_DAYS)),
+                      "$lt": datetime.now(timezone.utc) + timerange.FUTURE_TOLERANCE}
+        if bounds:
+            query = {"$and": [query, {"created_utc": bounds}]}
+        found, seen, complete = [], set(), True
+        for coll in (signals_collection, signals_collection_2, signals_collection_4):
+            if coll is None:
+                continue
+            if cancel_event is not None and cancel_event.is_set():
+                _register_scan_status(chat_id, topic_key, False)
+                return []
+            try:
+                cursor = coll.find(query, {"_id": 0, "embedding": 0}).sort("created_utc", -1).limit(MENTION_SCAN_CAP)
+                try:
+                    cursor = cursor.max_time_ms(MENTION_SCAN_MAX_MS)
+                except Exception:
+                    pass
+                docs = list(cursor)
+            except Exception as exc:
+                log.warning(f"Mention search read failed (reported as an incomplete scan): {type(exc).__name__}: {exc}")
+                complete = False
+                continue
+            for doc in docs:
+                if not _signal_platform_matches(doc, targeting_platform):
+                    continue
+                title = _first_present(doc, _TITLE_FIELD_CANDIDATES) or ""
+                text = _first_present(doc, _TEXT_FIELD_CANDIDATES) or ""
+                url = _first_present(doc, _URL_FIELD_CANDIDATES) or ""
+                if not (title or text) or not compiled.search(f"{title}\n{text}"):
+                    continue                       # the stored text must really contain the subject (not just a regex field hit)
+                if url and url in seen:
+                    continue
+                if url:
+                    seen.add(url)
+                platform = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(url)
+                found.append((doc.get("created_utc"), timerange.with_published_at(
+                    {"title": title, "post_text": text, "post_url": url, "platform": platform,
+                     "subreddit": _signal_subreddit(doc, url)}, doc)))
+        found.sort(key=lambda pair: pair[0] if isinstance(pair[0], datetime) else datetime.min.replace(tzinfo=timezone.utc),
+                   reverse=True)
+        _register_scan_status(chat_id, topic_key, complete)
+        return [post for _created, post in found[:limit]]
+    return _matcher
+
+
+def matcher_for_kind(request_kind, subject, default_matcher):
+    """The matcher_fn for a message: literal mention matching for the mention kinds, `default_matcher` for everything else."""
+    if request_kind in MENTION_KINDS and subject_pattern(subject):
+        return literal_mention_matcher(subject)
+    return default_matcher
+
+
+def request_kind_note(request_kind, subject) -> str:
+    """Extra instruction appended to the analysis context for a request that is not lead discovery ('' for lead discovery)."""
+    if request_kind == "mention_search":
+        return (f"REQUEST KIND: mention search. The user wants the posts that mention \"{subject}\". Every post you were given "
+                "contains that term. List the relevant ones with a one-line neutral summary of how the term appears. Buyer intent "
+                "is NOT required and is NOT being assessed: never call a post a lead, a buyer or a prospect, never score purchase "
+                "intent, and do not use the \"no_results\" format while posts were given. Do not add claims the posts do not make.")
+    if request_kind == "person_mentions":
+        return (f"REQUEST KIND: posts that mention the name \"{subject}\". Every post you were given contains that name. List "
+                "them with a one-line neutral summary of what each post says. A matching name does not show that two posts are "
+                "about the same person: never say or suggest it, never say who the person is, and never gather, infer or "
+                "summarise personal details (location, employer, contact details, accounts, appearance, relationships) across "
+                "posts. These are not leads: no buyer intent, no prospects. Do not use the \"no_results\" format while posts "
+                "were given.")
+    if request_kind == "research":
+        return ("REQUEST KIND: research. The user wants to understand what people write about this topic (complaints, pain points, "
+                "sentiment, discussions, comparisons, facts the posts state). It is NOT lead discovery: buyer intent is not "
+                "required, never present a post as a lead or a prospect, and do not choose \"no_results\" only because no post "
+                "shows purchase intent. Keep only posts that are genuinely about the topic.")
+    return ""
+
 
 
 def _parse_router_json(raw: str, allow_previous_results: bool = False):
@@ -6462,6 +6639,8 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
     target_entity = None
     intent_types = None
     resolved_query = None
+    request_kind = None
+    subject = None
     effort = cost = effort_reason = None   # (USAGE-BASED CREDITS) raw; credit_cost.py validates
     if intent == "search":
         effort, cost, effort_reason = data.get("effort"), data.get("cost"), data.get("reason")
@@ -6570,16 +6749,33 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
         website_topic_relation = _rel if _rel in ("related", "unrelated") else None
         _uat = data.get("url_ask_type")
         url_ask_type = _uat if _uat in ("generic_own_business", "specific_topic", "none") else None
+        # (REQUEST KIND) whitelisted; "lead_discovery", a missing or an unknown kind all mean the unchanged lead pipeline (None).
+        # A mention kind without a usable subject falls back to that pipeline too: it never searches for nothing.
+        _rk = data.get("request_kind")
+        _rk = _rk.strip().lower() if isinstance(_rk, str) else None
+        subject = clean_subject(data.get("subject"))
+        if _rk == "research":
+            request_kind = _rk
+        elif _rk in MENTION_KINDS and subject:
+            request_kind = _rk
+            keywords = [subject]            # the literal subject IS the search; buyer-style phrasing is meaningless here
+            match_phrases = None
+        if request_kind is None:
+            subject = None
 
     # (DATA-BACKED GUIDANCE) a business-guidance question (see the router prompt)
     guidance = bool(data.get("guidance") is True and intent in ("search", "clarify"))
-    return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
-            "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
-            "website_only": website_only, "use_website_context": use_website_context,
-            "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type,
-            "target_entity": target_entity, "intent_types": intent_types,
-            "resolved_query": resolved_query, "guidance": guidance,
-            "effort": effort, "cost": cost, "reason": effort_reason}
+    parsed = {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
+              "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
+              "website_only": website_only, "use_website_context": use_website_context,
+              "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type,
+              "target_entity": target_entity, "intent_types": intent_types,
+              "resolved_query": resolved_query, "guidance": guidance,
+              "effort": effort, "cost": cost, "reason": effort_reason}
+    if request_kind:                      # only a non-default kind is added: every other router result is exactly as before
+        parsed["request_kind"] = request_kind
+        parsed["subject"] = subject
+    return parsed
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -7821,6 +8017,43 @@ def build_outreach_report(selection_query: str, original_query: str, posts: list
     return "\n\n".join(out)
 
 
+_PROFILING_RE = re.compile(
+    r"\b(dossier|doxx?(?:ing)?|stalk(?:ing)?|home address|background check on|"
+    r"(?:identify|unmask|expose) (?:the |this )?(?:real )?(?:person|user|identity|name)|"
+    r"track (?:down )?(?:the |this )?(?:person|user|guy|girl)|"
+    r"where (?:does|do) [A-Z][a-z]+(?: [A-Z][a-z]+)* live|"
+    r"profile (?:of|on) [A-Z][a-z]+ [A-Z][a-z]+)\b", re.I)
+_BARE_NAME_RE = re.compile(
+    r"^\W*(?i:(?:can you |could you |please )*(?:find(?: out)?|search(?: for)?|look ?up|who is|who's|check)"
+    r"[\s,]+(?:(?:a|the|me|for)\s+)*(?:(?:person|user|guy|girl|someone)\s+)?(?:(?:named|name|called)\s+)?)"
+    r"[A-Z][a-z]+(?: [A-Z][a-z]+){1,2}"
+    r"(?i:(?:\s+(?:name\s+)?(?:person|user|guy|girl))?(?:\s+(?:on|in|from|at)\s+(?:reddit|there|here))?)\W*$")
+_PERSON_BLOCKED_REPLY = (
+    "I can't help identify, track, or build a profile on a specific person. "
+    "I can search for public posts that mention a topic, company, or product instead."
+)
+_PERSON_CLARIFY_REPLY = (
+    "A name alone doesn't tell me what you need. Do you want posts that literally mention "
+    "that name, or leads interested in a product or service? I can't identify or profile a person."
+)
+
+
+def _person_guard(query: str):
+    """Deterministic backstop run BEFORE the paid router call: profiling
+    requests -> blocked, a bare person name -> clarify. Never fires on
+    ordinary topic/lead requests."""
+    q = (query or "").strip()
+    if not q:
+        return None
+    if _PROFILING_RE.search(q):
+        return {"intent": "blocked", "reply": _PERSON_BLOCKED_REPLY, "keywords": None,
+                "time_window_days": None, "match_phrases": None, "evidence_required": None}
+    if _BARE_NAME_RE.match(q):
+        return {"intent": "clarify", "reply": _PERSON_CLARIFY_REPLY, "keywords": None,
+                "time_window_days": None, "match_phrases": None, "evidence_required": None}
+    return None
+
+
 def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None,
                              referenced_post_context: str = None, previous_results_context: str = None) -> dict:
     """(v5, extended in v6 with abuse-blocking, again with keyword
@@ -7864,6 +8097,9 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
     CLAUDE_ROUTER_SYSTEM_PROMPT above. None means "no reference detected
     for this message" — identical to how a missing website_context_
     summary means "no saved website for this chat"."""
+    _guard = _person_guard(query)
+    if _guard:
+        return _guard
     website_context_block = ""
     if website_context_summary:
         website_context_block = (
@@ -8822,7 +9058,7 @@ def _timeout_fallback_answer_impl(chat_id: str, owner_key: str, topic_key: str, 
                               match_phrases: list = None, evidence_required: int = None, website_note: str = None,
                               resolved_query: str = None, time_range=None, request_id: str = None,
                               gate_owner: str = None, time_window_days: int = None, requested_at=None,
-                              targeting_platform: str = None):
+                              targeting_platform: str = None, request_kind: str = None, subject: str = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -8955,7 +9191,7 @@ def _timeout_fallback_answer_impl(chat_id: str, owner_key: str, topic_key: str, 
                 matched = get_evidence_with_topup(
                     chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
                     keywords=keywords or [], evidence_required=evidence_required,
-                    matcher_fn=get_matched_signals, match_phrases=match_phrases,
+                    matcher_fn=matcher_for_kind(request_kind, subject, get_matched_signals), match_phrases=match_phrases,
                     targeting_platform=_fb_platform, **_fb_kwargs,       # (PILOT SAFETY) the request's own selection, never a hard-coded "all"
                     **({"time_range": time_range} if time_range else {}),   # (DATE/TIME)
                     **({"since_days": time_window_days} if time_window_days else {}),   # (RECENCY) the message's own window
@@ -8988,6 +9224,9 @@ def _timeout_fallback_answer_impl(chat_id: str, owner_key: str, topic_key: str, 
         extra_ctx_parts.append(flintel.build_mixed_evidence_note())
         if google_results:
             extra_ctx_parts.append(flintel.build_combined_source_context(len(matched), len(google_results)))
+        _kind_note = request_kind_note(request_kind, subject)          # (REQUEST KIND) '' for a lead request
+        if _kind_note:
+            extra_ctx_parts.append(_kind_note)
         if website_note:
             extra_ctx_parts.append(website_note)
         _rq_note = _resolved_request_note(query, resolved_query)   # (MULTI-TURN CONTEXT)
@@ -9006,11 +9245,12 @@ def _timeout_fallback_answer_impl(chat_id: str, owner_key: str, topic_key: str, 
             with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
                 answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
             save_pending_answer(chat_id, owner_key, topic_key, request_id, answer)
-        with time_scope_context(build_time_scope(time_window_days, time_range, requested_at, targeting_platform=_fb_platform)):   # (RECENCY)
-            answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
-        answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
-        answer = enrich_freshness_answer(answer, merged_pool, time_range=time_range, provenance=_fresh_prov,   # (FRESHNESS)
-                                         matched_count=len(matched), evidence_limit=effective_evidence_limit)
+        with answer_integrity.request_kind_context(request_kind, subject, len(merged_pool)):          # (REQUEST KIND)
+            with time_scope_context(build_time_scope(time_window_days, time_range, requested_at, targeting_platform=_fb_platform)):   # (RECENCY)
+                answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
+            answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
+            answer = enrich_freshness_answer(answer, merged_pool, time_range=time_range, provenance=_fresh_prov,   # (FRESHNESS)
+                                             matched_count=len(matched), evidence_limit=effective_evidence_limit)
         final_answer, results_to_save = _finalize_answer_and_results(answer, merged_pool, seed=query)
 
         final_answer = guest_gate.mark_limited(gate_key, request_id, final_answer)   # (GUEST GATE) says "limited results"
