@@ -3259,7 +3259,7 @@
     }
 
     apParagraphs(container, data.likely_reason, 'block-text');
-    if (reason === 'empty') {
+    if (reason === 'empty' && (!data.request_kind || data.request_kind === 'lead_discovery')) {   // the "demand" note is for lead requests only
       const p = document.createElement('p');
       p.className = 'block-text nr-note';
       p.textContent = "This means this search found no qualifying posts — not that the demand doesn't exist.";
