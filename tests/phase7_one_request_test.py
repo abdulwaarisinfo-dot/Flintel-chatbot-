@@ -14,25 +14,33 @@ WHAT THIS SCRIPT IS NOT
       original post text. Every URL is written out as "NOT VERIFIED"; verification is a separate, manual step.
 
 SAFETY
-    * Default mode is a DRY PREVIEW: it prints the confirmation block and the exact request body, then stops.
-      Nothing is sent unless `--execute` is given.
-    * One request only: no loops, no retries, 120 s timeout (plus a hard wall-clock alarm).
-    * All LOCAL preflight checks (request configuration, key, httpx import, request construction, folders, existing
-      marker) run first and create NO marker. A failed preflight therefore does not use up the attempt.
+    * Default mode is a DRY PREVIEW: the request configuration is VALIDATED first, then displayed (every displayed
+      value is read from the configuration itself), and the script stops. Nothing is sent unless `--execute` is given.
+    * `--execute` requires an INTERACTIVE terminal (stdin and stdout) and the exact typed answer RUN. No flag or
+      environment setting skips this. A non-interactive session is refused BEFORE any attempt marker, HTTP client or
+      other network-capable step exists.
+    * One request only: no loops, no retries (MAX_RETRIES = 0), redirects not followed (FOLLOW_REDIRECTS = False),
+      120 s timeout (plus a hard wall-clock alarm where the platform has one; native Windows does not).
+    * All LOCAL preflight checks (request configuration, key, httpx import and defaults, request construction,
+      folders, existing marker) run first and create NO marker. A failed preflight does not use up the attempt.
     * The attempt marker (runs/ONE_REQUEST_ATTEMPTED) is created immediately BEFORE the single HTTP request is
-      initiated. Once it exists, the script refuses to run again (also inside the same process), so a failed HTTP
+      initiated. Once it exists the script refuses to run again (also inside the same process), so a failed HTTP
       attempt can never be retried and a re-run cannot spend a second time.
-    * The API key is read from the environment variable OPENAI_API_KEY only. Leading/trailing whitespace is removed in
-      memory; a blank, whitespace-containing or non-ASCII value is rejected. The key is never printed, logged or written.
-      Output files are scanned and redacted for the key and for anything shaped like a key or a Bearer token.
-      Request headers are never saved.
-    * The script refuses to run (or write) inside either Flintel checkout.
+    * The API key is read from the environment variable OPENAI_API_KEY only. Leading/trailing whitespace is removed
+      in memory; a value that is shorter than 20 characters or has characters outside A-Z a-z 0-9 _ - . is rejected.
+      The key is never printed, logged or written.
+    * Output redaction removes the exact key, every 6-character fragment of it (with the token around it), key-shaped
+      tokens (sk-..., including masked forms such as sk-...****abcd), Bearer/Authorization values and masked suffixes.
+      The serialised report is then CHECKED; if any key material, masked suffix or key-shaped token remains, or if
+      redaction itself fails, nothing is written (fail closed). Request headers are never saved.
+    * The script refuses to run (also in preview) when its folder or the current folder is inside a Git working tree on
+      any operating system, or inside either Flintel checkout path.
     * The endpoint is a constant in this file; it is NOT taken from the environment.
 
 USAGE
-    python3 phase7_one_request_test.py                 # preview only, nothing is sent
-    python3 phase7_one_request_test.py --execute       # sends ONE request (asks you to type RUN)
-    python3 phase7_one_request_test.py --execute --yes # sends ONE request without the typed prompt
+    python3 phase7_one_request_test.py     # validation + preview only; nothing is sent
+    A live send needs the --execute flag, an interactive terminal and the typed answer RUN. (No live command is
+    recommended here; that decision is made separately.)
 
 THIS REQUEST MAY INCUR CHARGES to whichever OpenAI project owns the key. This script cannot tell which project that
 is and does not know current prices.
@@ -41,6 +49,7 @@ is and does not know current prices.
 import argparse
 import datetime as dt
 import hashlib
+import inspect
 import json
 import os
 import re
@@ -51,7 +60,7 @@ import time
 # ---------------------------------------------------------------------------------------------------------------------
 # Fixed configuration (the exact experiment approved in Phase 7). Change nothing here without re-approval.
 # ---------------------------------------------------------------------------------------------------------------------
-SCRIPT_VERSION = "1.2"
+SCRIPT_VERSION = "1.3"
 ENDPOINT = "https://api.openai.com/v1/responses"          # constant on purpose; not read from the environment
 MODEL = "gpt-5-mini"
 PROMPT = "Find recent Reddit discussions from people looking for a habit-tracking app."
@@ -78,6 +87,11 @@ REQUEST_BODY = {
     "store": False,
 }
 TIMEOUT_SECONDS = 120.0
+MAX_RETRIES = 0                   # no retries anywhere; preflight verifies httpx's default transport agrees
+FOLLOW_REDIRECTS = False          # redirects are never followed
+MAX_REQUESTS = 1                  # exactly one request (enforced by the attempt marker)
+KEY_MIN_LENGTH = 20
+FRAGMENT_LEN = 6                  # every FRAGMENT_LEN-character window of the key is redacted
 HARD_ALARM_SECONDS = 130          # wall-clock backstop; httpx timeouts apply per phase, not to the whole call
 MARKER_NAME = "ONE_REQUEST_ATTEMPTED"
 _ATTEMPT_STARTED = False          # in-process guard: a second send_once() in the same process is refused
@@ -89,10 +103,17 @@ FORBIDDEN_PATH_PREFIXES = (
 _REDDIT_POST = re.compile(
     r"^https?://(?:(?:www|old|np|new)\.)?reddit\.com/r/([^/\s]+)/comments/([a-z0-9]+)(?:[/?#].*)?$", re.IGNORECASE)
 _REDDIT_SHORT = re.compile(r"^https?://redd\.it/([a-z0-9]+)(?:[/?#].*)?$", re.IGNORECASE)
-_KEY_SHAPES = (
-    re.compile(r"sk-[A-Za-z0-9_\-]{8,}"),
-    re.compile(r"Bearer\s+[A-Za-z0-9._\-]{8,}", re.IGNORECASE),
+_SHAPE_PATTERNS = (
+    re.compile(r"\bsk-[A-Za-z0-9_\-.*\u2022\u2026\u00b7]+"),                          # sk-..., incl. masked / ellipsis forms
+    re.compile(r"\bbearer\s+[^\s\"',;)\]}]+", re.IGNORECASE),                          # Bearer <anything>
+    re.compile(r"\bauthorization\b[\"']?\s*[:=]\s*[\"']?[^\s\"',;)\]}]+", re.IGNORECASE),  # Authorization: <value>
+    re.compile(r"\bending\s+(?:in|with)\s+[A-Za-z0-9_\-]{3,12}", re.IGNORECASE),        # "ending in abcd"
+    re.compile(r"[*\u2022\u2026\u00b7]{3,}[A-Za-z0-9_\-]{1,12}"),                       # ****abcd
+    re.compile(r"[A-Za-z0-9_\-]{1,12}[*\u2022\u2026\u00b7]{3,}"),                       # abcd****
 )
+_FRAGMENT_CACHE = {}
+_SUFFIX_CACHE = {}
+_MASK_RUN = r"(?:[*\u2022\u2026\u00b7]|\.{2,})"           # *, bullet, ellipsis, middle dot, or two or more dots
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -107,20 +128,45 @@ def inside_forbidden_path(path):
     return any(real == p or real.startswith(p + os.sep) for p in FORBIDDEN_PATH_PREFIXES)
 
 
+def _fragment_regex(key):
+    """Matches the whole token around ANY FRAGMENT_LEN-character window of the key (prefix, suffix or middle)."""
+    if key not in _FRAGMENT_CACHE:
+        grams = {key[i:i + FRAGMENT_LEN] for i in range(len(key) - FRAGMENT_LEN + 1)}
+        alternatives = "|".join(re.escape(g) for g in sorted(grams))
+        _FRAGMENT_CACHE[key] = re.compile(r"[A-Za-z0-9_\-]*(?:" + alternatives + r")[A-Za-z0-9_\-]*")
+    return _FRAGMENT_CACHE[key]
+
+
+def _suffix_regex(key):
+    """Matches the token before a mask run plus the mask run plus any 4..8 character suffix of the key."""
+    if key not in _SUFFIX_CACHE:
+        suffixes = "|".join(re.escape(key[-k:]) for k in range(8, 3, -1))
+        _SUFFIX_CACHE[key] = re.compile(r"[A-Za-z0-9_\-]*" + _MASK_RUN + r"+\s*(?:" + suffixes + r")")
+    return _SUFFIX_CACHE[key]
+
+
 def redact(text, api_key):
-    """Remove the key itself and anything shaped like a key or a bearer token from a string."""
+    """Remove the key, any fragment of it, and anything shaped like a key, a bearer token or a masked key.
+
+    Order matters: whole key-shaped tokens first (so a partly shown key is removed as one piece), then masked suffixes
+    of THIS key, then every 6-character fragment of it."""
     if not isinstance(text, str):
         return text
     if api_key:
         text = text.replace(api_key, "[REDACTED]")
-    for pattern in _KEY_SHAPES:
+    for pattern in _SHAPE_PATTERNS:
         text = pattern.sub("[REDACTED]", text)
+    if api_key:
+        text = _suffix_regex(api_key).sub("[REDACTED]", text)
+        if len(api_key) >= FRAGMENT_LEN:
+            text = _fragment_regex(api_key).sub("[REDACTED]", text)
     return text
 
 
 def redact_obj(obj, api_key):
+    """Redacts every string VALUE and every string dictionary KEY."""
     if isinstance(obj, dict):
-        return {k: redact_obj(v, api_key) for k, v in obj.items()}
+        return {(redact(k, api_key) if isinstance(k, str) else k): redact_obj(v, api_key) for k, v in obj.items()}
     if isinstance(obj, list):
         return [redact_obj(v, api_key) for v in obj]
     if isinstance(obj, str):
@@ -128,22 +174,67 @@ def redact_obj(obj, api_key):
     return obj
 
 
+def leak_check(text, api_key):
+    """Returns a reason string if key material may remain in `text`, else None. Used to FAIL CLOSED before writing."""
+    if not api_key:
+        return "no key available to check against"
+    if api_key in text:
+        return "the exact key is present"
+    for i in range(len(api_key) - 7):
+        if api_key[i:i + 8] in text:
+            return "a fragment of 8 or more key characters is present"
+    for k in range(4, 8):
+        suffix = re.escape(api_key[-k:])
+        if re.search(_MASK_RUN + r"\s*" + suffix, text) or re.search(r"(?i)ending\s+(?:in|with)\s+" + suffix, text):
+            return "a masked key suffix is present"
+    if re.search(r"\bsk-", text) or re.search(r"(?i)\bbearer\s+(?!\[REDACTED\])", text):
+        return "a key-shaped or bearer token is present"
+    return None
+
+
+def is_interactive():
+    """True only when BOTH stdin and stdout are terminals."""
+    try:
+        return bool(sys.stdin.isatty() and sys.stdout.isatty())
+    except (AttributeError, ValueError, OSError):
+        return False
+
+
+def find_git_working_tree(path):
+    """The nearest enclosing folder that contains a .git entry (folder, or file for worktrees/submodules), else None."""
+    current = os.path.realpath(path)
+    if not os.path.isdir(current):
+        current = os.path.dirname(current)
+    while True:
+        if os.path.exists(os.path.join(current, ".git")):
+            return current
+        parent = os.path.dirname(current)
+        if parent == current:
+            return None
+        current = parent
+
+
 def print_confirmation(run_dir, key_state):
+    """Every displayed setting is read from REQUEST_BODY / the constants (never from fixed text)."""
+    body = REQUEST_BODY
+    tool = body["tools"][0]
+    alarm = f"{HARD_ALARM_SECONDS} s hard wall-clock alarm" if hasattr(signal, "SIGALRM") else "NO hard wall-clock alarm on this platform"
     line = "=" * 78
     print(line)
     print("PRE-EXECUTION CONFIRMATION  (nothing has been sent yet)")
     print(line)
     print(f"Endpoint        : {ENDPOINT}")
-    print(f"Model           : {MODEL}   (compatibility with web_search is UNVERIFIED)")
-    print(f"Prompt (exact)  : {PROMPT}")
-    print(f"Tool            : web_search | allowed_domains={TOOL['filters']['allowed_domains']} | "
-          f"search_context_size={TOOL['search_context_size']} | user_location={TOOL['user_location']}")
-    print("tool_choice     : \"required\" (the model must call a tool; web_search is the only tool configured)")
-    print(f"include         : {REQUEST_BODY['include']}")
-    print(f"max_tool_calls  : {REQUEST_BODY['max_tool_calls']}")
-    print(f"max_output_tokens: {REQUEST_BODY['max_output_tokens']}   reasoning.effort: {REQUEST_BODY['reasoning']['effort']}")
-    print(f"store           : {REQUEST_BODY['store']}")
-    print(f"Timeout / retries: {TIMEOUT_SECONDS:.0f} s / 0 retries; exactly one request")
+    print(f"Model           : {body['model']}   (compatibility with web_search is UNVERIFIED)")
+    print(f"Prompt (exact)  : {body['input']}")
+    print(f"Tool            : {tool['type']} | allowed_domains={tool['filters']['allowed_domains']} | "
+          f"search_context_size={tool['search_context_size']} | user_location={tool['user_location']}")
+    print(f"tool_choice     : {json.dumps(body['tool_choice'])}   (tools configured: {len(body['tools'])})")
+    print(f"include         : {body['include']}")
+    print(f"max_tool_calls  : {body['max_tool_calls']}")
+    print(f"max_output_tokens: {body['max_output_tokens']}   reasoning.effort: {body['reasoning']['effort']}")
+    print(f"store           : {body['store']}")
+    print(f"Timeout         : {TIMEOUT_SECONDS:.0f} s per network phase; {alarm}")
+    print(f"Retries         : {MAX_RETRIES}   Redirects followed: {FOLLOW_REDIRECTS}   Requests allowed: {MAX_REQUESTS}")
     print(f"OPENAI_API_KEY  : {key_state} (value never shown)")
     print(f"Output folder   : {run_dir}")
     print()
@@ -241,8 +332,8 @@ def normalize_api_key(raw):
     key = (raw or "").strip()
     if not key:
         raise PreflightError("OPENAI_API_KEY is missing or blank.")
-    if any(ch.isspace() for ch in key) or not key.isascii() or not key.isprintable():
-        raise PreflightError("OPENAI_API_KEY contains whitespace, control or non-ASCII characters.")
+    if len(key) < KEY_MIN_LENGTH or not re.fullmatch(r"[A-Za-z0-9_\-.]+", key):
+        raise PreflightError("OPENAI_API_KEY is too short or contains characters outside A-Z a-z 0-9 _ - .")
     return key
 
 
@@ -276,6 +367,18 @@ def validate_request_config():
             or tools[0].get("type") != "web_search"
             or (tools[0].get("filters") or {}).get("allowed_domains") != ["reddit.com"]):
         problems.append("tools must be exactly one web_search restricted to reddit.com")
+    if tools and isinstance(tools, list) and isinstance(tools[0], dict):
+        t0 = tools[0]
+        if not isinstance(t0.get("search_context_size"), str) or not isinstance(t0.get("user_location"), dict):
+            problems.append("web_search tool must define search_context_size and user_location")
+    if not isinstance(body.get("reasoning"), dict) or not isinstance(body["reasoning"].get("effort"), str):
+        problems.append("reasoning.effort must be defined")
+    if MAX_RETRIES != 0:
+        problems.append("MAX_RETRIES must be 0")
+    if FOLLOW_REDIRECTS is not False:
+        problems.append("FOLLOW_REDIRECTS must be False")
+    if MAX_REQUESTS != 1:
+        problems.append("MAX_REQUESTS must be 1")
     if body.get("tool_choice") != "required":
         problems.append('tool_choice must be the string "required" (the only configured tool is web_search)')
     if "web_search_call.action.sources" not in (body.get("include") or []):
@@ -290,6 +393,16 @@ def validate_request_config():
         raise PreflightError("Invalid request configuration: " + "; ".join(problems))
 
 
+def check_httpx_defaults(httpx_module):
+    """The default transport must not retry. Local introspection only; no I/O."""
+    try:
+        default = inspect.signature(httpx_module.HTTPTransport.__init__).parameters["retries"].default
+    except Exception:
+        raise PreflightError("could not confirm that the httpx transport does not retry.") from None
+    if default != MAX_RETRIES:
+        raise PreflightError("the installed httpx transport would retry by default; refusing to continue.")
+
+
 def preflight(env, runs_dir, run_dir):
     """Every LOCAL check. Creates NO attempt marker and sends NOTHING. Returns the context for send_once()."""
     validate_request_config()
@@ -301,9 +414,10 @@ def preflight(env, runs_dir, run_dir):
         import httpx
     except Exception:
         raise PreflightError("the httpx package is not available.") from None
+    check_httpx_defaults(httpx)
     client = None
     try:
-        client = httpx.Client(timeout=httpx.Timeout(TIMEOUT_SECONDS), follow_redirects=False)
+        client = httpx.Client(timeout=httpx.Timeout(TIMEOUT_SECONDS), follow_redirects=FOLLOW_REDIRECTS)
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         request = client.build_request("POST", ENDPOINT, headers=headers, json=REQUEST_BODY)   # local only, no I/O
     except Exception as exc:
@@ -331,6 +445,8 @@ def send_once(ctx, sender=None):
 
     `sender` exists only so the safety logic can be tested without a network; the real run uses default_sender."""
     global _ATTEMPT_STARTED
+    if ctx.get("confirmed") is not True:
+        raise PreflightError("the interactive RUN confirmation is missing; nothing was sent.")
     if _ATTEMPT_STARTED:
         raise PreflightError("an attempt was already started in this process; retries are not allowed.")
 
@@ -376,14 +492,25 @@ def send_once(ctx, sender=None):
 
 def main():
     parser = argparse.ArgumentParser(description="One-request web_search compatibility test (preview unless --execute).")
-    parser.add_argument("--execute", action="store_true", help="actually send the single request (may incur charges)")
-    parser.add_argument("--yes", action="store_true", help="skip the typed RUN confirmation (use with --execute)")
+    parser.add_argument("--execute", action="store_true",
+                        help="send the single request: needs an interactive terminal and the typed answer RUN (may incur charges)")
     args = parser.parse_args()
 
     script_path = os.path.realpath(__file__)
     base_dir = os.path.dirname(script_path)
-    if inside_forbidden_path(script_path) or inside_forbidden_path(os.getcwd()) or inside_forbidden_path(base_dir):
-        print("REFUSED: this script and its working directory must be outside both Flintel checkouts.")
+    for label, location in (("script", script_path), ("script folder", base_dir), ("current folder", os.getcwd())):
+        if inside_forbidden_path(location):
+            print(f"REFUSED: the {label} is inside a Flintel checkout. Use a folder outside both checkouts.")
+            return 2
+        git_root = find_git_working_tree(location)
+        if git_root:
+            print(f"REFUSED: the {label} is inside a Git working tree ({git_root}). Use a folder outside any repository.")
+            return 2
+
+    try:
+        validate_request_config()
+    except PreflightError as exc:
+        print(f"INVALID REQUEST CONFIGURATION: {exc}\nNothing is shown or sent.")
         return 2
 
     runs_dir = os.path.join(base_dir, "runs")
@@ -395,8 +522,12 @@ def main():
     print(json.dumps(REQUEST_BODY, indent=2))
 
     if not args.execute:
-        print("\nNOT EXECUTED. Add --execute to send the single request.")
+        print("\nPREVIEW ONLY. Nothing was sent.")
         return 0
+
+    if not is_interactive():                       # BEFORE preflight, marker, httpx import or any network-capable step
+        print("\nREFUSED: --execute needs an interactive terminal (stdin and stdout). Nothing was prepared or sent.")
+        return 2
 
     try:
         ctx = preflight(os.environ, runs_dir, run_dir)
@@ -404,12 +535,15 @@ def main():
         print(f"\nSTOPPED before sending anything. The one-attempt marker was NOT created.\nReason: {exc}")
         return 2
 
-    if sys.stdin.isatty() and not args.yes:
-        answer = input("\nType RUN to send the single request, anything else to abort: ").strip()
-        if answer != "RUN":
-            ctx["client"].close()
-            print("Aborted by user. Nothing was sent. The one-attempt marker was NOT created.")
-            return 0
+    try:
+        answer = input("\nType RUN (exactly, in capitals) to send the single request; anything else aborts: ")
+    except (EOFError, KeyboardInterrupt):
+        answer = ""
+    if answer != "RUN":
+        ctx["client"].close()
+        print("Aborted. Nothing was sent. The one-attempt marker was NOT created.")
+        return 0
+    ctx["confirmed"] = True
 
     try:
         result = send_once(ctx)
@@ -432,14 +566,14 @@ def main():
     record["retrieved_at_utc"] = result["finished_at_utc"]
     record["latency_seconds"] = round(result["latency"], 3)
     record["http_status"] = http_status
-    record["client_error"] = redact(error_text, api_key) if error_text else None
+    record["client_error"] = error_text if error_text else None
 
     data = None
     if raw_text is not None:
         try:
             data = json.loads(raw_text)
         except ValueError:
-            record["unparseable_body_excerpt"] = redact(raw_text[:4000], api_key)
+            record["unparseable_body_excerpt"] = raw_text[:4000]
     if isinstance(data, dict):
         record["response"] = {
             "id": data.get("id"), "status": data.get("status"), "model": data.get("model"),
@@ -451,12 +585,20 @@ def main():
     else:
         raw_to_save = None
 
-    # Redact, then verify no key material remains, before anything touches disk.
-    safe_record = redact_obj(record, api_key)
-    serialized = json.dumps(safe_record, indent=2, ensure_ascii=False)
-    safe_raw = json.dumps(redact_obj(raw_to_save, api_key), indent=2, ensure_ascii=False) if raw_to_save is not None else ""
-    if api_key and (api_key in serialized or api_key in safe_raw):
-        print("STOPPED WRITING: key material detected in output after redaction. Nothing was saved.")
+    # Redact EVERYTHING (values, keys, final text), then CHECK. Any doubt, or any failure, means nothing is written.
+    problem, serialized, safe_raw, safe_record = None, "", "", {}
+    try:
+        safe_record = redact_obj(record, api_key)
+        serialized = redact(json.dumps(safe_record, indent=2, ensure_ascii=False), api_key)
+        if raw_to_save is not None:
+            safe_raw = redact(json.dumps(redact_obj(raw_to_save, api_key), indent=2, ensure_ascii=False), api_key)
+        problem = leak_check(serialized, api_key) or (leak_check(safe_raw, api_key) if safe_raw else None)
+    except Exception:
+        problem = "redaction itself failed"
+    if problem:
+        print("\nSTOPPED WRITING (fail closed): safe redaction could not be established "
+              f"({problem}). Nothing was saved. The one attempt is consumed.")
+        print(f"  HTTP status: {http_status}   Latency: {round(result['latency'], 3)} s")
         return 3
     with open(os.path.join(run_dir, "result.json"), "w", encoding="utf-8") as fh:
         fh.write(serialized)
