@@ -1,0 +1,72 @@
+"""
+tests/test_active_intent_frontend.py — how the answer page shows the `live_candidates` block (templates/chat.html AND
+templates/index.html carry their own copy of the renderer). The real shipped function runs in the preinstalled Chromium.
+Offline; nothing is fetched.
+"""
+import re
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parent.parent
+TEMPLATES = ["chat.html", "index.html"]
+ORIGIN = "http://flintel.test"
+
+
+def _function_source(template):
+    text = (ROOT / "templates" / template).read_text(encoding="utf-8")
+    m = re.search(r"  function appendLiveCandidates\(data, container\) \{.*?\n  \}\n", text, re.S)
+    assert m, f"appendLiveCandidates missing from {template}"
+    return text, m.group(0)
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_both_templates_render_the_block_right_after_the_freshness_note(template):
+    text, _fn = _function_source(template)
+    call = re.search(r"if \(!answerEmpty\) appendFreshnessNote\(data, renderedEl\);[^\n]*\n\s*if \(!answerEmpty\) appendLiveCandidates\(data, renderedEl\);", text)
+    assert call, "the block must be appended in the same place and under the same condition as the freshness note"
+    assert ".live-links {" in text and ".live-links a" in text                # the section is styled in both pages
+
+
+def _page(browser, template, data_js):
+    _text, fn = _function_source(template)
+    page = browser.new_page()
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.route("**/*", lambda r: r.fulfill(status=200, headers={"Content-Type": "text/html"}, body="<!doctype html><html><body><div id='c'></div></body></html>"))
+    page.goto(ORIGIN + "/")
+    page.add_script_tag(content=fn)
+    page.evaluate(f"appendLiveCandidates({data_js}, document.getElementById('c'))")
+    return page, errors
+
+
+GOOD = """{live_candidates: {statement: 'Live web search: 2 Reddit links found by a separate live web search. Only the link and title were returned.',
+  items: [{rank: 1, title: '<img src=x onerror=window.__pwn=1> Which CRM?', url: 'https://www.reddit.com/r/a_b/comments/abc123/x/'},
+          {rank: 2, title: null, url: 'https://www.reddit.com/r/c_d/comments/def456/y/'},
+          {rank: 3, title: 'js link', url: 'javascript:window.__pwn=2'},
+          {rank: 4, title: 'plain http', url: 'http://www.reddit.com/r/e_f/comments/ghi789/z/'},
+          {rank: 5, title: 'no url'}]}}"""
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_block_shows_only_https_links_as_text_with_the_unverified_label(integrity_browser, template):
+    page, errors = _page(integrity_browser, template, GOOD)
+    assert page.evaluate("window.__pwn") is None and page.query_selector("section.live-links img") is None
+    assert page.inner_text("section.live-links .live-links-title") == "Live web-search candidates — unverified"
+    links = page.eval_on_selector_all("section.live-links li a", "els => els.map(e => [e.href, e.textContent, e.rel, e.target])")
+    assert links == [["https://www.reddit.com/r/a_b/comments/abc123/x/", "<img src=x onerror=window.__pwn=1> Which CRM?", "noopener noreferrer nofollow ugc", "_blank"],
+                     ["https://www.reddit.com/r/c_d/comments/def456/y/", "https://www.reddit.com/r/c_d/comments/def456/y/", "noopener noreferrer nofollow ugc", "_blank"]]
+    tags = page.eval_on_selector_all("section.live-links li", "els => els.map(e => e.textContent.includes('live web search · unverified'))")
+    assert tags == [True, True]
+    assert "Only the link and title were returned" in page.inner_text("section.live-links")
+    assert errors == []
+    page.close()
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+@pytest.mark.parametrize("data_js", ["null", "{}", "{live_candidates: null}", "{live_candidates: 'x'}", "{live_candidates: {items: []}}",
+                                     "{live_candidates: {items: 'x'}}", "{live_candidates: {items: [{url: 'http://x'}, {title: 't'}, null]}}"])
+def test_nothing_is_rendered_without_valid_candidates(integrity_browser, template, data_js):
+    page, errors = _page(integrity_browser, template, data_js)
+    assert page.query_selector("section.live-links") is None and errors == []
+    page.close()
