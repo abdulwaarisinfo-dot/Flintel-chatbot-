@@ -219,6 +219,10 @@ __all__ = [
     "REDDIT_LIVE_MAX_LINKS",
     "REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS",
     "REDDIT_LIVE_MODEL",
+    # Active-lead-intent workflow (historical recent window + live Reddit candidates; OFF by default)
+    "ACTIVE_INTENT_ENABLED",
+    "ACTIVE_INTENT_WINDOW_MINUTES",
+    "ACTIVE_INTENT_LIVE_WAIT_SECONDS",
     # Embedding config (mirrors background-service embedding config)
     "EMBEDDING_PROVIDER",
     "EMBEDDING_MODEL",
@@ -1084,3 +1088,17 @@ REDDIT_LIVE_MAX_OUTPUT_TOKENS = _live_pos_int("REDDIT_LIVE_MAX_OUTPUT_TOKENS", 2
 REDDIT_LIVE_MAX_LINKS = _live_pos_int("REDDIT_LIVE_MAX_LINKS", 8)
 REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS = _live_pos_int("REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS", 900)
 REDDIT_LIVE_MODEL = os.getenv("REDDIT_LIVE_MODEL", "").strip()          # empty = LLM_MODEL
+
+
+# ── Active-lead-intent workflow (see active_intent.py) ────────────────────────────────────────────────────────────────
+# OFF by default: with it off, nothing in this block has any effect and every search behaves exactly as before. When on, it
+# only acts on a signed-in owner's plain lead search that (a) the isolated query predicate in active_intent.py recognises as
+# "actively looking for / asking for a recommendation of / needing a solution" AND (b) has no time range of its own, AND only
+# while the Live Reddit links feature above is itself active (enabled, valid caps, valid in-flight limit).
+ACTIVE_INTENT_ENABLED = os.getenv("ACTIVE_INTENT_ENABLED", "false").lower() in ("1", "true", "yes")
+# The recent window applied to that request's saved-post search only: default 30 minutes, never more than 40 (the cap is
+# enforced again in active_intent.py); an unset, non-numeric, zero or negative value falls back to the 30-minute default.
+ACTIVE_INTENT_WINDOW_MINUTES = _live_pos_int("ACTIVE_INTENT_WINDOW_MINUTES", 30)
+# How long (seconds, from the moment the live branch starts) the answer waits for it before going on without it
+# (default 30, at most 60; invalid -> 30). The live call itself is still bounded by REDDIT_LIVE_TIMEOUT_SECONDS.
+ACTIVE_INTENT_LIVE_WAIT_SECONDS = _live_pos_int("ACTIVE_INTENT_LIVE_WAIT_SECONDS", 30)
