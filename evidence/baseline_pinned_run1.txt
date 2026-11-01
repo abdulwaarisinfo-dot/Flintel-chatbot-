@@ -1,0 +1,1152 @@
+........................................................................ [  1%]
+........................................................................ [  3%]
+...................................................ssssssss.ss.......... [  5%]
+...........................ssssssssssssssssssssss....................... [  6%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+......................................F................................. [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 17%]
+............................F..........s................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 25%]
+........................................................................ [ 27%]
+....s................................................................... [ 29%]
+........................................................................ [ 30%]
+........................................................................ [ 32%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+.......................................................................F [ 42%]
+FFFFFFFFFF..FFFssss.................................................ssss [ 44%]
+.s.s.s.s.s.s...............................................ssssssssssss. [ 46%]
+....................ssssssss............................................ [ 48%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 53%]
+.................................................................Fssssss [ 55%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+....x................................................................... [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+....................................................................xxxx [ 65%]
+xx...................................................................... [ 67%]
+........................................................................ [ 68%]
+...............................................xxFFFFFFFF............... [ 70%]
+........................................................................ [ 72%]
+.....................ssssss............................................. [ 73%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+........................................................................ [ 79%]
+........................................................................ [ 80%]
+........................................................................ [ 82%]
+........................................................................ [ 84%]
+........................................................................ [ 85%]
+..............................................................F......... [ 87%]
+.............................................F.......................... [ 89%]
+........................................................................ [ 91%]
+........................................................................ [ 92%]
+........................................................................ [ 94%]
+.............s..........................................F............... [ 96%]
+.......................................................................F [ 98%]
+........................................................................ [ 99%]
+......x....                                                              [100%]
+==================================== ERRORS ====================================
+______________ ERROR collecting tests/test_lead_qualification.py _______________
+ImportError while importing test module '/tmp/flintel_phaseB_base/tests/test_lead_qualification.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_lead_qualification.py:29: in <module>
+    from tests.test_option_a_outreach import flow, ORIGINAL_URLS, RESULTS, _report  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ModuleNotFoundError: No module named 'tests.test_option_a_outreach'
+_______________ ERROR collecting tests/test_option_a_followup.py _______________
+ImportError while importing test module '/tmp/flintel_phaseB_base/tests/test_option_a_followup.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_option_a_followup.py:24: in <module>
+    from tests.test_option_a_outreach import ANSWER, ORIGINAL_URLS, POSTS, flow  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ModuleNotFoundError: No module named 'tests.test_option_a_outreach'
+________________ ERROR collecting tests/test_option_a_guard.py _________________
+ImportError while importing test module '/tmp/flintel_phaseB_base/tests/test_option_a_guard.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_option_a_guard.py:27: in <module>
+    from tests.test_option_a_outreach import (  # noqa: F401  (fixture + data)
+E   ModuleNotFoundError: No module named 'tests.test_option_a_outreach'
+=================================== FAILURES ===================================
+_ test_after_an_unconfirmed_stop_a_reload_shows_the_real_state_without_restarting_the_run _
+
+counted = {'lg': <module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, 'idx': <module 'index' from '/tmp/flintel_phaseB_b.../flintel_phaseB_base/routes.py'>, 'tf': <module 'turn_finisher' from '/tmp/flintel_phaseB_base/turn_finisher.py'>, ...}
+
+    def test_after_an_unconfirmed_stop_a_reload_shows_the_real_state_without_restarting_the_run(counted):
+        f, ctl = counted, counted["ctl"]
+        page, chat = _start(f, hold_scan=True)
+        page.route("**/cancel", lambda route: route.abort())
+        click_stop(page)
+        assert bwait(page, lambda: "confirm" in _notice(page), 25)
+        before = _snapshot(f, chat)
+        page.unroute("**/cancel")
+        page.reload()
+        # the server never recorded a stop, so the page honestly shows the turn as still running - and reconnects to it
+        page.wait_for_function("document.getElementById('submit-btn').classList.contains('is-stop')", timeout=15000)
+        assert _snapshot(f, chat) == before and len(_searches(page)) == 1
+        click_stop(page)                                                           # the user presses Stop again, the network is back
+        page.wait_for_function("document.querySelector('.turn-chip .turn-status-label').textContent.trim() === 'Stopped'")
+>       assert bwait(page, lambda: msg_of(f, chat).get("cancelled_at") is not None, 15)
+E       AssertionError: assert False
+E        +  where False = bwait(<Page url='http://127.0.0.1:59737/chat/c85208c0fc5b43dc908d888c174de92e'>, <function test_after_an_unconfirmed_stop_a_reload_shows_the_real_state_without_restarting_the_run.<locals>.<lambda> at 0x7f2da5772160>, 15)
+
+tests/test_cancel_confirmation.py:86: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_______________ test_icon_files_exist_and_square_multiple_of_48 ________________
+
+    def test_icon_files_exist_and_square_multiple_of_48():
+>       from PIL import Image
+E       ModuleNotFoundError: No module named 'PIL'
+
+tests/test_favicon.py:115: ModuleNotFoundError
+_____________________ test_ping_get_and_head_touch_nothing _____________________
+
+app_env = (<module 'index' from '/tmp/flintel_phaseB_base/index.py'>, {'db': <MagicMock name='database.db' id='139833933771888'>...on' id='139833889681728'>, 'users_collection': <MagicMock name='database.users_collection' id='139834013330432'>, ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2d9e1ddc10>
+
+    def test_ping_get_and_head_touch_nothing(app_env, monkeypatch):
+        from fastapi.testclient import TestClient
+        idx, db_names = app_env
+        rt = sys.modules["routes"]
+        forbidden = MagicMock(side_effect=AssertionError("must not be called"))
+        for mod in (idx, rt):
+            for fn in ("get_owner", "get_anon_id", "get_current_user"):
+                if hasattr(mod, fn):
+                    monkeypatch.setattr(mod, fn, forbidden)
+        for m in db_names.values():
+            m.reset_mock()
+        client = TestClient(idx.app)                      # no `with`: startup hooks not run here
+        for _ in range(5):
+            r = client.get("/ping")
+>           assert r.status_code == 200 and r.json() == {"status": "ok"}
+E           assert (404 == 200)
+E            +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_keepalive.py:81: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_____________ test_startup_hook_registered_and_scheduler_hook_kept _____________
+
+app_env = (<module 'index' from '/tmp/flintel_phaseB_base/index.py'>, {'db': <MagicMock name='database.db' id='139833894395856'>...on' id='139833901305776'>, 'users_collection': <MagicMock name='database.users_collection' id='139833901307696'>, ...})
+
+    def test_startup_hook_registered_and_scheduler_hook_kept(app_env):
+        idx, _ = app_env
+        names = [h.__name__ for h in idx.app.router.on_startup]
+>       assert "_start_trending_keywords_scheduler" in names and "_start_keepalive" in names
+E       AssertionError: assert ('_start_trending_keywords_scheduler' in ['_start_trending_keywords_scheduler', '_start_turn_finisher'] and '_start_keepalive' in ['_start_trending_keywords_scheduler', '_start_turn_finisher'])
+
+tests/test_keepalive.py:94: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_____________________________ test_config_exports ______________________________
+
+    def test_config_exports():
+        import config
+        for name in ("KEEPALIVE_ENABLED", "KEEPALIVE_URL", "KEEPALIVE_INTERVAL_SECONDS"):
+>           assert name in config.__all__ and hasattr(config, name)
+E           AssertionError: assert ('KEEPALIVE_ENABLED' in ['STRICT_INTENT_MODE', 'STRICT_WAIT_SECONDS', 'STRICT_SUMMARY_MIN_OVERLAP', 'STRICT_TITLE_MATCH_MIN_JACCARD', 'INCREMENTAL_RESCAN_ENABLED', 'INCREMENTAL_WATERMARK_FIELD', ...])
+E            +  where ['STRICT_INTENT_MODE', 'STRICT_WAIT_SECONDS', 'STRICT_SUMMARY_MIN_OVERLAP', 'STRICT_TITLE_MATCH_MIN_JACCARD', 'INCREMENTAL_RESCAN_ENABLED', 'INCREMENTAL_WATERMARK_FIELD', ...] = <module 'config' from '/tmp/flintel_phaseB_base/config.py'>.__all__
+
+tests/test_keepalive.py:100: AssertionError
+_________________________ test_disabled_starts_nothing _________________________
+
+ka = <module 'keepalive' from '/tmp/flintel_phaseB_base/keepalive.py'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2dafb20620>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7f2dafb23b90>
+
+    def test_disabled_starts_nothing(ka, monkeypatch, caplog):
+        _cfg(monkeypatch, ka, enabled=False)
+        created = MagicMock()
+        monkeypatch.setattr(ka.asyncio, "create_task", created)
+        with caplog.at_level(logging.DEBUG, logger="flintel-keepalive"):
+>           assert asyncio.run(ka.start_keepalive()) is None
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_keepalive.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+main = <coroutine object start_keepalive at 0x7f2d9d714940>, debug = None
+loop_factory = None
+
+    def run(main, *, debug=None, loop_factory=None):
+        """Execute the coroutine and return the result.
+    
+        This function runs the passed coroutine, taking care of
+        managing the asyncio event loop, finalizing asynchronous
+        generators and closing the default executor.
+    
+        This function cannot be called when another asyncio event loop is
+        running in the same thread.
+    
+        If debug is True, the event loop will be run in debug mode.
+    
+        This function always creates a new event loop and closes it at the end.
+        It should be used as a main entry point for asyncio programs, and should
+        ideally only be called once.
+    
+        The executor is given a timeout duration of 5 minutes to shutdown.
+        If the executor hasn't finished within that duration, a warning is
+        emitted and the executor is closed.
+    
+        Example:
+    
+            async def main():
+                await asyncio.sleep(1)
+                print('hello')
+    
+            asyncio.run(main())
+        """
+        if events._get_running_loop() is not None:
+            # fail fast with short traceback
+>           raise RuntimeError(
+                "asyncio.run() cannot be called from a running event loop")
+E           RuntimeError: asyncio.run() cannot be called from a running event loop
+
+/usr/lib/python3.12/asyncio/runners.py:190: RuntimeError
+________________________ test_no_url_logs_one_info_line ________________________
+
+ka = <module 'keepalive' from '/tmp/flintel_phaseB_base/keepalive.py'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2da4cb3e00>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7f2da4cb27b0>
+
+    def test_no_url_logs_one_info_line(ka, monkeypatch, caplog):
+        _cfg(monkeypatch, ka, url="")
+        with caplog.at_level(logging.DEBUG, logger="flintel-keepalive"):
+>           assert asyncio.run(ka.start_keepalive()) is None
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_keepalive.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+main = <coroutine object start_keepalive at 0x7f2d9d716040>, debug = None
+loop_factory = None
+
+    def run(main, *, debug=None, loop_factory=None):
+        """Execute the coroutine and return the result.
+    
+        This function runs the passed coroutine, taking care of
+        managing the asyncio event loop, finalizing asynchronous
+        generators and closing the default executor.
+    
+        This function cannot be called when another asyncio event loop is
+        running in the same thread.
+    
+        If debug is True, the event loop will be run in debug mode.
+    
+        This function always creates a new event loop and closes it at the end.
+        It should be used as a main entry point for asyncio programs, and should
+        ideally only be called once.
+    
+        The executor is given a timeout duration of 5 minutes to shutdown.
+        If the executor hasn't finished within that duration, a warning is
+        emitted and the executor is closed.
+    
+        Example:
+    
+            async def main():
+                await asyncio.sleep(1)
+                print('hello')
+    
+            asyncio.run(main())
+        """
+        if events._get_running_loop() is not None:
+            # fail fast with short traceback
+>           raise RuntimeError(
+                "asyncio.run() cannot be called from a running event loop")
+E           RuntimeError: asyncio.run() cannot be called from a running event loop
+
+/usr/lib/python3.12/asyncio/runners.py:190: RuntimeError
+_______________________________ test_env_parsing _______________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2da4cb10d0>
+
+    def test_env_parsing(monkeypatch):
+        monkeypatch.setenv("KEEPALIVE_ENABLED", "false")
+        monkeypatch.delenv("KEEPALIVE_URL", raising=False)
+        monkeypatch.setenv("RENDER_EXTERNAL_URL", "https://x.onrender.com")
+        monkeypatch.setenv("KEEPALIVE_INTERVAL_SECONDS", "abc")
+        sys.modules.pop("config", None)
+        try:
+            import config
+>           assert config.KEEPALIVE_ENABLED is False
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'config' has no attribute 'KEEPALIVE_ENABLED'
+
+tests/test_keepalive.py:149: AttributeError
+------------------------------ Captured log call -------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_________ test_pings_survive_errors_logs_debug_only_and_stops_cleanly __________
+
+ka = <module 'keepalive' from '/tmp/flintel_phaseB_base/keepalive.py'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2da4cb39b0>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7f2d9e11be00>
+
+    def test_pings_survive_errors_logs_debug_only_and_stops_cleanly(ka, monkeypatch, caplog):
+        _cfg(monkeypatch, ka, url="https://flintel.test/")
+        hits = []
+    
+        def handler(request):
+            hits.append(str(request.url))
+            if len(hits) == 2:
+                raise httpx.ConnectTimeout("slow")
+            if len(hits) == 3:
+                raise RuntimeError("boom")
+            return httpx.Response(200 if len(hits) != 4 else 503, json={"status": "ok"})
+        _mock_client(monkeypatch, ka, handler)
+    
+        async def main():
+            t1 = await ka.start_keepalive()
+            t2 = await ka.start_keepalive()                    # second start is a no-op
+            assert t1 is not None and t2 is None
+            while len(hits) < 6:
+                await asyncio.sleep(0.01)
+            t1.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await t1
+            return t1
+        with caplog.at_level(logging.DEBUG, logger="flintel-keepalive"):
+>           task = asyncio.run(main())
+                   ^^^^^^^^^^^^^^^^^^^
+
+tests/test_keepalive.py:180: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+main = <coroutine object test_pings_survive_errors_logs_debug_only_and_stops_cleanly.<locals>.main at 0x7f2d9c93b1c0>
+debug = None, loop_factory = None
+
+    def run(main, *, debug=None, loop_factory=None):
+        """Execute the coroutine and return the result.
+    
+        This function runs the passed coroutine, taking care of
+        managing the asyncio event loop, finalizing asynchronous
+        generators and closing the default executor.
+    
+        This function cannot be called when another asyncio event loop is
+        running in the same thread.
+    
+        If debug is True, the event loop will be run in debug mode.
+    
+        This function always creates a new event loop and closes it at the end.
+        It should be used as a main entry point for asyncio programs, and should
+        ideally only be called once.
+    
+        The executor is given a timeout duration of 5 minutes to shutdown.
+        If the executor hasn't finished within that duration, a warning is
+        emitted and the executor is closed.
+    
+        Example:
+    
+            async def main():
+                await asyncio.sleep(1)
+                print('hello')
+    
+            asyncio.run(main())
+        """
+        if events._get_running_loop() is not None:
+            # fail fast with short traceback
+>           raise RuntimeError(
+                "asyncio.run() cannot be called from a running event loop")
+E           RuntimeError: asyncio.run() cannot be called from a running event loop
+
+/usr/lib/python3.12/asyncio/runners.py:190: RuntimeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+___________________ test_slow_ping_does_not_block_event_loop ___________________
+
+ka = <module 'keepalive' from '/tmp/flintel_phaseB_base/keepalive.py'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2d9e119d00>
+
+    def test_slow_ping_does_not_block_event_loop(ka, monkeypatch):
+        _cfg(monkeypatch, ka)
+    
+        async def slow_handler(request):
+            await asyncio.sleep(5)
+            return httpx.Response(200)
+        real = httpx.AsyncClient
+        monkeypatch.setattr(ka.httpx, "AsyncClient",
+                            lambda **kw: real(transport=httpx.MockTransport(slow_handler), **kw))
+    
+        async def main():
+            task = await ka.start_keepalive()
+            await asyncio.sleep(0.05)                          # ping now in flight
+            loop = asyncio.get_running_loop()
+            t0 = loop.time()
+            await asyncio.sleep(0.01)                          # other work still runs promptly
+            lag = loop.time() - t0
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)
+            return lag
+>       assert asyncio.run(main()) < 0.5
+               ^^^^^^^^^^^^^^^^^^^
+
+tests/test_keepalive.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+main = <coroutine object test_slow_ping_does_not_block_event_loop.<locals>.main at 0x7f2d9ce84b80>
+debug = None, loop_factory = None
+
+    def run(main, *, debug=None, loop_factory=None):
+        """Execute the coroutine and return the result.
+    
+        This function runs the passed coroutine, taking care of
+        managing the asyncio event loop, finalizing asynchronous
+        generators and closing the default executor.
+    
+        This function cannot be called when another asyncio event loop is
+        running in the same thread.
+    
+        If debug is True, the event loop will be run in debug mode.
+    
+        This function always creates a new event loop and closes it at the end.
+        It should be used as a main entry point for asyncio programs, and should
+        ideally only be called once.
+    
+        The executor is given a timeout duration of 5 minutes to shutdown.
+        If the executor hasn't finished within that duration, a warning is
+        emitted and the executor is closed.
+    
+        Example:
+    
+            async def main():
+                await asyncio.sleep(1)
+                print('hello')
+    
+            asyncio.run(main())
+        """
+        if events._get_running_loop() is not None:
+            # fail fast with short traceback
+>           raise RuntimeError(
+                "asyncio.run() cannot be called from a running event loop")
+E           RuntimeError: asyncio.run() cannot be called from a running event loop
+
+/usr/lib/python3.12/asyncio/runners.py:190: RuntimeError
+___________________________ test_start_never_raises ____________________________
+
+ka = <module 'keepalive' from '/tmp/flintel_phaseB_base/keepalive.py'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2da4cb16a0>
+
+    def test_start_never_raises(ka, monkeypatch):
+        _cfg(monkeypatch, ka)
+        def fail(coro):
+            coro.close()
+            raise RuntimeError("no loop")
+        monkeypatch.setattr(ka.asyncio, "create_task", fail)
+>       assert asyncio.run(ka.start_keepalive()) is None and ka._started is False
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_keepalive.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+main = <coroutine object start_keepalive at 0x7f2d9d715340>, debug = None
+loop_factory = None
+
+    def run(main, *, debug=None, loop_factory=None):
+        """Execute the coroutine and return the result.
+    
+        This function runs the passed coroutine, taking care of
+        managing the asyncio event loop, finalizing asynchronous
+        generators and closing the default executor.
+    
+        This function cannot be called when another asyncio event loop is
+        running in the same thread.
+    
+        If debug is True, the event loop will be run in debug mode.
+    
+        This function always creates a new event loop and closes it at the end.
+        It should be used as a main entry point for asyncio programs, and should
+        ideally only be called once.
+    
+        The executor is given a timeout duration of 5 minutes to shutdown.
+        If the executor hasn't finished within that duration, a warning is
+        emitted and the executor is closed.
+    
+        Example:
+    
+            async def main():
+                await asyncio.sleep(1)
+                print('hello')
+    
+            asyncio.run(main())
+        """
+        if events._get_running_loop() is not None:
+            # fail fast with short traceback
+>           raise RuntimeError(
+                "asyncio.run() cannot be called from a running event loop")
+E           RuntimeError: asyncio.run() cannot be called from a running event loop
+
+/usr/lib/python3.12/asyncio/runners.py:190: RuntimeError
+_____________________ test_link_and_chip_styles[chat.html] _____________________
+
+name = 'chat.html'
+
+    @pytest.mark.parametrize("name", TEMPLATES)
+    def test_link_and_chip_styles(name):
+        s = _src(name)
+        assert "--link-color: #009dff;" in s
+        assert ".answer-rendered a { color: var(--link-color); text-decoration: underline; }" in s
+        assert ".post-field .field-text a { color: var(--link-color);" in s
+        assert ".leadgen-field .text a { color: var(--link-color);" in s
+>       term = s[s.index("function clickableTerm(text) {"):]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: substring not found
+
+tests/test_keyword_chips.py:43: ValueError
+____________________ test_link_and_chip_styles[index.html] _____________________
+
+name = 'index.html'
+
+    @pytest.mark.parametrize("name", TEMPLATES)
+    def test_link_and_chip_styles(name):
+        s = _src(name)
+        assert "--link-color: #009dff;" in s
+        assert ".answer-rendered a { color: var(--link-color); text-decoration: underline; }" in s
+        assert ".post-field .field-text a { color: var(--link-color);" in s
+        assert ".leadgen-field .text a { color: var(--link-color);" in s
+>       term = s[s.index("function clickableTerm(text) {"):]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: substring not found
+
+tests/test_keyword_chips.py:43: ValueError
+___________________ test_helpers_identical_in_both_templates ___________________
+
+    def test_helpers_identical_in_both_templates():
+>       assert _terms_js("chat.html") == _terms_js("index.html")
+               ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_keyword_chips.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'chat.html'
+
+    def _terms_js(name):
+        s = _src(name)
+>       a = s.index("  const QUOTED_TERM_RE")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: substring not found
+
+tests/test_keyword_chips.py:30: ValueError
+____________________ test_suggested_search_terms[chat.html] ____________________
+
+name = 'chat.html'
+
+    @pytest.mark.skipif(not NODE, reason="node not installed")
+    @pytest.mark.parametrize("name", TEMPLATES)
+    def test_suggested_search_terms(name):
+        cases = [
+            {"suggestion": NOTION},
+            {"suggestion": "look for “Notion help”, “Notion troubleshooting”, or “Notion issues” threads"},
+            {"suggestion": 'Search "Notion help" or "Notion issues"'},
+            {"suggestion": "Hyderabad"},
+            {"suggestion": "Notion's API limits"},
+            {"suggestion": "users' complaints about Notion"},
+            {"suggestions": ["Notion help", "Notion troubleshooting", "notion help", "  ", None, 42]},
+            {"suggestions": ["try 'Notion help'", "Notion issues"]},
+            {"suggestions": "not-an-array", "suggestion": "Lahore"},
+            {"suggestion": None}, {}, None,
+        ]
+>       code = _terms_js(name) + f"\nconsole.log(JSON.stringify({json.dumps(cases)}.map(suggestedSearchTerms)));"
+               ^^^^^^^^^^^^^^^
+
+tests/test_keyword_chips.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'chat.html'
+
+    def _terms_js(name):
+        s = _src(name)
+>       a = s.index("  const QUOTED_TERM_RE")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: substring not found
+
+tests/test_keyword_chips.py:30: ValueError
+___________________ test_suggested_search_terms[index.html] ____________________
+
+name = 'index.html'
+
+    @pytest.mark.skipif(not NODE, reason="node not installed")
+    @pytest.mark.parametrize("name", TEMPLATES)
+    def test_suggested_search_terms(name):
+        cases = [
+            {"suggestion": NOTION},
+            {"suggestion": "look for “Notion help”, “Notion troubleshooting”, or “Notion issues” threads"},
+            {"suggestion": 'Search "Notion help" or "Notion issues"'},
+            {"suggestion": "Hyderabad"},
+            {"suggestion": "Notion's API limits"},
+            {"suggestion": "users' complaints about Notion"},
+            {"suggestions": ["Notion help", "Notion troubleshooting", "notion help", "  ", None, 42]},
+            {"suggestions": ["try 'Notion help'", "Notion issues"]},
+            {"suggestions": "not-an-array", "suggestion": "Lahore"},
+            {"suggestion": None}, {}, None,
+        ]
+>       code = _terms_js(name) + f"\nconsole.log(JSON.stringify({json.dumps(cases)}.map(suggestedSearchTerms)));"
+               ^^^^^^^^^^^^^^^
+
+tests/test_keyword_chips.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'index.html'
+
+    def _terms_js(name):
+        s = _src(name)
+>       a = s.index("  const QUOTED_TERM_RE")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: substring not found
+
+tests/test_keyword_chips.py:30: ValueError
+_______________ test_platform_pill_removed_and_completed_hidden ________________
+
+    def test_platform_pill_removed_and_completed_hidden():
+        s = _src("chat.html")
+        assert "{%- if _plat in ['all', 'all platforms'] -%}All Platforms" not in s
+>       assert ".turn-chip.status-completed { display: none; }" in s
+E       assert '.turn-chip.status-completed { display: none; }' in '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8" />\n<meta name="viewport" content="width=device-widt...Enter\' && !e.shiftKey) { e.preventDefault(); saveEditor(block); }\n    });\n  }\n}());\n</script>\n</body>\n</html>\n'
+
+tests/test_platform_multiselect.py:134: AssertionError
+_____________ test_partial_json_string_value_reads_a_growing_value _____________
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2dafb92690>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+
+    def test_partial_json_string_value_reads_a_growing_value(app_env):
+        _lg, _idx, rt, _chats, _state = app_env
+>       f = rt._partial_json_string_value
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'routes' has no attribute '_partial_json_string_value'
+
+tests/test_realtime_streaming.py:30: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+__________ test_partial_json_string_value_tolerates_dangling_escapes ___________
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2d9dd12540>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+
+    def test_partial_json_string_value_tolerates_dangling_escapes(app_env):
+        _lg, _idx, rt, _chats, _state = app_env
+>       f = rt._partial_json_string_value
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'routes' has no attribute '_partial_json_string_value'
+
+tests/test_realtime_streaming.py:45: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+____________ test_readable_field_streamer_emits_forward_only_prose _____________
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2d9d1eaa50>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+
+    def test_readable_field_streamer_emits_forward_only_prose(app_env):
+        _lg, _idx, rt, _chats, _state = app_env
+>       s = rt._ReadableFieldStreamer()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'routes' has no attribute '_ReadableFieldStreamer'
+
+tests/test_realtime_streaming.py:53: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_____________ test_readable_field_streamer_ignores_internal_fields _____________
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2da5ac04d0>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+
+    def test_readable_field_streamer_ignores_internal_fields(app_env):
+        _lg, _idx, rt, _chats, _state = app_env
+>       s = rt._ReadableFieldStreamer()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'routes' has no attribute '_ReadableFieldStreamer'
+
+tests/test_realtime_streaming.py:72: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_________________________ test_looks_like_answer_json __________________________
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2d9d1e9d60>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+
+    def test_looks_like_answer_json(app_env):
+        _lg, _idx, rt, _chats, _state = app_env
+>       assert rt._looks_like_answer_json('{"format": "source_list", "headline": "x"}') is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'routes' has no attribute '_looks_like_answer_json'
+
+tests/test_realtime_streaming.py:82: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+__________ test_stream_emits_readable_prose_then_the_validated_answer __________
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2d9ffc1a90>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2d9d559df0>
+
+    def test_stream_emits_readable_prose_then_the_validated_answer(app_env, monkeypatch):
+        lg, idx, rt, chats, state = app_env
+        saves = _common_stubs(app_env, monkeypatch)
+        calls = {"stream": 0, "blocking": 0}
+    
+        def fake_stream(query, pool, extra_context=None):
+            calls["stream"] += 1
+            for ch in json.dumps(ANSWER):          # token-by-token
+                yield ch
+    
+>       monkeypatch.setattr(rt, "analyze_with_claude_stream", fake_stream)
+E       AttributeError: <module 'routes' from '/tmp/flintel_phaseB_base/routes.py'> has no attribute 'analyze_with_claude_stream'
+
+tests/test_realtime_streaming.py:163: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+______________ test_blocking_fallback_runs_once_when_stream_fails ______________
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2d9ff909e0>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2d9fd602f0>
+
+    def test_blocking_fallback_runs_once_when_stream_fails(app_env, monkeypatch):
+        lg, idx, rt, chats, state = app_env
+        saves = _common_stubs(app_env, monkeypatch)
+        calls = {"stream": 0, "blocking": 0}
+    
+        def boom(query, pool, extra_context=None):
+            calls["stream"] += 1
+            yield '{"format": "source_l'      # partial, then fail
+            raise RuntimeError("stream dropped")
+    
+        def blocking(query, pool, extra_context=None):
+            calls["blocking"] += 1
+            return json.dumps(ANSWER)
+    
+>       monkeypatch.setattr(rt, "analyze_with_claude_stream", boom)
+E       AttributeError: <module 'routes' from '/tmp/flintel_phaseB_base/routes.py'> has no attribute 'analyze_with_claude_stream'
+
+tests/test_realtime_streaming.py:198: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_____ test_nonjson_stream_degrades_gracefully_without_duplicate_generation _____
+
+app_env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'...>, <tests.test_reliability_ux_perf.ListChats object at 0x7f2da40d50d0>, {'calls': [], 'jobs': [], 'router_delay': 0.0})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2da40d7110>
+
+    def test_nonjson_stream_degrades_gracefully_without_duplicate_generation(app_env, monkeypatch):
+        """A stream that yields prose with no JSON object is NOT retried via the
+        blocking path — `_extract_json_object_from_text` wraps it into a valid,
+        format-bearing `no_results` envelope, so exactly one answer is produced and
+        persisted, no raw JSON leaks to the client, and nothing crashes. (The
+        blocking fallback is reserved for an actual stream exception; see the test
+        above.)"""
+        lg, idx, rt, chats, state = app_env
+        saves = _common_stubs(app_env, monkeypatch)
+        calls = {"stream": 0, "blocking": 0}
+    
+        def not_json(query, pool, extra_context=None):
+            calls["stream"] += 1
+            for ch in "I think the answer is probably about CRMs.":   # prose, no JSON object
+                yield ch
+    
+>       monkeypatch.setattr(rt, "analyze_with_claude_stream", not_json)
+E       AttributeError: <module 'routes' from '/tmp/flintel_phaseB_base/routes.py'> has no attribute 'analyze_with_claude_stream'
+
+tests/test_realtime_streaming.py:230: AttributeError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_________________ test_og_card_keeps_the_logo_artwork_exactly __________________
+
+app_env = (<module 'index' from '/tmp/flintel_phaseB_base/index.py'>, <module 'routes' from '/tmp/flintel_phaseB_base/routes.py'...on' id='139834204111936'>, 'users_collection': <MagicMock name='database.users_collection' id='139834204125712'>, ...})
+
+    def test_og_card_keeps_the_logo_artwork_exactly(app_env):
+        import io
+>       from PIL import Image
+E       ModuleNotFoundError: No module named 'PIL'
+
+tests/test_seo_basics.py:407: ModuleNotFoundError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_________________ test_everything_else_goes_to_router[salaam] __________________
+
+env = (<module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>, <module 'index' from '/tmp/flintel_phaseB_base/index.py'>, <tests.test_answer_persistence.FakeChats object at 0x7f2d6b62f680>)
+text = 'salaam'
+
+    @pytest.mark.parametrize("text", NEGATIVE)
+    def test_everything_else_goes_to_router(env, text):
+        lg, _, _ = env
+>       assert lg.smalltalk_reply(text) is None
+E       AssertionError: assert 'Wa alaikum assalam! Batayein, kis brand, product ya topic par logon ki baatein dekhni hain?' is None
+E        +  where 'Wa alaikum assalam! Batayein, kis brand, product ya topic par logon ki baatein dekhni hain?' = <function smalltalk_reply at 0x7f2d787bb060>('salaam')
+E        +    where <function smalltalk_reply at 0x7f2d787bb060> = <module 'logics' from '/tmp/flintel_phaseB_base/logics.py'>.smalltalk_reply
+
+tests/test_smalltalk_fast_path.py:92: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  flintel.config:config.py:544 CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.
+_ test_future_epoch_zero_invalid_and_missing_dates_all_get_the_missing_date_score[value1] _
+
+value = datetime.datetime(2026, 11, 1, 11, 49, 52, 170804, tzinfo=datetime.timezone.utc)
+
+    @pytest.mark.parametrize("value", [NOW + D(days=30), NOW + D(minutes=30), datetime(1970, 1, 1, tzinfo=UTC),
+                                       datetime(1999, 1, 1), "1970-01-01T00:00:00Z", "junk", None, 0, ""])
+    def test_future_epoch_zero_invalid_and_missing_dates_all_get_the_missing_date_score(value):
+>       assert opportunity.recency_score(value, CFG) == 0.35
+E       AssertionError: assert 1.0 == 0.35
+E        +  where 1.0 = <function recency_score at 0x7f2db3624a40>(datetime.datetime(2026, 11, 1, 11, 49, 52, 170804, tzinfo=datetime.timezone.utc), {'half_life_days': 30, 'floor': 0.0, 'missing_date_score': 0.35})
+E        +    where <function recency_score at 0x7f2db3624a40> = opportunity.recency_score
+
+tests/test_timestamp_correctness.py:113: AssertionError
+___ test_enabled_backfill_is_bounded_by_chats_turns_age_and_never_limit_zero ___
+
+active = namespace(calls=[], result=('done', None), queue=Collection(Database(mongomock.MongoClient('localhost', 27017), 'turn_....datetime(2026, 10, 25, 11, 0, 1, tzinfo=datetime.timezone.utc)}, cfg=<function cfg.<locals>.setter at 0x7f2d783f4c20>)
+cfg = <function cfg.<locals>.setter at 0x7f2d783f4c20>
+
+    def test_enabled_backfill_is_bounded_by_chats_turns_age_and_never_limit_zero(active, cfg):
+        chats = mongomock.MongoClient()["c"].chats
+        for i in range(30):
+            _chat(chats, i, 3600)                                                       # recent (1 hour old)
+        for i in range(30, 36):
+            _chat(chats, i, 10 * 86400)                                                 # 10 days old: beyond the 3-day cutoff
+        cfg(TURN_FINISH_BACKFILL_ENABLED=True, TURN_FINISH_BACKFILL_MAX_CHATS=0, TURN_FINISH_BACKFILL_MAX_TURNS=4)
+        spy = _SpyChats(chats)
+        # a bad configured value (0) falls back to the default (20 chats); the per-pass turn cap (4) then bounds the work
+        assert tf.backfill_if_due(spy) == 4
+        assert 0 not in spy.limits and 20 in spy.limits and any(isinstance(x, tuple) for x in spy.limits)
+        docs = list(active.queue.find({"chat_id": {"$exists": True}}))
+        assert len(docs) == 4 and all(d["lease_owner"] is None for d in docs)
+        assert tf.backfill_if_due(spy) == 0                                             # the marker: once per interval
+        active.clock["now"] = T0 + timedelta(seconds=tf.BACKFILL_INTERVAL_SECONDS + 1)
+        cfg(TURN_FINISH_BACKFILL_MAX_TURNS=200)
+        got = tf.backfill_if_due(spy)
+>       assert got >= 20 and active.queue.count_documents({"topic_key": {"$regex": "question 3[0-5]"}}) == 0    # old turns never
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert (20 >= 20 and 6 == 0)
+E        +  where 6 = count_documents({'topic_key': {'$regex': 'question 3[0-5]'}})
+E        +    where count_documents = Collection(Database(mongomock.MongoClient('localhost', 27017), 'turn_queue_test'), 'turn_finishing').count_documents
+E        +      where Collection(Database(mongomock.MongoClient('localhost', 27017), 'turn_queue_test'), 'turn_finishing') = namespace(calls=[], result=('done', None), queue=Collection(Database(mongomock.MongoClient('localhost', 27017), 'turn_....datetime(2026, 10, 25, 11, 0, 1, tzinfo=datetime.timezone.utc)}, cfg=<function cfg.<locals>.setter at 0x7f2d783f4c20>).queue
+
+tests/test_turn_queue_limits.py:290: AssertionError
+=============================== warnings summary ===============================
+../venv_pinned/lib/python3.12/site-packages/starlette/formparsers.py:12
+  /tmp/venv_pinned/lib/python3.12/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+../venv_pinned/lib/python3.12/site-packages/starlette/testclient.py:40
+  /tmp/venv_pinned/lib/python3.12/site-packages/starlette/testclient.py:40: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_answer_integrity.py: 18 warnings
+tests/test_answer_persistence.py: 16 warnings
+tests/test_billing_hardening.py: 9 warnings
+tests/test_billing_lemonsqueezy.py: 22 warnings
+tests/test_cancel_confirmation.py: 5 warnings
+tests/test_conversation_context.py: 25 warnings
+tests/test_credit_corrections.py: 42 warnings
+tests/test_credit_cost.py: 28 warnings
+tests/test_credit_finalization.py: 17 warnings
+tests/test_d4_finalization.py: 9 warnings
+tests/test_discover_menu.py: 40 warnings
+tests/test_favicon.py: 7 warnings
+tests/test_find_buyers_page.py: 9 warnings
+tests/test_freshness_disclosure.py: 7 warnings
+tests/test_gate2_pilot_safety.py: 27 warnings
+tests/test_grounded_answers.py: 29 warnings
+tests/test_guest_credits.py: 50 warnings
+tests/test_guest_gate.py: 94 warnings
+tests/test_guest_gate_delivery.py: 31 warnings
+tests/test_guest_gate_fence.py: 26 warnings
+tests/test_guest_gate_final.py: 17 warnings
+tests/test_guest_signup_flow.py: 19 warnings
+tests/test_guidance_and_intro.py: 34 warnings
+tests/test_home_ui.py: 93 warnings
+tests/test_independent_chats_stop_retry.py: 49 warnings
+tests/test_index_guard.py: 26 warnings
+tests/test_integration_scenarios.py: 8 warnings
+tests/test_keepalive.py: 2 warnings
+tests/test_leases.py: 10 warnings
+tests/test_mapreduce_identity.py: 28 warnings
+tests/test_matched_results_encoding.py: 4 warnings
+tests/test_mongo_atomicity.py: 12 warnings
+tests/test_multiworker_recovery.py: 14 warnings
+tests/test_nonblocking_chat_page.py: 21 warnings
+tests/test_plan_credits.py: 2 warnings
+tests/test_realtime_streaming.py: 8 warnings
+tests/test_recency_phase2.py: 10 warnings
+tests/test_refresh_and_leases.py: 6 warnings
+tests/test_reliability_ux_perf.py: 38 warnings
+tests/test_report_validation.py: 21 warnings
+tests/test_request_kinds.py: 66 warnings
+tests/test_request_kinds_routes.py: 3 warnings
+tests/test_search_credit_routes.py: 24 warnings
+tests/test_search_credits.py: 125 warnings
+tests/test_search_to_report_flow.py: 7 warnings
+tests/test_seo_basics.py: 33 warnings
+tests/test_smalltalk_fast_path.py: 53 warnings
+tests/test_temporal_integrity_step21.py: 2 warnings
+tests/test_time_ranges.py: 4 warnings
+tests/test_trending_job.py: 4 warnings
+tests/test_turn_queue_limits.py: 1 warning
+tests/test_turn_queue_wiring.py: 3 warnings
+tests/test_validation_audit.py: 10 warnings
+  /tmp/flintel_phaseB_base/index.py:315: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+tests/test_answer_integrity.py: 54 warnings
+tests/test_answer_persistence.py: 48 warnings
+tests/test_billing_hardening.py: 27 warnings
+tests/test_billing_lemonsqueezy.py: 66 warnings
+tests/test_cancel_confirmation.py: 15 warnings
+tests/test_conversation_context.py: 75 warnings
+tests/test_credit_corrections.py: 126 warnings
+tests/test_credit_cost.py: 84 warnings
+tests/test_credit_finalization.py: 51 warnings
+tests/test_d4_finalization.py: 27 warnings
+tests/test_discover_menu.py: 120 warnings
+tests/test_favicon.py: 21 warnings
+tests/test_find_buyers_page.py: 27 warnings
+tests/test_freshness_disclosure.py: 21 warnings
+tests/test_gate2_pilot_safety.py: 81 warnings
+tests/test_grounded_answers.py: 87 warnings
+tests/test_guest_credits.py: 150 warnings
+tests/test_guest_gate.py: 282 warnings
+tests/test_guest_gate_delivery.py: 93 warnings
+tests/test_guest_gate_fence.py: 78 warnings
+tests/test_guest_gate_final.py: 51 warnings
+tests/test_guest_signup_flow.py: 57 warnings
+tests/test_guidance_and_intro.py: 102 warnings
+tests/test_home_ui.py: 279 warnings
+tests/test_independent_chats_stop_retry.py: 147 warnings
+tests/test_index_guard.py: 78 warnings
+tests/test_integration_scenarios.py: 24 warnings
+tests/test_keepalive.py: 6 warnings
+tests/test_leases.py: 30 warnings
+tests/test_mapreduce_identity.py: 84 warnings
+tests/test_matched_results_encoding.py: 12 warnings
+tests/test_mongo_atomicity.py: 36 warnings
+tests/test_multiworker_recovery.py: 42 warnings
+tests/test_nonblocking_chat_page.py: 63 warnings
+tests/test_plan_credits.py: 6 warnings
+tests/test_realtime_streaming.py: 24 warnings
+tests/test_recency_phase2.py: 30 warnings
+tests/test_refresh_and_leases.py: 18 warnings
+tests/test_reliability_ux_perf.py: 114 warnings
+tests/test_report_validation.py: 63 warnings
+tests/test_request_kinds.py: 198 warnings
+tests/test_request_kinds_routes.py: 9 warnings
+tests/test_search_credit_routes.py: 72 warnings
+tests/test_search_credits.py: 375 warnings
+tests/test_search_to_report_flow.py: 21 warnings
+tests/test_seo_basics.py: 99 warnings
+tests/test_smalltalk_fast_path.py: 159 warnings
+tests/test_temporal_integrity_step21.py: 6 warnings
+tests/test_time_ranges.py: 12 warnings
+tests/test_trending_job.py: 12 warnings
+tests/test_turn_queue_limits.py: 3 warnings
+tests/test_turn_queue_wiring.py: 9 warnings
+tests/test_validation_audit.py: 30 warnings
+  /tmp/venv_pinned/lib/python3.12/site-packages/fastapi/applications.py:4495: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+tests/test_answer_integrity.py: 18 warnings
+tests/test_answer_persistence.py: 16 warnings
+tests/test_billing_hardening.py: 9 warnings
+tests/test_billing_lemonsqueezy.py: 22 warnings
+tests/test_cancel_confirmation.py: 5 warnings
+tests/test_conversation_context.py: 25 warnings
+tests/test_credit_corrections.py: 42 warnings
+tests/test_credit_cost.py: 28 warnings
+tests/test_credit_finalization.py: 17 warnings
+tests/test_d4_finalization.py: 9 warnings
+tests/test_discover_menu.py: 40 warnings
+tests/test_favicon.py: 7 warnings
+tests/test_find_buyers_page.py: 9 warnings
+tests/test_freshness_disclosure.py: 7 warnings
+tests/test_gate2_pilot_safety.py: 27 warnings
+tests/test_grounded_answers.py: 29 warnings
+tests/test_guest_credits.py: 50 warnings
+tests/test_guest_gate.py: 94 warnings
+tests/test_guest_gate_delivery.py: 31 warnings
+tests/test_guest_gate_fence.py: 26 warnings
+tests/test_guest_gate_final.py: 17 warnings
+tests/test_guest_signup_flow.py: 19 warnings
+tests/test_guidance_and_intro.py: 34 warnings
+tests/test_home_ui.py: 93 warnings
+tests/test_independent_chats_stop_retry.py: 49 warnings
+tests/test_index_guard.py: 26 warnings
+tests/test_integration_scenarios.py: 8 warnings
+tests/test_keepalive.py: 2 warnings
+tests/test_leases.py: 10 warnings
+tests/test_mapreduce_identity.py: 28 warnings
+tests/test_matched_results_encoding.py: 4 warnings
+tests/test_mongo_atomicity.py: 12 warnings
+tests/test_multiworker_recovery.py: 14 warnings
+tests/test_nonblocking_chat_page.py: 21 warnings
+tests/test_plan_credits.py: 2 warnings
+tests/test_realtime_streaming.py: 8 warnings
+tests/test_recency_phase2.py: 10 warnings
+tests/test_refresh_and_leases.py: 6 warnings
+tests/test_reliability_ux_perf.py: 38 warnings
+tests/test_report_validation.py: 21 warnings
+tests/test_request_kinds.py: 66 warnings
+tests/test_request_kinds_routes.py: 3 warnings
+tests/test_search_credit_routes.py: 24 warnings
+tests/test_search_credits.py: 125 warnings
+tests/test_search_to_report_flow.py: 7 warnings
+tests/test_seo_basics.py: 33 warnings
+tests/test_smalltalk_fast_path.py: 53 warnings
+tests/test_temporal_integrity_step21.py: 2 warnings
+tests/test_time_ranges.py: 4 warnings
+tests/test_trending_job.py: 4 warnings
+tests/test_turn_queue_limits.py: 1 warning
+tests/test_turn_queue_wiring.py: 3 warnings
+tests/test_validation_audit.py: 10 warnings
+  /tmp/flintel_phaseB_base/index.py:2883: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+tests/test_answer_integrity.py: 18 warnings
+tests/test_answer_persistence.py: 16 warnings
+tests/test_billing_hardening.py: 9 warnings
+tests/test_billing_lemonsqueezy.py: 22 warnings
+tests/test_cancel_confirmation.py: 5 warnings
+tests/test_conversation_context.py: 25 warnings
+tests/test_credit_corrections.py: 42 warnings
+tests/test_credit_cost.py: 28 warnings
+tests/test_credit_finalization.py: 17 warnings
+tests/test_d4_finalization.py: 9 warnings
+tests/test_discover_menu.py: 40 warnings
+tests/test_favicon.py: 7 warnings
+tests/test_find_buyers_page.py: 9 warnings
+tests/test_freshness_disclosure.py: 7 warnings
+tests/test_gate2_pilot_safety.py: 27 warnings
+tests/test_grounded_answers.py: 29 warnings
+tests/test_guest_credits.py: 50 warnings
+tests/test_guest_gate.py: 94 warnings
+tests/test_guest_gate_delivery.py: 31 warnings
+tests/test_guest_gate_fence.py: 26 warnings
+tests/test_guest_gate_final.py: 17 warnings
+tests/test_guest_signup_flow.py: 19 warnings
+tests/test_guidance_and_intro.py: 34 warnings
+tests/test_home_ui.py: 93 warnings
+tests/test_independent_chats_stop_retry.py: 49 warnings
+tests/test_index_guard.py: 26 warnings
+tests/test_integration_scenarios.py: 8 warnings
+tests/test_keepalive.py: 2 warnings
+tests/test_leases.py: 10 warnings
+tests/test_mapreduce_identity.py: 28 warnings
+tests/test_matched_results_encoding.py: 4 warnings
+tests/test_mongo_atomicity.py: 12 warnings
+tests/test_multiworker_recovery.py: 14 warnings
+tests/test_nonblocking_chat_page.py: 21 warnings
+tests/test_plan_credits.py: 2 warnings
+tests/test_realtime_streaming.py: 8 warnings
+tests/test_recency_phase2.py: 10 warnings
+tests/test_refresh_and_leases.py: 6 warnings
+tests/test_reliability_ux_perf.py: 38 warnings
+tests/test_report_validation.py: 21 warnings
+tests/test_request_kinds.py: 66 warnings
+tests/test_request_kinds_routes.py: 3 warnings
+tests/test_search_credit_routes.py: 24 warnings
+tests/test_search_credits.py: 125 warnings
+tests/test_search_to_report_flow.py: 7 warnings
+tests/test_seo_basics.py: 33 warnings
+tests/test_smalltalk_fast_path.py: 53 warnings
+tests/test_temporal_integrity_step21.py: 2 warnings
+tests/test_time_ranges.py: 4 warnings
+tests/test_trending_job.py: 4 warnings
+tests/test_turn_queue_limits.py: 1 warning
+tests/test_turn_queue_wiring.py: 3 warnings
+tests/test_validation_audit.py: 10 warnings
+  /tmp/flintel_phaseB_base/index.py:2888: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("shutdown")
+
+tests/test_answer_integrity.py: 47 warnings
+tests/test_search_to_report_flow.py: 25 warnings
+  /tmp/flintel_phaseB_base/usage_meter.py:144: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "ts":                 datetime.utcnow(),
+
+tests/test_leases.py::test_without_a_beat_a_search_older_than_the_timeout_is_reclaimable_control
+  /usr/lib/python3.12/unittest/mock.py:2188: RuntimeWarning: coroutine 'start_keepalive' was never awaited
+    def __init__(self, name, parent):
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_leases.py::test_an_abandoned_search_is_reclaimed_after_its_timeout_whichever_kind_of_document
+  /tmp/venv_pinned/lib/python3.12/site-packages/fastapi/params.py:127: RuntimeWarning: coroutine 'test_slow_ping_does_not_block_event_loop.<locals>.main' was never awaited
+    use_kwargs = {k: v for k, v in kwargs.items() if v is not _Unset}
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_reliability_ux_perf.py: 15 warnings
+  /tmp/flintel_phaseB_base/tests/test_reliability_ux_perf.py:111: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.datetime.utcnow()
+
+tests/test_search_to_report_flow.py::test_external_search_calls_are_counted_apart_from_model_usage
+tests/test_search_to_report_flow.py::test_external_search_calls_are_counted_apart_from_model_usage
+  /tmp/flintel_phaseB_base/usage_meter.py:174: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    doc = {"ts": datetime.utcnow(), "call_type": "external", "call_site": service, "provider": provider,
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_cancel_confirmation.py::test_after_an_unconfirmed_stop_a_reload_shows_the_real_state_without_restarting_the_run
+FAILED tests/test_favicon.py::test_icon_files_exist_and_square_multiple_of_48
+FAILED tests/test_keepalive.py::test_ping_get_and_head_touch_nothing - assert...
+FAILED tests/test_keepalive.py::test_startup_hook_registered_and_scheduler_hook_kept
+FAILED tests/test_keepalive.py::test_config_exports - AssertionError: assert ...
+FAILED tests/test_keepalive.py::test_disabled_starts_nothing - RuntimeError: ...
+FAILED tests/test_keepalive.py::test_no_url_logs_one_info_line - RuntimeError...
+FAILED tests/test_keepalive.py::test_env_parsing - AttributeError: module 'co...
+FAILED tests/test_keepalive.py::test_pings_survive_errors_logs_debug_only_and_stops_cleanly
+FAILED tests/test_keepalive.py::test_slow_ping_does_not_block_event_loop - Ru...
+FAILED tests/test_keepalive.py::test_start_never_raises - RuntimeError: async...
+FAILED tests/test_keyword_chips.py::test_link_and_chip_styles[chat.html] - Va...
+FAILED tests/test_keyword_chips.py::test_link_and_chip_styles[index.html] - V...
+FAILED tests/test_keyword_chips.py::test_helpers_identical_in_both_templates
+FAILED tests/test_keyword_chips.py::test_suggested_search_terms[chat.html] - ...
+FAILED tests/test_keyword_chips.py::test_suggested_search_terms[index.html]
+FAILED tests/test_platform_multiselect.py::test_platform_pill_removed_and_completed_hidden
+FAILED tests/test_realtime_streaming.py::test_partial_json_string_value_reads_a_growing_value
+FAILED tests/test_realtime_streaming.py::test_partial_json_string_value_tolerates_dangling_escapes
+FAILED tests/test_realtime_streaming.py::test_readable_field_streamer_emits_forward_only_prose
+FAILED tests/test_realtime_streaming.py::test_readable_field_streamer_ignores_internal_fields
+FAILED tests/test_realtime_streaming.py::test_looks_like_answer_json - Attrib...
+FAILED tests/test_realtime_streaming.py::test_stream_emits_readable_prose_then_the_validated_answer
+FAILED tests/test_realtime_streaming.py::test_blocking_fallback_runs_once_when_stream_fails
+FAILED tests/test_realtime_streaming.py::test_nonjson_stream_degrades_gracefully_without_duplicate_generation
+FAILED tests/test_seo_basics.py::test_og_card_keeps_the_logo_artwork_exactly
+FAILED tests/test_smalltalk_fast_path.py::test_everything_else_goes_to_router[salaam]
+FAILED tests/test_timestamp_correctness.py::test_future_epoch_zero_invalid_and_missing_dates_all_get_the_missing_date_score[value1]
+FAILED tests/test_turn_queue_limits.py::test_enabled_backfill_is_bounded_by_chats_turns_age_and_never_limit_zero
+ERROR tests/test_lead_qualification.py
+ERROR tests/test_option_a_followup.py
+ERROR tests/test_option_a_guard.py
+29 failed, 4067 passed, 81 skipped, 10 xfailed, 7701 warnings, 3 errors in 1295.89s (0:21:35)
+exit 1

@@ -1,0 +1,213 @@
+Collecting pytest
+  Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting mongomock
+  Using cached mongomock-4.3.0-py2.py3-none-any.whl.metadata (12 kB)
+Collecting playwright
+  Downloading playwright-1.64.1-py3-none-manylinux1_x86_64.whl.metadata (3.3 kB)
+Collecting fastapi<0.116.0,>=0.115.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 8))
+  Downloading fastapi-0.115.14-py3-none-any.whl.metadata (27 kB)
+Collecting uvicorn>=0.29.0 (from uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting starlette<0.39.0,>=0.38.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 10))
+  Downloading starlette-0.38.6-py3-none-any.whl.metadata (6.0 kB)
+Collecting jinja2<4.0.0,>=3.1.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 11))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting python-multipart>=0.0.9 (from -r /tmp/flintel_phaseB/requirements.txt (line 12))
+  Downloading python_multipart-0.0.33-py3-none-any.whl.metadata (6.3 kB)
+Collecting httpx>=0.27.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 15))
+  Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting pymongo>=4.7.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 18))
+  Downloading pymongo-4.19.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+Collecting PyMySQL>=1.1.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 21))
+  Downloading pymysql-1.2.3-py3-none-any.whl.metadata (4.2 kB)
+Collecting cryptography>=42.0.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 22))
+  Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+Collecting authlib>=1.3.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 25))
+  Using cached authlib-1.9.1-py2.py3-none-any.whl.metadata (10 kB)
+Collecting passlib>=1.7.4 (from passlib[bcrypt]>=1.7.4->-r /tmp/flintel_phaseB/requirements.txt (line 26))
+  Using cached passlib-1.7.4-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting bcrypt==4.0.1 (from -r /tmp/flintel_phaseB/requirements.txt (line 27))
+  Downloading bcrypt-4.0.1-cp36-abi3-manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+Collecting itsdangerous>=2.1.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 28))
+  Using cached itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+Collecting python-dotenv>=1.0.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 31))
+  Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+Collecting openai>=1.30.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 34))
+  Downloading openai-3.42.0-py3-none-any.whl.metadata (44 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.9/44.9 kB 8.2 MB/s eta 0:00:00
+Collecting numpy>=1.26.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 37))
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting iniconfig>=2 (from pytest)
+  Using cached iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting packaging>=24 (from pytest)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.6 (from pytest)
+  Using cached pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting pygments>=2.15 (from pytest)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting pytz (from mongomock)
+  Downloading pytz-2026.6-py2.py3-none-any.whl.metadata (22 kB)
+Collecting sentinels (from mongomock)
+  Using cached sentinels-1.1.1-py3-none-any.whl.metadata (3.0 kB)
+Collecting pyee<15,>=13 (from playwright)
+  Using cached pyee-14.0.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting greenlet<4.0.0,>=3.1.1 (from playwright)
+  Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+INFO: pip is looking at multiple versions of fastapi to determine which version is compatible with other requirements. This could take a while.
+Collecting fastapi<0.116.0,>=0.115.0 (from -r /tmp/flintel_phaseB/requirements.txt (line 8))
+  Downloading fastapi-0.115.13-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.12-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.11-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.10-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.9-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.8-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.7-py3-none-any.whl.metadata (27 kB)
+INFO: pip is still looking at multiple versions of fastapi to determine which version is compatible with other requirements. This could take a while.
+  Downloading fastapi-0.115.6-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.5-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.4-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.3-py3-none-any.whl.metadata (27 kB)
+  Downloading fastapi-0.115.2-py3-none-any.whl.metadata (27 kB)
+Collecting pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 (from fastapi<0.116.0,>=0.115.0->-r /tmp/flintel_phaseB/requirements.txt (line 8))
+  Downloading pydantic-2.14.2-py3-none-any.whl.metadata (137 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 137.6/137.6 kB 22.8 MB/s eta 0:00:00
+Collecting typing-extensions>=4.8.0 (from fastapi<0.116.0,>=0.115.0->-r /tmp/flintel_phaseB/requirements.txt (line 8))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting click>=7.0 (from uvicorn>=0.29.0->uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn>=0.29.0->uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting anyio<5,>=3.4.0 (from starlette<0.39.0,>=0.38.0->-r /tmp/flintel_phaseB/requirements.txt (line 10))
+  Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting MarkupSafe>=2.0 (from jinja2<4.0.0,>=3.1.0->-r /tmp/flintel_phaseB/requirements.txt (line 11))
+  Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting certifi (from httpx>=0.27.0->-r /tmp/flintel_phaseB/requirements.txt (line 15))
+  Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx>=0.27.0->-r /tmp/flintel_phaseB/requirements.txt (line 15))
+  Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx>=0.27.0->-r /tmp/flintel_phaseB/requirements.txt (line 15))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting dnspython<3.0.0,>=2.7.0 (from pymongo>=4.7.0->-r /tmp/flintel_phaseB/requirements.txt (line 18))
+  Downloading dnspython-2.9.1-py3-none-any.whl.metadata (5.8 kB)
+Collecting cffi>=2.0.0 (from cryptography>=42.0.0->-r /tmp/flintel_phaseB/requirements.txt (line 22))
+  Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+Collecting joserfc>=1.6.8 (from authlib>=1.3.0->-r /tmp/flintel_phaseB/requirements.txt (line 25))
+  Downloading joserfc-1.7.7-py3-none-any.whl.metadata (3.2 kB)
+Collecting httpx2<3,>=2.12.0 (from openai>=1.30.0->-r /tmp/flintel_phaseB/requirements.txt (line 34))
+  Downloading httpx2-2.16.0-py3-none-any.whl.metadata (10 kB)
+Collecting jiter<1,>=0.16.0 (from openai>=1.30.0->-r /tmp/flintel_phaseB/requirements.txt (line 34))
+  Downloading jiter-0.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+Collecting sniffio (from openai>=1.30.0->-r /tmp/flintel_phaseB/requirements.txt (line 34))
+  Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=13.0 (from uvicorn[standard]>=0.29.0->-r /tmp/flintel_phaseB/requirements.txt (line 9))
+  Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=42.0.0->-r /tmp/flintel_phaseB/requirements.txt (line 22))
+  Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+Collecting httpcore2==2.16.0 (from httpx2<3,>=2.12.0->openai>=1.30.0->-r /tmp/flintel_phaseB/requirements.txt (line 34))
+  Downloading httpcore2-2.16.0-py3-none-any.whl.metadata (27 kB)
+Collecting truststore>=0.10 (from httpx2<3,>=2.12.0->openai>=1.30.0->-r /tmp/flintel_phaseB/requirements.txt (line 34))
+  Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+Collecting annotated-types>=0.6.0 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi<0.116.0,>=0.115.0->-r /tmp/flintel_phaseB/requirements.txt (line 8))
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.2 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi<0.116.0,>=0.115.0->-r /tmp/flintel_phaseB/requirements.txt (line 8))
+  Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
+Collecting typing-inspection>=0.4.4 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi<0.116.0,>=0.115.0->-r /tmp/flintel_phaseB/requirements.txt (line 8))
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Downloading bcrypt-4.0.1-cp36-abi3-manylinux_2_28_x86_64.whl (593 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 593.7/593.7 kB 28.1 MB/s eta 0:00:00
+Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 411.8/411.8 kB 26.7 MB/s eta 0:00:00
+Using cached mongomock-4.3.0-py2.py3-none-any.whl (64 kB)
+Downloading playwright-1.64.1-py3-none-manylinux1_x86_64.whl (48.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.5/48.5 MB 11.2 MB/s eta 0:00:00
+Downloading fastapi-0.115.2-py3-none-any.whl (94 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.7/94.7 kB 16.7 MB/s eta 0:00:00
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 11.1 MB/s eta 0:00:00
+Downloading starlette-0.38.6-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.5/71.5 kB 13.2 MB/s eta 0:00:00
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 18.8 MB/s eta 0:00:00
+Downloading python_multipart-0.0.33-py3-none-any.whl (32 kB)
+Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading pymongo-4.19.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 20.8 MB/s eta 0:00:00
+Downloading pymysql-1.2.3-py3-none-any.whl (46 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.7/46.7 kB 8.6 MB/s eta 0:00:00
+Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 15.8 MB/s eta 0:00:00
+Using cached authlib-1.9.1-py2.py3-none-any.whl (266 kB)
+Using cached passlib-1.7.4-py2.py3-none-any.whl (525 kB)
+Using cached itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading openai-3.42.0-py3-none-any.whl (2.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 12.9 MB/s eta 0:00:00
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 15.3 MB/s eta 0:00:00
+Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 23.0 MB/s eta 0:00:00
+Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 221.8/221.8 kB 19.2 MB/s eta 0:00:00
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.3/125.3 kB 17.2 MB/s eta 0:00:00
+Downloading dnspython-2.9.1-py3-none-any.whl (360 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 360.4/360.4 kB 15.5 MB/s eta 0:00:00
+Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (621 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 621.4/621.4 kB 17.0 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 18.2 MB/s eta 0:00:00
+Downloading httpx2-2.16.0-py3-none-any.whl (97 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 12.7 MB/s eta 0:00:00
+Downloading httpcore2-2.16.0-py3-none-any.whl (85 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.1/85.1 kB 8.7 MB/s eta 0:00:00
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 10.6 MB/s eta 0:00:00
+Using cached iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading jiter-0.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (336 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 336.3/336.3 kB 16.1 MB/s eta 0:00:00
+Downloading joserfc-1.7.7-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.8/71.8 kB 12.9 MB/s eta 0:00:00
+Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 21.1 MB/s eta 0:00:00
+Using cached pluggy-1.7.0-py3-none-any.whl (27 kB)
+Downloading pydantic-2.14.2-py3-none-any.whl (490 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 490.4/490.4 kB 15.4 MB/s eta 0:00:00
+Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 21.3 MB/s eta 0:00:00
+Using cached pyee-14.0.0-py3-none-any.whl (15 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 21.7 MB/s eta 0:00:00
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 11.1 MB/s eta 0:00:00
+Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 9.2 MB/s eta 0:00:00
+Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 458.4/458.4 kB 14.9 MB/s eta 0:00:00
+Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 226.3/226.3 kB 15.2 MB/s eta 0:00:00
+Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 11.6 MB/s eta 0:00:00
+Downloading pytz-2026.6-py2.py3-none-any.whl (506 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 506.3/506.3 kB 16.8 MB/s eta 0:00:00
+Using cached sentinels-1.1.1-py3-none-any.whl (3.7 kB)
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.6/62.6 kB 14.2 MB/s eta 0:00:00
+Installing collected packages: pytz, passlib, websockets, uvloop, typing-extensions, truststore, sniffio, sentinels, pyyaml, python-multipart, python-dotenv, PyMySQL, pygments, pycparser, pluggy, packaging, numpy, MarkupSafe, jiter, itsdangerous, iniconfig, idna, httptools, h11, greenlet, dnspython, click, certifi, bcrypt, annotated-types, uvicorn, typing-inspection, pytest, pymongo, pyee, pydantic-core, mongomock, jinja2, httpcore2, httpcore, cffi, anyio, watchfiles, starlette, pydantic, playwright, httpx2, httpx, cryptography, openai, joserfc, fastapi, authlib
+Successfully installed MarkupSafe-3.0.4 PyMySQL-1.2.3 annotated-types-0.8.0 anyio-4.15.1 authlib-1.9.1 bcrypt-4.0.1 certifi-2026.10.23 cffi-2.1.1 click-8.5.0 cryptography-50.0.2 dnspython-2.9.1 fastapi-0.115.2 greenlet-3.5.6 h11-0.16.0 httpcore-1.0.9 httpcore2-2.16.0 httptools-0.9.0 httpx-0.28.1 httpx2-2.16.0 idna-3.20 iniconfig-2.3.1 itsdangerous-2.2.0 jinja2-3.1.6 jiter-0.18.0 joserfc-1.7.7 mongomock-4.3.0 numpy-2.5.4 openai-3.42.0 packaging-26.3 passlib-1.7.4 playwright-1.64.1 pluggy-1.7.0 pycparser-3.12 pydantic-2.14.2 pydantic-core-2.50.2 pyee-14.0.0 pygments-2.21.0 pymongo-4.19.0 pytest-9.2.0 python-dotenv-1.2.4 python-multipart-0.0.33 pytz-2026.6 pyyaml-6.0.3 sentinels-1.1.1 sniffio-1.3.1 starlette-0.38.6 truststore-0.10.5 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.54.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+exit 0

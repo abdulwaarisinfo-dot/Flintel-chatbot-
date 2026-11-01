@@ -1,0 +1,23 @@
+routes: drop the custom-header check                           KILLED  FAILED tests/test_reddit_live_endpoint.py::test_route_requires_the_custom_header
+routes: drop the Origin check                                  KILLED  FAILED tests/test_reddit_live_endpoint.py::test_route_rejects_a_foreign_origin_and_accepts_the_same_site
+process: chat lookup ignores owner                             KILLED  FAILED tests/test_reddit_live.py::test_another_owners_chat_is_not_found_and_never_called
+process: guests allowed                                        KILLED  FAILED tests/test_reddit_live.py::test_guest_is_excluded_before_any_database_read
+_http_post: follow redirects                                   KILLED  FAILED tests/test_reddit_live.py::test_http_post_sends_one_json_post_without_following_redirects
+validator: any *.reddit.com host                               KILLED  FAILED tests/test_reddit_live.py::test_hostile_or_non_post_urls_are_rejected['https://xn--e.reddit.com/r/SaaS/
+validator: any path                                            KILLED  FAILED tests/test_reddit_live.py::test_hostile_or_non_post_urls_are_rejected['https://www.reddit.com/r/SaaS/co
+validator: non-ASCII allowed + any host suffix                 KILLED  FAILED tests/test_reddit_live.py::test_hostile_or_non_post_urls_are_rejected['https://www.reddit.com/r/SaaS/co
+process: slot never released                                   KILLED  ERROR tests/test_reddit_live.py::test_live_search_only_below_three_rows[0-1]
+process: skip in-flight guard                                  KILLED  FAILED tests/test_reddit_live.py::test_second_concurrent_call_is_refused_before_claiming_or_counting_then_work
+eligible: ignore time_range                                    KILLED  FAILED tests/test_reddit_live.py::test_ineligible_messages_never_call_and_write_nothing[time_range]
+eligible: ignore website_only                                  KILLED  FAILED tests/test_reddit_live.py::test_ineligible_messages_never_call_and_write_nothing[website_only]
+eligible: ignore credit_request_id                             KILLED  FAILED tests/test_reddit_live.py::test_ineligible_messages_never_call_and_write_nothing[no credit_request_id]
+eligible: threshold 3 -> 4                                     KILLED  FAILED tests/test_reddit_live.py::test_live_search_only_below_three_rows[3-0]
+render_links: no validation                                    KILLED  FAILED tests/test_reddit_live.py::test_the_same_validator_guards_storage_serving_and_rendering
+present: no re-validation                                      KILLED  FAILED tests/test_reddit_live.py::test_the_same_validator_guards_storage_serving_and_rendering
+budget: ceiling not enforced                                   KILLED  FAILED tests/test_reddit_live.py::test_is_active_requires_flag_valid_caps_and_inflight_limit[True-100001-5-2-F
+budget: owner cap ignored                                      KILLED  FAILED tests/test_reddit_live.py::test_per_owner_cap_and_interval - Assertion...
+budget: global cap ignored                                     KILLED  FAILED tests/test_reddit_live.py::test_global_cap_holds_under_concurrency - A...
+budget: interval ignored                                       KILLED  FAILED tests/test_reddit_live.py::test_per_owner_cap_and_interval - Assertion...
+process: retry/reclaim on stale (claim filter dropped)         SURVIVED (all tests still pass)
+process: call before budget (swap reserve to always True)      KILLED  FAILED tests/test_reddit_live.py::test_success_persists_links_only_and_second_post_reads_only
+survivors: 1 of 22
