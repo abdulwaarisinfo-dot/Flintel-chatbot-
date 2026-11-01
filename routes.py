@@ -186,6 +186,7 @@ import billing          # (BILLING) Lemon Squeezy checkout + webhook -> plan ent
 import credit_cost      # (USAGE-BASED CREDITS) validates the router's effort/cost proposal; no LLM
 import guest_gate       # (GUEST GATE) server-side limit on a visitor's genuine searches
 import reddit_live       # (LIVE REDDIT LINKS) separate, unverified, disabled-by-default links; see reddit_live.py
+import active_intent     # (ACTIVE INTENT) historical recent window + separate live candidates in one answer; OFF by default
 import email_verification   # (EMAIL SIGN-UP) emailed 6-digit code before an account is created
 import uuid as _uuid
 from jinja2 import pass_context   # (HOME UI) context-aware template helpers
@@ -3015,6 +3016,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
     _fresh_prov = {} if freshness_enabled() else None     # (FRESHNESS) per-request provenance; None = feature off
 
+    # (ACTIVE INTENT) Inert (does nothing at all) unless enabled AND this is an eligible active-lead search. If it is, the recent
+    # window is put on THIS request's in-memory message here - the same `time_range` a typed range uses - before any retrieval.
+    _ai = active_intent.Run.prepare(msg, owner_key=owner_key, chat_id=chat_id, mode="stream", owner_type=_owner_type)
+
     def _topup(cancel_event=None):
         """The one place get_evidence_with_topup() is called for this
         message — used by the sync (flag-off) path, the background scan
@@ -3211,6 +3216,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if _stopped():                                   # (STOP) stopped before the scan started: start nothing
                 yield from _stopped_events()
                 return
+
+            _ai.start()                                      # (ACTIVE INTENT) the separate live branch, concurrent with the scan; no-op unless eligible
 
             # (SCAN FIX, STEP 4 — NON-BLOCKING) Show 0% right away, then start
             # the evidence scan in the BACKGROUND via acquire_scan() instead of
@@ -3649,6 +3656,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     if full_answer else (full_answer, merged_pool)
                 )
                 answer_integrity.reset_request_kind(_kind_token)
+                if full_answer:      # (ACTIVE INTENT) after integrity: adds the labelled live block, or leaves the answer as is
+                    full_answer = _ai.finish(full_answer, historical=merged_pool, historical_timed_out=bool(scan_timed_out))
             except Exception as exc:
                 try:
                     answer_integrity.reset_request_kind(_kind_token)
