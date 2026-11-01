@@ -74,6 +74,15 @@ class World:
         self.live.add_chat(EMAIL, chat_id, [message(0, claude_answer=None, answered_at=None, query=query, resolved_query=None,
                                                     request_id="req-1", credit_request_id="cr-1", evidence_required=15, keywords=["crm"])])
         self.live.response = resp(list(live_items))
+        self.meta_ids = []
+        subs = {rl.post_ref(u)[1]: rl.post_ref(u)[0] for u, _ in live_items if rl.post_ref(u)}
+
+        def info(ids, timeout):                       # Reddit's metadata endpoint, faked: every found post is 5 minutes old
+            self.meta_ids.append(list(ids))
+            now = datetime.datetime.now(datetime.timezone.utc)
+            return {i: {"created_utc": (now - datetime.timedelta(minutes=5)).timestamp(), "subreddit": subs.get(i, "x"), "removed": False}
+                    for i in ids}
+        self.live.deps.reddit_info = info
         self.retrieval_kwargs = []
         self.model_pools = []
         self.model_contexts = []
@@ -180,7 +189,7 @@ def test_active_lead_prompt_triggers_both_branches_and_yields_one_combined_answe
     assert len(world.live.calls) == 1 and world.live.calls[0]["payload"]["tools"][0]["type"] == "web_search"
     # ONE answer: the live candidates are inside it, labelled, next to (not instead of) the historical analysis
     lc = ans["live_candidates"]
-    assert {i["url"] for i in lc["items"]} == {LIVE1, LIVE2} and lc["live_results_limited_to_window"] is False
+    assert {i["url"] for i in lc["items"]} == {LIVE1, LIVE2} and lc["live_results_limited_to_window"] is True
     assert json.loads(done["answer"]) == ans
     assert world.live.stored(0, "s1")["workflow"] == "active_intent"
 
@@ -283,20 +292,22 @@ def test_historical_failure_is_not_turned_into_fabricated_results_and_live_survi
     done, _u, chats = run_stream(wf, monkeypatch, world, retrieval=broken, nonblocking=False)
     ans = final_answer(done, chats, "s1")
     assert ans["format"] == "no_results" and not ans.get("platforms")                  # no historical row was made up
-    assert ans["live_candidates"]["items"][0]["verification_status"] == "unverified"   # the live result was kept, labelled
+    assert ans["live_candidates"]["items"][0]["verification_status"] == "date_verified_only"   # the live result was kept, labelled
     assert all(i["source"] == "live_web_search" for i in ans["live_candidates"]["items"])
 
 
 # ── 6/7/8/12: provenance, unverified status, no window / date claims ─────────────────────────────────────────────────────
-def test_live_candidates_are_labelled_unverified_with_no_date_intent_or_window_claim(wf, monkeypatch):
+def test_live_candidates_are_labelled_date_verified_only_with_no_intent_claim(wf, monkeypatch):
     world = World("s1")
     done, _u, chats = run_stream(wf, monkeypatch, world)
     lc = final_answer(done, chats, "s1")["live_candidates"]
-    assert lc["verification"] == "unverified_title_and_url_only"
+    assert lc["verification"] == "date_verified_title_and_url_only"
     for item in lc["items"]:
-        assert item["verification_status"] == "unverified" and item["evidence"] == "title_and_url_only" and item["source"] == "live_web_search"
-        assert not ({"published_at", "date", "intent", "score", "summary", "post_text"} & set(item))
-    assert "has not read these posts" in lc["statement"] and "not limited to the last 30 minutes" in lc["statement"]
+        assert item["verification_status"] == "date_verified_only" and item["evidence"] == "title_url_and_verified_date_only"
+        assert item["source"] == "live_web_search" and item["date_verified"] is True and item["published_at"]
+        assert not ({"intent", "score", "summary", "post_text"} & set(item))
+    assert "has not read these posts" in lc["statement"] and "same 30-minute window" in lc["statement"]
+    assert "not limited" not in lc["statement"]
     ranks = [i["title_relevance"] for i in lc["items"]]
     assert ranks == sorted(ranks, reverse=True)
 
@@ -348,12 +359,20 @@ def test_the_window_override_is_never_persisted(wf, monkeypatch):
     assert stored["time_range"] is None and stored["time_window_days"] is None
 
 
-def test_the_cap_of_forty_minutes_holds_in_the_real_stream(wf, monkeypatch):
-    enable(monkeypatch, minutes=120)
+@pytest.mark.parametrize("minutes", [30, 1500])
+def test_the_same_window_reaches_retrieval_and_the_live_search_in_the_real_stream(wf, monkeypatch, minutes):
+    enable(monkeypatch, minutes=minutes)
     world = World("s1")
-    run_stream(wf, monkeypatch, world)
+    done, _u, chats = run_stream(wf, monkeypatch, world)
     tr = timerange.range_from_doc(world.retrieval_kwargs[0]["time_range"])
-    assert (tr.end - tr.start) == datetime.timedelta(minutes=40)
+    assert (tr.end - tr.start) == datetime.timedelta(minutes=minutes)                  # no 40-minute cap
+    payload = json.dumps(world.live.calls[0]["payload"])
+    assert rl._utc(tr.start) in payload and rl._utc(tr.end) in payload                # identical boundaries given to the model
+    wdoc = world.live.stored(0, "s1")["window"]
+    assert wdoc == {"start": rl._utc(tr.start), "end": rl._utc(tr.end)}
+    lc = final_answer(done, chats, "s1")["live_candidates"]
+    assert lc["window"]["start"] == tr.start.isoformat() and lc["window"]["end"] == tr.end.isoformat()
+    assert lc["window"]["minutes"] == minutes
 
 
 def test_guests_and_inactive_live_get_no_window_and_no_live_call(wf, monkeypatch):
@@ -365,9 +384,10 @@ def test_guests_and_inactive_live_get_no_window_and_no_live_call(wf, monkeypatch
 
 def test_live_is_claimed_once_per_message_even_if_the_stream_runs_again(wf, monkeypatch):
     world = World("s1")
-    run_stream(wf, monkeypatch, world)
+    same = {"requested_at": datetime.datetime.utcnow()}                    # a resumed stream reads the SAME stored message
+    run_stream(wf, monkeypatch, world, msg_over=same)
     world2_calls = len(world.live.calls)
-    done, _u, chats = run_stream(wf, monkeypatch, world)                   # same message / same claim: a resumed or repeated run
+    done, _u, chats = run_stream(wf, monkeypatch, world, msg_over=same)                   # same message / same claim: a resumed or repeated run
     assert world2_calls == 1 and len(world.live.calls) == 1
     assert "live_candidates" in final_answer(done, chats, "s1")
 
@@ -386,7 +406,7 @@ def background(env, monkeypatch, world, matched, query=CRM, msg_over=None):
     with lg._usage_attribution(request_id="req-1"):
         idx.add_search_to_chat("c1", EMAIL, query, lg.normalize_topic_key(query), ["crm"], "reddit", evidence_required=15)
     msg = chats.find_one({"chat_id": "c1", "owner_key": EMAIL})["messages"][-1]
-    msg["requested_at"] = datetime.datetime(2026, 11, 1, 12, 0, 0)
+    msg["requested_at"] = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     msg["credit_request_id"] = "cr-1"
     msg.update(msg_over or {})
     idx._complete_message_answer_and_results("c1", EMAIL, msg, matched)
