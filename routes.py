@@ -185,6 +185,7 @@ import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
 import billing          # (BILLING) Lemon Squeezy checkout + webhook -> plan entitlements
 import credit_cost      # (USAGE-BASED CREDITS) validates the router's effort/cost proposal; no LLM
 import guest_gate       # (GUEST GATE) server-side limit on a visitor's genuine searches
+import reddit_live       # (LIVE REDDIT LINKS) separate, unverified, disabled-by-default links; see reddit_live.py
 import email_verification   # (EMAIL SIGN-UP) emailed 6-digit code before an account is created
 import uuid as _uuid
 from jinja2 import pass_context   # (HOME UI) context-aware template helpers
@@ -1063,6 +1064,8 @@ def _tpl_home_greeting(context) -> dict:
 
 
 templates.env.globals["conversation_started"] = _tpl_conversation_started
+templates.env.globals["live_links_enabled"] = reddit_live.is_active    # (LIVE REDDIT LINKS) False unless enabled AND both caps are set
+templates.env.globals["live_links_for"] = reddit_live.render_links      # (LIVE REDDIT LINKS) re-validates stored links before they reach a page
 templates.env.globals["home_greeting"] = _tpl_home_greeting
 
 
@@ -3810,6 +3813,40 @@ def cancel_turn(request: Request, chat_id: str, topic_key: str = Form(None), req
     except Exception as exc:
         log.warning(f"Stopping a search failed for chat_id={chat_id}: {exc}")
         return JSONResponse({"status": "error"}, status_code=500)
+
+
+@app.post("/chat/{chat_id}/live-links")
+def live_links(request: Request, chat_id: str, request_id: str = Form(None), topic_key: str = Form(None)):
+    """(LIVE REDDIT LINKS) Optional, separate, UNVERIFIED Reddit links for one already-answered search of the CURRENT signed-in
+    owner's chat. Additive: it never touches the answer, `results`, the evidence, credits or answer-integrity processing, and the
+    stream / background answer functions do not call it. Idempotent: the database claim in reddit_live.process decides, once per
+    message, whether an API attempt is ever made; repeated, concurrent or reconnecting POSTs only read the stored outcome.
+
+    Protection: the owner always comes from the authenticated session (never from the request); guests get "ineligible"; the
+    request must carry the custom header X-Flintel-Live-Links (a cross-site form or image cannot send it without a CORS
+    preflight, and this app sends no CORS headers) and, when the browser sends an Origin, it must be this site (same rule as
+    /api/billing/checkout). Rate limiting is the per-owner minimum interval and the daily caps, enforced atomically in the
+    database. When the feature is off, no database is read and nothing is written."""
+    from urllib.parse import urlparse
+    if not reddit_live.is_active():
+        return JSONResponse({"state": "disabled"})
+    if request.headers.get("x-flintel-live-links") != "1":
+        return JSONResponse({"state": "forbidden"}, status_code=403)
+    origin = request.headers.get("origin")
+    if origin and urlparse(origin).netloc != request.url.netloc:
+        return JSONResponse({"state": "forbidden"}, status_code=403)
+    if not (request_id or topic_key):
+        return JSONResponse({"state": "bad_request"}, status_code=400)
+    owner_key, owner_type = get_owner(request)
+    try:
+        result = reddit_live.process(reddit_live.default_deps(), owner_key=owner_key, owner_type=owner_type,
+                                     chat_id=chat_id, request_id=request_id or None, topic_key=topic_key or None)
+    except Exception as exc:
+        log.warning(f"Live links failed closed for chat_id={chat_id}: {type(exc).__name__}")
+        return JSONResponse({"state": "unavailable"})
+    if result.get("state") == "not_found":
+        return JSONResponse({"state": "not_found"}, status_code=404)
+    return JSONResponse(result)
 
 
 @app.post("/chat/{chat_id}/delete")
