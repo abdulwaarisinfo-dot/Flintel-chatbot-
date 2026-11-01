@@ -2583,6 +2583,15 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # it always has.
         effective_evidence_limit = msg.get("evidence_required")
 
+        if needs_answer:     # (ACTIVE INTENT) the shared window goes onto THIS in-memory message BEFORE the retrieval below reads it
+            _prev_range = msg.get("time_range")
+            try:
+                active_intent.apply_window(msg, owner_key=owner_key, chat_id=chat_id, mode="background_retrieval")
+            except Exception as _exc:     # fail closed: retrieval continues exactly as it would without Active Intent
+                if msg.get("time_range") != _prev_range:
+                    msg["time_range"] = _prev_range      # never leave a half-applied window behind
+                log.warning("active_intent window preparation failed (%s): normal retrieval continues", type(_exc).__name__)
+
         _fresh_prov = {} if freshness_enabled() else None      # (FRESHNESS) per-request provenance; None = off
         try:
             with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
