@@ -4533,6 +4533,43 @@
   }
   // ANSWER-STATE-HELPERS-END
 
+  // (ACTIVE INTENT) A server-written block of UNVERIFIED live web-search candidates, inside the same answer (title and link only:
+  // nothing here has been read, dated or scored for intent). Rendered as text; a link is only made for an https URL.
+  function appendLiveCandidates(data, container) {
+    const lc = data && data.live_candidates;
+    if (!lc || typeof lc !== 'object' || !Array.isArray(lc.items) || !lc.items.length) return;
+    const box = document.createElement('section');
+    box.className = 'live-links';
+    box.setAttribute('aria-label', 'Live web-search candidates \u2014 unverified');
+    const h = document.createElement('p');
+    h.className = 'live-links-title';
+    h.textContent = 'Live web-search candidates \u2014 unverified';
+    box.appendChild(h);
+    if (typeof lc.statement === 'string' && lc.statement.trim()) {
+      const n = document.createElement('p');
+      n.className = 'live-links-note';
+      n.textContent = lc.statement.trim().slice(0, 1500);
+      box.appendChild(n);
+    }
+    const ul = document.createElement('ul');
+    lc.items.slice(0, 20).forEach((it) => {
+      if (!it || typeof it.url !== 'string' || !it.url.startsWith('https://')) return;
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = it.url; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow ugc';
+      a.textContent = (typeof it.title === 'string' && it.title) ? it.title : it.url;
+      li.appendChild(a);
+      const tag = document.createElement('span');
+      tag.className = 'live-links-note';
+      tag.textContent = ' \u00b7 live web search \u00b7 unverified';
+      li.appendChild(tag);
+      ul.appendChild(li);
+    });
+    if (!ul.children.length) return;
+    box.appendChild(ul);
+    container.appendChild(box);
+  }
+
   // (FRESHNESS DISCLOSURE) One plain-text line under the answer, written by the server (stored post dates, window,
   // saved-vs-searched, what is unknown). Rendered as text only; absent -> nothing is added.
   function appendFreshnessNote(data, container) {
@@ -4627,6 +4664,7 @@
           return;
         }
         if (!answerEmpty) appendFreshnessNote(data, renderedEl);   // (FRESHNESS DISCLOSURE)
+        if (!answerEmpty) appendLiveCandidates(data, renderedEl);   // (ACTIVE INTENT)
         if (answerEmpty) {
           renderAnswerUnavailable(wrap, renderedEl);
         } else if (data.answer_status === 'partial') {
