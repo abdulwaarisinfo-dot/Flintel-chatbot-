@@ -40,8 +40,8 @@ def _page(browser, template, data_js):
     return page, errors
 
 
-GOOD = """{live_candidates: {statement: 'Live web search: 2 Reddit links found by a separate live web search. Only the link and title were returned.',
-  items: [{rank: 1, title: '<img src=x onerror=window.__pwn=1> Which CRM?', url: 'https://www.reddit.com/r/a_b/comments/abc123/x/'},
+GOOD = """{live_candidates: {statement: 'Live web search: 2 Reddit links found by a separate live web search. Each post date was checked.',
+  items: [{rank: 1, title: '<img src=x onerror=window.__pwn=1> Which CRM?', url: 'https://www.reddit.com/r/a_b/comments/abc123/x/', date_verified: true, published_at: '2026-11-01T10:05:00+00:00'},
           {rank: 2, title: null, url: 'https://www.reddit.com/r/c_d/comments/def456/y/'},
           {rank: 3, title: 'js link', url: 'javascript:window.__pwn=2'},
           {rank: 4, title: 'plain http', url: 'http://www.reddit.com/r/e_f/comments/ghi789/z/'},
@@ -52,13 +52,15 @@ GOOD = """{live_candidates: {statement: 'Live web search: 2 Reddit links found b
 def test_block_shows_only_https_links_as_text_with_the_unverified_label(integrity_browser, template):
     page, errors = _page(integrity_browser, template, GOOD)
     assert page.evaluate("window.__pwn") is None and page.query_selector("section.live-links img") is None
-    assert page.inner_text("section.live-links .live-links-title") == "Live web-search candidates — unverified"
+    assert page.inner_text("section.live-links .live-links-title") == "Live Reddit results — date-checked, content not assessed"
     links = page.eval_on_selector_all("section.live-links li a", "els => els.map(e => [e.href, e.textContent, e.rel, e.target])")
     assert links == [["https://www.reddit.com/r/a_b/comments/abc123/x/", "<img src=x onerror=window.__pwn=1> Which CRM?", "noopener noreferrer nofollow ugc", "_blank"],
                      ["https://www.reddit.com/r/c_d/comments/def456/y/", "https://www.reddit.com/r/c_d/comments/def456/y/", "noopener noreferrer nofollow ugc", "_blank"]]
-    tags = page.eval_on_selector_all("section.live-links li", "els => els.map(e => e.textContent.includes('live web search · unverified'))")
+    tags = page.eval_on_selector_all("section.live-links li", "els => els.map(e => e.textContent.includes('live Reddit result'))")
     assert tags == [True, True]
-    assert "Only the link and title were returned" in page.inner_text("section.live-links")
+    assert "posted 2026-11-01 10:05 UTC" in page.inner_text("section.live-links li:first-child")
+    assert "posted" not in page.inner_text("section.live-links li:nth-child(2)")      # no verified date -> none invented
+    assert "Each post date was checked" in page.inner_text("section.live-links")
     assert errors == []
     page.close()
 
