@@ -862,7 +862,8 @@ def test_only_routes_imports_reddit_live_and_the_module_imports_no_billing_or_an
         text = py.read_text(encoding="utf-8")
         if py.name != "reddit_live.py" and ("import reddit_live" in text or "from reddit_live" in text):
             importers.append(py.name)
-    assert importers == ["routes.py"]
+    # routes.py serves the endpoint; active_intent.py is the active-lead-intent workflow that reuses the same safety controls
+    assert sorted(importers) == ["active_intent.py", "routes.py"]
     src = (ROOT / "reddit_live.py").read_text(encoding="utf-8")
     for forbidden in ("search_credits", "credit_cost", "billing", "import logics", "import index", "import flintel",
                       "google_search", "analyze_with_claude", "save_signal_results", "enforce_answer_integrity"):
