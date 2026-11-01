@@ -208,6 +208,17 @@ __all__ = [
     "LLM_REASONING_HEADROOM",
     "LLM_VERBOSITY",
     "OPENAI_RESPONSES_URL",
+    # Live Reddit web-search links (separate, unverified; OFF unless enabled AND both daily caps are positive)
+    "REDDIT_LIVE_LINKS_ENABLED",
+    "REDDIT_LIVE_DAILY_CAP_GLOBAL",
+    "REDDIT_LIVE_DAILY_CAP_PER_OWNER",
+    "REDDIT_LIVE_OWNER_MIN_INTERVAL_SECONDS",
+    "REDDIT_LIVE_MAX_INFLIGHT",
+    "REDDIT_LIVE_TIMEOUT_SECONDS",
+    "REDDIT_LIVE_MAX_OUTPUT_TOKENS",
+    "REDDIT_LIVE_MAX_LINKS",
+    "REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS",
+    "REDDIT_LIVE_MODEL",
     # Embedding config (mirrors background-service embedding config)
     "EMBEDDING_PROVIDER",
     "EMBEDDING_MODEL",
@@ -1046,3 +1057,30 @@ SITE_URL = os.getenv("SITE_URL", "").strip().rstrip("/")
 # GOOGLE_SITE_VERIFICATION: the Search Console "HTML tag" token. Empty (default)
 # = the <meta name="google-site-verification"> tag is not rendered at all.
 GOOGLE_SITE_VERIFICATION = os.getenv("GOOGLE_SITE_VERIFICATION", "").strip()
+
+
+# ── Live Reddit web-search links (separate, UNVERIFIED; see reddit_live.py) ───────────────────────────────────────────
+# Off by default. The feature is inert unless REDDIT_LIVE_LINKS_ENABLED is true AND BOTH daily caps below are valid positive
+# integers within the fixed ceilings in reddit_live.py (a missing, zero, negative, non-numeric or over-ceiling cap disables it: it fails closed). Nothing here changes credits,
+# billing or retrieval; no price is assumed anywhere - the caps count attempts, not money.
+def _live_pos_int(name: str, default: int = 0) -> int:
+    """A strictly positive integer from the environment, or `default` (0 = "not configured") for anything else."""
+    try:
+        value = int(str(os.getenv(name, "")).strip())
+    except ValueError:
+        return default
+    return value if value > 0 else default
+
+
+REDDIT_LIVE_LINKS_ENABLED = os.getenv("REDDIT_LIVE_LINKS_ENABLED", "false").lower() in ("1", "true", "yes")
+REDDIT_LIVE_DAILY_CAP_GLOBAL = _live_pos_int("REDDIT_LIVE_DAILY_CAP_GLOBAL")            # attempts per UTC day, all users
+REDDIT_LIVE_DAILY_CAP_PER_OWNER = _live_pos_int("REDDIT_LIVE_DAILY_CAP_PER_OWNER")      # attempts per UTC day, one signed-in user
+REDDIT_LIVE_OWNER_MIN_INTERVAL_SECONDS = _live_pos_int("REDDIT_LIVE_OWNER_MIN_INTERVAL_SECONDS", 30)
+# Simultaneous paid calls ONE process may have in flight (process-local, NOT a distributed limit). Unset = 2; set but invalid
+# (non-numeric, zero, negative) = 0, which keeps the feature off. Values above the ceiling in reddit_live.py also keep it off.
+REDDIT_LIVE_MAX_INFLIGHT = (2 if not str(os.getenv("REDDIT_LIVE_MAX_INFLIGHT", "")).strip() else _live_pos_int("REDDIT_LIVE_MAX_INFLIGHT"))
+REDDIT_LIVE_TIMEOUT_SECONDS = _live_pos_int("REDDIT_LIVE_TIMEOUT_SECONDS", 25)
+REDDIT_LIVE_MAX_OUTPUT_TOKENS = _live_pos_int("REDDIT_LIVE_MAX_OUTPUT_TOKENS", 2000)
+REDDIT_LIVE_MAX_LINKS = _live_pos_int("REDDIT_LIVE_MAX_LINKS", 8)
+REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS = _live_pos_int("REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS", 900)
+REDDIT_LIVE_MODEL = os.getenv("REDDIT_LIVE_MODEL", "").strip()          # empty = LLM_MODEL
