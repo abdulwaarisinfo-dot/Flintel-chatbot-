@@ -637,10 +637,15 @@ def _watermark_clause(field: str, value: datetime, overlap_seconds: int) -> dict
 
 
 def _scan_signature(keywords, match_phrases, targeting_platform, since_days,
-                    user_query, strict: bool, field: str) -> str:
-    """A delta is only valid for the exact query it was recorded for."""
+                    user_query, strict: bool, field: str, time_range=None) -> str:
+    """A delta is only valid for the exact query it was recorded for. An explicit `time_range` is part of that query: its
+    normalised UTC start and end are added to the signature, so the same query with other boundaries never shares a scan
+    entry. With no range the signature is byte-for-byte what it always was."""
     base = _compute_query_signature(keywords, match_phrases)
     raw = f"{base}|{targeting_platform}|{since_days}|{(user_query or '').strip().lower()}|{int(bool(strict))}|{field}"
+    _tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+    if _tr is not None:
+        raw += f"|range:{_tr.start.astimezone(timezone.utc).isoformat()}|{_tr.end.astimezone(timezone.utc).isoformat()}"
     # (MYSQL CARRY FIX) Only when MySQL is enabled: the configured database
     # set is part of the signature, so enabling MySQL or changing
     # MYSQL_READ_DATABASES invalidates a carry recorded without those sources
@@ -3812,7 +3817,7 @@ def save_topic_evidence_cache(chat_id: str, owner_key: str, topic_key: str,
 
 def _prepare_scan_state(cached, chat_id, topic_key, keywords, match_phrases,
                         targeting_platform, since_days, user_query, strict,
-                        matcher_fn, unfiltered, fetch_limit=None):
+                        matcher_fn, unfiltered, fetch_limit=None, time_range=None):
     """Builds the in/out dict for get_matched_signals(scan_state=...), or None
     for a plain full scan. Never raises.
 
@@ -3839,7 +3844,7 @@ def _prepare_scan_state(cached, chat_id, topic_key, keywords, match_phrases,
 
         field = _watermark_field()
         sig = _scan_signature(keywords, match_phrases, targeting_platform, since_days,
-                              user_query, strict, field)
+                              user_query, strict, field, time_range)
         state = {"sig": sig, "field": field}
 
         poll_no = _next_poll_number(chat_id, topic_key)
@@ -4158,7 +4163,7 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     # usable stored state, or a forced periodic full scan).
     scan_state = _prepare_scan_state(
         cached, chat_id, topic_key, keywords, match_phrases, targeting_platform,
-        since_days, user_query, strict, matcher_fn, unfiltered, fetch_limit,
+        since_days, user_query, strict, matcher_fn, unfiltered, fetch_limit, time_range=_tr,
     )
     _call_kwargs = dict(
         targeting_platform=targeting_platform,
