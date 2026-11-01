@@ -122,6 +122,7 @@ import flintel
 import scheduler as trending_keywords_scheduler   # 12-hourly trending-keywords background job
 import guest_gate      # (GUEST GATE) server-side limit on a visitor's genuine searches
 import answer_integrity  # (REQUEST KIND) what was asked decides how posts are kept and the empty state is worded
+import active_intent    # (ACTIVE INTENT) separate live candidates + recent window for active-lead searches; OFF by default
 import turn_control    # (STOP) is_closed(): stopped / failed turns are never worked on again
 import turn_finisher   # (NON-BLOCKING CHAT PAGE) durable finishing of older unfinished research turns
 import google as google_search   # the new google.py module
@@ -2253,6 +2254,11 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 return  # website-only path complete — skip the normal branch below entirely.
 
             # ── EXISTING NORMAL BRANCH (unchanged) starts here ──
+            # (ACTIVE INTENT) Inert unless enabled AND an eligible active-lead search. Here the saved-post retrieval has already
+            # run (in the caller), so the recent window is applied to `matched` with the existing pure range filter, and the
+            # separate live branch starts now, concurrent with the model call below.
+            _ai = active_intent.Run.prepare(msg, owner_key=owner_key, chat_id=chat_id, mode="background")
+            matched = _ai.historical(matched)
             # (MERGE BEFORE ANSWERING) Pulls in Google-search stub
             # results and combines them with the flintel_signals
             # `matched` list passed in, capped at the message's own
@@ -2367,6 +2373,7 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement; no-op when off
                     answer, merged_pool, time_range=msg.get("time_range"), time_window_days=msg.get("time_window_days"),
                     provenance=freshness_prov, matched_count=len(matched), evidence_limit=effective_evidence_limit)
+            answer = _ai.finish(answer, historical=merged_pool)     # (ACTIVE INTENT) adds the labelled live block, or leaves it
             # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
             verdict = guest_gate.on_answer_ready(gate_key, chat_id, msg["topic_key"], gate_token, answer, lease=gate_lease)
             if verdict != guest_gate.DELIVER:
