@@ -47,6 +47,7 @@ from datetime import datetime, timezone, timedelta
 from urllib.parse import urlsplit
 
 import config
+import timerange
 
 log = logging.getLogger(__name__)
 
@@ -289,18 +290,35 @@ def completed_search_calls(data) -> int:
                if isinstance(item, dict) and item.get("type") == "web_search_call" and item.get("status") == "completed")
 
 
-def build_payload(query: str) -> dict:
+def _utc(t) -> str:
+    """The exact instant as a UTC string, e.g. 2026-11-01T11:30:00Z (whole seconds)."""
+    return timerange.to_utc(t).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def build_payload(query: str, window=None) -> dict:
     """The single request. Mirrors the one-request benchmark's shape: reddit.com only, exactly one tool call, sources
     included, nothing stored. The model name comes from config; 'minimal' reasoning is raised to 'low' (web search is
-    not documented to work with minimal reasoning - unverified)."""
+    not documented to work with minimal reasoning - unverified).
+
+    `window=(start, end)` (aware UTC, half-open [start, end)) is the active-intent workflow's shared time window: the exact
+    boundaries are written into the instructions and the input. This only ASKS the model; the backend still checks every
+    returned post's publication time itself (`verify_publication`) and drops anything it cannot confirm."""
     query = _WS.sub(" ", _CTRL.sub(" ", str(query or ""))).strip()[:300]
     effort = getattr(config, "LLM_REASONING_EFFORT", "low")
     if effort not in ("low", "medium", "high"):
         effort = "low"
+    instructions, text = INSTRUCTIONS, f"Find Reddit posts for this request: {query}"
+    if window is not None:
+        start, end = _utc(window[0]), _utc(window[1])
+        instructions = (INSTRUCTIONS + f" Only return Reddit posts that were published between {start} (inclusive) and {end} "
+                        "(exclusive), both in UTC. Return only real Reddit post URLs that your search actually found; never invent "
+                        "or guess a post, title, author, date or URL. If you find nothing in that period, return nothing.")
+        text += (f"\nPublication window (UTC): from {start} (inclusive) until {end} (exclusive). "
+                 "Return only posts published inside it.")
     return {
         "model": getattr(config, "REDDIT_LIVE_MODEL", "") or getattr(config, "LLM_MODEL", ""),
-        "instructions": INSTRUCTIONS,
-        "input": f"Find Reddit posts for this request: {query}",
+        "instructions": instructions,
+        "input": text,
         "tools": [{"type": "web_search", "filters": {"allowed_domains": ["reddit.com"]}}],
         "tool_choice": "required",
         "include": ["web_search_call.action.sources"],
@@ -314,9 +332,10 @@ def build_payload(query: str) -> dict:
 # ── dependencies (injected, so tests use fakes and nothing here opens a connection at import) ─────────────────────────────
 
 class Deps:
-    def __init__(self, chats, budget, attempts, post, now, record_usage):
+    def __init__(self, chats, budget, attempts, post, now, record_usage, reddit_info=None):
         self.chats, self.budget, self.attempts = chats, budget, attempts
         self.post, self.now, self.record_usage = post, now, record_usage
+        self.reddit_info = reddit_info or _reddit_info      # per-post metadata lookup (publication-date check); injectable
 
 
 def _http_post(url, headers, payload, timeout):
@@ -327,6 +346,96 @@ def _http_post(url, headers, payload, timeout):
         response = client.post(url, headers=headers, json=payload)
         response.raise_for_status()
         return response.json()
+
+
+# ── publication-date verification (active-intent workflow only) ─────────────────────────────────────────────────────────
+# Reddit's own public metadata for the posts the model found: ONE GET for all (at most REDDIT_LIVE_MAX_LINKS) candidates, to a
+# constant host, no redirects, short timeout. It is a lookup of those specific posts, never a search of any database.
+META_ENDPOINT = "https://api.reddit.com/api/info/"
+META_TIMEOUT_SECONDS = 8
+META_USER_AGENT = "Flintel/1.0 (checks the publication time of posts it links to; +https://getflintel.com)"
+MAX_META_IDS = 25
+_META_MAX_BYTES = 2_000_000
+_POST_REF = re.compile(r"/r/([A-Za-z0-9_]{2,21})/comments/([a-z0-9]{4,10})(?:/|$)")
+
+
+def post_ref(url):
+    """(subreddit, post_id) of an already-validated post URL, else None."""
+    try:
+        m = _POST_REF.match(urlsplit(url).path)
+    except Exception:       # a non-string or malformed value is simply 'no post reference'
+        return None
+    return (m.group(1), m.group(2)) if m else None
+
+
+def _reddit_info(ids, timeout):
+    """{post_id: {"created_utc", "subreddit", "removed"}} for the ids Reddit returned. Raises on any HTTP error (429, 403, 5xx,
+    a redirect), timeout or unreadable body: the caller treats that as 'cannot verify' for every candidate."""
+    import httpx
+    params = {"id": ",".join("t3_" + i for i in ids), "raw_json": "1"}
+    with httpx.Client(timeout=timeout, follow_redirects=False) as client:
+        r = client.get(META_ENDPOINT, params=params, headers={"User-Agent": META_USER_AGENT, "Accept": "application/json"})
+        r.raise_for_status()
+        if len(r.content) > _META_MAX_BYTES:
+            raise ValueError("metadata response too large")
+        data = r.json()
+    out = {}
+    children = ((data.get("data") or {}).get("children") or []) if isinstance(data, dict) else []
+    for ch in children:
+        d = ch.get("data") if isinstance(ch, dict) and ch.get("kind") == "t3" else None
+        if isinstance(d, dict) and isinstance(d.get("id"), str):
+            out[d["id"]] = {"created_utc": d.get("created_utc"), "subreddit": d.get("subreddit"),
+                            "removed": bool(d.get("removed_by_category")) or d.get("author") == "[deleted]"
+                            or d.get("selftext") in ("[removed]", "[deleted]")}
+    return out
+
+
+def verify_publication(deps, links, window):
+    """(verified_links, stats). Keeps ONLY the links whose publication time Reddit's metadata confirms to lie inside the half-open
+    window [start, end). Fail closed per candidate: a post that is missing from the reply (deleted / private / inaccessible), in
+    another subreddit than its URL says, removed, without a readable or plausible timestamp, or outside the window is dropped
+    and counted; if the lookup itself fails, every candidate is dropped. A model's date or a title is never evidence. Each kept
+    link carries the date Reddit reported, as an ISO UTC string. Never raises."""
+    start, end = timerange.to_utc(window[0]), timerange.to_utc(window[1])
+    stats = {"checked": 0, "verified": 0, "outside_window": 0, "unverifiable": 0, "removed": 0, "lookup_failed": 0}
+    refs = []
+    for l in links or []:
+        ref = post_ref(l.get("url")) if isinstance(l, dict) else None
+        stats["checked"] += 1
+        if ref is None:
+            stats["unverifiable"] += 1
+        else:
+            refs.append((l, ref))
+    refs = refs[:MAX_META_IDS]
+    if not refs:
+        return [], stats
+    ids = sorted({r[1] for _l, r in refs})
+    try:
+        info = deps.reddit_info(ids, META_TIMEOUT_SECONDS)
+        if not isinstance(info, dict):
+            raise ValueError("unexpected metadata reply")
+    except Exception as exc:
+        stats["lookup_failed"] = len(refs)
+        log.warning("Reddit metadata lookup failed (%s status=%s): no live candidate is verified", type(exc).__name__,
+                    getattr(getattr(exc, "response", None), "status_code", None))
+        return [], stats
+    kept = []
+    for l, (sub, pid) in refs:
+        d = info.get(pid)
+        if not isinstance(d, dict) or str(d.get("subreddit") or "").lower() != sub.lower():
+            stats["unverifiable"] += 1
+        elif d.get("removed"):
+            stats["removed"] += 1
+        else:
+            when = timerange.publication_time(d.get("created_utc"), now=end, platform="reddit")
+            if when is None:
+                stats["unverifiable"] += 1
+            elif not (start <= when < end):
+                stats["outside_window"] += 1
+            else:
+                stats["verified"] += 1
+                kept.append(dict(l, published_at=when.isoformat()))
+    return kept, stats
 
 
 def _record_usage(model, data, status):
@@ -342,7 +451,7 @@ def default_deps() -> Deps:
     from database import chats_collection
     db = chats_collection.database
     return Deps(chats_collection, db[BUDGET_COLLECTION], db[ATTEMPTS_COLLECTION], _http_post,
-                lambda: datetime.now(timezone.utc), _record_usage)
+                lambda: datetime.now(timezone.utc), _record_usage, _reddit_info)
 
 
 # ── the single entry point ────────────────────────────────────────────────────────────────────────────────────────────
@@ -375,7 +484,11 @@ def _safe_links(links):
     for l in links if isinstance(links, list) else []:
         url = valid_reddit_url(l.get("url")) if isinstance(l, dict) else None
         if url:
-            out.append({"url": url, "title": clean_title(l.get("title"))})
+            item = {"url": url, "title": clean_title(l.get("title"))}
+            when = timerange.to_utc(l.get("published_at")) if isinstance(l.get("published_at"), str) else None
+            if when is not None:
+                item["published_at"] = when.isoformat()      # only ever set by verify_publication
+            out.append(item)
     return out
 
 
@@ -519,7 +632,7 @@ def _set_live(deps, chat_id, owner_key, idx, request_id, claim_id, fields, requi
     return res.matched_count == 1
 
 
-def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=None, pre_answer=False) -> dict:
+def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=None, pre_answer=False, window=None) -> dict:
     """Idempotent. Returns {"state": ...} and, for 'ok', the labelled links. Never raises. The caller has already
     authenticated the session and passes the session's owner (never a client-supplied one).
     States other than 'ok': disabled, ineligible, not_found, pending (another request holds the claim), busy (this process
@@ -528,8 +641,13 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
     `pre_answer=True` is the ACTIVE-INTENT workflow (active_intent.py): the same claim, budget, in-flight guard, validator and
     idempotency, but asked for BEFORE the answer exists (no answer / recency / evidence-count rules; a plain lead search only),
     the record is marked `workflow`, and the result additionally carries `reason` (a safe diagnostic code) plus, when a call was
-    made, `http_status`, `web_search_calls` (completed search calls) and `validated_urls`. Without it nothing here changes."""
+    made, `http_status`, `web_search_calls` (completed search calls) and `validated_urls`. Without it nothing here changes.
+
+    `window=(start, end)` (aware UTC, half-open) is only used together with `pre_answer`: it goes into the model's instructions,
+    every returned post is then checked against Reddit's own publication time (`verify_publication`) and only posts inside the
+    window are kept, and the window is recorded on the claim so that a stored result is only ever reused for the SAME window."""
     entered = False
+    wdoc = {"start": _utc(window[0]), "end": _utc(window[1])} if (pre_answer and window is not None) else None
 
     def R(out, reason, **extra):                     # pre-answer callers also get a reason; the endpoint's replies are unchanged
         return dict(out, reason=reason, **extra) if pre_answer else out
@@ -546,6 +664,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
         if msg is None:
             return R({"state": "not_found"}, "message_not_found")
         if isinstance(msg.get("live_reddit"), dict):
+            if wdoc is not None and msg["live_reddit"].get("window") != wdoc:
+                return R({"state": "none"}, "window_mismatch")      # a result for another window is never reused
             return R(present(msg["live_reddit"], now, pre_answer=pre_answer), "already_decided")   # repeated asks only read
         ok, _reason = eligible_pre_answer(msg) if pre_answer else eligible(msg, now)
         if not ok:
@@ -568,10 +688,14 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
         record = {"claim_id": claim_id, "state": STATE_CLAIMING, "claimed_at": now, "day": day}
         if pre_answer:
             record["workflow"] = "active_intent"
+            if wdoc is not None:
+                record["window"] = wdoc
         res = deps.chats.update_one(claim_filter, {"$set": {f"messages.{idx}.live_reddit": record}})
         if res.matched_count != 1:
             fresh = deps.chats.find_one({"chat_id": chat_id, "owner_key": owner_key}) or {}
             _i, again = _find_message(fresh, rid, None)
+            if wdoc is not None and again and isinstance(again.get("live_reddit"), dict) and again["live_reddit"].get("window") != wdoc:
+                return R({"state": "none"}, "window_mismatch")
             return R(present((again or {}).get("live_reddit"), now, pre_answer=pre_answer) if again else {"state": "none"},
                      "claim_lost")
         # 2. the budget slot (both caps + interval, one atomic update). No slot = no call; the claim stays, terminal.
@@ -586,12 +710,12 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                          require_state=(STATE_CLAIMING,)):
             return R({"state": "unavailable"}, "could_not_record_call_start")
         # 4. the single attempt: no retry, no redirect, hard per-phase timeout
-        payload = build_payload(msg.get("resolved_query") or msg.get("query"))
+        payload = build_payload(msg.get("resolved_query") or msg.get("query"), window if wdoc is not None else None)
         timeout = _cfg_int("REDDIT_LIVE_TIMEOUT_SECONDS", 25)
         headers = {"Authorization": f"Bearer {config.OPENAI_API_KEY}", "content-type": "application/json"}
         started = deps.now()
         state, links, calls, sources, data, http_status = STATE_ERROR, [], 0, 0, None, None
-        completed, outcome = 0, "api_error"
+        completed, outcome, vstats = 0, "api_error", None
         try:
             data = deps.post(config.OPENAI_RESPONSES_URL, headers, payload, timeout)
             if isinstance(data, dict):
@@ -605,6 +729,9 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                     state, links, outcome = STATE_ERROR, [], "response_" + str(data.get("status"))
                 elif links and completed >= 1:
                     state, outcome = STATE_OK, "ok"
+                    if wdoc is not None:     # keep only posts whose PUBLICATION time Reddit confirms is inside the window
+                        links, vstats = verify_publication(deps, links, window)
+                        state, outcome = (STATE_OK, "ok") if links else (STATE_EMPTY, "no_verified_in_window")
                 elif links:
                     state, links, outcome = STATE_ERROR, [], "no_completed_web_search_call"
                 else:
@@ -625,7 +752,7 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                 "state": state, "http_status": http_status, "latency_ms": latency_ms, "model": payload["model"],
                 "input_tokens": (usage or {}).get("input_tokens"), "output_tokens": (usage or {}).get("output_tokens"),
                 "web_search_calls": calls, "sources": sources, "links": len(links), "cost_usd": None,
-                "completed_search_calls": completed, "outcome": outcome})
+                "completed_search_calls": completed, "outcome": outcome, "verification": vstats})
         except Exception as exc:
             log.warning("Recording a live-links attempt failed (%s)", type(exc).__name__)
         try:
@@ -637,6 +764,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
         except Exception as exc:
             log.warning("Storing the live-links result failed (%s)", type(exc).__name__)
         info = {"http_status": http_status, "web_search_calls": completed, "validated_urls": len(links)}
+        if vstats is not None:
+            info["verification"] = vstats
         if state == STATE_OK:
             return R(present({"state": STATE_OK, "links": links}, now, pre_answer=True), outcome, **info)
         return R({"state": "none"}, outcome, **info)
