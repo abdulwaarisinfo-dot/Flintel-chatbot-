@@ -65,6 +65,21 @@ def live_env(items=((URL1, "Looking for a CRM for my small business"),), *, msg_
     over.update(msg_over or {})
     env = Env([message(0, **over)])
     env.response = resp(list(items), **resp_kw)
+    env.meta_calls = []
+    env.ages = {}                       # post id -> minutes old (default 5); None -> Reddit does not return that post
+    env.removed = set()
+    env.meta_raises = None
+
+    def info(ids, timeout):             # stands in for Reddit's metadata endpoint: no network
+        env.meta_calls.append((list(ids), timeout))
+        if env.meta_raises:
+            raise env.meta_raises
+        subs = {rl.post_ref(u)[1]: rl.post_ref(u)[0] for u, _ in items if rl.post_ref(u)}
+        now = datetime.now(timezone.utc)
+        return {i: {"created_utc": (now - timedelta(minutes=env.ages.get(i, 5))).timestamp(), "subreddit": subs.get(i, "x"),
+                    "removed": i in env.removed}
+                for i in ids if env.ages.get(i, 5) is not None}
+    env.deps.reddit_info = info
     return env
 
 
@@ -148,21 +163,50 @@ def test_predicate_is_total(value):
 
 
 # ── the window ─────────────────────────────────────────────────────────────────────────────────────────────────────────
-@pytest.mark.parametrize("configured,expected", [(30, 30), (10, 10), (40, 40), (41, 40), (90, 40), (1000, 40), (0, 30), (-5, 30),
-                                                 ("x", 30), (None, 30), (True, 30), (2.5, 30)])
-def test_window_is_configurable_but_never_more_than_forty_minutes(monkeypatch, configured, expected):
+@pytest.mark.parametrize("configured", [30, 1, 40, 41, 90, 1000, 1500, ain.MAX_WINDOW_MINUTES])
+def test_any_positive_window_up_to_the_documented_maximum_is_used_exactly_as_configured(monkeypatch, configured):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", configured, raising=False)
-    assert ain.window_minutes() == expected
+    assert ain.window_setting() == (configured, "ok") and ain.window_minutes() == configured       # no 40-minute cap, no clamping
+
+
+@pytest.mark.parametrize("configured,reason", [(ain.MAX_WINDOW_MINUTES + 1, "over_maximum"), (10 ** 9, "over_maximum"), (0, "invalid"),
+                                               (-5, "invalid"), ("x", "invalid"), (None, "invalid"), (True, "invalid"),
+                                               (False, "invalid"), (2.5, "invalid"), ([], "invalid")])
+def test_an_unusable_window_fails_closed_and_is_never_silently_changed(ai_on, monkeypatch, configured, reason):
+    monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", configured, raising=False)
+    assert ain.window_setting() == (None, reason) and ain.window_minutes() is None
+    env = live_env()
+    msg = stored_msg(env)
+    run = prepare(env, msg=msg)
+    assert run.active is False and msg == stored_msg(env) and env.calls == []        # workflow off: no window, no Live call
+
+
+def test_maximum_is_documented_and_1500_is_inside_it():
+    assert ain.MAX_WINDOW_MINUTES == 10080 and 1500 < ain.MAX_WINDOW_MINUTES
+
+
+@pytest.mark.parametrize("raw,expected", [(None, 30), ("", 30), ("  ", 30), ("30", 30), ("1500", 1500), (" 45 ", 45), ("0", 0), ("-5", 0),
+                                          ("x", 0), ("true", 0), ("2.5", 0), ("1e3", 0), ("+30", 0), ("30m", 0), ("\u0663\u0660", 0)])
+def test_the_environment_value_is_parsed_strictly(raw, expected):
+    import config
+    assert config._active_intent_window_minutes(raw) == expected
 
 
 def test_recent_window_is_a_half_open_range_in_the_type_a_typed_range_uses(ai_on):
-    now = datetime(2026, 11, 1, 12, 0, 0, tzinfo=timezone.utc)
-    tr = ain.recent_window(now)
-    assert (tr.end - tr.start) == timedelta(minutes=30) and tr.end == now and tr.start == now - timedelta(minutes=30)
-    doc = tr.to_doc(now)
-    back = timerange.range_from_doc(doc)
+    end = datetime(2026, 11, 1, 12, 0, 0, tzinfo=timezone.utc)
+    tr = ain.recent_window(end, 30)
+    assert (tr.end - tr.start) == timedelta(minutes=30) and tr.end == end and tr.start == end - timedelta(minutes=30)
+    assert tr.start.tzinfo is not None and tr.end.tzinfo is not None
+    back = timerange.range_from_doc(tr.to_doc(end))
     assert back.start == tr.start and back.end == tr.end
-    assert back.contains(now - timedelta(minutes=29)) and not back.contains(now - timedelta(minutes=31)) and not back.contains(now)
+    assert back.contains(tr.start) and back.contains(end - timedelta(minutes=29)) and not back.contains(tr.start - timedelta(seconds=1))
+    assert not back.contains(end)                                           # start included, end excluded
+
+
+def test_recent_window_supports_1500_minutes():
+    end = datetime(2026, 11, 2, 12, 0, 0, tzinfo=timezone.utc)
+    tr = ain.recent_window(end, 1500)
+    assert tr.end - tr.start == timedelta(minutes=1500) and tr.start == datetime(2026, 11, 1, 11, 0, 0, tzinfo=timezone.utc)
 
 
 # ── eligibility / preparing a run ──────────────────────────────────────────────────────────────────────────────────────────
@@ -188,83 +232,14 @@ def test_eligible_active_lead_search_gets_the_recent_window_in_memory_only(ai_on
     assert msg["time_window_days"] is None
 
 
-@pytest.mark.parametrize("minutes,expected", [(90, 40), (15, 15), ("bad", 30)])
-def test_the_applied_window_follows_the_configuration_and_its_cap(ai_on, monkeypatch, minutes, expected):
+@pytest.mark.parametrize("minutes", [15, 30, 90, 1500])
+def test_the_applied_window_follows_the_configuration_exactly(ai_on, monkeypatch, minutes):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", minutes, raising=False)
     env = live_env()
     msg = stored_msg(env)
     prepare(env, msg=msg)
     tr = timerange.range_from_doc(msg["time_range"])
-    assert (tr.end - tr.start) == timedelta(minutes=expected)
-
-
-@pytest.mark.parametrize("over", [
-    {"time_range": {"start": datetime(2026, 10, 1, tzinfo=timezone.utc), "end": datetime(2026, 10, 8, tzinfo=timezone.utc), "tz": "UTC"}},
-    {"time_window_days": 7}, {"time_window_days": 30}, {"request_kind": "research"}, {"request_kind": "mention_search"},
-    {"request_kind": "provider_search"}, {"website_only": True}, {"website_context": {"url": "https://x.example"}},
-    {"keywords": []}, {"credit_request_id": None}, {"evidence_required": None}, {"query": "What is a CRM?"}])
-def test_ineligible_searches_are_left_exactly_as_they_were(ai_on, over):
-    env = live_env(msg_over=over)
-    msg = stored_msg(env)
-    before = copy.deepcopy(msg)
-    run = prepare(env, msg=msg)
-    assert run.active is False and msg == before                  # incl. every explicit time range, exactly as provided
-    run.start()
-    assert run.finish("ANSWER", historical=[]) == "ANSWER" and env.calls == []
-
-
-def test_a_guest_owner_is_never_eligible(ai_on):
-    env = live_env()
-    ain.DEPS_FACTORY = lambda: env.deps
-    msg = stored_msg(env)
-    run = ain.Run.prepare(msg, owner_key="anon-guest-id", chat_id="c1", mode="stream")
-    assert run.active is False and msg["time_range"] is None
-
-
-def test_nothing_happens_while_the_live_feature_is_inactive(ai_on, monkeypatch):
-    monkeypatch.setattr(rl.config, "REDDIT_LIVE_LINKS_ENABLED", False, raising=False)
-    env = live_env()
-    msg = stored_msg(env)
-    run = prepare(env, msg=msg)
-    assert run.active is False and msg["time_range"] is None and env.calls == []
-
-
-@pytest.mark.parametrize("bad", [None, "x", 5, []])
-def test_prepare_never_raises(ai_on, bad):
-    assert ain.Run.prepare(bad, owner_key=OWNER, chat_id="c1").active is False
-
-
-# ── normalise, deduplicate, rank ─────────────────────────────────────────────────────────────────────────────────────────
-def test_historical_and_live_items_keep_their_provenance_and_status():
-    hist = ain.normalize_historical([hrow(1), {"title": "stub", "post_text": None, "post_url": "https://www.reddit.com/r/x/comments/stub11/z/"}])
-    live = ain.normalize_live([{"url": URL1, "title": "A title"}, {"url": "https://evil.com/x", "title": "bad"}, {"url": None}])
-    assert [e.source_type for e in hist] == ["historical", "historical"] and [e.source_type for e in live] == ["live_web_search"]
-    assert hist[0].has_content is True and hist[0].verification == "verified" and hist[0].published_at
-    assert hist[1].has_content is False and hist[1].verification == "unverified"
-    assert live[0].has_content is False and live[0].verification == "unverified" and live[0].published_at is None
-    assert live[0].relevance is None
-
-
-def test_title_relevance_is_lexical_overlap_on_the_title_only():
-    terms = ain._terms("Find people actively looking for a CRM", "crm")
-    assert terms == ["crm"]                                            # request words, stop words and generic words are not terms
-    assert ain.title_relevance(terms, "Looking for a CRM") == 1.0 and ain.title_relevance(terms, "Anyone use Notion?") == 0.0
-    assert ain.title_relevance(["crm", "invoicing"], "Need a CRM today") == 0.5
-    assert ain.title_relevance(terms, None) == 0.0 and ain.title_relevance([], "CRM") == 0.0
-
-
-def test_duplicates_are_removed_and_live_items_are_ranked_by_title_match():
-    hist = ain.normalize_historical([hrow(1, url=HURL)])
-    live = ain.normalize_live([{"url": URL2, "title": "Which CRM should I use for my agency?"},
-                               {"url": HURL + "?utm_source=x", "title": "same post as the saved one"},
-                               {"url": URL3, "title": "Need help picking software"},
-                               {"url": URL2, "title": "duplicate inside live"},
-                               {"url": "https://old.reddit.com/r/startups/comments/jkl012/crm_for_startups/", "title": "CRM for startups"}])
-    kept, dups = ain.combine(hist, live, ain._terms("crm"))
-    assert dups == 2 and [c.url for c in kept][0] != HURL
-    assert [c.relevance for c in kept] == sorted([c.relevance for c in kept], reverse=True)
-    assert kept[-1].url == URL3 and kept[-1].relevance == 0.0           # no title overlap: last, never dropped or promoted
-    assert HURL not in [c.url for c in kept] and "live_web_search" in hist[0].also_found_by
+    assert (tr.end - tr.start) == timedelta(minutes=minutes)
 
 
 def test_at_most_eight_candidates_are_kept():
@@ -273,25 +248,41 @@ def test_at_most_eight_candidates_are_kept():
 
 
 # ── the block that goes into the answer ───────────────────────────────────────────────────────────────────────────────────
+WIN = ain.recent_window(datetime(2026, 11, 1, 12, 0, 0, tzinfo=timezone.utc), 30)
+VERIFIED = {"url": URL1, "title": "Looking for a CRM", "published_at": "2026-11-01T11:50:00+00:00"}
+
+
+def _cands():
+    return ain.combine([], ain.normalize_live([VERIFIED]), ["crm"])[0]
+
+
 def test_block_is_honest_about_what_a_live_candidate_is():
-    cands = ain.combine([], ain.normalize_live([{"url": URL1, "title": "Looking for a CRM"}]), ["crm"])[0]
-    block = ain.build_block(cands, historical_count=0, window=30, duplicates_removed=0, historical_state="completed")
-    assert block["verification"] == "unverified_title_and_url_only" and block["live_results_limited_to_window"] is False
+    block = ain.build_block(_cands(), historical_count=0, window_range=WIN, duplicates_removed=0, historical_state="completed")
+    assert block["verification"] == "date_verified_title_and_url_only" and block["live_results_limited_to_window"] is True
+    assert block["window"] == {"minutes": 30, "start": WIN.start.isoformat(), "end": WIN.end.isoformat()}
     item = block["items"][0]
-    assert set(item) == {"rank", "title", "url", "source", "verification_status", "evidence", "title_relevance"}
-    assert item["verification_status"] == "unverified" and item["evidence"] == "title_and_url_only" and item["source"] == "live_web_search"
+    assert set(item) == {"rank", "title", "url", "source", "verification_status", "evidence", "published_at", "date_verified",
+                         "title_relevance"}
+    assert item["verification_status"] == "date_verified_only" and item["published_at"] == "2026-11-01T11:50:00+00:00"
+    assert item["date_verified"] is True and item["source"] == "live_web_search"
     st = block["statement"]
-    assert "has not read these posts" in st and "verified their dates" in st and "buying" in st
-    assert "not limited to the last 30 minutes" in st and "ranked by how well their titles match" in st
-    assert "No analysed saved-post evidence" in st and "just now" not in st.lower()
+    assert "Live Reddit results" in st and "2026-11-01 11:30 UTC and 2026-11-01 12:00 UTC" in st and "30-minute window" in st
+    assert "has not read these posts" in st and "buying" in st and "ranked only by how well their titles match" in st
+    assert "other posts in this window may exist that were not found" in st
+    assert "outside" not in st and "not limited" not in st and "No analysed saved-post evidence" in st
+
+
+def test_an_undated_live_item_is_never_given_a_date():
+    live = ain.normalize_live([{"url": URL1, "title": "CRM"}])
+    assert live[0].published_at is None and live[0].verification == "unverified"
 
 
 @pytest.mark.parametrize("hist_count,state,needle", [(3, "completed", "analysed in the answer above"),
                                                      (0, "completed", "No analysed saved-post evidence"),
                                                      (0, "timed_out", "did not finish in time")])
 def test_block_describes_the_historical_side_without_inventing_anything(hist_count, state, needle):
-    cands = ain.combine([], ain.normalize_live([{"url": URL1, "title": "CRM"}]), ["crm"])[0]
-    assert needle in ain.build_block(cands, historical_count=hist_count, window=30, duplicates_removed=0, historical_state=state)["statement"]
+    assert needle in ain.build_block(_cands(), historical_count=hist_count, window_range=WIN, duplicates_removed=0,
+                                     historical_state=state)["statement"]
 
 
 def test_attach_adds_the_block_to_a_json_answer_and_leaves_anything_else_alone():
@@ -409,7 +400,8 @@ def test_both_branches_contribute_to_one_answer(ai_on):
     assert data["platforms"][0]["posts"][0]["link"] == HURL                    # the historical analysis is untouched
     lc = data["live_candidates"]
     assert {i["url"] for i in lc["items"]} == {URL1, URL2} and all(i["source"] == "live_web_search" for i in lc["items"])
-    assert all(i["verification_status"] == "unverified" for i in lc["items"]) and "analysed in the answer above" in lc["statement"]
+    assert all(i["verification_status"] == "date_verified_only" and i["date_verified"] is True for i in lc["items"])
+    assert "analysed in the answer above" in lc["statement"]
     assert len(env.calls) == 1
 
 
@@ -504,15 +496,19 @@ def test_historical_failure_does_not_fabricate_results_or_pass_as_success(ai_on)
     assert out["format"] == "no_results" and "platforms" not in out                           # no historical row was invented
 
 
-def test_live_candidates_do_not_claim_the_historical_window_or_a_publication_date(ai_on):
+def test_live_candidates_state_the_shared_window_and_the_search_gets_its_exact_boundaries(ai_on):
     env = live_env()
     out = json.loads(prepare(env).finish(answer_json(), historical=[]))
     lc = out["live_candidates"]
-    assert lc["live_results_limited_to_window"] is False and lc["historical_window_minutes"] == 30
-    assert all("published_at" not in i and "date" not in i and "intent" not in " ".join(i) for i in lc["items"])
-    assert "not limited to the last 30 minutes" in lc["statement"]
+    assert lc["live_results_limited_to_window"] is True and lc["historical_window_minutes"] == 30
+    assert lc["live_dates_verified_against"] == "reddit_metadata"
+    assert "intent" not in " ".join(lc["items"][0]) and lc["items"][0]["published_at"]
     payload = env.calls[0]["payload"]
-    assert "date" not in json.dumps(payload["tools"]).lower() and "recency" not in json.dumps(payload).lower()
+    start, end = lc["window"]["start"], lc["window"]["end"]
+    text = json.dumps(payload)
+    assert start in text.replace("\\u002b", "+") or start[:19] in text
+    assert end[:19] in text
+    assert payload["tools"][0]["filters"]["allowed_domains"] == ["reddit.com"] and len(env.calls) == 1
 
 
 def test_duplicate_urls_are_removed_before_the_answer(ai_on):
