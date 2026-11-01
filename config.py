@@ -1096,9 +1096,21 @@ REDDIT_LIVE_MODEL = os.getenv("REDDIT_LIVE_MODEL", "").strip()          # empty 
 # "actively looking for / asking for a recommendation of / needing a solution" AND (b) has no time range of its own, AND only
 # while the Live Reddit links feature above is itself active (enabled, valid caps, valid in-flight limit).
 ACTIVE_INTENT_ENABLED = os.getenv("ACTIVE_INTENT_ENABLED", "false").lower() in ("1", "true", "yes")
-# The recent window applied to that request's saved-post search only: default 30 minutes, never more than 40 (the cap is
-# enforced again in active_intent.py); an unset, non-numeric, zero or negative value falls back to the 30-minute default.
-ACTIVE_INTENT_WINDOW_MINUTES = _live_pos_int("ACTIVE_INTENT_WINDOW_MINUTES", 30)
+# The ONE shared time window, in minutes, applied to BOTH branches of an eligible active-lead search: the saved-post search and
+# the live Reddit search (whose posts are also date-verified against Reddit's own metadata). Unset or blank -> 30. A value
+# that is not a plain positive integer (zero, negative, "abc", "2.5", "true", "1_500") is INVALID: it is stored as 0 here and
+# the workflow stays off (fail closed, with a warning log) - it is never silently replaced. The upper bound
+# (MAX_WINDOW_MINUTES = 10080, 7 days) lives in active_intent.py, which also fails closed above it. 1500 works as configured.
+def _active_intent_window_minutes(raw):
+    import re as _re
+    text = "" if raw is None else str(raw).strip()
+    if not text:
+        return 30
+    return int(text) if _re.fullmatch(r"[0-9]+", text) and int(text) > 0 else 0
+
+
+ACTIVE_INTENT_WINDOW_MINUTES = _active_intent_window_minutes(os.getenv("ACTIVE_INTENT_WINDOW_MINUTES"))
 # How long (seconds, from the moment the live branch starts) the answer waits for it before going on without it
-# (default 30, at most 60; invalid -> 30). The live call itself is still bounded by REDDIT_LIVE_TIMEOUT_SECONDS.
+# (default 30, at most 60; invalid -> 30). The live call itself is still bounded by REDDIT_LIVE_TIMEOUT_SECONDS; the date
+# check against Reddit runs inside the same wait, and a branch that overruns it is left behind without losing the answer.
 ACTIVE_INTENT_LIVE_WAIT_SECONDS = _live_pos_int("ACTIVE_INTENT_LIVE_WAIT_SECONDS", 30)
