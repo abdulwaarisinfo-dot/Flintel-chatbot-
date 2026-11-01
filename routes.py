@@ -23,6 +23,13 @@ import inspect   # (STREAM DISCONNECT FIX)
 
 _STOP_POLL_SECONDS = 1.0     # (STOP) how often a running stream re-reads the durable stop flag (the in-process event is instant)
 
+# (RANGE POLL CAP) The most ADDITIONAL top-up polls (after the initial scan) a stream makes while it waits for more evidence on a
+# search with an EXPLICIT time range (a typed range or an Active Intent window). Such a poll is a full rescan of the whole window
+# (the range path deliberately skips the topic cache and the incremental scan state), so repeating it every ~2 s for up to
+# RESPONSE_TIMEOUT only re-reads the same window. 3 polls ~ 6 s of extra wait for the collector to ingest. Searches WITHOUT a time
+# range are not affected by this constant at all.
+RANGE_SEARCH_MAX_EXTRA_POLLS = 3
+
 
 def _close_stream_generator_when_idle(gen):
     """(STREAM DISCONNECT FIX) Closes a streaming route's sync generator once
@@ -3467,6 +3474,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # already finished (or acquire_scan failed), so these top-up
             # calls refill rather than start a competing scan; they pass the
             # handle's cancel_event so a disconnect still stops them.
+            _range_search = bool(msg.get("time_range"))     # (RANGE POLL CAP) explicit range only; plain searches poll as before
+            _range_polls = 0
             if (not scan_timed_out) and len(matched) < effective_evidence_limit and not (_strict_wait and _strict_done()):
                 while True:
                     if _stopped():                           # (STOP) no further top-up scans
@@ -3518,6 +3527,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     if _strict_wait and _strict_done():
                         break
 
+                    if _range_search and _range_polls >= RANGE_SEARCH_MAX_EXTRA_POLLS:
+                        break        # (RANGE POLL CAP) go on with the evidence already collected; not a timeout, tier3 is not set
+
                     guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease)    # keeps a legitimate long wait leased
                     stop_evt.wait(2)                         # (STOP) same 2 s poll, cut short by a stop
 
@@ -3526,6 +3538,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         return
 
                     try:
+                        _range_polls += 1
                         matched = _topup(handle.cancel_event if handle is not None else None)
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
