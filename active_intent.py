@@ -3,17 +3,26 @@
 For a signed-in owner's plain lead search that clearly asks for people who are ACTIVELY looking for something (a CRM, a
 recommendation, an alternative, a solution), this module lets two independent branches contribute to the same answer:
 
+  ONE shared window. ACTIVE_INTENT_WINDOW_MINUTES (default 30; any integer from 1 to MAX_WINDOW_MINUTES = 10080, i.e. 7 days;
+  an unusable value turns the workflow off instead of being changed) defines ONE half-open UTC interval [start, end) per search.
+  Its end is the search's own `requested_at` (the current time if that is missing), so every path - the stream, the background
+  completion, a resumed or reloaded run - derives the identical interval, and both branches below receive exactly it.
+
   Branch A - the EXISTING saved-post (historical) search and its normal evidence analysis. Only one search parameter changes,
-             and only for this request: its publication window becomes the last N minutes (default 30, never more than 40),
-             supplied the same way a user-typed range is (the message's `time_range`), in memory, at stream time.
+             and only for this request: its publication window is the interval above, supplied the same way a user-typed
+             range is (the message's `time_range`, in memory only), BEFORE the existing retrieval runs - in the stream and in
+             the background path (where it is set ahead of `_fill_in_message_outputs`'s retrieval call).
   Branch B - the separate Live Reddit web search of reddit_live.py (same claim, budgets, cooldown, in-flight guard, URL
-             validation and idempotency), started at the same moment and bounded by its own wait.
+             validation and idempotency), started at the same moment. The model is told the exact boundaries, and then the
+             BACKEND checks every returned post's publication time against Reddit's own metadata and keeps only posts inside
+             the interval; a post whose date cannot be confirmed is dropped.
 
 What the combined answer is - and is not
     * Historical rows keep their normal analysis, ranking and integrity checks. Nothing here touches them.
-    * A live result is a URL and (maybe) a title. Flintel has NOT read the post, so it is shown as an UNVERIFIED candidate:
-      ranked by how well its TITLE matches the request, never given a buying-intent score, never described as verified,
-      never given a date, and never claimed to fall inside the historical window.
+    * A live result is a URL, maybe a title, and the publication time Reddit reported (checked to lie inside the window).
+      Flintel has NOT read the post: it is ranked by how well its TITLE matches the request, never given a buying-intent
+      score, and never described as verified evidence - only its date is verified. Web search is discovery, not an index of
+      Reddit, so the list is not exhaustive.
     * Live candidates are merged AFTER the answer is finalised, as one clearly labelled block inside the same answer
       (`live_candidates`). They are deliberately NOT put into the pool the answer-integrity layer counts, so its accounting
       (retrieved / unique / unverified / verified) stays exactly what the historical branch produced.
@@ -40,8 +49,8 @@ log = logging.getLogger("flintel.active_intent")
 
 SOURCE_HISTORICAL = "historical"
 SOURCE_LIVE = "live_web_search"
-DEFAULT_WINDOW_MINUTES = 30
-MAX_WINDOW_MINUTES = 40
+DEFAULT_WINDOW_MINUTES = 30           # used by config.py when ACTIVE_INTENT_WINDOW_MINUTES is unset or blank
+MAX_WINDOW_MINUTES = 10080            # 7 days: the deliberate, documented upper bound (nothing silently shortens a value above it)
 DEFAULT_LIVE_WAIT_SECONDS = 30
 MAX_LIVE_WAIT_SECONDS = 60
 MAX_LIVE_CANDIDATES = 8
@@ -56,12 +65,21 @@ def enabled() -> bool:
     return getattr(config, "ACTIVE_INTENT_ENABLED", False) is True
 
 
-def window_minutes() -> int:
-    """The recent window in minutes: configured value, never more than MAX_WINDOW_MINUTES; anything invalid -> the default."""
+def window_setting():
+    """(minutes, reason). The configured window EXACTLY as configured, or (None, why) when it cannot be used:
+    'invalid' (not a positive integer: config.py stores 0 for those, and a boolean is never accepted) or 'over_maximum'
+    (above MAX_WINDOW_MINUTES). The workflow then stays off - a value is never silently clamped or replaced."""
     v = getattr(config, "ACTIVE_INTENT_WINDOW_MINUTES", DEFAULT_WINDOW_MINUTES)
-    if not isinstance(v, int) or isinstance(v, bool) or v <= 0:
-        v = DEFAULT_WINDOW_MINUTES
-    return min(v, MAX_WINDOW_MINUTES)
+    if isinstance(v, bool) or not isinstance(v, int) or v <= 0:
+        return None, "invalid"
+    if v > MAX_WINDOW_MINUTES:
+        return None, "over_maximum"
+    return v, "ok"
+
+
+def window_minutes():
+    """The configured window in minutes, or None when it is unusable (see window_setting)."""
+    return window_setting()[0]
 
 
 def live_wait_seconds() -> int:
@@ -71,14 +89,26 @@ def live_wait_seconds() -> int:
     return min(v, MAX_LIVE_WAIT_SECONDS)
 
 
-def recent_window(now: datetime) -> "timerange.TimeRange":
-    """The half-open [now - N min, now) range, in the same type a user-typed 'last N minutes' produces."""
+def window_end(msg, now=None):
+    """The one instant that closes the shared window: the search's own `requested_at` (never later than now), else now, in whole
+    seconds. Deriving it from the search - not from whichever code path runs - is what makes every path agree."""
     now = timerange.to_utc(now) or datetime.now(timezone.utc)
-    n = window_minutes()
-    return timerange.TimeRange(start=now - timedelta(minutes=n), end=now, tz_name="UTC", kind="rolling",
-                               phrase=f"last {n} minutes", capped=True,
-                               note="Applied automatically to this search of saved posts because it asks for people who are "
-                                    "actively looking; it does not apply to the separate live web search.")
+    t = timerange.to_utc((msg or {}).get("requested_at")) if isinstance(msg, dict) else None
+    return (min(t, now) if t is not None else now).replace(microsecond=0)
+
+
+def recent_window(end, minutes) -> "timerange.TimeRange":
+    """The half-open [end - minutes, end) range, in the same type a user-typed 'last N minutes' produces."""
+    end = (timerange.to_utc(end) or datetime.now(timezone.utc)).replace(microsecond=0)
+    return timerange.TimeRange(start=end - timedelta(minutes=minutes), end=end, tz_name="UTC", kind="rolling",
+                               phrase=f"last {minutes} minutes", capped=True,
+                               note="Applied automatically because this search asks for people who are actively looking; the "
+                                    "live web search uses the same window and its posts are date-checked against it.")
+
+
+def same_window(doc, tr) -> bool:
+    r = timerange.range_from_doc(doc)
+    return r is not None and r.start == tr.start and r.end == tr.end
 
 
 # ── the narrow query-text predicate (NOT a model call, NOT the router) ──────────────────────────────────────────────────
@@ -156,8 +186,10 @@ def normalize_live(links):
     for l in links or []:
         url = reddit_live.valid_reddit_url(l.get("url")) if isinstance(l, dict) else None
         if url:
+            when = timerange.to_utc(l.get("published_at")) if isinstance(l.get("published_at"), str) else None
             out.append(Evidence(source_type=SOURCE_LIVE, url=url, title=reddit_live.clean_title(l.get("title")),
-                                has_content=False, published_at=None, verification="unverified"))
+                                has_content=False, published_at=when.isoformat() if when else None,
+                                verification="date_verified_only" if when else "unverified"))
     return out
 
 
@@ -209,28 +241,39 @@ def combine(historical, live, terms):
 
 # ── the block that goes into the answer ───────────────────────────────────────────────────────────────────────────────────
 
-def build_block(candidates, *, historical_count, window, duplicates_removed, historical_state):
-    """The `live_candidates` object. Every sentence in it is written here, never by a model, and says only what is true."""
+def _fmt(t):
+    return timerange.to_utc(t).strftime("%Y-%m-%d %H:%M UTC")
+
+
+def build_block(candidates, *, historical_count, window_range, duplicates_removed, historical_state):
+    """The `live_candidates` object. Every sentence in it is written here, never by a model, and says only what is true: each
+    item's publication time was confirmed from Reddit's own metadata to lie inside the shared window; nothing else about the
+    post (its content, its author's intent) has been read or assessed; and web search cannot list every post in a window."""
     n = len(candidates)
-    parts = [f"Live web search: {n} Reddit link{'s' if n != 1 else ''} found by a separate live web search. "
-             "Only the link and title were returned, so Flintel has not read these posts, verified their dates or assessed "
-             f"whether the authors are buying. They were not limited to the last {window} minutes that was applied to "
-             "Flintel's saved posts, and they are ranked by how well their titles match your request, nothing more."]
+    minutes = int((window_range.end - window_range.start).total_seconds() // 60)
+    parts = [f"Live Reddit results: {n} Reddit post{'s' if n != 1 else ''} found by a separate live web search. Each post's "
+             f"publication time was checked against Reddit's own data and falls between {_fmt(window_range.start)} and "
+             f"{_fmt(window_range.end)} (the same {minutes}-minute window used for Flintel's saved posts). Flintel has not read "
+             "these posts or assessed whether the authors are buying, so they are ranked only by how well their titles match "
+             "your request. Web search finds some posts, not all of them: other posts in this window may exist that were not found."]
     if historical_state == "timed_out":
         parts.append("The search of saved posts did not finish in time, so this answer may be missing saved-post evidence.")
     elif historical_count:
-        parts.append("Saved-post results are analysed in the answer above and are separate from these candidates.")
+        parts.append("Saved-post results are analysed in the answer above and are separate from these live results.")
     else:
-        parts.append("No analysed saved-post evidence was available for this answer, so these unverified candidates are "
-                     "the only leads found.")
+        parts.append("No analysed saved-post evidence was available for this answer, so these live results are the only "
+                     "leads found.")
     if duplicates_removed:
         parts.append(f"{duplicates_removed} duplicate link{'s' if duplicates_removed != 1 else ''} already covered by the "
                      "saved posts ha" + ("ve" if duplicates_removed != 1 else "s") + " been left out.")
     return {
-        "source": SOURCE_LIVE, "verification": "unverified_title_and_url_only", "historical_window_minutes": window,
-        "live_results_limited_to_window": False, "statement": " ".join(parts),
+        "source": SOURCE_LIVE, "verification": "date_verified_title_and_url_only", "historical_window_minutes": minutes,
+        "live_results_limited_to_window": True, "live_dates_verified_against": "reddit_metadata",
+        "window": {"minutes": minutes, "start": window_range.start.isoformat(), "end": window_range.end.isoformat()},
+        "statement": " ".join(parts),
         "items": [{"rank": i + 1, "title": c.title, "url": c.url, "source": SOURCE_LIVE,
-                   "verification_status": "unverified", "evidence": "title_and_url_only", "title_relevance": c.relevance}
+                   "verification_status": "date_verified_only", "evidence": "title_url_and_verified_date_only",
+                   "published_at": c.published_at, "date_verified": True, "title_relevance": c.relevance}
                   for i, c in enumerate(candidates)],
     }
 
@@ -273,6 +316,48 @@ def _log(event, **fields):
         pass
 
 
+def apply_window(msg, *, owner_key, chat_id, mode, owner_type=None, now=None):
+    """(window, kind, reason). Decides whether this search is an eligible active-lead search and, if so, puts the ONE shared
+    window on the in-memory `msg["time_range"]` - where the existing saved-post retrieval reads it exactly like a typed range.
+    Call it BEFORE that retrieval (the stream does, via Run.prepare; the background path does in _fill_in_message_outputs).
+    Idempotent: a message that already carries this very window is recognised and left alone, so the second call - in
+    _complete_message_answer_and_results - derives the identical interval. Any other time range is the user's own and is
+    NEVER overwritten (the search is then not eligible). Returns (None, kind, reason) when nothing was applied."""
+    if not enabled():
+        return None, "disabled", "disabled"
+    if not isinstance(msg, dict):
+        return None, "rejected", "no_message"
+    text = msg.get("resolved_query") or msg.get("query")
+    detected, why = is_active_lead_intent(text)
+    if not detected:
+        _log("intent_not_detected", reason=why, mode=mode)
+        return None, "not_detected", why
+    if not reddit_live.is_active():
+        _log("intent_detected_live_inactive", mode=mode)
+        return None, "live_inactive", "live_inactive"
+    owner_type = owner_type or ("email" if isinstance(owner_key, str) and "@" in owner_key else "anon")
+    if owner_type != "email":
+        _log("live_eligibility_rejected", reason="guest", mode=mode)
+        return None, "rejected", "guest"
+    minutes, wwhy = window_setting()
+    if minutes is None:
+        cfg = getattr(config, "ACTIVE_INTENT_WINDOW_MINUTES", None)
+        log.warning("active_intent window unusable (%s): configured=%s maximum=%s - the workflow stays off for this search",
+                    wwhy, cfg if isinstance(cfg, int) and not isinstance(cfg, bool) else "not-an-integer", MAX_WINDOW_MINUTES)
+        _log("window_unusable", reason=wwhy, maximum=MAX_WINDOW_MINUTES, mode=mode)
+        return None, "window_unusable", wwhy
+    tr = recent_window(window_end(msg, now), minutes)
+    existing = msg.get("time_range")
+    already = bool(existing) and same_window(existing, tr)
+    ok, reason = reddit_live.eligible_pre_answer(dict(msg, time_range=None) if already else msg)   # no OTHER time range, plain lead search
+    if not ok:
+        _log("live_eligibility_rejected", reason=reason, mode=mode)
+        return None, "rejected", reason
+    if not already:
+        msg["time_range"] = tr.to_doc(tr.end)      # in memory only; the existing retrieval reads it like a typed range
+    return tr, "ok", "already_applied" if already else "applied"
+
+
 # ── the object the two answer paths call ─────────────────────────────────────────────────────────────────────────────────
 
 class Run:
@@ -296,35 +381,18 @@ class Run:
     # -- creation -----------------------------------------------------------------------------------------------------
     @classmethod
     def prepare(cls, msg, *, owner_key, chat_id, mode="stream", owner_type=None, now=None):
-        """Decide eligibility and, if eligible, apply the recent window to THIS request's in-memory message. Never raises."""
+        """Decide eligibility and, if eligible, apply the shared window to THIS request's in-memory message. Never raises."""
         try:
-            if not enabled():
-                return cls()
-            if not isinstance(msg, dict):
+            tr, kind, reason = apply_window(msg, owner_key=owner_key, chat_id=chat_id, mode=mode, owner_type=owner_type, now=now)
+            if tr is None:
                 return cls()
             text = msg.get("resolved_query") or msg.get("query")
-            detected, why = is_active_lead_intent(text)
-            if not detected:
-                _log("intent_not_detected", reason=why, mode=mode)
-                return cls()
-            if not reddit_live.is_active():
-                _log("intent_detected_live_inactive", mode=mode)
-                return cls()
-            owner_type = owner_type or ("email" if isinstance(owner_key, str) and "@" in owner_key else "anon")
-            if owner_type != "email":
-                _log("live_eligibility_rejected", reason="guest", mode=mode)
-                return cls()
-            ok, reason = reddit_live.eligible_pre_answer(msg)     # includes: no explicit time range, plain lead search
-            if not ok:
-                _log("live_eligibility_rejected", reason=reason, mode=mode)
-                return cls()
-            now = timerange.to_utc(now) or datetime.now(timezone.utc)
-            tr = recent_window(now)
-            msg["time_range"] = tr.to_doc(now)     # in memory only: the existing retrieval reads it exactly like a typed range
-            run = cls(True, msg=msg, owner_key=owner_key, chat_id=chat_id, mode=mode, window=window_minutes(),
+            minutes = int((tr.end - tr.start).total_seconds() // 60)
+            run = cls(True, msg=msg, owner_key=owner_key, chat_id=chat_id, mode=mode, window=minutes,
                       window_range=tr, terms=_terms(text, " ".join(msg.get("keywords") or [])))
-            _log("intent_detected", mode=mode, window_minutes=run.window)
-            _log("historical_branch_started", mode=mode, window_minutes=run.window)
+            _log("intent_detected", mode=mode, window_minutes=minutes, window_start=tr.start.isoformat(),
+                 window_end=tr.end.isoformat())
+            _log("historical_branch_started", mode=mode, window_minutes=minutes)
             return run
         except Exception as exc:
             log.warning("active_intent prepare failed closed (%s)", type(exc).__name__)
@@ -350,7 +418,7 @@ class Run:
             factory = DEPS_FACTORY or reddit_live.default_deps
             self.live_result = reddit_live.process(factory(), owner_key=self.owner_key, owner_type="email",
                                                    chat_id=self.chat_id, request_id=self.msg.get("request_id"),
-                                                   pre_answer=True)
+                                                   pre_answer=True, window=(self.window_range.start, self.window_range.end))
         except Exception as exc:
             self.live_result = {"state": "unavailable", "reason": "exception:" + type(exc).__name__}
         finally:
@@ -390,9 +458,14 @@ class Run:
             live_state = "timed_out_waiting" if not finished else res.get("state")
             links = res.get("links") if res.get("state") == "ok" else []
             live = normalize_live(links)
+            inside = [e for e in live if e.published_at and self.window_range.contains(e.published_at)]
+            if len(inside) != len(live):                        # defence in depth: the backend already checked each date
+                _log("live_candidates_dropped_outside_window", count=len(live) - len(inside))
+            live = inside
             _log("live_branch_" + ("completed" if res.get("state") == "ok" else "failed"), state=live_state,
                  reason=res.get("reason"), http_status=res.get("http_status"),
-                 web_search_calls=res.get("web_search_calls"), validated_urls=len(live))
+                 web_search_calls=res.get("web_search_calls"), validated_urls=len(live),
+                 verification=res.get("verification"))        # counts only: verified / outside_window / unverifiable / removed
             # a link already in the saved posts OR in the finished answer is a duplicate of historical evidence
             known = list(hist) + [Evidence(SOURCE_HISTORICAL, u, None) for u in _answer_links(answer_text)]
             candidates, dups = combine(known, live, self.terms)
@@ -401,7 +474,7 @@ class Run:
             if not candidates:
                 _log("final_response", outcome="historical_only_or_empty", live_candidates=0)
                 return answer_text
-            block = build_block(candidates, historical_count=sum(1 for e in hist if e.has_content), window=self.window,
+            block = build_block(candidates, historical_count=sum(1 for e in hist if e.has_content), window_range=self.window_range,
                                 duplicates_removed=dups,
                                 historical_state=hist_state)
             out, outcome = attach(answer_text, block)
