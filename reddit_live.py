@@ -281,6 +281,14 @@ def parse_response(data, max_links, known_urls=()):
     return out, calls, sources
 
 
+def completed_search_calls(data) -> int:
+    """How many `web_search_call` output items the response carries with status "completed". A generic HTTP 200, or citations
+    on their own, do not prove the search tool actually ran."""
+    out = data.get("output") if isinstance(data, dict) else None
+    return sum(1 for item in (out if isinstance(out, list) else [])
+               if isinstance(item, dict) and item.get("type") == "web_search_call" and item.get("status") == "completed")
+
+
 def build_payload(query: str) -> dict:
     """The single request. Mirrors the one-request benchmark's shape: reddit.com only, exactly one tool call, sources
     included, nothing stored. The model name comes from config; 'minimal' reasoning is raised to 'low' (web search is
@@ -371,9 +379,13 @@ def _safe_links(links):
     return out
 
 
-def present(live, now) -> dict:
-    """What the client may see of a stored live_reddit record. Links only for state 'ok', each re-validated."""
+def present(live, now, pre_answer=False) -> dict:
+    """What the client may see of a stored live_reddit record. Links only for state 'ok', each re-validated.
+    A record made by the active-intent workflow (`workflow` marker) is shown INSIDE that workflow's answer; the post-answer
+    links endpoint therefore reports nothing for it (no second, duplicate links section)."""
     if not isinstance(live, dict):
+        return {"state": "none"}
+    if live.get("workflow") and not pre_answer:
         return {"state": "none"}
     state = live.get("state")
     if state == STATE_OK:
@@ -393,7 +405,7 @@ def render_links(live):
     """Template helper (registered as `live_links_for`): the validated links of a stored record, or []. Same validator as at
     write time, so a tampered or legacy stored URL can never reach a page. Nothing is rendered while the feature is off."""
     try:
-        if is_active() and isinstance(live, dict) and live.get("state") == STATE_OK:
+        if is_active() and isinstance(live, dict) and live.get("state") == STATE_OK and not live.get("workflow"):
             return _safe_links(live.get("links"))
     except Exception:
         pass
@@ -404,18 +416,18 @@ def _nonempty_str_list(value) -> bool:
     return isinstance(value, list) and bool(value) and all(isinstance(x, str) and x.strip() for x in value)
 
 
-def eligible(msg, now):
+def _eligible_core(msg):
     """(ok, reason). Positive and conservative; every rule is checked on the stored message, nothing on the client.
 
-    A message may trigger a paid call only if ALL hold (fields verified against the accepted-search flow):
+    The rules about the SEARCH itself, shared by both workflows (fields verified against the accepted-search flow):
       * a search turn (not a chat turn) with a request_id, and `request_kind` ABSENT (a plain lead search) or exactly
         "mention_search" (the router stores research / provider_search / person_mentions explicitly);
       * keywords (a non-empty list of non-empty strings), `evidence_required` (a positive integer: set only when the router
         returned one) and `credit_request_id` (set only by the credited accept path, after the reservation);
       * NOT website-derived (`website_only`, `website_evidence`, `website_context`) and NOT time-bounded (`time_range`,
         `time_window_days`): web_search cannot enforce a requested period, so such a search never gets live links;
-      * answered, not cancelled or failed, and answered recently (`answered_at`), so reopening an old chat never spends;
-      * fewer than THRESHOLD persisted evidence rows in the saved answer.
+      * not cancelled or failed.
+    The post-answer endpoint (`eligible`) adds: answered, answered recently, fewer than THRESHOLD evidence rows.
     `website_note` is deliberately NOT consulted: it also carries time-range and guidance notes."""
     if not isinstance(msg, dict) or msg.get("message_type") == "chat":
         return False, "not_a_search"
@@ -435,6 +447,26 @@ def eligible(msg, now):
         return False, "no_evidence_required"
     if msg.get("cancelled_at") or msg.get("failed_at"):
         return False, "closed"
+    return True, "ok"
+
+
+def eligible_pre_answer(msg):
+    """(ok, reason) for the ACTIVE-INTENT workflow, which asks for live links BEFORE the answer exists: every rule of
+    `eligible` that concerns the search itself (same function), none that needs an answer (no answer, no recency, no evidence
+    count), and only a plain lead search: `request_kind` must be absent (a mention search is a different workflow)."""
+    ok, reason = _eligible_core(msg)
+    if not ok:
+        return False, reason
+    if msg.get("request_kind") is not None:
+        return False, "kind"
+    return True, "ok"
+
+
+def eligible(msg, now):
+    """(ok, reason) for the post-answer links endpoint: the core rules, then an answer that is recent and short of evidence."""
+    ok, reason = _eligible_core(msg)
+    if not ok:
+        return False, reason
     answer = msg.get("claude_answer")
     if not isinstance(answer, str) or not answer.strip():
         return False, "no_answer"
@@ -487,73 +519,98 @@ def _set_live(deps, chat_id, owner_key, idx, request_id, claim_id, fields, requi
     return res.matched_count == 1
 
 
-def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=None) -> dict:
+def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=None, pre_answer=False) -> dict:
     """Idempotent. Returns {"state": ...} and, for 'ok', the labelled links. Never raises. The caller has already
     authenticated the session and passes the session's owner (never a client-supplied one).
     States other than 'ok': disabled, ineligible, not_found, pending (another request holds the claim), busy (this process
-    is at its in-flight limit; nothing was claimed or counted), unavailable, none."""
+    is at its in-flight limit; nothing was claimed or counted), unavailable, none.
+
+    `pre_answer=True` is the ACTIVE-INTENT workflow (active_intent.py): the same claim, budget, in-flight guard, validator and
+    idempotency, but asked for BEFORE the answer exists (no answer / recency / evidence-count rules; a plain lead search only),
+    the record is marked `workflow`, and the result additionally carries `reason` (a safe diagnostic code) plus, when a call was
+    made, `http_status`, `web_search_calls` (completed search calls) and `validated_urls`. Without it nothing here changes."""
     entered = False
+
+    def R(out, reason, **extra):                     # pre-answer callers also get a reason; the endpoint's replies are unchanged
+        return dict(out, reason=reason, **extra) if pre_answer else out
     try:
         if not is_active():
-            return {"state": "disabled"}
+            return R({"state": "disabled"}, "live_inactive")
         if owner_type != "email" or not owner_key:
-            return {"state": "ineligible"}
+            return R({"state": "ineligible"}, "guest_or_no_owner")
         now = deps.now()
         chat = deps.chats.find_one({"chat_id": chat_id, "owner_key": owner_key})
         if not chat:
-            return {"state": "not_found"}
+            return R({"state": "not_found"}, "chat_not_found")
         idx, msg = _find_message(chat, request_id, topic_key)
         if msg is None:
-            return {"state": "not_found"}
+            return R({"state": "not_found"}, "message_not_found")
         if isinstance(msg.get("live_reddit"), dict):
-            return present(msg["live_reddit"], now)           # already decided: repeated POSTs only read
-        ok, _reason = eligible(msg, now)
+            return R(present(msg["live_reddit"], now, pre_answer=pre_answer), "already_decided")   # repeated asks only read
+        ok, _reason = eligible_pre_answer(msg) if pre_answer else eligible(msg, now)
         if not ok:
-            return {"state": "ineligible"}
+            return R({"state": "ineligible"}, f"ineligible:{_reason}")
         if not getattr(config, "OPENAI_API_KEY", ""):
-            return {"state": "unavailable"}                   # checked BEFORE the claim: a missing key burns no budget
+            return R({"state": "unavailable"}, "no_api_key")  # checked BEFORE the claim: a missing key burns no budget
         # in-flight guard: non-blocking, BEFORE the claim, so a refusal claims and counts nothing and can be asked again
         if not INFLIGHT.try_enter(_inflight_limit()):
-            return {"state": "busy"}
+            return R({"state": "busy"}, "in_flight_limit")
         entered = True
         rid = msg["request_id"]
         claim_id = uuid.uuid4().hex
         day = now.strftime("%Y-%m-%d")
         # 1. the authoritative claim: exactly one caller can ever set live_reddit on this message
-        res = deps.chats.update_one(
-            {"chat_id": chat_id, "owner_key": owner_key, f"messages.{idx}.request_id": rid,
-             f"messages.{idx}.live_reddit": {"$exists": False},
-             f"messages.{idx}.claude_answer": {"$nin": [None, ""]},
-             f"messages.{idx}.cancelled_at": {"$exists": False}, f"messages.{idx}.failed_at": {"$exists": False}},
-            {"$set": {f"messages.{idx}.live_reddit": {"claim_id": claim_id, "state": STATE_CLAIMING,
-                                                      "claimed_at": now, "day": day}}})
+        claim_filter = {"chat_id": chat_id, "owner_key": owner_key, f"messages.{idx}.request_id": rid,
+                        f"messages.{idx}.live_reddit": {"$exists": False},
+                        f"messages.{idx}.cancelled_at": {"$exists": False}, f"messages.{idx}.failed_at": {"$exists": False}}
+        if not pre_answer:                                     # the endpoint only ever claims an ANSWERED message
+            claim_filter[f"messages.{idx}.claude_answer"] = {"$nin": [None, ""]}
+        record = {"claim_id": claim_id, "state": STATE_CLAIMING, "claimed_at": now, "day": day}
+        if pre_answer:
+            record["workflow"] = "active_intent"
+        res = deps.chats.update_one(claim_filter, {"$set": {f"messages.{idx}.live_reddit": record}})
         if res.matched_count != 1:
             fresh = deps.chats.find_one({"chat_id": chat_id, "owner_key": owner_key}) or {}
             _i, again = _find_message(fresh, rid, None)
-            return present((again or {}).get("live_reddit"), now) if again else {"state": "none"}
+            return R(present((again or {}).get("live_reddit"), now, pre_answer=pre_answer) if again else {"state": "none"},
+                     "claim_lost")
         # 2. the budget slot (both caps + interval, one atomic update). No slot = no call; the claim stays, terminal.
         if not _reserve_budget(deps, _owner_hash(owner_key), now):
             try:
                 _set_live(deps, chat_id, owner_key, idx, rid, claim_id, {"state": STATE_SKIPPED, "finished_at": now})
             except Exception:
                 pass
-            return {"state": "none"}
+            return R({"state": "none"}, "budget_or_cooldown_refused")
         # 3. mark the call as started; if the database cannot record it, make NO call (the slot stays counted)
         if not _set_live(deps, chat_id, owner_key, idx, rid, claim_id, {"state": STATE_CALLING},
                          require_state=(STATE_CLAIMING,)):
-            return {"state": "unavailable"}
+            return R({"state": "unavailable"}, "could_not_record_call_start")
         # 4. the single attempt: no retry, no redirect, hard per-phase timeout
         payload = build_payload(msg.get("resolved_query") or msg.get("query"))
         timeout = _cfg_int("REDDIT_LIVE_TIMEOUT_SECONDS", 25)
         headers = {"Authorization": f"Bearer {config.OPENAI_API_KEY}", "content-type": "application/json"}
         started = deps.now()
         state, links, calls, sources, data, http_status = STATE_ERROR, [], 0, 0, None, None
+        completed, outcome = 0, "api_error"
         try:
             data = deps.post(config.OPENAI_RESPONSES_URL, headers, payload, timeout)
             if isinstance(data, dict):
+                http_status = 200                              # the HTTP layer raises on any non-2xx
                 known = [r.get("post_url") for r in (msg.get("results") or []) if isinstance(r, dict)]
                 links, calls, sources = parse_response(data, _cfg_int("REDDIT_LIVE_MAX_LINKS", 8), known)
-                state = STATE_OK if links else STATE_EMPTY
+                completed = completed_search_calls(data)
+                # SUCCESS needs a COMPLETED web_search_call as well as a validated Reddit post URL: HTTP 200, or citations
+                # on their own, prove nothing about the search tool having run.
+                if data.get("status") in ("failed", "cancelled"):
+                    state, links, outcome = STATE_ERROR, [], "response_" + str(data.get("status"))
+                elif links and completed >= 1:
+                    state, outcome = STATE_OK, "ok"
+                elif links:
+                    state, links, outcome = STATE_ERROR, [], "no_completed_web_search_call"
+                else:
+                    state, outcome = STATE_EMPTY, ("no_valid_reddit_urls" if completed >= 1 else "no_completed_web_search_call")
+            else:
+                outcome = "response_not_an_object"
         except Exception as exc:
             http_status = getattr(getattr(exc, "response", None), "status_code", None)
             log.warning("Live Reddit links call failed: %s status=%s", type(exc).__name__, http_status)
@@ -567,7 +624,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                 "ts": now, "day": day, "claim_id": claim_id, "request_id": rid, "owner": _owner_hash(owner_key),
                 "state": state, "http_status": http_status, "latency_ms": latency_ms, "model": payload["model"],
                 "input_tokens": (usage or {}).get("input_tokens"), "output_tokens": (usage or {}).get("output_tokens"),
-                "web_search_calls": calls, "sources": sources, "links": len(links), "cost_usd": None})
+                "web_search_calls": calls, "sources": sources, "links": len(links), "cost_usd": None,
+                "completed_search_calls": completed, "outcome": outcome})
         except Exception as exc:
             log.warning("Recording a live-links attempt failed (%s)", type(exc).__name__)
         try:
@@ -578,12 +636,13 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                 log.warning("Live-links result was not stored (claim no longer matches)")
         except Exception as exc:
             log.warning("Storing the live-links result failed (%s)", type(exc).__name__)
+        info = {"http_status": http_status, "web_search_calls": completed, "validated_urls": len(links)}
         if state == STATE_OK:
-            return present({"state": STATE_OK, "links": links}, now)
-        return {"state": "none"}
+            return R(present({"state": STATE_OK, "links": links}, now, pre_answer=True), outcome, **info)
+        return R({"state": "none"}, outcome, **info)
     except Exception as exc:                                   # fail closed: never raise into the request
         log.warning("Live-links request failed closed (%s)", type(exc).__name__)
-        return {"state": "unavailable"}
+        return R({"state": "unavailable"}, "exception")
     finally:
         if entered:
             INFLIGHT.leave()
