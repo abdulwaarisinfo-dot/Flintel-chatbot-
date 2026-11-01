@@ -1049,6 +1049,13 @@
   .turn-chip.status-stopped { color: #8a8986; }
   .turn-chip.status-stopped .status-dot { display: none; }
   .turn-stopped-note { color: #8a8986; font-size: 14px; padding: 4px 0 8px 0; }
+  /* (LIVE REDDIT LINKS) separate, clearly-unverified section; never part of the answer or its post cards */
+  .live-links { margin: 10px 0 6px 0; padding: 10px 14px; border: 1px dashed #4a4a47; border-radius: 10px; font-size: 14px; }
+  .live-links-title { margin: 0 0 2px 0; font-size: 13px; font-weight: 600; color: #c9c8c5; }
+  .live-links-note { margin: 0 0 6px 0; font-size: 12px; color: #8a8986; }
+  .live-links ul { margin: 0; padding-left: 18px; }
+  .live-links li { margin: 2px 0; overflow-wrap: anywhere; }
+  .live-links a { color: #9db7e8; }
   /* (SEND-LOCK) While a search runs the button is simply disabled/greyed (same look as
      :disabled above) — arrow stays visible, no spinner; the turn's own loading row shows progress. */
   @keyframes submitSpinnerRotate {
@@ -1839,6 +1846,20 @@
                 <svg width="15" height="15" viewBox="0 0 17 18" fill="none" aria-hidden="true"><path d="M2.69657 5.01162C2.59032 4.98351 2.49154 4.93239 2.40724 4.86189C2.32293 4.79139 2.25515 4.70321 2.20868 4.60361C2.16222 4.50401 2.13822 4.39542 2.13837 4.28552C2.13852 4.17561 2.16283 4.06709 2.20957 3.96762L3.86957 0.432616C3.93003 0.303165 4.02621 0.193677 4.14679 0.117036C4.26737 0.0403949 4.40733 -0.000209299 4.5502 8.11308e-07C4.69308 0.000210921 4.83292 0.0412268 4.95327 0.118222C5.07363 0.195217 5.16949 0.304987 5.22957 0.434616L5.96157 2.00362L6.04157 1.97662C7.76857 1.51409 9.59975 1.63228 11.253 2.31298C12.9062 2.99368 14.2897 4.19912 15.1904 5.74356C16.091 7.28801 16.4588 9.08576 16.2371 10.8598C16.0154 12.6339 15.2165 14.2858 13.9634 15.5611C12.7104 16.8364 11.0728 17.6643 9.30286 17.9172C7.53297 18.1701 5.72902 17.834 4.16896 16.9607C2.6089 16.0874 1.3793 14.7253 0.669602 13.0843C-0.0400913 11.4433 -0.190494 9.6145 0.241567 7.87962C0.265467 7.78401 0.307964 7.69406 0.366631 7.61488C0.425297 7.5357 0.498985 7.46885 0.583486 7.41815C0.667987 7.36745 0.761648 7.33389 0.859119 7.31938C0.95659 7.30488 1.05596 7.30972 1.15157 7.33362C1.24717 7.35752 1.33713 7.40001 1.41631 7.45868C1.49548 7.51735 1.56233 7.59103 1.61303 7.67554C1.66373 7.76004 1.69729 7.8537 1.7118 7.95117C1.7263 8.04864 1.72147 8.14801 1.69757 8.24362C1.34718 9.65175 1.467 11.1358 2.03873 12.4695C2.61047 13.8032 3.60275 14.9133 4.86421 15.6304C6.12568 16.3476 7.58709 16.6325 9.02555 16.4416C10.464 16.2507 11.8006 15.5946 12.8313 14.5732C13.8621 13.5519 14.6305 12.2215 14.7347 10.7848C14.9388 9.34818 14.6674 7.8842 13.9619 6.61618C13.2564 5.34816 12.1555 4.3457 10.8272 3.7617C9.49879 3.1777 8.01587 3.04422 6.60457 3.38162L7.34457 4.96462C7.40514 5.0939 7.42756 5.23779 7.40918 5.37938C7.39081 5.52096 7.3324 5.65436 7.24082 5.7639C7.14924 5.87343 7.0283 5.95455 6.89221 5.99773C6.75612 6.0409 6.61054 6.04433 6.47257 6.00762L2.69657 5.01162Z" fill="currentColor"/></svg>
               </button>
             </div>
+            {#- (LIVE REDDIT LINKS) persisted links of this message: a separate section. The links pass through live_links_for (the same validator
+                that guards storage), so only https Reddit post URLs can render; nothing renders while the feature is off or the helper is absent. -#}
+            {% set _live_links = live_links_for(msg.live_reddit) if live_links_for is defined else [] %}
+            {% if _live_links %}
+            <section class="live-links" aria-label="Live web-search links — unverified">
+              <p class="live-links-title">Live web-search links — unverified</p>
+              <p class="live-links-note">Returned by a live web search when this answer was generated. Post dates and recency are unverified, and Flintel has not checked that these posts exist or match your request.</p>
+              <ul>
+                {% for l in _live_links %}
+                <li><a href="{{ l.url }}" target="_blank" rel="noopener noreferrer nofollow ugc">{{ l.title or l.url }}</a></li>
+                {% endfor %}
+              </ul>
+            </section>
+            {% endif %}
             {% elif msg.failed_at and msg.claude_answer is none %}
             {#- (FAILED TURN) the analysis failed: shown as it is, never silently run again by a refresh; send the prompt again to retry -#}
             <div class="turn-stopped-note turn-failed-note" role="status">This search failed. Send your prompt again to retry.</div>
@@ -5046,6 +5067,55 @@
   // existing loading-row markup stays visually untouched the entire time.
   // No page reload happens on "done" — the completed answer renders
   // in-place with a gentle entrance animation instead.
+  // (LIVE REDDIT LINKS) Optional, separate, UNVERIFIED links. Asked for once per rendered answer, after the answer is on screen;
+  // the server decides everything (feature on/off, who, which message, budget) and a repeated or concurrent ask only reads the
+  // stored outcome. Nothing here touches the answer, its post cards or the stream. Titles/URLs are shown as text only.
+  const LIVE_LINKS_ON = {{ 'true' if (live_links_enabled is defined and live_links_enabled()) else 'false' }};   // (absent in renderers that do not register the global)
+  function renderLiveLinks(anchor, data) {
+    if (!anchor || !anchor.isConnected || anchor.dataset.liveLinksShown) return;
+    const links = (data.links || []).filter(l => l && typeof l.url === 'string' && l.url.startsWith('https://'));
+    if (!links.length) return;
+    anchor.dataset.liveLinksShown = '1';
+    const box = document.createElement('section');
+    box.className = 'live-links';
+    box.setAttribute('aria-label', 'Live web-search links — unverified');
+    const title = document.createElement('p'); title.className = 'live-links-title'; title.textContent = 'Live web-search links — unverified';
+    const note = document.createElement('p'); note.className = 'live-links-note';
+    note.textContent = 'Returned by a live web search when this answer was generated. Post dates and recency are unverified, and Flintel has not checked that these posts exist or match your request.';
+    const ul = document.createElement('ul');
+    links.forEach(l => {
+      const li = document.createElement('li'); const a = document.createElement('a');
+      a.href = l.url; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow ugc';
+      a.textContent = (typeof l.title === 'string' && l.title) ? l.title : l.url;
+      li.appendChild(a); ul.appendChild(li);
+    });
+    box.appendChild(title); box.appendChild(note); box.appendChild(ul);
+    const actions = anchor.parentNode && anchor.parentNode.querySelector('.msg-actions-asst');
+    (actions || anchor).insertAdjacentElement('afterend', box);
+  }
+  function requestLiveLinks(anchor, chatId, topicKey, requestId) {
+    if (!LIVE_LINKS_ON || !anchor || anchor.dataset.liveLinksAsked) return;
+    anchor.dataset.liveLinksAsked = '1';
+    let tries = 0;
+    const ask = () => {
+      tries += 1;
+      if (!anchor.isConnected) return;
+      const body = new URLSearchParams();
+      body.set('request_id', requestId || ''); body.set('topic_key', topicKey || '');
+      fetch('/chat/' + encodeURIComponent(chatId) + '/live-links', {
+        method: 'POST', credentials: 'same-origin',
+        headers: { 'X-Flintel-Live-Links': '1', 'Content-Type': 'application/x-www-form-urlencoded' }, body })
+        .then(r => (r.ok ? r.json() : null))
+        .then(d => {
+          if (!d) return;
+          if ((d.state === 'pending' || d.state === 'busy') && tries < 8) { setTimeout(ask, 4000); return; }
+          if (d.state === 'ok') renderLiveLinks(anchor, d);
+        })
+        .catch(() => {});
+    };
+    ask();
+  }
+
   function wireUpStream(pendingTurn, chatId) {
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
@@ -5280,6 +5350,7 @@
               '</div>'
             );
           }
+          requestLiveLinks(wrap, chatId, topicKey, pendingTurn.dataset.requestId || '');   // (LIVE REDDIT LINKS) separate; no-op unless enabled
         } else {
           // Fallback safety net: if the loading-row somehow isn't there
           // anymore for any reason, fall back to the original, always-
