@@ -91,3 +91,27 @@ def test_a_discussion_block_is_labelled_as_discussions_and_a_demand_block_keeps_
     assert "live Reddit result" in page.inner_text("section.live-links li")
     assert errors == []
     page.close()
+
+
+ANALYSED = """{live_candidates: {intent: 'demand', statement: 'long statement',
+  report: {main_finding: 'Teams want support automation.', themes: [{theme: 'Support automation', verified_post_count: 2, why_it_matters: 'Repetitive tickets'}, {theme: 'B', verified_post_count: 1}, {theme: 'C', verified_post_count: 1}, {theme: 'D is cut', verified_post_count: 1}],
+           implications: ['one', 'two', 'three', 'four is cut'], limitations: ['Web search finds some posts, not all of them.']},
+  items: [{rank: 1, title: 'Looking for an AI agent builder', url: 'https://www.reddit.com/r/SaaS/comments/abc123/x/', subreddit: 'SaaS',
+           date_verified: true, published_at: '2026-11-01T10:05:00+00:00', analysis: {summary: 'Store needs an AI agent.', sentiment: 'neutral'}},
+          {rank: 2, title: '<img src=x onerror=window.__pwn=1>', url: 'https://www.reddit.com/r/a_b/comments/def456/y/', analysis: null}]}}"""
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_an_analysed_block_shows_the_concise_report_and_each_posts_own_summary_as_text(integrity_browser, template):
+    page, errors = _page(integrity_browser, template, ANALYSED)
+    assert page.evaluate("window.__pwn") is None and page.query_selector("section.live-links img") is None
+    assert "summaries by GPT" in page.inner_text("section.live-links .live-links-title")
+    assert page.inner_text("section.live-links .live-links-finding") == "Teams want support automation."
+    themes = page.eval_on_selector_all("section.live-links .live-links-themes li", "els => els.map(e => e.textContent)")
+    assert themes[0] == "Support automation — 2 verified posts. Repetitive tickets" and len(themes) == 3          # at most 3 themes
+    first, second = page.eval_on_selector_all("section.live-links > ul:nth-of-type(2) > li", "els => els.map(e => e.textContent)")
+    assert "r/SaaS" in first and "sentiment: neutral" in first and "Store needs an AI agent." in first
+    assert "content not assessed" in second and "sentiment" not in second and "Store needs" not in second                # no summary bleeds over
+    assert page.inner_text("section.live-links").count("four is cut") == 0 and "Limitations:" in page.inner_text("section.live-links")
+    assert errors == []
+    page.close()
