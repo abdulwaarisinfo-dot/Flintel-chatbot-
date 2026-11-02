@@ -1,7 +1,8 @@
 """Active lead intent: Historical Search + a separate Live Reddit search, combined into ONE answer.
 
-For a signed-in owner's plain lead search that clearly asks for people who are ACTIVELY looking for something (a CRM, a
-recommendation, an alternative, a solution), this module lets two independent branches contribute to the same answer:
+For a signed-in owner's plain lead search that a small GPT classifier (intent_classifier.py) judges - from its MEANING, not
+from particular words - to be asking for people who currently show genuine demand for something (a product, a service, a
+provider, a solution), this module lets two independent branches contribute to the same answer:
 
   ONE shared window. ACTIVE_INTENT_WINDOW_MINUTES (default 30; any integer from 1 to MAX_WINDOW_MINUTES = 10080, i.e. 7 days;
   an unusable value turns the workflow off instead of being changed) defines ONE half-open UTC interval [start, end) per search.
@@ -42,6 +43,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 
 import config
+import intent_classifier
 import reddit_live
 import timerange
 
@@ -111,44 +113,8 @@ def same_window(doc, tr) -> bool:
     return r is not None and r.start == tr.start and r.end == tr.end
 
 
-# ── the narrow query-text predicate (NOT a model call, NOT the router) ──────────────────────────────────────────────────
-# It asks two things of the request text: (1) it is a request to LOCATE other people/businesses, and (2) it describes them as
-# actively looking / asking for a recommendation / needing a solution. Ordinary informational or educational questions
-# ("what is a CRM", "how does a CRM work", "best CRM for ...") never satisfy (1) and so never trigger it.
-_LEAD_VERB = re.compile(r"\b(?:find|show|list|get|search|look\s+for|discover|identify|surface|pull|give\s+me|who)\b")
-_TARGET = re.compile(r"\b(?:who|people|persons?|users?|redditors?|businesses|business\s+owners?|companies|company|founders?|"
-                     r"owners?|startups?|teams?|folks|someone|anyone|buyers?|customers?|prospects?|leads?|agencies|"
-                     r"managers|sellers|shops?|stores?)\b")
-_ACTIVE = re.compile(
-    r"(?:\b(?:actively|currently|right\s+now|at\s+the\s+moment)\s+(?:looking|searching|seeking|shopping|asking|trying|"
-    r"evaluating|comparing|hunting|needing|wanting)\b"
-    r"|\b(?:looking|searching|shopping|hunting)\s+for\b"
-    r"|\b(?:looking|trying|wanting|wants?|needs?|needing|planning|ready)\s+to\s+(?:buy|find|get|switch|replace|choose|pick|adopt|migrate|upgrade|compare)\b"
-    r"|\b(?:in\s+the\s+market|in\s+need)\s+(?:for|of)\b"
-    r"|\b(?:need|needs|needing|want|wants|require|requires)\s+(?:a|an|to\s+find|to\s+get|to\s+choose|help\s+(?:finding|choosing|picking))\b"
-    r"|\b(?:ask(?:ing)?|request(?:ing)?)\s+(?:for\s+)?(?:[\w-]+\s+){0,3}?(?:recommendations?|suggestions?|advice)\b"
-    r"|\brecommendations?\s+(?:for|on)\b"
-    r"|\bwhich\s+[\w\s/&+.-]{1,40}?\s+(?:should|to)\s+(?:i|we|they|use|choose|pick|buy|get)\b"
-    r"|\balternatives?\s+to\b"
-    r"|\b(?:switch(?:ing)?|migrat(?:e|ing)|mov(?:e|ing))\s+(?:away\s+)?from\b"
-    r"|\bseeking\s+(?:a|an|the)?\s*(?:solution|tool|software|app|platform)\b)")
-_NOT_LEADS = re.compile(r"\b(?:tutorials?|courses?|guides?|explain|explanation|what\s+is|history\s+of|definition|salary|"
-                        r"salaries|careers?|jobs?|hiring|interviews?|certifications?|training|degree)\b")
-
-
-def is_active_lead_intent(text):
-    """(detected, reason). Pure and deterministic. `text` is the user's request (the router's standalone restatement when it
-    exists, else the original). Deliberately narrow: when in doubt the answer is False and nothing changes."""
-    if not isinstance(text, str) or not text.strip():
-        return False, "empty"
-    t = re.sub(r"\s+", " ", text.lower()).strip()
-    if _NOT_LEADS.search(t):
-        return False, "informational"
-    if not _LEAD_VERB.search(t) or not _TARGET.search(t):
-        return False, "not_a_request_to_find_people"
-    if not _ACTIVE.search(t):
-        return False, "no_active_intent_phrase"
-    return True, "active_lead_intent"
+# (Eligibility by meaning - not by words - is decided by intent_classifier.decide(), called from apply_window below. There is no
+# regex or phrase list in this module and no fallback to one.)
 
 
 # ── common evidence structure: normalise, deduplicate, rank ─────────────────────────────────────────────────────────────
@@ -327,11 +293,6 @@ def apply_window(msg, *, owner_key, chat_id, mode, owner_type=None, now=None):
         return None, "disabled", "disabled"
     if not isinstance(msg, dict):
         return None, "rejected", "no_message"
-    text = msg.get("resolved_query") or msg.get("query")
-    detected, why = is_active_lead_intent(text)
-    if not detected:
-        _log("intent_not_detected", reason=why, mode=mode)
-        return None, "not_detected", why
     if not reddit_live.is_active():
         _log("intent_detected_live_inactive", mode=mode)
         return None, "live_inactive", "live_inactive"
@@ -353,6 +314,13 @@ def apply_window(msg, *, owner_key, chat_id, mode, owner_type=None, now=None):
     if not ok:
         _log("live_eligibility_rejected", reason=reason, mode=mode)
         return None, "rejected", reason
+    if not already:
+        # Every structural rule has passed, so only now is the (paid, once-per-message) semantic decision made. The window
+        # already being on this message means that decision was already positive.
+        qualifies, why = intent_classifier.decide(owner_key=owner_key, chat_id=chat_id, request_id=msg.get("request_id"))
+        _log("intent_classified", qualifies=bool(qualifies), reason=why, mode=mode)
+        if not qualifies:
+            return None, "not_detected", why
     if not already:
         msg["time_range"] = tr.to_doc(tr.end)      # in memory only; the existing retrieval reads it like a typed range
     return tr, "ok", "already_applied" if already else "applied"
