@@ -36,6 +36,8 @@ def drive(app_env, monkeypatch, *, query, rows, cap=1, response_timeout=9, msg_o
     if world is not None:
         import active_intent
         active_intent.DEPS_FACTORY = lambda: world.live.deps
+        import intent_classifier
+        intent_classifier.DEPS_FACTORY = lambda: world.live.cls_deps
     seed_stream_message(chats, "s1", query=query, **(msg_over or {}))
     monkeypatch.setattr(rt, "StreamingResponse", lambda gen, **kw: types.SimpleNamespace(body_iterator=gen))
     monkeypatch.setattr(rt, "STREAM_CHUNK_DELAY_SECONDS", 0, raising=False)
