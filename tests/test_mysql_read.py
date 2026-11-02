@@ -285,8 +285,8 @@ def test_2_rows_mapped_to_mongo_shape(lg, cfg, monkeypatch):
     assert f1["created_utc"].tzinfo is not None and f1["created_utc"].utcoffset() == timedelta(0)
     g1, g2 = got["u/g1"], got["u/g2"]
     assert g1["title"] is None and g1["subreddit"] == "r/askcars"
-    assert g1["created_utc"] == NOW - timedelta(days=2)       # posted_at NULL -> created_at
-    assert g2["created_utc"] == NOW - timedelta(days=1)       # posted_at wins
+    assert g1["created_utc"] is None                          # posted_at NULL -> NO publication time (created_at is ingestion time, never a substitute)
+    assert g2["created_utc"] == NOW - timedelta(days=1)       # posted_at is the publication time
     assert "u/f3" not in got                                  # NULL embedding never returned
 
 
@@ -362,10 +362,11 @@ def test_6_time_window_in_sql(lg, cfg, monkeypatch):
     out, _, _ = run(lg, monkeypatch, [], since_days=7)
     urls = [p["post_url"] for p in out]
     assert "u/old" not in urls and "u/gold" not in urls and "u/f1" in urls and "u/g2" in urls
+    assert "u/g1" not in urls                                  # posted_at NULL: created_at (2 days ago) must NOT make it eligible
     data = [(s, p) for s, p in srv.executed if "information_schema" not in s]
     g_sql = [s for s, _ in data if "`flintel_google`" in s][0]
     f_sql = [s for s, _ in data if "`flintel`.`" in s][0]
-    assert "COALESCE(`posted_at`, `created_at`) >= %s" in g_sql
+    assert "`posted_at` >= %s" in g_sql and "COALESCE" not in g_sql and "created_at" not in g_sql
     assert "`created_utc` >= %s" in f_sql
     assert all(len(p) == 3 and isinstance(p[1], datetime) for _, p in data)
 
