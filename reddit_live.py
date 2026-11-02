@@ -282,6 +282,92 @@ def parse_response(data, max_links, known_urls=()):
     return out, calls, sources
 
 
+def classify_url(url):
+    """(accepted, reason, shape) for one discovered URL. DIAGNOSTIC ONLY: `accepted` is exactly `valid_reddit_url(url) is not None` -
+    this function never decides anything and no rule of valid_reddit_url is changed. `reason` says why a refused URL was refused;
+    `shape` is a coarse, content-free description of its form."""
+    if not isinstance(url, str) or not url:
+        return False, "not_a_string", "none"
+    if len(url) > _MAX_URL_LEN:
+        return False, "too_long", "other"
+    try:
+        parts = urlsplit(url)
+        host = (parts.hostname or "").lower()
+        path = parts.path or ""
+    except ValueError:
+        return False, "malformed", "other"
+    if host in _HOSTS:
+        shape = ("post" if _POST_PATH.fullmatch(path) else "search" if path.startswith("/search") else
+                 "user" if re.match(r"/(?:u|user)/", path) else "share_link" if re.match(r"/r/[^/]+/s/", path) else
+                 "subreddit_page" if re.fullmatch(r"/r/[A-Za-z0-9_]+/?(?:(?:hot|new|top|rising|about)/?)?", path) else
+                 "post_without_valid_id" if "/comments/" in path else "other_reddit")
+    else:
+        shape = "short_link" if host in ("redd.it", "www.redd.it") else "media" if host.endswith(("redd.it", "redditmedia.com")) else "other_site"
+    if valid_reddit_url(url) is not None:
+        return True, "accepted", shape
+    if parts.scheme != "https":
+        return False, "not_https", shape
+    if not _PRINTABLE_ASCII.fullmatch(url) or "\\" in url:
+        return False, "non_ascii_or_control_chars", shape
+    try:
+        port = parts.port
+    except ValueError:
+        port = -1
+    if "@" in parts.netloc or "%" in parts.netloc or port is not None:
+        return False, "userinfo_port_or_encoded_host", shape
+    if host not in _HOSTS:
+        return False, "host_not_allowed", shape
+    return False, "path_not_a_post", shape
+
+
+def diagnose_response(data, max_links=8):
+    """A SAFE summary of the URLs a Responses reply offered, for the log and the attempt record: counts, formats, reasons and a few
+    truncated host+path samples of refused URLs (no query string, no post text, no model prose). Never raises; changes nothing."""
+    out = {"sources": 0, "citations": 0, "unique_discovered": 0, "accepted": 0, "rejected": 0, "capped_by_max_links": 0,
+           "shapes": {}, "rejection_reasons": {}, "rejected_samples": []}
+    try:
+        seen, accepted = set(), set()
+        for item in (data.get("output") if isinstance(data, dict) else None) or []:
+            if not isinstance(item, dict):
+                continue
+            found = []
+            if item.get("type") == "web_search_call":
+                action = item.get("action")
+                for src in (action.get("sources") if isinstance(action, dict) else None) or []:
+                    out["sources"] += 1
+                    found.append(src.get("url") if isinstance(src, dict) else None)
+            elif item.get("type") == "message":
+                for part in item.get("content") or []:
+                    for ann in (part.get("annotations") if isinstance(part, dict) else None) or []:
+                        if isinstance(ann, dict) and ann.get("type") == "url_citation":
+                            out["citations"] += 1
+                            found.append(ann.get("url"))
+            for u in found:
+                key = u if isinstance(u, str) else repr(type(u))
+                if key in seen:
+                    continue
+                seen.add(key)
+                ok, reason, shape = classify_url(u)
+                out["shapes"][shape] = out["shapes"].get(shape, 0) + 1
+                if ok:
+                    accepted.add(url_key(u))
+                else:
+                    out["rejection_reasons"][reason] = out["rejection_reasons"].get(reason, 0) + 1
+                    if len(out["rejected_samples"]) < 5 and isinstance(u, str):
+                        try:
+                            p = urlsplit(u)
+                            out["rejected_samples"].append({"host": (p.hostname or "")[:40], "path": (p.path or "")[:60], "reason": reason, "shape": shape})
+                        except ValueError:
+                            pass
+        out["unique_discovered"] = len(seen)
+        out["accepted"] = len(accepted)
+        out["rejected"] = out["unique_discovered"] - out["accepted"]
+        out["capped_by_max_links"] = max(0, len(accepted) - int(max_links))
+    except Exception:
+        out["error"] = "diagnostics_failed"
+    return out
+
+
 def completed_search_calls(data) -> int:
     """How many `web_search_call` output items the response carries with status "completed". A generic HTTP 200, or citations
     on their own, do not prove the search tool actually ran."""
@@ -456,23 +542,31 @@ def verify_publication(deps, links, window):
     link carries the date, real title, subreddit and text Reddit reported (the date as an ISO UTC string). Never raises."""
     start, end = timerange.to_utc(window[0]), timerange.to_utc(window[1])
     stats = {"checked": 0, "verified": 0, "outside_window": 0, "unverifiable": 0, "removed": 0, "lookup_failed": 0}
+    # diagnostics only (counts and codes, never content): how the Reddit metadata lookup went and why posts were unverifiable
+    stats["lookup"] = {"requested": 0, "returned": 0, "outcome": "not_attempted", "error": None, "status": None}
+    stats["unverifiable_reasons"] = {"no_post_ref": 0, "not_in_reply": 0, "subreddit_mismatch": 0, "no_title": 0, "bad_timestamp": 0}
     refs = []
     for l in links or []:
         ref = post_ref(l.get("url")) if isinstance(l, dict) else None
         stats["checked"] += 1
         if ref is None:
             stats["unverifiable"] += 1
+            stats["unverifiable_reasons"]["no_post_ref"] += 1
         else:
             refs.append((l, ref))
     refs = refs[:MAX_META_IDS]
     if not refs:
         return [], stats
     ids = sorted({r[1] for _l, r in refs})
+    stats["lookup"]["requested"] = len(ids)
     try:
         info = deps.reddit_info(ids, META_TIMEOUT_SECONDS)
         if not isinstance(info, dict):
             raise ValueError("unexpected metadata reply")
+        stats["lookup"].update(outcome="ok", returned=len(info))
     except Exception as exc:
+        stats["lookup"].update(outcome="failed", error=type(exc).__name__,
+                               status=getattr(getattr(exc, "response", None), "status_code", None))
         stats["lookup_failed"] = len(refs)
         log.warning("Reddit metadata lookup failed (%s status=%s): no live candidate is verified", type(exc).__name__,
                     getattr(getattr(exc, "response", None), "status_code", None))
@@ -480,16 +574,22 @@ def verify_publication(deps, links, window):
     kept = []
     for l, (sub, pid) in refs:
         d = info.get(pid)
-        if not isinstance(d, dict) or str(d.get("subreddit") or "").lower() != sub.lower():
+        if not isinstance(d, dict):
             stats["unverifiable"] += 1
+            stats["unverifiable_reasons"]["not_in_reply"] += 1
+        elif str(d.get("subreddit") or "").lower() != sub.lower():
+            stats["unverifiable"] += 1
+            stats["unverifiable_reasons"]["subreddit_mismatch"] += 1
         elif d.get("removed"):
             stats["removed"] += 1
         elif not d.get("title"):
             stats["unverifiable"] += 1              # no real title from Reddit = no grounded content for this post
+            stats["unverifiable_reasons"]["no_title"] += 1
         else:
             when = timerange.publication_time(d.get("created_utc"), now=end, platform="reddit")
             if when is None:
                 stats["unverifiable"] += 1
+                stats["unverifiable_reasons"]["bad_timestamp"] += 1
             elif not (start <= when < end):
                 stats["outside_window"] += 1
             else:
@@ -884,7 +984,7 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
         headers = {"Authorization": f"Bearer {config.OPENAI_API_KEY}", "content-type": "application/json"}
         started = deps.now()
         state, links, calls, sources, data, http_status = STATE_ERROR, [], 0, 0, None, None
-        completed, outcome, vstats, report = 0, "api_error", None, None
+        completed, outcome, vstats, report, udiag = 0, "api_error", None, None, None
         try:
             data = deps.post(config.OPENAI_RESPONSES_URL, headers, payload, timeout)
             if isinstance(data, dict):
@@ -892,6 +992,7 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                 known = [r.get("post_url") for r in (msg.get("results") or []) if isinstance(r, dict)]
                 links, calls, sources = parse_response(data, _cfg_int("REDDIT_LIVE_MAX_LINKS", 8), known)
                 completed = completed_search_calls(data)
+                udiag = diagnose_response(data, _cfg_int("REDDIT_LIVE_MAX_LINKS", 8)) if wdoc is not None else None
                 # SUCCESS needs a COMPLETED web_search_call as well as a validated Reddit post URL: HTTP 200, or citations
                 # on their own, prove nothing about the search tool having run.
                 if data.get("status") in ("failed", "cancelled"):
@@ -923,7 +1024,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                 "state": state, "http_status": http_status, "latency_ms": latency_ms, "model": payload["model"],
                 "input_tokens": (usage or {}).get("input_tokens"), "output_tokens": (usage or {}).get("output_tokens"),
                 "web_search_calls": calls, "sources": sources, "links": len(links), "cost_usd": None,
-                "completed_search_calls": completed, "outcome": outcome, "verification": vstats})
+                "completed_search_calls": completed, "outcome": outcome, "verification": vstats,
+                "url_diagnostics": udiag})
         except Exception as exc:
             log.warning("Recording a live-links attempt failed (%s)", type(exc).__name__)
         try:
@@ -940,6 +1042,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
             info["verification"] = vstats
         if report:
             info["report"] = report
+        if udiag is not None:
+            info["url_diagnostics"] = udiag
         if state == STATE_OK:
             return R(present({"state": STATE_OK, "links": links}, now, pre_answer=True), outcome, **info)
         return R({"state": "none"}, outcome, **info)
