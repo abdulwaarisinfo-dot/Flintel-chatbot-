@@ -223,6 +223,9 @@ __all__ = [
     "ACTIVE_INTENT_ENABLED",
     "ACTIVE_INTENT_WINDOW_MINUTES",
     "ACTIVE_INTENT_LIVE_WAIT_SECONDS",
+    "ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_GLOBAL",
+    "ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_PER_OWNER",
+    "ACTIVE_INTENT_CLASSIFIER_TIMEOUT_SECONDS",
     # Embedding config (mirrors background-service embedding config)
     "EMBEDDING_PROVIDER",
     "EMBEDDING_MODEL",
@@ -1092,9 +1095,9 @@ REDDIT_LIVE_MODEL = os.getenv("REDDIT_LIVE_MODEL", "").strip()          # empty 
 
 # ── Active-lead-intent workflow (see active_intent.py) ────────────────────────────────────────────────────────────────
 # OFF by default: with it off, nothing in this block has any effect and every search behaves exactly as before. When on, it
-# only acts on a signed-in owner's plain lead search that (a) the isolated query predicate in active_intent.py recognises as
-# "actively looking for / asking for a recommendation of / needing a solution" AND (b) has no time range of its own, AND only
-# while the Live Reddit links feature above is itself active (enabled, valid caps, valid in-flight limit).
+# only acts on a signed-in owner's plain lead search that (a) a small GPT classifier call (intent_classifier.py) judges, from
+# the MEANING of the request, to be a search for people with genuine active demand AND (b) has no time range of its own, AND
+# only while the Live Reddit links feature above is itself active (enabled, valid caps, valid in-flight limit).
 ACTIVE_INTENT_ENABLED = os.getenv("ACTIVE_INTENT_ENABLED", "false").lower() in ("1", "true", "yes")
 # The ONE shared time window, in minutes, applied to BOTH branches of an eligible active-lead search: the saved-post search and
 # the live Reddit search (whose posts are also date-verified against Reddit's own metadata). Unset or blank -> 30. A value
@@ -1114,3 +1117,9 @@ ACTIVE_INTENT_WINDOW_MINUTES = _active_intent_window_minutes(os.getenv("ACTIVE_I
 # (default 30, at most 60; invalid -> 30). The live call itself is still bounded by REDDIT_LIVE_TIMEOUT_SECONDS; the date
 # check against Reddit runs inside the same wait, and a branch that overruns it is left behind without losing the answer.
 ACTIVE_INTENT_LIVE_WAIT_SECONDS = _live_pos_int("ACTIVE_INTENT_LIVE_WAIT_SECONDS", 30)
+# The intent classifier's OWN daily budget (attempts per UTC day; separate from the Live links caps above). BOTH are required:
+# unset, zero, negative, non-numeric or above the fixed ceilings (100000 / 1000, intent_classifier.py) = the classifier is off
+# and Active Intent never starts (fail closed). Its timeout is per phase, in seconds (default 10).
+ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_GLOBAL = _live_pos_int("ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_GLOBAL")
+ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_PER_OWNER = _live_pos_int("ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_PER_OWNER")
+ACTIVE_INTENT_CLASSIFIER_TIMEOUT_SECONDS = _live_pos_int("ACTIVE_INTENT_CLASSIFIER_TIMEOUT_SECONDS", 10)
