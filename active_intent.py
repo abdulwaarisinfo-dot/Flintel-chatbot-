@@ -50,6 +50,7 @@ MAX_WINDOW_MINUTES = 10080            # 7 days: the deliberate, documented upper
 DEFAULT_LIVE_WAIT_SECONDS = 30
 MAX_LIVE_WAIT_SECONDS = 60
 MAX_LIVE_CANDIDATES = 8
+WINDOW_KIND = "active_intent_window"   # the TimeRange.kind of this workflow's window: the explicit marker the Historical scan reads (mysql_signals.ACTIVE_INTENT_WINDOW_KIND)
 REQUEST_KIND_NAMES = ("mention_search", "research", "person_mentions", "provider_search")   # the router's fixed kinds: safe to log
 
 # Overridable in tests: how the Live branch obtains its database/HTTP dependencies (default: the real ones).
@@ -97,7 +98,7 @@ def window_end(msg, now=None):
 def recent_window(end, minutes) -> "timerange.TimeRange":
     """The half-open [end - minutes, end) range, in the same type a user-typed 'last N minutes' produces."""
     end = (timerange.to_utc(end) or datetime.now(timezone.utc)).replace(microsecond=0)
-    return timerange.TimeRange(start=end - timedelta(minutes=minutes), end=end, tz_name="UTC", kind="rolling",
+    return timerange.TimeRange(start=end - timedelta(minutes=minutes), end=end, tz_name="UTC", kind=WINDOW_KIND,
                                phrase=f"last {minutes} minutes", capped=True,
                                note="Applied automatically because this search asks for people who are actively looking; the "
                                     "live web search uses the same window and its posts are date-checked against it.")
@@ -328,15 +329,15 @@ def _log(event, **fields):
 
 
 def _default_recency_lookback(msg) -> bool:
-    """True when the message's `time_window_days` is exactly the default lookback that a bare recency word ("currently", "right now",
-    "recent") created (config.RECENT_DEFAULT_WINDOW_DAYS), there is no explicit time_range, and the message's own wording contains such
-    a word. A period the user named ("last 7 days") has another value or no recency word and is NOT this. Read-only; never raises."""
+    """True only when the message RECORDS that its `time_window_days` was created automatically from a bare recency word
+    ("currently", "right now", "recent"): `time_window_source == "default_recent"`, set by /search at the moment it made that
+    lookback. Nothing is inferred from the number of days or the wording, so a user who asks for "the last 30 days" (recorded as
+    "explicit_period") is never mistaken for it, and a message with no recorded origin (an older one) is treated as the user's own.
+    Read-only; never raises."""
     try:
         days = msg.get("time_window_days")
-        default = getattr(config, "RECENT_DEFAULT_WINDOW_DAYS", 30)
-        if isinstance(days, bool) or not isinstance(days, int) or days <= 0 or days != default or msg.get("time_range"):
-            return False
-        return bool(timerange.recency_intent(msg.get("query")) or timerange.recency_intent(msg.get("resolved_query")))
+        return (msg.get("time_window_source") == "default_recent" and isinstance(days, int) and not isinstance(days, bool)
+                and days > 0 and not msg.get("time_range"))
     except Exception:
         return False
 
@@ -344,7 +345,7 @@ def _default_recency_lookback(msg) -> bool:
 def historical_window_applies(msg, tr) -> bool:
     """Whether the Live window should ALSO be the Historical search's window for this request: only when the user gave the
     Historical search no range or period of their own. A typed `time_range` or a named period always wins and is never touched;
-    the default lookback of a bare recency word does not count as the user's own. A message that already carries exactly this
+    only a lookback RECORDED as automatic (`time_window_source == "default_recent"`) does not count as the user's own. A message that already carries exactly this
     window (the second call of the same request) is already done."""
     existing = msg.get("time_range")
     if existing:
@@ -502,7 +503,8 @@ class Run:
             _log("live_branch_" + ("completed" if res.get("state") == "ok" else "failed"), state=live_state,
                  reason=res.get("reason"), http_status=res.get("http_status"),
                  web_search_calls=res.get("web_search_calls"), validated_urls=len(live),
-                 verification=res.get("verification"))        # counts only: verified / outside_window / unverifiable / removed
+                 verification=res.get("verification"),         # counts only: verified / outside_window / unverifiable / removed + lookup outcome
+                 url_diagnostics=res.get("url_diagnostics"))   # counts / formats / reasons of the URLs the search offered (no content)
             # a link already in the saved posts OR in the finished answer is a duplicate of historical evidence
             known = list(hist) + [Evidence(SOURCE_HISTORICAL, u, None) for u in _answer_links(answer_text)]
             candidates, dups = combine(known, live, self.terms)
