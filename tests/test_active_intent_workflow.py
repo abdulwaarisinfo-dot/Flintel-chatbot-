@@ -80,11 +80,13 @@ class World:
         attach_classifier(self.live, decide=lambda t: "what is a crm" not in t.lower())     # a stand-in for the model's answer
         self.meta_ids = []
         subs = {rl.post_ref(u)[1]: rl.post_ref(u)[0] for u, _ in live_items if rl.post_ref(u)}
+        titles = {rl.post_ref(u)[1]: t for u, t in live_items if rl.post_ref(u)}
 
         def info(ids, timeout):                       # Reddit's metadata endpoint, faked: every found post is 5 minutes old
             self.meta_ids.append(list(ids))
             now = datetime.datetime.now(datetime.timezone.utc)
-            return {i: {"created_utc": (now - datetime.timedelta(minutes=5)).timestamp(), "subreddit": subs.get(i, "x"), "removed": False}
+            return {i: {"created_utc": (now - datetime.timedelta(minutes=5)).timestamp(), "subreddit": subs.get(i, "x"), "removed": False,
+                        "title": titles.get(i, "A real post"), "body": f"{titles.get(i, 'A real post')}. Comparing options and asking for advice."}
                     for i in ids}
         self.live.deps.reddit_info = info
         self.retrieval_kwargs = []
@@ -186,9 +188,10 @@ def test_active_lead_prompt_triggers_both_branches_and_yields_one_combined_answe
     world = World("s1")
     done, _unused, chats = run_stream(wf, monkeypatch, world)
     ans = final_answer(done, chats, "s1")
-    # the historical branch ran EXACTLY as a normal search does (no window of any kind), and its analysis is the normal one
+    # the historical branch ran through the existing range path with the SAME interval Live was given, and its analysis is the normal one
     (kw,) = world.retrieval_kwargs
-    assert "time_range" not in kw and kw["since_days"] is None
+    h = timerange.range_from_doc(kw["time_range"])
+    assert kw["since_days"] is None and h is not None and h.end - h.start == datetime.timedelta(minutes=30)
     assert ans["format"] == "source_list" and ans["platforms"][0]["posts"][0]["link"] == HIST_URL
     # live branch ran once, with the web_search tool
     assert len(world.live.calls) == 1 and world.live.calls[0]["payload"]["tools"][0]["type"] == "web_search"
@@ -368,18 +371,21 @@ def test_the_window_override_is_never_persisted(wf, monkeypatch):
 
 
 @pytest.mark.parametrize("minutes", [30, 1500])
-def test_live_gets_the_configured_window_and_historical_retrieval_gets_none_in_the_real_stream(wf, monkeypatch, minutes):
+def test_live_and_historical_get_the_same_configured_interval_in_the_real_stream(wf, monkeypatch, minutes):
     enable(monkeypatch, minutes=minutes)
     world = World("s1")
     done, _u, chats = run_stream(wf, monkeypatch, world)
-    assert "time_range" not in world.retrieval_kwargs[0] and world.retrieval_kwargs[0]["since_days"] is None   # Historical: untouched
+    kw = world.retrieval_kwargs[0]
+    h = timerange.range_from_doc(kw["time_range"])                                         # Historical: the existing explicit-range path
     wdoc = world.live.stored(0, "s1")["window"]
     start, end = timerange.to_utc(wdoc["start"]), timerange.to_utc(wdoc["end"])
-    assert end - start == datetime.timedelta(minutes=minutes)                              # no 40-minute cap
+    assert (h.start, h.end) == (start, end) and end - start == datetime.timedelta(minutes=minutes)      # one UTC interval, no 40-minute cap
     payload = json.dumps(world.live.calls[0]["payload"])
     assert wdoc["start"] in payload and wdoc["end"] in payload                             # the exact boundaries given to the model
     lc = final_answer(done, chats, "s1")["live_candidates"]
     assert lc["window"]["minutes"] == minutes and timerange.to_utc(lc["window"]["start"]) == start
+    stored = chats.docs[("s1", EMAIL)]["messages"][0]
+    assert stored.get("time_range") is None                                                 # the shared interval is never persisted
 
 
 def test_guests_and_inactive_live_get_no_window_and_no_live_call(wf, monkeypatch):
