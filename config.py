@@ -1096,11 +1096,11 @@ REDDIT_LIVE_MODEL = os.getenv("REDDIT_LIVE_MODEL", "").strip()          # empty 
 # ── Active-lead-intent workflow (see active_intent.py) ────────────────────────────────────────────────────────────────
 # OFF by default: with it off, nothing in this block has any effect and every search behaves exactly as before. When on, it
 # only acts on a signed-in owner's plain lead search that (a) a small GPT classifier call (intent_classifier.py) judges, from
-# the MEANING of the request, to be a search for people with genuine active demand AND (b) has no time range of its own, AND
-# only while the Live Reddit links feature above is itself active (enabled, valid caps, valid in-flight limit).
+# the MEANING of the request, to be a search for people with active demand or for relevant current discussions AND (b) has no
+# explicit time range of the user's own, AND only while the Live Reddit links feature above is itself active (enabled, valid caps, valid in-flight limit).
 ACTIVE_INTENT_ENABLED = os.getenv("ACTIVE_INTENT_ENABLED", "false").lower() in ("1", "true", "yes")
-# The ONE shared time window, in minutes, applied to BOTH branches of an eligible active-lead search: the saved-post search and
-# the live Reddit search (whose posts are also date-verified against Reddit's own metadata). Unset or blank -> 30. A value
+# The LIVE Reddit search window, in minutes (Active Intent only; the saved-post/Historical search does NOT use it and keeps its own
+# time range): the live search is told this window and every returned post is date-verified against Reddit's own metadata. Unset or blank -> 30. A value
 # that is not a plain positive integer (zero, negative, "abc", "2.5", "true", "1_500") is INVALID: it is stored as 0 here and
 # the workflow stays off (fail closed, with a warning log) - it is never silently replaced. The upper bound
 # (MAX_WINDOW_MINUTES = 10080, 7 days) lives in active_intent.py, which also fails closed above it. 1500 works as configured.
