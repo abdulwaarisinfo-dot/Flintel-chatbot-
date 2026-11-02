@@ -99,6 +99,7 @@ def live_env(items=((URL1, "Looking for a CRM for my small business"),), *, msg_
     env.response = resp(list(items), **resp_kw)
     env.meta_calls = []
     env.ages = {}                       # post id -> minutes old (default 5); None -> Reddit does not return that post
+    env.bodies = {}                     # post id -> the post's text as Reddit reports it (default: a generic sentence)
     env.removed = set()
     env.meta_raises = None
 
@@ -107,9 +108,11 @@ def live_env(items=((URL1, "Looking for a CRM for my small business"),), *, msg_
         if env.meta_raises:
             raise env.meta_raises
         subs = {rl.post_ref(u)[1]: rl.post_ref(u)[0] for u, _ in items if rl.post_ref(u)}
+        titles = {rl.post_ref(u)[1]: t for u, t in items if rl.post_ref(u)}
         now = datetime.now(timezone.utc)
         return {i: {"created_utc": (now - timedelta(minutes=env.ages.get(i, 5))).timestamp(), "subreddit": subs.get(i, "x"),
-                    "removed": i in env.removed}
+                    "removed": i in env.removed, "title": titles.get(i, "A real post title"),
+                    "body": env.bodies.get(i, f"{titles.get(i, 'A real post title')}. We are comparing options and would welcome advice.")}
                 for i in ids if env.ages.get(i, 5) is not None}
     env.deps.reddit_info = info
     attach_classifier(env)
@@ -260,14 +263,17 @@ def test_disabled_by_default_changes_nothing(on):
     assert env.calls == []
 
 
-def test_an_eligible_search_leaves_the_message_and_historical_search_completely_alone(ai_on):
+def test_an_eligible_search_without_a_user_range_gets_the_live_interval_in_memory_only(ai_on):
     env = live_env()
     msg = stored_msg(env)
     before = copy.deepcopy(msg)
     run = prepare(env, msg=msg)
     assert run.active is True and run.intent == "demand"
-    assert msg == before and msg["time_range"] is None and msg["time_window_days"] is None      # Historical gets no window at all
-    assert env.chats.find_one({"chat_id": "c1"})["messages"][0].get("time_range") is None
+    assert {k for k in set(msg) | set(before) if msg.get(k) != before.get(k)} == {"time_range"}
+    tr = timerange.range_from_doc(msg["time_range"])
+    assert (tr.start, tr.end) == (run.window_range.start, run.window_range.end)          # Historical and Live: ONE interval
+    assert msg["time_window_days"] is None
+    assert env.chats.find_one({"chat_id": "c1"})["messages"][0].get("time_range") is None   # never persisted
 
 
 @pytest.mark.parametrize("minutes", [15, 30, 90, 1500])
@@ -276,7 +282,9 @@ def test_the_live_window_follows_the_configuration_exactly(ai_on, monkeypatch, m
     env = live_env()
     msg = stored_msg(env)
     run = prepare(env, msg=msg)
-    assert (run.window_range.end - run.window_range.start) == timedelta(minutes=minutes) and msg["time_range"] is None
+    assert (run.window_range.end - run.window_range.start) == timedelta(minutes=minutes)
+    hist = timerange.range_from_doc(msg["time_range"])
+    assert (hist.start, hist.end) == (run.window_range.start, run.window_range.end)
     run.start()
     run.finish(answer_json(), historical=[])
     rec = env.chats.find_one({"chat_id": "c1"})["messages"][0]["live_reddit"]["window"]
@@ -304,7 +312,8 @@ def test_block_is_honest_about_what_a_live_candidate_is():
     assert block["window"] == {"minutes": 30, "start": WIN.start.isoformat(), "end": WIN.end.isoformat()}
     item = block["items"][0]
     assert set(item) == {"rank", "title", "url", "source", "intent", "verification_status", "evidence", "published_at", "date_verified",
-                         "title_relevance"}
+                         "title_relevance", "subreddit", "body", "analysis", "content_status", "discovered_by"}
+    assert item["content_status"] == "analysis_unavailable" and item["analysis"] is None and block["report"] is None
     assert block["intent"] == "demand" and block["label"] == "Live Reddit results" and item["intent"] == "demand"
     assert item["verification_status"] == "date_verified_only" and item["published_at"] == "2026-11-01T11:50:00+00:00"
     assert item["date_verified"] is True and item["source"] == "live_web_search"
