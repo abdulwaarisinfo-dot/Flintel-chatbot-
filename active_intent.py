@@ -1,4 +1,4 @@
-"""Active lead intent: Historical Search + a separate Live Reddit search, combined into ONE answer.
+"""Active lead intent: Historical Search + a separate Live Reddit search, combined into ONE answer. 
 
 For a signed-in owner's plain lead search that a small GPT classifier (intent_classifier.py) judges - from its MEANING, not
 from particular words - to be asking for people who currently show genuine demand for something (a product, a service, a
