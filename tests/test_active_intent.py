@@ -15,6 +15,7 @@ import pytest
 
 mongomock = pytest.importorskip("mongomock")
 import active_intent as ain  # noqa: E402
+import intent_classifier as ic  # noqa: E402
 import reddit_live as rl  # noqa: E402
 import timerange  # noqa: E402
 from tests.test_reddit_live import Env, OWNER, URL1, message, on  # noqa: F401,E402  (builders + the Live fixture)
@@ -45,7 +46,37 @@ def ai_on(on, monkeypatch):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_ENABLED", True, raising=False)
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", 30, raising=False)
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_LIVE_WAIT_SECONDS", 5, raising=False)
+    set_classifier_caps(monkeypatch)
     return ain
+
+
+def set_classifier_caps(monkeypatch, g=1000, o=100):
+    monkeypatch.setattr(ain.config, "ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_GLOBAL", g, raising=False)
+    monkeypatch.setattr(ain.config, "ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_PER_OWNER", o, raising=False)
+
+
+def cls_resp(active=True, confidence="high", *, status="completed", text=None):
+    """A Responses-API-shaped reply of the CLASSIFIER (structured JSON in output_text)."""
+    body = text if text is not None else json.dumps({"active_demand": active, "confidence": confidence})
+    return {"id": "resp_cls", "status": status, "usage": {"input_tokens": 120, "output_tokens": 20},
+            "output": [{"type": "message", "content": [{"type": "output_text", "text": body}]}]}
+
+
+def attach_classifier(env, decide=lambda text: True):
+    """A fake MODEL for the classifier: `decide(request_text) -> bool` stands in for GPT. No network. Records every call."""
+    env.cls_calls, env.cls_usage = [], []
+    env.cls_raises = None
+    env.cls_override = None          # a full response dict to return instead of decide()'s
+
+    def post(url, headers, payload, timeout):
+        env.cls_calls.append({"url": url, "payload": payload, "timeout": timeout})
+        if env.cls_raises:
+            raise env.cls_raises
+        return env.cls_override if env.cls_override is not None else cls_resp(decide(payload["input"]))
+    env.cls_deps = ic.Deps(env.chats, env.chats.database["cls_budget"], post, env.clock,
+                           lambda model, data, status: env.cls_usage.append((model, data, status)))
+    ic.DEPS_FACTORY = lambda: env.cls_deps
+    return env
 
 
 def resp(items, *, call_status="completed", with_call=True, status="completed"):
@@ -80,6 +111,7 @@ def live_env(items=((URL1, "Looking for a CRM for my small business"),), *, msg_
                     "removed": i in env.removed}
                 for i in ids if env.ages.get(i, 5) is not None}
     env.deps.reddit_info = info
+    attach_classifier(env)
     return env
 
 
@@ -89,6 +121,8 @@ def stored_msg(env):
 
 def prepare(env, mode="stream", msg=None, monkeypatch=None):
     ain.DEPS_FACTORY = lambda: env.deps
+    if getattr(env, "cls_deps", None) is not None:
+        ic.DEPS_FACTORY = lambda: env.cls_deps
     return ain.Run.prepare(msg if msg is not None else stored_msg(env), owner_key=OWNER, chat_id="c1", mode=mode)
 
 
@@ -96,6 +130,7 @@ def prepare(env, mode="stream", msg=None, monkeypatch=None):
 def _reset_factory():
     yield
     ain.DEPS_FACTORY = None
+    ic.DEPS_FACTORY = None
 
 
 def hrow(n=1, text="We are actively looking for a CRM, any recommendations?", url=None, age_minutes=5):
@@ -109,57 +144,61 @@ def answer_json(*links, fmt="source_list"):
     return json.dumps(data)
 
 
-# ── the predicate ──────────────────────────────────────────────────────────────────────────────────────────────────────
-POSITIVE = [
-    CRM,
-    "Find people actively looking for a CRM",
-    "Show me businesses that need a CRM",
-    "Find people asking which CRM they should use",
-    "Find people asking for CRM recommendations",
-    "Find people looking for alternatives to HubSpot",
-    "Who is looking to switch from Salesforce to something cheaper?",
-    "Find founders actively seeking a solution to manage customer onboarding",
-    "List teams in the market for project management software",
-    "Find small business owners who need help choosing accounting software",
-    "Get me companies currently searching for a helpdesk tool",
-    "Find users asking for recommendations for invoicing software",
-    "Find people who want to replace their current CRM",
-    "Find anyone looking for a scheduling app",
-]
-NEGATIVE = [
-    "What is a CRM?",
-    "How does a CRM work?",
-    "Explain the benefits of CRM software for small businesses",
-    "Best CRM for small business",
-    "How do I choose a CRM for my business?",
-    "What do people on Reddit say about HubSpot?",
-    "Find the history of CRM software",
-    "Find posts about CRM trends",
-    "Find people complaining about HubSpot pricing",
-    "Show me CRM tutorials for businesses",
-    "Find people who need a CRM tutorial",
-    "Find CRM jobs for people looking for work",
-    "Compare Salesforce and HubSpot",
-    "Summarize last week's discussion about project management tools",
-    "Which CRM should I use?",
-    "",
-    "   ",
-]
+# ── the semantic gate (a model decides; there is no regex or phrase list) ────────────────────────────────────────────────────
+def test_the_regex_predicate_and_its_patterns_are_gone():
+    for name in ("is_active_lead_intent", "_LEAD_VERB", "_TARGET", "_ACTIVE", "_NOT_LEADS"):
+        assert not hasattr(ain, name)
 
 
-@pytest.mark.parametrize("text", POSITIVE)
-def test_active_lead_intent_prompts_are_detected(text):
-    assert ain.is_active_lead_intent(text) == (True, "active_lead_intent")
+# Wordings that none of the old patterns would have matched. The fake model says yes to the first group and no to the second;
+# the point is that the gate FOLLOWS THE MODEL'S ANSWER for any wording, not that this fake understands language.
+WORDED_DIFFERENTLY = ["Find people who need AI agents", "Who is trying to get a chatbot built for their store?",
+                      "Show me founders asking around for someone to automate their support inbox",
+                      "Anyone hunting for a bookkeeping solution?"]
+INFORMATIONAL = ["Explain what AI agents are", "Summarise this week's AI news", "Find tutorials on building agents"]
 
 
-@pytest.mark.parametrize("text", NEGATIVE)
-def test_informational_and_non_lead_prompts_are_not_detected(text):
-    assert ain.is_active_lead_intent(text)[0] is False
+@pytest.mark.parametrize("text", WORDED_DIFFERENTLY)
+def test_the_gate_follows_the_models_yes_for_any_wording(ai_on, text):
+    env = live_env(msg_over={"query": text})
+    attach_classifier(env, decide=lambda t: True)
+    assert prepare(env, msg=stored_msg(env)).active is True and len(env.cls_calls) == 1
 
 
-@pytest.mark.parametrize("value", [None, 5, [], {}, b"find people looking for a crm"])
-def test_predicate_is_total(value):
-    assert ain.is_active_lead_intent(value)[0] is False
+@pytest.mark.parametrize("text", INFORMATIONAL + [CRM])
+def test_the_gate_follows_the_models_no_even_for_wording_the_old_regex_accepted(ai_on, text):
+    env = live_env(msg_over={"query": text})
+    attach_classifier(env, decide=lambda t: False)                   # CRM is the old regex's textbook positive
+    msg = stored_msg(env)
+    run = prepare(env, msg=msg)
+    assert run.active is False and msg["time_range"] is None and env.calls == [] and len(env.cls_calls) == 1
+
+
+@pytest.mark.parametrize("confidence", ["medium", "low"])
+def test_an_uncertain_answer_does_not_qualify(ai_on, confidence):
+    env = live_env()
+    env.cls_override = cls_resp(True, confidence)
+    assert prepare(env).active is False and env.calls == []
+
+
+@pytest.mark.parametrize("name,setup", [
+    ("timeout", lambda e: setattr(e, "cls_raises", TimeoutError("slow"))),
+    ("http error", lambda e: setattr(e, "cls_raises", RuntimeError("500"))),
+    ("not json", lambda e: setattr(e, "cls_override", cls_resp(text="yes, it qualifies"))),
+    ("extra keys", lambda e: setattr(e, "cls_override", cls_resp(text='{"active_demand": true, "confidence": "high", "x": 1}'))),
+    ("string boolean", lambda e: setattr(e, "cls_override", cls_resp(text='{"active_demand": "true", "confidence": "high"}'))),
+    ("missing confidence", lambda e: setattr(e, "cls_override", cls_resp(text='{"active_demand": true}'))),
+    ("incomplete response", lambda e: setattr(e, "cls_override", cls_resp(status="incomplete"))),
+    ("not a dict", lambda e: setattr(e, "cls_override", ["x"])),
+    ("no output", lambda e: setattr(e, "cls_override", {"status": "completed", "output": []})),
+])
+def test_every_failure_fails_closed_and_the_search_runs_as_a_normal_one(ai_on, name, setup):
+    env = live_env()
+    setup(env)
+    msg = stored_msg(env)
+    run = prepare(env, msg=msg)
+    assert run.active is False and msg["time_range"] is None and env.calls == []             # no window, no Live call
+    assert run.finish("ANSWER", historical=[1]) == "ANSWER" and run.historical([1, 2]) == [1, 2]
 
 
 # ── the window ─────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -558,7 +597,10 @@ def test_rejections_are_logged_with_a_reason(ai_on, caplog):
     caplog.set_level(logging.INFO, logger="flintel.active_intent")
     env = live_env(msg_over={"time_window_days": 7})
     prepare(env)
-    ain.Run.prepare({"query": "What is a CRM?", "request_id": "r"}, owner_key=OWNER, chat_id="c1")
+    env2 = live_env(msg_over={"query": "Explain what a CRM is"})
+    attach_classifier(env2, decide=lambda t: False)
+    prepare(env2)
     text = "\n".join(r.getMessage() for r in caplog.records)
     assert '"event": "live_eligibility_rejected"' in text and '"reason": "time_bounded"' in text
-    assert '"event": "intent_not_detected"' in text and '"reason": "informational"' in text
+    assert '"event": "intent_classified"' in text and '"qualifies": false' in text and '"reason": "not_active_demand"' in text
+    assert "Explain what a CRM is" not in text                        # the request text is never logged
