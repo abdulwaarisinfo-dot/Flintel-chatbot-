@@ -72,3 +72,22 @@ def test_nothing_is_rendered_without_valid_candidates(integrity_browser, templat
     page, errors = _page(integrity_browser, template, data_js)
     assert page.query_selector("section.live-links") is None and errors == []
     page.close()
+
+
+DISC = """{live_candidates: {intent: 'discussion', label: 'Live Reddit discussions', statement: 'Live Reddit discussions: 1 post.',
+  items: [{rank: 1, title: 'Anyone using AI agents for support?', url: 'https://www.reddit.com/r/a_b/comments/abc123/x/', intent: 'discussion',
+           date_verified: true, published_at: '2026-11-01T10:05:00+00:00'}]}}"""
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_a_discussion_block_is_labelled_as_discussions_and_a_demand_block_keeps_its_label(integrity_browser, template):
+    page, errors = _page(integrity_browser, template, DISC)
+    assert page.inner_text("section.live-links .live-links-title") == "Live Reddit discussions — date-checked, content not assessed"
+    tag = page.inner_text("section.live-links li")
+    assert "live Reddit discussion" in tag and "buyer" not in tag.lower() and "lead" not in tag.lower()
+    page.close()
+    page, errors = _page(integrity_browser, template, GOOD)
+    assert page.inner_text("section.live-links .live-links-title") == "Live Reddit results — date-checked, content not assessed"
+    assert "live Reddit result" in page.inner_text("section.live-links li")
+    assert errors == []
+    page.close()
