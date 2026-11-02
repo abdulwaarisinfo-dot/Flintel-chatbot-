@@ -15,6 +15,7 @@ import pytest
 
 mongomock = pytest.importorskip("mongomock")
 import active_intent as ain  # noqa: E402
+import intent_classifier as ic  # noqa: E402
 import reddit_live as rl  # noqa: E402
 import timerange  # noqa: E402
 from tests.test_active_intent import CRM, HURL, URL2, answer_json, hrow, live_env, prepare, stored_msg, ai_on  # noqa: F401,E402
@@ -38,6 +39,7 @@ def _clean():
     assert rl.INFLIGHT.count == 0
     yield
     ain.DEPS_FACTORY = None
+    ic.DEPS_FACTORY = None
     assert rl.INFLIGHT.count == 0
 
 
@@ -281,6 +283,7 @@ def bg(env, on, monkeypatch):
     for name, fn in (("_is_owner_busy", lambda *a: False), ("_set_owner_busy", lambda *a: None), ("_clear_owner_busy", lambda *a: None)):
         monkeypatch.setattr(idx, name, fn, raising=False)
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_ENABLED", True, raising=False)
+    monkeypatch.setattr(ic, "decide", lambda **kw: (True, "active_demand"))     # these tests are about the window reaching retrieval
     return lg, idx, chats
 
 
@@ -310,6 +313,8 @@ def test_background_retrieval_is_unchanged_for_an_ordinary_search_or_when_disabl
     monkeypatch.setattr(lg, "_call_claude", lambda *a, **k: "{}")
     monkeypatch.setattr(idx, "_complete_message_answer_and_results", lambda *a, **k: None)
     owner = "alice@example.com"
+    asked = []
+    monkeypatch.setattr(ic, "decide", lambda **kw: asked.append(kw["chat_id"]) or (False, "not_active_demand"))
     for cid, q, on_flag in (("c1", "What is a CRM and how does it work?", True), ("c2", CRM, False)):
         monkeypatch.setattr(ain.config, "ACTIVE_INTENT_ENABLED", on_flag, raising=False)
         idx.add_search_to_chat(cid, owner, q, lg.normalize_topic_key(q), ["crm"], "reddit")
@@ -317,6 +322,7 @@ def test_background_retrieval_is_unchanged_for_an_ordinary_search_or_when_disabl
         chat["messages"][-1].update(evidence_required=15, request_id="req-1", credit_request_id="cr-1")
         idx._fill_in_message_outputs(cid, owner, chat["messages"])
     assert len(seen) == 2 and all("time_range" not in kw for kw in seen)
+    assert asked == ["c1"]                                           # the model is asked only when the feature is on
 
 
 def test_a_failing_window_hook_does_not_stop_background_historical_retrieval(bg, monkeypatch):
