@@ -57,8 +57,8 @@ def test_the_request_text_is_cleaned_and_bounded():
 
 # ── the decision: positive, negative, ambiguous, malformed ──────────────────────────────────────────────────────────────────
 def test_positive_negative_and_ambiguous_answers(ai_on):
-    for answer, expected, reason in ((cls_resp(True, "high"), True, "active_demand"), (cls_resp(False, "high"), False, "not_active_demand"),
-                                     (cls_resp(False, "low"), False, "not_active_demand"), (cls_resp(True, "medium"), False, "uncertain"),
+    for answer, expected, reason in ((cls_resp(True, "high"), True, "active_demand"), (cls_resp(False, "high"), False, "no_discovery_intent"),
+                                     (cls_resp(False, "low"), False, "no_discovery_intent"), (cls_resp(True, "medium"), False, "uncertain"),
                                      (cls_resp(True, "low"), False, "uncertain")):
         env = live_env()
         env.cls_override = answer
@@ -88,7 +88,7 @@ def test_repeated_calls_for_one_message_make_one_api_call_and_one_budget_slot(ai
 def test_a_negative_decision_is_also_remembered_and_never_asked_again(ai_on):
     env = live_env()
     attach_classifier(env, decide=lambda t: False)
-    assert decide(env) == (False, "not_active_demand") and decide(env) == (False, "already_decided")
+    assert decide(env) == (False, "no_discovery_intent") and decide(env) == (False, "already_decided")
     assert len(env.cls_calls) == 1
 
 
@@ -187,7 +187,7 @@ def test_a_failed_call_is_still_recorded_and_counted(ai_on):
 
 
 # ── structural rules come first: nothing is paid for a search that could never qualify ───────────────────────────────────────
-@pytest.mark.parametrize("over", [{"time_range": {"start": 1}}, {"time_window_days": 7}, {"request_kind": "mention_search"}, {"website_only": True},
+@pytest.mark.parametrize("over", [{"request_kind": "mention_search"}, {"website_only": True},
                                   {"keywords": []}, {"credit_request_id": None}])
 def test_ineligible_searches_never_reach_the_classifier(ai_on, over):
     env = live_env(msg_over=over)
@@ -222,14 +222,12 @@ def test_a_negative_decision_leaves_the_message_and_historical_results_exactly_a
     assert run.finish(base, historical=pool) == base and env.calls == []
 
 
-def test_a_positive_decision_changes_only_the_time_range_and_the_classifier_never_sees_results(ai_on):
+def test_a_positive_decision_changes_nothing_on_the_message_and_the_classifier_never_sees_results(ai_on):
     env = live_env()
     msg = stored_msg(env)
     before = copy.deepcopy(msg)
     run = prepare(env, msg=msg)
-    assert run.active is True
-    changed = {k for k in set(msg) | set(before) if msg.get(k) != before.get(k)}
-    assert changed == {"time_range"}
+    assert run.active is True and msg == before
     payload_text = json.dumps(env.cls_calls[0]["payload"])
     assert "results" not in env.cls_calls[0]["payload"] and "claude_answer" not in payload_text
 
