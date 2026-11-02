@@ -466,6 +466,8 @@
   .live-links { margin: 10px 0 6px 0; padding: 10px 14px; border: 1px dashed #4a4a47; border-radius: 10px; font-size: 14px; }
   .live-links-title { margin: 0 0 2px 0; font-size: 13px; font-weight: 600; color: #c9c8c5; }
   .live-links-note { margin: 0 0 6px 0; font-size: 12px; color: #8a8986; }
+  .live-links-finding { margin: 0 0 6px 0; font-size: 14px; }
+  .live-links-summary { margin: 0 0 4px 0; font-size: 13px; color: #b4b3b0; }
   .live-links ul { margin: 0; padding-left: 18px; }
   .live-links li { margin: 2px 0; overflow-wrap: anywhere; }
   .live-links a { color: #9db7e8; }
@@ -4260,17 +4262,31 @@
     const box = document.createElement('section');
     box.className = 'live-links';
     const discussion = lc.intent === 'discussion';
-    const heading = (discussion ? 'Live Reddit discussions' : 'Live Reddit results') + ' \u2014 date-checked, content not assessed';
+    const analysed = lc.items.some((it) => it && it.analysis && typeof it.analysis === 'object');
+    const heading = (discussion ? 'Live Reddit discussions' : 'Live Reddit results') +
+      (analysed ? ' — dates and excerpts checked, summaries by GPT' : ' — date-checked, content not assessed');
     box.setAttribute('aria-label', heading);
-    const h = document.createElement('p');
-    h.className = 'live-links-title';
-    h.textContent = heading;
-    box.appendChild(h);
-    if (typeof lc.statement === 'string' && lc.statement.trim()) {
-      const n = document.createElement('p');
-      n.className = 'live-links-note';
-      n.textContent = lc.statement.trim().slice(0, 1500);
-      box.appendChild(n);
+    const para = (cls, text) => { const p = document.createElement('p'); p.className = cls; p.textContent = String(text).slice(0, 1500); return p; };
+    box.appendChild(para('live-links-title', heading));
+    const rep = lc.report && typeof lc.report === 'object' ? lc.report : null;
+    if (rep) {
+      if (typeof rep.main_finding === 'string' && rep.main_finding.trim()) box.appendChild(para('live-links-finding', rep.main_finding.trim()));
+      const themes = Array.isArray(rep.themes) ? rep.themes.slice(0, 3) : [];
+      if (themes.length) {
+        const tl = document.createElement('ul');
+        tl.className = 'live-links-themes';
+        themes.forEach((t) => {
+          if (!t || typeof t.theme !== 'string') return;
+          const li = document.createElement('li');
+          const n = Number.isInteger(t.verified_post_count) ? t.verified_post_count : 0;
+          li.textContent = t.theme + ' — ' + n + ' verified post' + (n === 1 ? '' : 's') +
+            (typeof t.why_it_matters === 'string' && t.why_it_matters ? '. ' + t.why_it_matters : '');
+          tl.appendChild(li);
+        });
+        if (tl.children.length) box.appendChild(tl);
+      }
+    } else if (typeof lc.statement === 'string' && lc.statement.trim()) {
+      box.appendChild(para('live-links-note', lc.statement.trim()));
     }
     const ul = document.createElement('ul');
     lc.items.slice(0, 20).forEach((it) => {
@@ -4285,14 +4301,30 @@
       let when = '';
       if (it.date_verified === true && typeof it.published_at === 'string') {
         const d = new Date(it.published_at);
-        if (!isNaN(d.getTime())) when = ' \u00b7 posted ' + d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+        if (!isNaN(d.getTime())) when = ' · posted ' + d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
       }
-      tag.textContent = ' \u00b7 live Reddit ' + (discussion ? 'discussion' : 'result') + when + ' \u00b7 content not assessed';
+      const sub = (typeof it.subreddit === 'string' && it.subreddit) ? ' · r/' + it.subreddit : '';
+      const an = it.analysis && typeof it.analysis === 'object' ? it.analysis : null;
+      const sent = an && typeof an.sentiment === 'string' ? ' · sentiment: ' + an.sentiment : '';
+      tag.textContent = ' · live Reddit ' + (discussion ? 'discussion' : 'result') + sub + when + sent +
+        (an ? '' : ' · content not assessed');
       li.appendChild(tag);
+      if (an && typeof an.summary === 'string' && an.summary) {
+        const s = document.createElement('div');
+        s.className = 'live-links-summary';
+        s.textContent = an.summary;
+        li.appendChild(s);
+      }
       ul.appendChild(li);
     });
     if (!ul.children.length) return;
     box.appendChild(ul);
+    if (rep) {
+      const imps = Array.isArray(rep.implications) ? rep.implications.slice(0, 3).filter((x) => typeof x === 'string' && x) : [];
+      if (imps.length) { box.appendChild(para('live-links-title', 'Implications')); const il = document.createElement('ul'); imps.forEach((x) => { const li = document.createElement('li'); li.textContent = x; il.appendChild(li); }); box.appendChild(il); }
+      const lims = Array.isArray(rep.limitations) ? rep.limitations.slice(0, 3).filter((x) => typeof x === 'string' && x) : [];
+      if (lims.length) box.appendChild(para('live-links-note', 'Limitations: ' + lims.join(' ')));
+    }
     container.appendChild(box);
   }
 
