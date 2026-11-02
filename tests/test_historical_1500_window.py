@@ -91,16 +91,15 @@ def test_without_a_range_nothing_about_the_scan_is_time_bounded(lg, cfg, monkeyp
     assert all(len(p) == 2 for p in data)                                                # no cutoff parameter at all
 
 
-def test_the_google_table_keeps_its_documented_posted_at_then_created_at_mapping(lg, cfg, monkeypatch):
-    """Pre-existing, documented in mysql_signals: flintel_google has no created_utc, so the time column is
-    COALESCE(posted_at, created_at). This is a fallback to ingestion time ONLY when posted_at is NULL - recorded here, not changed."""
+def test_the_google_table_uses_posted_at_alone_and_created_at_never_qualifies_a_row(lg, cfg, monkeypatch):
+    """flintel_google has no created_utc: its publication time is `posted_at`. `created_at` is ingestion time - it never substitutes for it."""
     tables = mysql_tables()
-    tables["flintel_google"] = (GOOGLE_COLS, [g_row(1, "u/g_in", 0.9, posted_days=None, created_days=0),
+    tables["flintel_google"] = (GOOGLE_COLS, [g_row(1, "u/g_null_posted", 0.9, posted_days=None, created_days=0),
                                               g_row(2, "u/g_old", 0.9, posted_days=5, created_days=0)])
     srv = FakeMySQL(tables)
     install(lg, cfg, monkeypatch, srv)
     out, _s, _c = run(lg, monkeypatch, [], time_range=TR, limit=50)
     urls = {p["post_url"] for p in out}
-    assert "u/g_old" not in urls                       # a real posted_at outside the interval excludes the row, whatever created_at says
+    assert "u/g_old" not in urls and "u/g_null_posted" not in urls
     g_sql = [s for s, _ in srv.executed if "`flintel_google`" in s and "information_schema" not in s][0]
-    assert "COALESCE(`posted_at`, `created_at`) >= %s" in g_sql
+    assert "`posted_at` >= %s" in g_sql and "COALESCE" not in g_sql
