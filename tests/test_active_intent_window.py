@@ -52,8 +52,8 @@ def link(url=URL1):
     return {"url": url, "title": "t"}
 
 
-def meta(created, sub="SaaS", removed=False):
-    return {"created_utc": created, "subreddit": sub, "removed": removed}
+def meta(created, sub="SaaS", removed=False, title="A real post title", body=""):
+    return {"created_utc": created, "subreddit": sub, "removed": removed, "title": title, "body": body}
 
 
 # ── boundaries: [start, end) in tz-aware UTC ───────────────────────────────────────────────────────────────────────────
@@ -134,12 +134,13 @@ def test_reddit_info_asks_for_the_given_ids_only_and_parses_the_reply(monkeypatc
 
     def handler(req):
         seen.append(req)
-        body = {"data": {"children": [{"kind": "t3", "data": {"id": "abc123", "created_utc": 1.0, "subreddit": "x", "author": "a"}},
+        body = {"data": {"children": [{"kind": "t3", "data": {"id": "abc123", "created_utc": 1.0, "subreddit": "x", "author": "a",
+                                                              "title": "  A real\x00 title ", "selftext": "Some   body text\nhere"}},
                                       {"kind": "t1", "data": {"id": "zzz"}}, "junk"]}}
         return _REAL_HTTPX.Response(200, json=body)
     _mock_client(monkeypatch, handler)
     out = rl._reddit_info(["abc123", "def456"], 8)
-    assert out == {"abc123": {"created_utc": 1.0, "subreddit": "x", "removed": False}}
+    assert out == {"abc123": {"created_utc": 1.0, "subreddit": "x", "removed": False, "title": "A real title", "body": "Some body text here"}}
     assert len(seen) == 1 and seen[0].url.host == "api.reddit.com" and seen[0].url.params["id"] == "t3_abc123,t3_def456"
     assert "Authorization" not in seen[0].headers and "Cookie" not in seen[0].headers
 
@@ -246,7 +247,7 @@ def test_a_historical_time_range_is_never_overwritten_and_does_not_block_live(ai
     assert run.window_range.end - run.window_range.start == timedelta(minutes=30)      # Live has its own window
 
 
-def test_both_entry_points_derive_the_identical_live_window_and_never_touch_the_message(ai_on, monkeypatch):
+def test_both_entry_points_derive_the_identical_window_and_historical_gets_it_once_in_memory(ai_on, monkeypatch):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", 1500, raising=False)
     env = live_env()
     msg = stored_msg(env)
@@ -254,8 +255,11 @@ def test_both_entry_points_derive_the_identical_live_window_and_never_touch_the_
     before = copy.deepcopy(msg)
     a = ain.apply_window(msg, owner_key=OWNER, chat_id="c1", mode="background_retrieval")
     b = ain.apply_window(msg, owner_key=OWNER, chat_id="c1", mode="stream")
-    assert msg == before and msg["time_range"] is None                                   # Historical's message is untouched
     (tr_a, intent_a, _r), (tr_b, intent_b, _r2) = a, b
+    changed = {k for k in set(msg) | set(before) if msg.get(k) != before.get(k)}
+    assert changed == {"time_range"}                                                       # the only in-memory change, made once
+    hist = timerange.range_from_doc(msg["time_range"])
+    assert (hist.start, hist.end) == (tr_a.start, tr_a.end)                                # Historical gets the SAME interval
     assert (tr_a.start, tr_a.end) == (tr_b.start, tr_b.end) and tr_a.end == END and tr_a.end - tr_a.start == timedelta(minutes=1500)
     assert intent_a == intent_b == "demand" and len(env.cls_calls) == 1                  # the classifier was asked once
 
@@ -290,7 +294,7 @@ def bg(env, on, monkeypatch):
 
 
 @pytest.mark.parametrize("minutes", [30, 1500])
-def test_background_historical_retrieval_gets_its_original_arguments_not_the_live_window(bg, monkeypatch, minutes):
+def test_background_historical_retrieval_gets_the_same_interval_as_live_in_memory_only(bg, monkeypatch, minutes):
     lg, idx, chats = bg
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", minutes, raising=False)
     seen = []
@@ -302,8 +306,10 @@ def test_background_historical_retrieval_gets_its_original_arguments_not_the_liv
     chat = chats.find_one({"chat_id": "c1", "owner_key": owner})
     chat["messages"][-1].update(evidence_required=15, request_id="req-1", credit_request_id="cr-1")
     idx._fill_in_message_outputs("c1", owner, chat["messages"])
-    assert len(seen) == 1 and "time_range" not in seen[0] and seen[0]["since_days"] is None       # exactly what a normal search passes
-    assert chats.find_one({"chat_id": "c1", "owner_key": owner})["messages"][-1].get("time_range") is None
+    assert len(seen) == 1 and seen[0]["since_days"] is None
+    tr = timerange.range_from_doc(seen[0]["time_range"])
+    assert tr is not None and tr.end - tr.start == timedelta(minutes=minutes)              # the existing range path, MongoDB and MySQL alike
+    assert chats.find_one({"chat_id": "c1", "owner_key": owner})["messages"][-1].get("time_range") is None      # never persisted
 
 
 def test_a_users_own_historical_range_is_passed_through_unchanged_and_blocks_the_workflow(bg, monkeypatch):
