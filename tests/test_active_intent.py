@@ -55,9 +55,10 @@ def set_classifier_caps(monkeypatch, g=1000, o=100):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_PER_OWNER", o, raising=False)
 
 
-def cls_resp(active=True, confidence="high", *, status="completed", text=None):
-    """A Responses-API-shaped reply of the CLASSIFIER (structured JSON in output_text)."""
-    body = text if text is not None else json.dumps({"active_demand": active, "confidence": confidence})
+def cls_resp(active=True, confidence="high", *, intent=None, status="completed", text=None):
+    """A Responses-API-shaped reply of the CLASSIFIER (structured JSON in output_text). `active` True -> "demand", False -> "neither";
+    `intent` ("demand" / "discussion" / "neither") overrides it."""
+    body = text if text is not None else json.dumps({"intent": intent or ("demand" if active else "neither"), "confidence": confidence})
     return {"id": "resp_cls", "status": status, "usage": {"input_tokens": 120, "output_tokens": 20},
             "output": [{"type": "message", "content": [{"type": "output_text", "text": body}]}]}
 
@@ -259,26 +260,28 @@ def test_disabled_by_default_changes_nothing(on):
     assert env.calls == []
 
 
-def test_eligible_active_lead_search_gets_the_recent_window_in_memory_only(ai_on):
+def test_an_eligible_search_leaves_the_message_and_historical_search_completely_alone(ai_on):
     env = live_env()
     msg = stored_msg(env)
-    assert msg["time_range"] is None and msg["time_window_days"] is None
+    before = copy.deepcopy(msg)
     run = prepare(env, msg=msg)
-    assert run.active is True
-    tr = timerange.range_from_doc(msg["time_range"])
-    assert tr is not None and (tr.end - tr.start) == timedelta(minutes=30)
-    assert env.chats.find_one({"chat_id": "c1"})["messages"][0]["time_range"] is None       # never persisted
-    assert msg["time_window_days"] is None
+    assert run.active is True and run.intent == "demand"
+    assert msg == before and msg["time_range"] is None and msg["time_window_days"] is None      # Historical gets no window at all
+    assert env.chats.find_one({"chat_id": "c1"})["messages"][0].get("time_range") is None
 
 
 @pytest.mark.parametrize("minutes", [15, 30, 90, 1500])
-def test_the_applied_window_follows_the_configuration_exactly(ai_on, monkeypatch, minutes):
+def test_the_live_window_follows_the_configuration_exactly(ai_on, monkeypatch, minutes):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", minutes, raising=False)
     env = live_env()
     msg = stored_msg(env)
-    prepare(env, msg=msg)
-    tr = timerange.range_from_doc(msg["time_range"])
-    assert (tr.end - tr.start) == timedelta(minutes=minutes)
+    run = prepare(env, msg=msg)
+    assert (run.window_range.end - run.window_range.start) == timedelta(minutes=minutes) and msg["time_range"] is None
+    run.start()
+    run.finish(answer_json(), historical=[])
+    rec = env.chats.find_one({"chat_id": "c1"})["messages"][0]["live_reddit"]["window"]
+    assert rec == {"start": rl._utc(run.window_range.start), "end": rl._utc(run.window_range.end)}      # what Live was actually told
+    assert rl._utc(run.window_range.start) in env.calls[0]["payload"]["instructions"]
 
 
 def test_at_most_eight_candidates_are_kept():
@@ -300,12 +303,14 @@ def test_block_is_honest_about_what_a_live_candidate_is():
     assert block["verification"] == "date_verified_title_and_url_only" and block["live_results_limited_to_window"] is True
     assert block["window"] == {"minutes": 30, "start": WIN.start.isoformat(), "end": WIN.end.isoformat()}
     item = block["items"][0]
-    assert set(item) == {"rank", "title", "url", "source", "verification_status", "evidence", "published_at", "date_verified",
+    assert set(item) == {"rank", "title", "url", "source", "intent", "verification_status", "evidence", "published_at", "date_verified",
                          "title_relevance"}
+    assert block["intent"] == "demand" and block["label"] == "Live Reddit results" and item["intent"] == "demand"
     assert item["verification_status"] == "date_verified_only" and item["published_at"] == "2026-11-01T11:50:00+00:00"
     assert item["date_verified"] is True and item["source"] == "live_web_search"
     st = block["statement"]
-    assert "Live Reddit results" in st and "2026-11-01 11:30 UTC and 2026-11-01 12:00 UTC" in st and "30-minute window" in st
+    assert "Live Reddit results" in st and "2026-11-01 11:30 UTC and 2026-11-01 12:00 UTC" in st and "30-minute live search window" in st
+    assert "saved posts" not in st.replace("No analysed saved-post evidence", "") and "same" not in st      # no claim of a shared window
     assert "has not read these posts" in st and "buying" in st and "ranked only by how well their titles match" in st
     assert "other posts in this window may exist that were not found" in st
     assert "outside" not in st and "not limited" not in st and "No analysed saved-post evidence" in st
@@ -423,10 +428,16 @@ def test_pre_answer_is_signed_in_only_and_owner_isolated(on):
     assert env.calls == []
 
 
-@pytest.mark.parametrize("over", [{"time_range": {"start": 1}}, {"time_window_days": 7}, {"request_kind": "mention_search"}, {"website_only": True}])
+@pytest.mark.parametrize("over", [{"request_kind": "mention_search"}, {"website_only": True}])
 def test_pre_answer_keeps_every_search_side_rule(on, over):
     env = live_env(msg_over=over)
     assert pre(env)["state"] == "ineligible" and env.calls == []
+
+
+@pytest.mark.parametrize("over", [{"time_range": {"start": 1}}, {"time_window_days": 7}])
+def test_a_historical_time_range_does_not_make_the_pre_answer_live_search_ineligible(on, over):
+    env = live_env(msg_over=over)
+    assert pre(env)["state"] == "ok" and len(env.calls) == 1               # Live has its own window; Historical's is not its business
 
 
 # ── Run end to end (live branch fake, historical side given) ─────────────────────────────────────────────────────────────
@@ -539,9 +550,9 @@ def test_live_candidates_state_the_shared_window_and_the_search_gets_its_exact_b
     env = live_env()
     out = json.loads(prepare(env).finish(answer_json(), historical=[]))
     lc = out["live_candidates"]
-    assert lc["live_results_limited_to_window"] is True and lc["historical_window_minutes"] == 30
+    assert lc["live_results_limited_to_window"] is True and lc["live_window_minutes"] == 30 and "historical_window_minutes" not in lc
     assert lc["live_dates_verified_against"] == "reddit_metadata"
-    assert "intent" not in " ".join(lc["items"][0]) and lc["items"][0]["published_at"]
+    assert lc["items"][0]["published_at"] and lc["items"][0]["intent"] == "demand"
     payload = env.calls[0]["payload"]
     start, end = lc["window"]["start"], lc["window"]["end"]
     text = json.dumps(payload)
@@ -566,13 +577,16 @@ def test_finish_is_idempotent_and_never_makes_a_second_paid_call(ai_on):
     assert json.loads(again)["live_candidates"]["items"][0]["url"] == URL1 and len(env.calls) == 1
 
 
-def test_background_mode_filters_saved_posts_to_the_window_with_the_existing_range_filter(ai_on):
+def test_background_mode_returns_the_saved_posts_exactly_as_they_are_and_starts_live(ai_on):
     env = live_env()
     run = prepare(env, mode="background")
-    rows = [hrow(1, age_minutes=5), hrow(2, age_minutes=29), hrow(3, age_minutes=45), {"title": "undated", "post_text": "x", "post_url": "https://www.reddit.com/r/a/comments/und11/t/"}]
+    rows = [hrow(1, age_minutes=5), hrow(2, age_minutes=29), hrow(3, age_minutes=45), hrow(4, age_minutes=100000),
+            {"title": "undated", "post_text": "x", "post_url": "https://www.reddit.com/r/a/comments/und11/t/"}]
+    snap = copy.deepcopy(rows)
     kept = run.historical(rows)
-    assert [r["title"] for r in kept] == ["Looking for a CRM 1", "Looking for a CRM 2"]
+    assert kept is rows and rows == snap                       # nothing is filtered, reordered or dropped
     run.finish(answer_json(), historical=kept)
+    assert len(env.calls) == 1
 
 
 def test_diagnostics_are_structured_and_carry_no_secrets(ai_on, caplog):
@@ -595,12 +609,12 @@ def test_diagnostics_are_structured_and_carry_no_secrets(ai_on, caplog):
 def test_rejections_are_logged_with_a_reason(ai_on, caplog):
     import logging
     caplog.set_level(logging.INFO, logger="flintel.active_intent")
-    env = live_env(msg_over={"time_window_days": 7})
+    env = live_env(msg_over={"website_only": True})
     prepare(env)
     env2 = live_env(msg_over={"query": "Explain what a CRM is"})
     attach_classifier(env2, decide=lambda t: False)
     prepare(env2)
     text = "\n".join(r.getMessage() for r in caplog.records)
-    assert '"event": "live_eligibility_rejected"' in text and '"reason": "time_bounded"' in text
-    assert '"event": "intent_classified"' in text and '"qualifies": false' in text and '"reason": "not_active_demand"' in text
+    assert '"event": "live_eligibility_rejected"' in text and '"reason": "website"' in text
+    assert '"event": "intent_classified"' in text and '"qualifies": false' in text and '"reason": "no_discovery_intent"' in text
     assert "Explain what a CRM is" not in text                        # the request text is never logged
