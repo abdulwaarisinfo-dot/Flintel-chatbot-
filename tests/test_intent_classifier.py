@@ -222,12 +222,12 @@ def test_a_negative_decision_leaves_the_message_and_historical_results_exactly_a
     assert run.finish(base, historical=pool) == base and env.calls == []
 
 
-def test_a_positive_decision_changes_nothing_on_the_message_and_the_classifier_never_sees_results(ai_on):
+def test_a_positive_decision_changes_only_the_in_memory_time_range_and_the_classifier_never_sees_results(ai_on):
     env = live_env()
     msg = stored_msg(env)
     before = copy.deepcopy(msg)
     run = prepare(env, msg=msg)
-    assert run.active is True and msg == before
+    assert run.active is True and {k for k in set(msg) | set(before) if msg.get(k) != before.get(k)} == {"time_range"}
     payload_text = json.dumps(env.cls_calls[0]["payload"])
     assert "results" not in env.cls_calls[0]["payload"] and "claude_answer" not in payload_text
 
