@@ -812,7 +812,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         website_only: bool = False, website_evidence: dict = None,
                         website_note: str = None, resolved_query: str = None, time_range: dict = None,
                         credit_request_id: str = None, late_delivery: tuple = None,
-                        request_kind: str = None, subject: str = None):
+                        request_kind: str = None, subject: str = None, time_window_source: str = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -950,6 +950,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
 
     if credit_request_id:
         message["credit_request_id"] = credit_request_id
+    if time_window_source and time_window_days:      # (RANGE ORIGIN) recorded only when a lookback exists: "default_recent" | "explicit_period"
+        message["time_window_source"] = time_window_source
     if request_kind:                       # (REQUEST KIND) only a non-lead request records its kind; every other message is unchanged
         message["request_kind"] = request_kind
         message["subject"] = subject
