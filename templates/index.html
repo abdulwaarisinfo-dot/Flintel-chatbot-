@@ -4259,10 +4259,12 @@
     if (!lc || typeof lc !== 'object' || !Array.isArray(lc.items) || !lc.items.length) return;
     const box = document.createElement('section');
     box.className = 'live-links';
-    box.setAttribute('aria-label', 'Live Reddit results \u2014 date-checked, content not assessed');
+    const discussion = lc.intent === 'discussion';
+    const heading = (discussion ? 'Live Reddit discussions' : 'Live Reddit results') + ' \u2014 date-checked, content not assessed';
+    box.setAttribute('aria-label', heading);
     const h = document.createElement('p');
     h.className = 'live-links-title';
-    h.textContent = 'Live Reddit results \u2014 date-checked, content not assessed';
+    h.textContent = heading;
     box.appendChild(h);
     if (typeof lc.statement === 'string' && lc.statement.trim()) {
       const n = document.createElement('p');
@@ -4285,7 +4287,7 @@
         const d = new Date(it.published_at);
         if (!isNaN(d.getTime())) when = ' \u00b7 posted ' + d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
       }
-      tag.textContent = ' \u00b7 live Reddit result' + when + ' \u00b7 content not assessed';
+      tag.textContent = ' \u00b7 live Reddit ' + (discussion ? 'discussion' : 'result') + when + ' \u00b7 content not assessed';
       li.appendChild(tag);
       ul.appendChild(li);
     });
