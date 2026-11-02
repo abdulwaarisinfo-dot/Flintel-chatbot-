@@ -13,6 +13,7 @@ import pytest
 
 mongomock = pytest.importorskip("mongomock")
 import active_intent as ain  # noqa: E402
+import timerange  # noqa: E402
 import reddit_live as rl  # noqa: E402
 from tests.test_active_intent import (HURL, URL2, ai_on, answer_json, attach_classifier, cls_resp, hrow, live_env, prepare,  # noqa: F401,E402
                                       stored_msg, _no_network, _no_inflight_leak, _reset_factory)
@@ -119,16 +120,28 @@ TYPED_RANGE = {"time_range": {"start": "2026-10-25T00:00:00+00:00", "end": "2026
                               "phrase": "last 7 days"}}
 
 
-@pytest.mark.parametrize("query", ["find people currently looking for ai agents", "ai agents posts people are discussing right now",
-                                   "recent posts about ai agents", "give me ai agents posts people actively talking about"])
-@pytest.mark.parametrize("hist", [{}, {"time_window_days": 30}, SEVEN_DAYS, TYPED_RANGE], ids=["none", "default30", "seven_days", "typed_range"])
-def test_whatever_historical_range_the_message_has_the_live_search_still_qualifies_and_the_message_is_untouched(ai_on, query, hist):
+@pytest.mark.parametrize("query,hist,applied", [
+    ("find people currently looking for ai agents", {}, True),
+    ("give me ai agents posts people actively talking about", {}, True),
+    ("find people currently looking for ai agents", {"time_window_days": 30}, True),     # the default lookback of a recency word is not the user's
+    ("recent posts about ai agents", {"time_window_days": 30}, True),
+    ("ai agents posts people actively talking about", {"time_window_days": 30}, False),   # 30 days but no recency word: a period the user named
+    ("recent posts about ai agents", {"time_window_days": 7}, False),                    # a named period wins even with a recency word
+    ("give me ai agents posts people actively talking about", SEVEN_DAYS, False),
+    ("give me ai agents posts people actively talking about", TYPED_RANGE, False),
+], ids=["none-currently", "none-actively", "default30-currently", "default30-recent", "30-no-recency", "7days-recent", "7days", "typed"])
+def test_the_historical_search_gets_the_live_interval_only_when_the_user_gave_it_no_range_of_its_own(ai_on, query, hist, applied):
     env = env_with(cls_resp(intent="discussion"), query, "research", **hist)
     msg = stored_msg(env)
     before = copy.deepcopy(msg)
     run = prepare(env, msg=msg)
-    assert run.active is True and len(env.cls_calls) == 1 and msg == before            # not blocked, not overwritten, not reinterpreted
-    assert run.window_range.end - run.window_range.start == timedelta(minutes=30)      # Live's own window (the fixture's config)
+    assert run.active is True and len(env.cls_calls) == 1                        # Live qualifies either way
+    if applied:
+        assert {k for k in set(msg) | set(before) if msg.get(k) != before.get(k)} == {"time_range"}
+        h = timerange.range_from_doc(msg["time_range"])
+        assert (h.start, h.end) == (run.window_range.start, run.window_range.end) and msg["time_window_days"] == before["time_window_days"]
+    else:
+        assert msg == before                                                     # the user's range / period: not overwritten, not reinterpreted
 
 
 def test_the_post_answer_links_endpoint_still_refuses_time_bounded_searches():
@@ -149,7 +162,7 @@ def test_restricted_kinds_stay_restricted_with_or_without_a_historical_range(ai_
 
 # ── the Live window and Historical Search ───────────────────────────────────────────────────────────────────────────────────────
 @pytest.mark.parametrize("intent", ["demand", "discussion"])
-def test_live_uses_the_configured_1500_minute_window_and_the_message_is_untouched(ai_on, monkeypatch, intent):
+def test_live_and_historical_use_the_same_configured_1500_minute_interval(ai_on, monkeypatch, intent):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", 1500, raising=False)
     env = env_with(cls_resp(intent=intent), "ai agents posts people are currently discussing", "research", time_window_days=7)
     run, msg, out = run_live(env)
@@ -159,7 +172,7 @@ def test_live_uses_the_configured_1500_minute_window_and_the_message_is_untouche
     p = env.calls[0]["payload"]
     assert rec["start"] in p["instructions"] and rec["end"] in p["instructions"] and rec["start"] in p["input"]
     assert out["live_candidates"]["window"]["minutes"] == 1500 and out["live_candidates"]["live_window_minutes"] == 1500
-    assert msg["time_range"] is None and msg["time_window_days"] == 7           # Historical keeps its own lookback
+    assert msg["time_range"] is None and msg["time_window_days"] == 7             # a named period: Historical keeps it (Live still ran)
 
 
 def test_historical_rows_and_answer_are_untouched_by_either_outcome(ai_on):
