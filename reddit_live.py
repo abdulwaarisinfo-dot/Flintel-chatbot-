@@ -295,14 +295,19 @@ def _utc(t) -> str:
     return timerange.to_utc(t).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def build_payload(query: str, window=None) -> dict:
+def build_payload(query: str, window=None, context=None) -> dict:
     """The single request. Mirrors the one-request benchmark's shape: reddit.com only, exactly one tool call, sources
     included, nothing stored. The model name comes from config; 'minimal' reasoning is raised to 'low' (web search is
     not documented to work with minimal reasoning - unverified).
 
     `window=(start, end)` (aware UTC, half-open [start, end)) is the active-intent workflow's shared time window: the exact
     boundaries are written into the instructions and the input. This only ASKS the model; the backend still checks every
-    returned post's publication time itself (`verify_publication`) and drops anything it cannot confirm."""
+    returned post's publication time itself (`verify_publication`) and drops anything it cannot confirm.
+
+    `context` ({"query", "keywords"}; only used together with `window`) is the stored message's own wording and keywords, given
+    to the model as supporting context. With `window` the model is also asked to look for posts that show genuine, current
+    demand (judged from meaning, not exact words) and to leave out posts it is unsure about; this only ASKS - nothing here
+    verifies demand, and no post is described as a buyer."""
     query = _WS.sub(" ", _CTRL.sub(" ", str(query or ""))).strip()[:300]
     effort = getattr(config, "LLM_REASONING_EFFORT", "low")
     if effort not in ("low", "medium", "high"):
@@ -315,6 +320,19 @@ def build_payload(query: str, window=None) -> dict:
                         "or guess a post, title, author, date or URL. If you find nothing in that period, return nothing.")
         text += (f"\nPublication window (UTC): from {start} (inclusive) until {end} (exclusive). "
                  "Return only posts published inside it.")
+        ctx = context if isinstance(context, dict) else {}
+        original = _WS.sub(" ", _CTRL.sub(" ", str(ctx.get("query") or ""))).strip()[:300]
+        if original and original != query:
+            text += f"\nThe user's original wording: {original}"
+        kws = [k for k in (_WS.sub(" ", _CTRL.sub(" ", k)).strip()[:60] for k in (ctx.get("keywords") if isinstance(ctx.get("keywords"), list) else [])[:20]
+                           if isinstance(k, str)) if k]
+        if kws:
+            text += "\nKeywords saved for this search (context only; do not limit the search to them): " + ", ".join(kws)
+        instructions += (" First work out what the user actually wants. Then look for posts whose authors show genuine, current "
+                         "demand for it: a real need, an active search, an intention to hire or buy, a request for recommendations, "
+                         "or an attempt to find a solution. People word this in many different ways, so do not depend on exact "
+                         "keywords. Leave out posts that only explain, teach, report news, advertise or merely mention the topic. "
+                         "If you are unsure whether a post shows real demand, leave it out.")
     return {
         "model": getattr(config, "REDDIT_LIVE_MODEL", "") or getattr(config, "LLM_MODEL", ""),
         "instructions": instructions,
@@ -710,7 +728,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                          require_state=(STATE_CLAIMING,)):
             return R({"state": "unavailable"}, "could_not_record_call_start")
         # 4. the single attempt: no retry, no redirect, hard per-phase timeout
-        payload = build_payload(msg.get("resolved_query") or msg.get("query"), window if wdoc is not None else None)
+        payload = build_payload(msg.get("resolved_query") or msg.get("query"), window if wdoc is not None else None,
+                                {"query": msg.get("query"), "keywords": msg.get("keywords")} if wdoc is not None else None)
         timeout = _cfg_int("REDDIT_LIVE_TIMEOUT_SECONDS", 25)
         headers = {"Authorization": f"Bearer {config.OPENAI_API_KEY}", "content-type": "application/json"}
         started = deps.now()
