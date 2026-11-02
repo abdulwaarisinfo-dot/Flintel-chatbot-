@@ -319,11 +319,12 @@ def build_payload(query: str, window=None, context=None) -> dict:
                         "(exclusive), both in UTC. Return only real Reddit post URLs that your search actually found; never invent "
                         "or guess a post, title, author, date or URL. If you find nothing in that period, return nothing.")
         ctx = context if isinstance(context, dict) else {}
+        discussion = ctx.get("mode") == "discussion"      # the classifier's other outcome; anything else is the demand search
         kws = [k for k in (_WS.sub(" ", _CTRL.sub(" ", k)).strip()[:60] for k in (ctx.get("keywords") if isinstance(ctx.get("keywords"), list) else [])[:20]
                            if isinstance(k, str)) if k]
         if kws:       # the keywords generated for this prompt are the PRIMARY search terms; the wording only says what demand to look for
             text = ("Search reddit.com for posts matching these keywords: " + ", ".join(kws)
-                    + f"\nThe user's request (context only - it defines what demand to look for; it is not the search query): {query}")
+                    + f"\nThe user's request (context only - it defines what {'conversations' if discussion else 'demand'} to look for; it is not the search query): {query}")
             instructions += (" Use the given keywords, plus close synonyms or variants you judge appropriate, to build your search "
                              "query. You may run only ONE search, so combine them into one effective query instead of searching "
                              "once per keyword.")
@@ -332,11 +333,19 @@ def build_payload(query: str, window=None, context=None) -> dict:
         original = _WS.sub(" ", _CTRL.sub(" ", str(ctx.get("query") or ""))).strip()[:300]
         if original and original != query:
             text += f"\nThe user's original wording{' (context only)' if kws else ''}: {original}"
-        instructions += (" First work out what the user actually wants. Then look for posts whose authors show genuine, current "
-                         "demand for it: a real need, an active search, an intention to hire or buy, a request for recommendations, "
-                         "or an attempt to find a solution. People word this in many different ways, so do not depend on exact "
-                         "keywords. Leave out posts that only explain, teach, report news, advertise or merely mention the topic. "
-                         "If you are unsure whether a post shows real demand, leave it out.")
+        if discussion:
+            instructions += (" First work out what topic, tool or product the user wants to see discussed. Then look for posts in "
+                             "which people are currently discussing it: sharing experiences, asking questions, comparing options or "
+                             "talking about it. The authors do not need to be looking to buy or hire anything. People word this in "
+                             "many different ways, so do not depend on exact keywords. Leave out posts that only advertise, only "
+                             "repeat news without any discussion, or merely mention the topic in passing. If you are unsure whether "
+                             "a post is a relevant discussion, leave it out.")
+        else:
+            instructions += (" First work out what the user actually wants. Then look for posts whose authors show genuine, current "
+                             "demand for it: a real need, an active search, an intention to hire or buy, a request for recommendations, "
+                             "or an attempt to find a solution. People word this in many different ways, so do not depend on exact "
+                             "keywords. Leave out posts that only explain, teach, report news, advertise or merely mention the topic. "
+                             "If you are unsure whether a post shows real demand, leave it out.")
     return {
         "model": getattr(config, "REDDIT_LIVE_MODEL", "") or getattr(config, "LLM_MODEL", ""),
         "instructions": instructions,
@@ -585,14 +594,30 @@ def _eligible_core(msg):
     return True, "ok"
 
 
+# The only request kinds the ACTIVE-INTENT workflow will even put to its classifier: a plain lead search (no kind) and "research".
+# The router files a request like "posts people are actively talking about" under "research" (it keeps the router's keywords); whether
+# such a request really expresses active demand is the classifier's decision, by meaning, with its confidence requirement. Every
+# other kind (provider_search, person_mentions, mention_search) is a different workflow and stays rejected here.
+PRE_ANSWER_KINDS = (None, "research")
+
+
 def eligible_pre_answer(msg):
     """(ok, reason) for the ACTIVE-INTENT workflow, which asks for live links BEFORE the answer exists: every rule of
     `eligible` that concerns the search itself (same function), none that needs an answer (no answer, no recency, no evidence
-    count), and only a plain lead search: `request_kind` must be absent (a mention search is a different workflow)."""
-    ok, reason = _eligible_core(msg)
+    count), and only a plain lead search or a "research" search (see PRE_ANSWER_KINDS): any other `request_kind` is rejected. A
+    time range of the user's own does not block it (see below). The post-answer endpoint (`eligible`) is not affected: it still
+    refuses "research" and time-bounded searches."""
+    kind = msg.get("request_kind") if isinstance(msg, dict) else None
+    # The Historical search's own time range / lookback (typed range, router period, default recency lookback) belongs to Historical
+    # alone: it neither changes nor blocks the Live search, which has its own window (ACTIVE_INTENT_WINDOW_MINUTES). The other
+    # rules of _eligible_core are applied as always. (The post-answer `eligible()` keeps its own time-bounded rule.)
+    probe = dict(msg, time_range=None, time_window_days=None)
+    if kind == "research":
+        probe["request_kind"] = None
+    ok, reason = _eligible_core(probe)
     if not ok:
         return False, reason
-    if msg.get("request_kind") is not None:
+    if kind not in PRE_ANSWER_KINDS:
         return False, "kind"
     return True, "ok"
 
@@ -654,7 +679,7 @@ def _set_live(deps, chat_id, owner_key, idx, request_id, claim_id, fields, requi
     return res.matched_count == 1
 
 
-def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=None, pre_answer=False, window=None) -> dict:
+def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=None, pre_answer=False, window=None, intent=None) -> dict:
     """Idempotent. Returns {"state": ...} and, for 'ok', the labelled links. Never raises. The caller has already
     authenticated the session and passes the session's owner (never a client-supplied one).
     States other than 'ok': disabled, ineligible, not_found, pending (another request holds the claim), busy (this process
@@ -733,7 +758,7 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
             return R({"state": "unavailable"}, "could_not_record_call_start")
         # 4. the single attempt: no retry, no redirect, hard per-phase timeout
         payload = build_payload(msg.get("resolved_query") or msg.get("query"), window if wdoc is not None else None,
-                                {"query": msg.get("query"), "keywords": msg.get("keywords")} if wdoc is not None else None)
+                                {"query": msg.get("query"), "keywords": msg.get("keywords"), "mode": intent} if wdoc is not None else None)
         timeout = _cfg_int("REDDIT_LIVE_TIMEOUT_SECONDS", 25)
         headers = {"Authorization": f"Bearer {config.OPENAI_API_KEY}", "content-type": "application/json"}
         started = deps.now()
