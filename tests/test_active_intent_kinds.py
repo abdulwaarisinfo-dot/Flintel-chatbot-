@@ -114,12 +114,12 @@ def test_historical_search_and_the_answer_are_untouched_when_active_intent_rejec
     assert msg == before and run.historical(pool) is pool and pool == snap and run.finish(base, historical=pool) == base
 
 
-def test_an_accepted_research_search_changes_nothing_on_the_message_and_adds_only_the_live_block(ai_on):
+def test_an_accepted_research_search_changes_only_the_in_memory_time_range_and_adds_only_the_live_block(ai_on):
     env = env_for("research")
     msg = stored_msg(env)
     before = copy.deepcopy(msg)
     run = prepare(env, msg=msg)
-    assert msg == before                                                                                  # Historical's message is untouched
+    assert {k for k in set(msg) | set(before) if msg.get(k) != before.get(k)} == {"time_range"}          # the shared interval, in memory
     base = answer_json(HURL)
     out = json.loads(run.finish(base, historical=[hrow(1, url=HURL)]))
     expected = json.loads(base)
