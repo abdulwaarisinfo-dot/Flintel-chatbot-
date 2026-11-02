@@ -2293,6 +2293,7 @@ def search(
         # replaces the router's coarse time_window_days for this message; a
         # materially ambiguous phrase gets one short question instead of a guess.
         time_range_obj = None
+        time_window_source = None      # (RANGE ORIGIN) how `time_window_days` came about: "default_recent" (automatic, from a bare recency word) or "explicit_period"
         try:
             _parsed_range = timerange.parse_time_range(query, reference_utc, _request_timezone(request, tz))
         except Exception as exc:
@@ -2332,12 +2333,15 @@ def search(
                 time_range_obj = _lb_range
             elif _lb_source in ("default_recent", "explicit_period"):
                 routed_time_window_days = _lb_days
+                time_window_source = _lb_source
             if _lb_source != "none":
                 log.info(f"Lookback | query={query!r} | source={_lb_source} | days={routed_time_window_days} | range={bool(time_range_obj)}")
         except Exception as exc:
             log.warning(f"Lookback resolution failed for query={query!r} (searching as routed): {exc}")
 
         time_window_days = routed_time_window_days
+        if not time_window_days:
+            time_window_source = None
 
         # (VAGUE WEBSITE FOLLOW-UP REUSE) When this message's keywords were
         # reused from a stored last_website_context, the matching job for
@@ -2369,6 +2373,7 @@ def search(
                 "query": query, "topic_key": topic_key, "keywords": keywords,
                 "targeting_platform": targeting_platform,
                 "time_window_days": time_window_days,
+                **({"time_window_source": time_window_source} if time_window_source else {}),
                 "unfiltered": routed_unfiltered,
                 "website_context": website_answer_context,
                 "match_phrases": routed_match_phrases,
@@ -2415,6 +2420,7 @@ def search(
             add_search_to_chat(
                 active_chat_id, owner_key, query, topic_key, keywords, targeting_platform,
                 time_window_days=time_window_days,
+                **({"time_window_source": time_window_source} if time_window_source else {}),
                 unfiltered=routed_unfiltered,
                 website_context=website_answer_context,
                 match_phrases=routed_match_phrases,
