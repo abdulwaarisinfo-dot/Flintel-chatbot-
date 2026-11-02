@@ -23,9 +23,11 @@ import pytest
 
 mongomock = pytest.importorskip("mongomock")
 import active_intent as ain  # noqa: E402
+import intent_classifier as ic  # noqa: E402
 import reddit_live as rl  # noqa: E402
 import timerange  # noqa: E402
 from tests import test_realtime_streaming as rs  # noqa: E402
+from tests.test_active_intent import attach_classifier, set_classifier_caps  # noqa: E402
 from tests.test_reddit_live import Env, message, on  # noqa: F401,E402
 from tests.test_reliability_ux_perf import _Req, app_env, env  # noqa: F401,E402
 
@@ -51,6 +53,7 @@ def _clean():
     assert rl.INFLIGHT.count == 0
     yield
     ain.DEPS_FACTORY = None
+    ic.DEPS_FACTORY = None
     assert rl.INFLIGHT.count == 0
 
 
@@ -74,6 +77,7 @@ class World:
         self.live.add_chat(EMAIL, chat_id, [message(0, claude_answer=None, answered_at=None, query=query, resolved_query=None,
                                                     request_id="req-1", credit_request_id="cr-1", evidence_required=15, keywords=["crm"])])
         self.live.response = resp(list(live_items))
+        attach_classifier(self.live, decide=lambda t: "what is a crm" not in t.lower())     # a stand-in for the model's answer
         self.meta_ids = []
         subs = {rl.post_ref(u)[1]: rl.post_ref(u)[0] for u, _ in live_items if rl.post_ref(u)}
 
@@ -92,6 +96,7 @@ def enable(monkeypatch, minutes=30, wait=10):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_ENABLED", True, raising=False)
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", minutes, raising=False)
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_LIVE_WAIT_SECONDS", wait, raising=False)
+    set_classifier_caps(monkeypatch)
 
 
 def seed_stream_message(chats, chat_id, query=CRM, **over):
@@ -116,6 +121,7 @@ def run_stream(app_env, monkeypatch, world, *, retrieval=None, nonblocking=True,
                         lambda elapsed_seconds, trigger_seconds=0, timeout_seconds=1: 1, raising=False)
     monkeypatch.setattr(rt, "get_owner", lambda request: (EMAIL, "email"))
     ain.DEPS_FACTORY = lambda: world.live.deps
+    ic.DEPS_FACTORY = lambda: world.live.cls_deps
 
     def default_retrieval(**kw):
         return [dict(HIST_ROW)]
@@ -396,6 +402,7 @@ def test_live_is_claimed_once_per_message_even_if_the_stream_runs_again(wf, monk
 def background(env, monkeypatch, world, matched, query=CRM, msg_over=None):
     lg, idx, chats = env
     ain.DEPS_FACTORY = lambda: world.live.deps
+    ic.DEPS_FACTORY = lambda: world.live.cls_deps
     captured = {}
 
     def analyze(q, pool, extra_context=None):
