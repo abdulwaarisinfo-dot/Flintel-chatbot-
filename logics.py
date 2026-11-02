@@ -2699,6 +2699,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             gen = mysql_signals.iter_signal_batches(
                 source, cutoff=cutoff, batch_size=SIGNAL_EMBEDDING_FETCH_BATCH,
                 dim=_st["dim"], cancelled=_cancelled,
+                # (STRICT PUBLICATION TIME) only the Active Intent window workflow; every other range / lookback is unchanged
+                strict_publication=bool(_tr is not None and getattr(_tr, "kind", None) == mysql_signals.ACTIVE_INTENT_WINDOW_KIND),
             )
             for docs, M in gen:
                 consumed += len(docs)
