@@ -51,6 +51,14 @@ FIELD_COLUMNS = {
     "subreddit":   ["subreddit", "subreddit_or_channel"],
     "created_utc": ["created_utc", "posted_at", "created_at"],
 }
+# (STRICT PUBLICATION TIME) A row's PUBLICATION time is `created_utc`, or - in a Google-shaped table (no created_utc, but a
+# `posted_at`; flintel_google) - `posted_at`. `created_at` is when the row was STORED and is never a substitute for it: a Google-shaped
+# table therefore ALWAYS uses `posted_at` alone (selected value and time filter, in every workflow: typed ranges, lookbacks and the
+# Active Intent window); a NULL / unusable `posted_at` means "no known publication time", which no time window accepts. The Active Intent
+# window (TimeRange.kind == ACTIVE_INTENT_WINDOW_KIND) additionally applies the same publication-only rule to every table.
+# Reddit-shaped tables (with a created_utc) keep FIELD_COLUMNS exactly as above in every other workflow.
+ACTIVE_INTENT_WINDOW_KIND = "active_intent_window"
+PUBLICATION_COLUMNS = ["created_utc", "posted_at"]
 # Without these a database is skipped (with a clear warning).
 REQUIRED_COLUMNS = ("id", "post_url", "text", "embedding")
 
@@ -203,10 +211,13 @@ def _table_columns(cursor, db) -> set:
     return {str(r[0]).lower() for r in rows or []}
 
 
-def build_select(db: str, columns: set, with_cutoff: bool):
+def build_select(db: str, columns: set, with_cutoff: bool, strict_publication: bool = False):
     """(sql, field_order, created_expr) for one database, or (None, reason).
-    Column names come only from FIELD_COLUMNS/REQUIRED_COLUMNS (fixed
-    identifiers); the db name is validated; values are always parameters."""
+    Column names come only from FIELD_COLUMNS/REQUIRED_COLUMNS/PUBLICATION_COLUMNS (fixed
+    identifiers); the db name is validated; values are always parameters.
+    The time column is restricted to PUBLICATION_COLUMNS - never `created_at` - for a Google-shaped table (no created_utc, has
+    posted_at) always, and for every table when `strict_publication` (the Active Intent window; default False). A table left with none
+    of those columns gets `NULL`, so no row of it is eligible for a time window. Other tables keep FIELD_COLUMNS."""
     if not valid_db_name(db):
         return None, f"invalid database name {db!r}"
     missing = [c for c in REQUIRED_COLUMNS if c not in columns]
@@ -214,10 +225,14 @@ def build_select(db: str, columns: set, with_cutoff: bool):
         return None, f"missing required column(s) {', '.join(missing)}"
     select, order = ["`id`"], ["id"]
     created_expr = None
+    publication_only = strict_publication or ("created_utc" not in columns and "posted_at" in columns)
     for field, cands in FIELD_COLUMNS.items():
-        present = [c for c in cands if c in columns]
+        present = [c for c in (PUBLICATION_COLUMNS if (publication_only and field == "created_utc") else cands) if c in columns]
         if field == "created_utc":
-            if present:
+            if publication_only and not present:
+                created_expr = "NULL"            # no original publication-time column: nothing from this table is eligible
+                select.append("NULL")
+            elif present:
                 created_expr = (f"`{present[0]}`" if len(present) == 1
                                 else "COALESCE(" + ", ".join(f"`{c}`" for c in present) + ")")
                 select.append(created_expr)
@@ -267,7 +282,7 @@ def _warn_dim(db, got_bytes, dim):
 
 
 def iter_signal_batches(source, *, cutoff=None, batch_size=5000, dim=1536, connect_fn=None,
-                        cancelled=None):
+                        cancelled=None, strict_publication=False):
     """Yield (docs, matrix) per batch for one MySQL source.
 
     docs   : list of Mongo-shaped dicts {title, text, post_url, platform,
@@ -287,7 +302,7 @@ def iter_signal_batches(source, *, cutoff=None, batch_size=5000, dim=1536, conne
         cur = conn.cursor()
         try:
             columns = _table_columns(cur, db)
-            built = build_select(db, columns, cutoff is not None)
+            built = build_select(db, columns, cutoff is not None, strict_publication)
             if built[0] is None:
                 # (MYSQL SOURCE FAILURE FIX) unreadable -> failure, not a skip
                 raise SourceUnreadable(f"{built[1]} in `{db}`.{TABLE}")
