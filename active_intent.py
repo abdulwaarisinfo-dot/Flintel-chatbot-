@@ -125,6 +125,7 @@ class Evidence:
     verification: str = "unverified"     # historical: the existing integrity status; live: always "unverified"
     relevance: object = None             # live only: title match to the request, 0..1 (NOT an intent score)
     also_found_by: list = field(default_factory=list)
+    extra: dict = field(default_factory=dict)   # live only: subreddit, body (the post's real text), analysis (grounded summary / sentiment)
 
 
 def normalize_historical(rows):
@@ -148,9 +149,11 @@ def normalize_live(links):
         url = reddit_live.valid_reddit_url(l.get("url")) if isinstance(l, dict) else None
         if url:
             when = timerange.to_utc(l.get("published_at")) if isinstance(l.get("published_at"), str) else None
+            safe = (reddit_live._safe_links([l]) or [{}])[0]           # re-validated: only grounded content fields survive
             out.append(Evidence(source_type=SOURCE_LIVE, url=url, title=reddit_live.clean_title(l.get("title")),
                                 has_content=False, published_at=when.isoformat() if when else None,
-                                verification="date_verified_only" if when else "unverified"))
+                                verification="date_verified_only" if when else "unverified",
+                                extra={k: safe[k] for k in ("subreddit", "body", "analysis") if k in safe}))
     return out
 
 
@@ -206,7 +209,38 @@ def _fmt(t):
     return timerange.to_utc(t).strftime("%Y-%m-%d %H:%M UTC")
 
 
-def build_block(candidates, *, historical_count, window_range, duplicates_removed, historical_state, intent="demand"):
+def build_report(candidates, report, found):
+    """The concise research summary of the Live posts, or None. Everything in it is tied to the posts in `candidates` (accepted,
+    date-verified, with a grounded analysis): theme counts are counted here, a theme or implication with no supporting accepted
+    post is dropped, and the limitations are written here (never by the model). `found` = how many posts the model's search
+    returned before verification."""
+    if not isinstance(report, dict):
+        return None
+    analysed = {reddit_live.url_key(c.url) for c in candidates if (c.extra or {}).get("analysis")}
+    if not analysed:
+        return None
+    themes = []
+    for t in report.get("themes") or []:
+        urls = [u for u in t.get("post_urls") or [] if reddit_live.url_key(u) in analysed]
+        if t.get("theme") and urls:
+            themes.append({"theme": t["theme"], "why_it_matters": t.get("why_it_matters"), "verified_post_count": len(urls),
+                           "post_urls": urls})
+    without = sum(1 for c in candidates if not (c.extra or {}).get("analysis"))
+    limits = ["Summaries and sentiment are GPT's reading of each post; Flintel confirmed the post, its date and that the quoted "
+              "excerpt is in the post, not the reading itself.",
+              "Web search finds some posts, not all of them."]
+    if without:
+        limits.insert(0, f"{without} of {len(candidates)} posts are listed without a summary because their text could not be "
+                         "matched to an analysis.")
+    if found > len(candidates):
+        limits.append(f"{found - len(candidates)} found post{'s were' if found - len(candidates) != 1 else ' was'} left out because "
+                      "Reddit could not confirm its date, text or window.")
+    return {"main_finding": report.get("main_finding"), "themes": themes[:3], "implications": (report.get("implications") or [])[:3],
+            "limitations": limits[:3]}
+
+
+def build_block(candidates, *, historical_count, window_range, duplicates_removed, historical_state, intent="demand",
+                report=None, found=0, search_keywords=None):
     """The `live_candidates` object. Every sentence in it is written here, never by a model, and says only what is true: each
     item's publication time was confirmed from Reddit's own metadata to lie inside the Live window; nothing else about the post
     (its content, its author's intent) has been read or assessed by Flintel; and web search cannot list every post in a window.
@@ -245,8 +279,13 @@ def build_block(candidates, *, historical_count, window_range, duplicates_remove
         "items": [{"rank": i + 1, "title": c.title, "url": c.url, "source": SOURCE_LIVE,
                    "intent": "discussion" if discussion else "demand",
                    "verification_status": "date_verified_only", "evidence": "title_url_and_verified_date_only",
-                   "published_at": c.published_at, "date_verified": True, "title_relevance": c.relevance}
+                   "published_at": c.published_at, "date_verified": True, "title_relevance": c.relevance,
+                   "subreddit": (c.extra or {}).get("subreddit"), "body": (c.extra or {}).get("body") or None,
+                   "analysis": (c.extra or {}).get("analysis"),
+                   "content_status": "analysed" if (c.extra or {}).get("analysis") else "analysis_unavailable",
+                   "discovered_by": list(search_keywords or [])[:20]}
                   for i, c in enumerate(candidates)],
+        "report": build_report(candidates, report, found),
     }
 
 
@@ -288,13 +327,39 @@ def _log(event, **fields):
         pass
 
 
+def _default_recency_lookback(msg) -> bool:
+    """True when the message's `time_window_days` is exactly the default lookback that a bare recency word ("currently", "right now",
+    "recent") created (config.RECENT_DEFAULT_WINDOW_DAYS), there is no explicit time_range, and the message's own wording contains such
+    a word. A period the user named ("last 7 days") has another value or no recency word and is NOT this. Read-only; never raises."""
+    try:
+        days = msg.get("time_window_days")
+        default = getattr(config, "RECENT_DEFAULT_WINDOW_DAYS", 30)
+        if isinstance(days, bool) or not isinstance(days, int) or days <= 0 or days != default or msg.get("time_range"):
+            return False
+        return bool(timerange.recency_intent(msg.get("query")) or timerange.recency_intent(msg.get("resolved_query")))
+    except Exception:
+        return False
+
+
+def historical_window_applies(msg, tr) -> bool:
+    """Whether the Live window should ALSO be the Historical search's window for this request: only when the user gave the
+    Historical search no range or period of their own. A typed `time_range` or a named period always wins and is never touched;
+    the default lookback of a bare recency word does not count as the user's own. A message that already carries exactly this
+    window (the second call of the same request) is already done."""
+    existing = msg.get("time_range")
+    if existing:
+        return False
+    days = msg.get("time_window_days")
+    return days is None or _default_recency_lookback(msg)
+
+
 def apply_window(msg, *, owner_key, chat_id, mode, owner_type=None, now=None):
     """(live_window, intent, reason). Decides whether this search qualifies for a Live Reddit search and of which kind
     ("demand" or "discussion", by the classifier) and returns the Live window [end - ACTIVE_INTENT_WINDOW_MINUTES, end).
-    It NEVER writes to `msg`: the saved-post (Historical) search keeps its own message, time range and behaviour exactly as the
-    user asked for them - the Live window is not given to it. A user's explicit time range blocks the workflow; the default
-    lookback of a bare recency word does not (see reddit_live.eligible_pre_answer). The classifier is asked at most once per
-    message (stored decision), so calling this from both answer paths is free. Returns (None, kind, reason) when not eligible."""
+    When the user gave the Historical search NO range or period of their own (see historical_window_applies), the same UTC interval is
+    put on the in-memory `msg["time_range"]` so the EXISTING saved-post retrieval - MongoDB and MySQL alike - reads it exactly like
+    a typed range, before it runs. A range or period the user chose is never overwritten and never blocks the Live search. The
+    classifier is asked at most once per message (stored decision). Returns (None, kind, reason) when not eligible."""
     if not enabled():
         return None, "disabled", "disabled"
     if not isinstance(msg, dict):
@@ -324,6 +389,13 @@ def apply_window(msg, *, owner_key, chat_id, mode, owner_type=None, now=None):
     _log("intent_classified", qualifies=bool(intent), intent=intent or None, reason=why, mode=mode)
     if not intent:
         return None, "not_detected", why
+    if historical_window_applies(msg, tr):
+        msg["time_range"] = tr.to_doc(tr.end)      # in memory only, the shared interval; the existing retrieval reads it like a typed range
+        _log("historical_window_applied", mode=mode, window_minutes=int((tr.end - tr.start).total_seconds() // 60))
+    elif same_window(msg.get("time_range"), tr):
+        pass                                        # the second call of this request: already carries exactly this window
+    else:
+        _log("historical_range_kept", mode=mode)    # the user's own range / period stays Historical's; Live runs on its own window
     return tr, intent, why
 
 
@@ -440,7 +512,9 @@ class Run:
                 _log("final_response", outcome="historical_only_or_empty", live_candidates=0)
                 return answer_text
             block = build_block(candidates, historical_count=sum(1 for e in hist if e.has_content), window_range=self.window_range,
-                                duplicates_removed=dups, historical_state=hist_state, intent=self.intent)
+                                duplicates_removed=dups, historical_state=hist_state, intent=self.intent,
+                                report=res.get("report"), found=int((res.get("verification") or {}).get("checked") or len(live)),
+                                search_keywords=[k for k in (self.msg or {}).get("keywords") or [] if isinstance(k, str)])
             out, outcome = attach(answer_text, block)
             _log("final_response", outcome=outcome, live_candidates=len(candidates))
             return out
