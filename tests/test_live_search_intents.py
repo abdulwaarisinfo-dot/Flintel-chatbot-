@@ -120,16 +120,22 @@ TYPED_RANGE = {"time_range": {"start": "2026-10-25T00:00:00+00:00", "end": "2026
                               "phrase": "last 7 days"}}
 
 
+DEFAULT30 = {"time_window_days": 30, "time_window_source": "default_recent"}     # recorded by /search: an automatic lookback
+USER30 = {"time_window_days": 30, "time_window_source": "explicit_period"}       # recorded by /search: the user asked for 30 days
+
+
 @pytest.mark.parametrize("query,hist,applied", [
     ("find people currently looking for ai agents", {}, True),
     ("give me ai agents posts people actively talking about", {}, True),
-    ("find people currently looking for ai agents", {"time_window_days": 30}, True),     # the default lookback of a recency word is not the user's
-    ("recent posts about ai agents", {"time_window_days": 30}, True),
-    ("ai agents posts people actively talking about", {"time_window_days": 30}, False),   # 30 days but no recency word: a period the user named
-    ("recent posts about ai agents", {"time_window_days": 7}, False),                    # a named period wins even with a recency word
+    ("find people currently looking for ai agents", DEFAULT30, True),             # an automatic lookback is not the user's
+    ("recent posts about ai agents", DEFAULT30, True),
+    ("recent posts about ai agents", USER30, False),                              # the user asked for 30 days: kept, whatever the words
+    ("ai agents posts people actively talking about", USER30, False),
+    ("find people currently looking for ai agents", {"time_window_days": 30}, False),    # no recorded origin (older message): the user's own
+    ("recent posts about ai agents", {"time_window_days": 7, "time_window_source": "explicit_period"}, False),
     ("give me ai agents posts people actively talking about", SEVEN_DAYS, False),
     ("give me ai agents posts people actively talking about", TYPED_RANGE, False),
-], ids=["none-currently", "none-actively", "default30-currently", "default30-recent", "30-no-recency", "7days-recent", "7days", "typed"])
+], ids=["none-currently", "none-actively", "default-currently", "default-recent", "user30-recent", "user30", "legacy30", "7days-recent", "7days", "typed"])
 def test_the_historical_search_gets_the_live_interval_only_when_the_user_gave_it_no_range_of_its_own(ai_on, query, hist, applied):
     env = env_with(cls_resp(intent="discussion"), query, "research", **hist)
     msg = stored_msg(env)
