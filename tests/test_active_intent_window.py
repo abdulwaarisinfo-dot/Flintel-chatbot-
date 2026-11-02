@@ -4,6 +4,7 @@ All mocked: no network, no OpenAI call, no production database. What these tests
 endpoint answers an unauthenticated server request, or how many in-window posts web search happens to find.
 """
 import datetime
+import copy
 import json
 import logging
 import socket
@@ -235,27 +236,28 @@ def test_the_window_is_recorded_and_a_result_for_another_window_is_not_reused(ai
 
 
 # ── eligibility is unchanged ───────────────────────────────────────────────────────────────────────────────────────────
-@pytest.mark.parametrize("over", [{"time_range": {"start": 1}}, {"time_window_days": 7}])
-def test_an_explicit_time_range_is_never_overwritten(ai_on, over):
+@pytest.mark.parametrize("over", [{"time_range": {"start": "2026-10-01T00:00:00+00:00", "end": "2026-10-08T00:00:00+00:00", "tz": "UTC"}}, {"time_window_days": 7}])
+def test_a_historical_time_range_is_never_overwritten_and_does_not_block_live(ai_on, over):
     env = live_env(msg_over=over)
     msg = stored_msg(env)
+    before = copy.deepcopy(msg)
     run = prepare(env, msg=msg)
-    assert run.active is False and msg["time_range"] == over.get("time_range") and msg["time_window_days"] == over.get("time_window_days")
-    assert env.calls == []
+    assert run.active is True and msg == before                              # Historical's range / period: exactly as the user asked
+    assert run.window_range.end - run.window_range.start == timedelta(minutes=30)      # Live has its own window
 
 
-def test_the_window_is_applied_once_and_identically_by_both_entry_points(ai_on, monkeypatch):
+def test_both_entry_points_derive_the_identical_live_window_and_never_touch_the_message(ai_on, monkeypatch):
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", 1500, raising=False)
     env = live_env()
     msg = stored_msg(env)
     msg["requested_at"] = END.replace(tzinfo=None)
-    ain.apply_window(msg, owner_key=OWNER, chat_id="c1", mode="background_retrieval")
-    assert msg["time_range"]
-    first = dict(msg["time_range"])
-    ain.apply_window(msg, owner_key=OWNER, chat_id="c1", mode="stream")                # second call: idempotent
-    assert msg["time_range"] == first
-    tr = timerange.range_from_doc(msg["time_range"])
-    assert tr.end == END and tr.end - tr.start == timedelta(minutes=1500)
+    before = copy.deepcopy(msg)
+    a = ain.apply_window(msg, owner_key=OWNER, chat_id="c1", mode="background_retrieval")
+    b = ain.apply_window(msg, owner_key=OWNER, chat_id="c1", mode="stream")
+    assert msg == before and msg["time_range"] is None                                   # Historical's message is untouched
+    (tr_a, intent_a, _r), (tr_b, intent_b, _r2) = a, b
+    assert (tr_a.start, tr_a.end) == (tr_b.start, tr_b.end) and tr_a.end == END and tr_a.end - tr_a.start == timedelta(minutes=1500)
+    assert intent_a == intent_b == "demand" and len(env.cls_calls) == 1                  # the classifier was asked once
 
 
 # ── safe logging ───────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -283,12 +285,12 @@ def bg(env, on, monkeypatch):
     for name, fn in (("_is_owner_busy", lambda *a: False), ("_set_owner_busy", lambda *a: None), ("_clear_owner_busy", lambda *a: None)):
         monkeypatch.setattr(idx, name, fn, raising=False)
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_ENABLED", True, raising=False)
-    monkeypatch.setattr(ic, "decide", lambda **kw: (True, "active_demand"))     # these tests are about the window reaching retrieval
+    monkeypatch.setattr(ic, "decide_full", lambda **kw: ("demand", "active_demand"))     # these tests are about Historical retrieval staying unchanged
     return lg, idx, chats
 
 
 @pytest.mark.parametrize("minutes", [30, 1500])
-def test_background_retrieval_receives_the_window_before_it_runs(bg, monkeypatch, minutes):
+def test_background_historical_retrieval_gets_its_original_arguments_not_the_live_window(bg, monkeypatch, minutes):
     lg, idx, chats = bg
     monkeypatch.setattr(ain.config, "ACTIVE_INTENT_WINDOW_MINUTES", minutes, raising=False)
     seen = []
@@ -300,10 +302,23 @@ def test_background_retrieval_receives_the_window_before_it_runs(bg, monkeypatch
     chat = chats.find_one({"chat_id": "c1", "owner_key": owner})
     chat["messages"][-1].update(evidence_required=15, request_id="req-1", credit_request_id="cr-1")
     idx._fill_in_message_outputs("c1", owner, chat["messages"])
-    assert len(seen) == 1
-    tr = timerange.range_from_doc(seen[0]["time_range"])
-    assert tr is not None and tr.end - tr.start == timedelta(minutes=minutes) and seen[0]["since_days"] is None
-    assert chats.find_one({"chat_id": "c1", "owner_key": owner})["messages"][-1]["time_range"] is None      # never persisted
+    assert len(seen) == 1 and "time_range" not in seen[0] and seen[0]["since_days"] is None       # exactly what a normal search passes
+    assert chats.find_one({"chat_id": "c1", "owner_key": owner})["messages"][-1].get("time_range") is None
+
+
+def test_a_users_own_historical_range_is_passed_through_unchanged_and_blocks_the_workflow(bg, monkeypatch):
+    lg, idx, chats = bg
+    seen = []
+    monkeypatch.setattr(idx, "get_evidence_with_topup", lambda **kw: seen.append(kw) or [])
+    monkeypatch.setattr(lg, "_call_claude", lambda *a, **k: "{}")
+    monkeypatch.setattr(idx, "_complete_message_answer_and_results", lambda *a, **k: None)
+    owner = "alice@example.com"
+    mine = timerange.TimeRange(start=END - timedelta(days=3), end=END, tz_name="UTC", kind="rolling", phrase="last 3 days").to_doc(END)
+    idx.add_search_to_chat("c1", owner, CRM, lg.normalize_topic_key(CRM), ["crm"], "reddit", time_range=mine)
+    chat = chats.find_one({"chat_id": "c1", "owner_key": owner})
+    chat["messages"][-1].update(evidence_required=15, request_id="req-1", credit_request_id="cr-1")
+    idx._fill_in_message_outputs("c1", owner, chat["messages"])
+    assert seen[0]["time_range"] == mine
 
 
 def test_background_retrieval_is_unchanged_for_an_ordinary_search_or_when_disabled(bg, monkeypatch):
@@ -314,7 +329,7 @@ def test_background_retrieval_is_unchanged_for_an_ordinary_search_or_when_disabl
     monkeypatch.setattr(idx, "_complete_message_answer_and_results", lambda *a, **k: None)
     owner = "alice@example.com"
     asked = []
-    monkeypatch.setattr(ic, "decide", lambda **kw: asked.append(kw["chat_id"]) or (False, "not_active_demand"))
+    monkeypatch.setattr(ic, "decide_full", lambda **kw: asked.append(kw["chat_id"]) or (False, "no_discovery_intent"))
     for cid, q, on_flag in (("c1", "What is a CRM and how does it work?", True), ("c2", CRM, False)):
         monkeypatch.setattr(ain.config, "ACTIVE_INTENT_ENABLED", on_flag, raising=False)
         idx.add_search_to_chat(cid, owner, q, lg.normalize_topic_key(q), ["crm"], "reddit")
