@@ -186,10 +186,9 @@ def test_active_lead_prompt_triggers_both_branches_and_yields_one_combined_answe
     world = World("s1")
     done, _unused, chats = run_stream(wf, monkeypatch, world)
     ans = final_answer(done, chats, "s1")
-    # historical branch ran with the recent window, and its analysis is the normal one
+    # the historical branch ran EXACTLY as a normal search does (no window of any kind), and its analysis is the normal one
     (kw,) = world.retrieval_kwargs
-    tr = timerange.range_from_doc(kw["time_range"])
-    assert tr is not None and (tr.end - tr.start) == datetime.timedelta(minutes=30) and kw["since_days"] is None
+    assert "time_range" not in kw and kw["since_days"] is None
     assert ans["format"] == "source_list" and ans["platforms"][0]["posts"][0]["link"] == HIST_URL
     # live branch ran once, with the web_search tool
     assert len(world.live.calls) == 1 and world.live.calls[0]["payload"]["tools"][0]["type"] == "web_search"
@@ -311,8 +310,8 @@ def test_live_candidates_are_labelled_date_verified_only_with_no_intent_claim(wf
     for item in lc["items"]:
         assert item["verification_status"] == "date_verified_only" and item["evidence"] == "title_url_and_verified_date_only"
         assert item["source"] == "live_web_search" and item["date_verified"] is True and item["published_at"]
-        assert not ({"intent", "score", "summary", "post_text"} & set(item))
-    assert "has not read these posts" in lc["statement"] and "same 30-minute window" in lc["statement"]
+        assert item["intent"] == "demand" and not ({"score", "summary", "post_text"} & set(item))
+    assert "has not read these posts" in lc["statement"] and "30-minute live search window" in lc["statement"]
     assert "not limited" not in lc["statement"]
     ranks = [i["title_relevance"] for i in lc["items"]]
     assert ranks == sorted(ranks, reverse=True)
@@ -341,21 +340,24 @@ def test_workflow_off_means_even_an_active_lead_prompt_behaves_as_before(wf, mon
     assert world.live.calls == [] and "live_candidates" not in ans and world.retrieval_kwargs[0].get("time_range") is None
 
 
-def test_an_explicit_time_range_is_preserved_exactly_and_live_is_skipped(wf, monkeypatch):
+def test_an_explicit_time_range_is_preserved_exactly_for_historical_and_live_runs_independently(wf, monkeypatch):
     explicit = {"start": datetime.datetime(2026, 10, 1, tzinfo=datetime.timezone.utc), "end": datetime.datetime(2026, 10, 8, tzinfo=datetime.timezone.utc),
                 "tz": "UTC", "kind": "date_range", "phrase": "October 1 to October 7", "capped": False, "note": "",
                 "reference": datetime.datetime(2026, 11, 1, tzinfo=datetime.timezone.utc), "display": "Oct 1 - Oct 7"}
     world = World("s1")
     done, _u, chats = run_stream(wf, monkeypatch, world, msg_over={"time_range": explicit})
-    assert world.retrieval_kwargs[0]["time_range"] == explicit and world.live.calls == []
-    assert "live_candidates" not in final_answer(done, chats, "s1")
+    assert world.retrieval_kwargs[0]["time_range"] == explicit                       # Historical: the user's range, byte for byte
+    assert len(world.live.calls) == 1 and "live_candidates" in final_answer(done, chats, "s1")      # Live: its own (configured) window
+    wdoc = world.live.stored(0, "s1")["window"]
+    assert timerange.to_utc(wdoc["end"]) - timerange.to_utc(wdoc["start"]) == datetime.timedelta(minutes=30)
 
 
-def test_an_explicit_day_window_is_preserved_and_live_is_skipped(wf, monkeypatch):
+def test_an_explicit_day_window_is_preserved_for_historical_and_live_runs_independently(wf, monkeypatch):
     world = World("s1")
     done, _u, chats = run_stream(wf, monkeypatch, world, msg_over={"time_window_days": 7})
     kw = world.retrieval_kwargs[0]
-    assert kw["since_days"] == 7 and kw.get("time_range") is None and world.live.calls == []
+    assert kw["since_days"] == 7 and kw.get("time_range") is None            # Historical: the user's period, exactly
+    assert len(world.live.calls) == 1 and "live_candidates" in final_answer(done, chats, "s1")           # Live: its own window
 
 
 def test_the_window_override_is_never_persisted(wf, monkeypatch):
@@ -366,19 +368,18 @@ def test_the_window_override_is_never_persisted(wf, monkeypatch):
 
 
 @pytest.mark.parametrize("minutes", [30, 1500])
-def test_the_same_window_reaches_retrieval_and_the_live_search_in_the_real_stream(wf, monkeypatch, minutes):
+def test_live_gets_the_configured_window_and_historical_retrieval_gets_none_in_the_real_stream(wf, monkeypatch, minutes):
     enable(monkeypatch, minutes=minutes)
     world = World("s1")
     done, _u, chats = run_stream(wf, monkeypatch, world)
-    tr = timerange.range_from_doc(world.retrieval_kwargs[0]["time_range"])
-    assert (tr.end - tr.start) == datetime.timedelta(minutes=minutes)                  # no 40-minute cap
-    payload = json.dumps(world.live.calls[0]["payload"])
-    assert rl._utc(tr.start) in payload and rl._utc(tr.end) in payload                # identical boundaries given to the model
+    assert "time_range" not in world.retrieval_kwargs[0] and world.retrieval_kwargs[0]["since_days"] is None   # Historical: untouched
     wdoc = world.live.stored(0, "s1")["window"]
-    assert wdoc == {"start": rl._utc(tr.start), "end": rl._utc(tr.end)}
+    start, end = timerange.to_utc(wdoc["start"]), timerange.to_utc(wdoc["end"])
+    assert end - start == datetime.timedelta(minutes=minutes)                              # no 40-minute cap
+    payload = json.dumps(world.live.calls[0]["payload"])
+    assert wdoc["start"] in payload and wdoc["end"] in payload                             # the exact boundaries given to the model
     lc = final_answer(done, chats, "s1")["live_candidates"]
-    assert lc["window"]["start"] == tr.start.isoformat() and lc["window"]["end"] == tr.end.isoformat()
-    assert lc["window"]["minutes"] == minutes
+    assert lc["window"]["minutes"] == minutes and timerange.to_utc(lc["window"]["start"]) == start
 
 
 def test_guests_and_inactive_live_get_no_window_and_no_live_call(wf, monkeypatch):
@@ -443,19 +444,19 @@ def bgenv(env, on, monkeypatch):
     return lg, idx, chats
 
 
-def test_background_path_combines_both_branches_and_filters_saved_posts_to_the_window(bgenv, monkeypatch):
+def test_background_path_combines_both_branches_and_leaves_the_saved_posts_exactly_as_retrieved(bgenv, monkeypatch):
     world = bg_world()
     stored, seen = background(bgenv, monkeypatch, world, [recent(1, 5), recent(2, 25), recent(3, 90)])
     ans = json.loads(stored["claude_answer"])
-    assert sorted(r["title"] for r in seen["pool"]) == ["Need a CRM 1", "Need a CRM 2"]          # the 90-minute-old post is outside 30 min
+    assert sorted(r["title"] for r in seen["pool"]) == ["Need a CRM 1", "Need a CRM 2", "Need a CRM 3"]      # nothing is windowed away
     assert len(world.live.calls) == 1 and {i["url"] for i in ans["live_candidates"]["items"]} == {LIVE1, LIVE2}
-    assert stored["time_range"] is None and stored["time_window_days"] is None                       # the window is never stored on the message
+    assert stored["time_range"] is None and stored["time_window_days"] is None
     assert [r["post_url"] for r in stored["results"]] == [r["post_url"] for r in seen["pool"]]
 
 
-def test_background_path_historical_zero_still_uses_live(bgenv, monkeypatch):
+def test_background_path_with_no_saved_posts_still_uses_live(bgenv, monkeypatch):
     world = bg_world()
-    stored, seen = background(bgenv, monkeypatch, world, [recent(1, 90)])           # everything is older than the window
+    stored, seen = background(bgenv, monkeypatch, world, [])
     ans = json.loads(stored["claude_answer"])
     assert seen["pool"] == [] and ans["format"] == "no_results" and len(ans["live_candidates"]["items"]) == 2
 
@@ -468,13 +469,14 @@ def test_background_live_failure_keeps_the_historical_answer(bgenv, monkeypatch)
     assert "live_candidates" not in ans and ans["platforms"][0]["posts"]
 
 
-def test_background_path_ignores_normal_prompts_and_explicit_ranges(bgenv, monkeypatch):
+def test_background_path_ignores_normal_prompts_and_keeps_explicit_ranges_independent_of_live(bgenv, monkeypatch):
     world = bg_world(query=NOT_LEAD)
     stored, seen = background(bgenv, monkeypatch, world, [recent(1, 5), recent(2, 90)], query=NOT_LEAD)
     assert len(seen["pool"]) == 2 and world.live.calls == [] and "live_candidates" not in json.loads(stored["claude_answer"])
     world2 = bg_world()
     stored2, seen2 = background(bgenv, monkeypatch, world2, [recent(1, 5), recent(2, 90)], msg_over={"time_window_days": 7})
-    assert len(seen2["pool"]) == 2 and world2.live.calls == []
+    assert len(seen2["pool"]) == 2 and len(world2.live.calls) == 1                     # the saved posts untouched; Live ran on its own window
+    assert stored2["time_range"] is None                                                # Live's window is never written to the message
 
 
 # ── the post-answer links endpoint does not show a second, duplicate section ─────────────────────────────────────────────
