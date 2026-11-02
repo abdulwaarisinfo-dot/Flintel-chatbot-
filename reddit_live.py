@@ -295,6 +295,9 @@ def _utc(t) -> str:
     return timerange.to_utc(t).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+WORKFLOW_MIN_OUTPUT_TOKENS = 4000      # the JSON report of the active-intent workflow needs more room than a list of links
+
+
 def build_payload(query: str, window=None, context=None) -> dict:
     """The single request. Mirrors the one-request benchmark's shape: reddit.com only, exactly one tool call, sources
     included, nothing stored. The model name comes from config; 'minimal' reasoning is raised to 'low' (web search is
@@ -346,6 +349,21 @@ def build_payload(query: str, window=None, context=None) -> dict:
                              "or an attempt to find a solution. People word this in many different ways, so do not depend on exact "
                              "keywords. Leave out posts that only explain, teach, report news, advertise or merely mention the topic. "
                              "If you are unsure whether a post shows real demand, leave it out.")
+    out_tokens = _cfg_int("REDDIT_LIVE_MAX_OUTPUT_TOKENS", 2000)
+    if window is not None:
+        # The workflow asks for the model's reading of each post, not just links. The base "one short plain sentence" rule is
+        # replaced by a JSON report; every field is re-checked by the backend (ground_analysis) and nothing is taken on trust.
+        instructions = instructions.replace(" Reply with one short plain sentence.", "")
+        instructions += (' Read each post you found, then reply with ONLY one JSON object and no other text: {"posts": [{"url": the '
+                         'post\'s Reddit permalink, "title": its exact title, "quote": a short excerpt of at most 200 characters copied '
+                         'word for word from that post\'s title or text, "summary": one or two sentences using only what the post says, '
+                         '"sentiment": "positive" or "negative" or "neutral" or "mixed" (the author\'s attitude to the topic), '
+                         '"relevance": one short sentence on how it answers the request}], "main_finding": one short paragraph, '
+                         '"themes": [{"theme": a short name, "why_it_matters": one sentence, "post_urls": [urls of posts listed above]}] '
+                         '(at most 3), "implications": [at most 3 short, concrete points for someone building a product here]}. List '
+                         'only posts you actually found and whose text you could read; copy the quote exactly; leave a post out '
+                         'rather than guess. Keep every field brief.')
+        out_tokens = max(out_tokens, WORKFLOW_MIN_OUTPUT_TOKENS)
     return {
         "model": getattr(config, "REDDIT_LIVE_MODEL", "") or getattr(config, "LLM_MODEL", ""),
         "instructions": instructions,
@@ -354,7 +372,7 @@ def build_payload(query: str, window=None, context=None) -> dict:
         "tool_choice": "required",
         "include": ["web_search_call.action.sources"],
         "max_tool_calls": 1,
-        "max_output_tokens": _cfg_int("REDDIT_LIVE_MAX_OUTPUT_TOKENS", 2000),
+        "max_output_tokens": out_tokens,
         "reasoning": {"effort": effort},
         "store": False,
     }
@@ -388,6 +406,11 @@ META_USER_AGENT = "Flintel/1.0 (checks the publication time of posts it links to
 MAX_META_IDS = 25
 _META_MAX_BYTES = 2_000_000
 _POST_REF = re.compile(r"/r/([A-Za-z0-9_]{2,21})/comments/([a-z0-9]{4,10})(?:/|$)")
+MAX_BODY_CHARS = 1500           # the most of a post's text that is kept (and shown / checked against)
+
+
+def _clean_text(text, limit):
+    return _WS.sub(" ", _CTRL.sub(" ", text)).strip()[:limit] if isinstance(text, str) else ""
 
 
 def post_ref(url):
@@ -400,7 +423,8 @@ def post_ref(url):
 
 
 def _reddit_info(ids, timeout):
-    """{post_id: {"created_utc", "subreddit", "removed"}} for the ids Reddit returned. Raises on any HTTP error (429, 403, 5xx,
+    """{post_id: {"created_utc", "subreddit", "removed", "title", "body"}} for the ids Reddit returned: the post's REAL title and
+    text (`selftext`, cleaned and cut to MAX_BODY_CHARS) as Reddit itself reports them. Raises on any HTTP error (429, 403, 5xx,
     a redirect), timeout or unreadable body: the caller treats that as 'cannot verify' for every candidate."""
     import httpx
     params = {"id": ",".join("t3_" + i for i in ids), "raw_json": "1"}
@@ -415,9 +439,12 @@ def _reddit_info(ids, timeout):
     for ch in children:
         d = ch.get("data") if isinstance(ch, dict) and ch.get("kind") == "t3" else None
         if isinstance(d, dict) and isinstance(d.get("id"), str):
+            body = d.get("selftext")
             out[d["id"]] = {"created_utc": d.get("created_utc"), "subreddit": d.get("subreddit"),
                             "removed": bool(d.get("removed_by_category")) or d.get("author") == "[deleted]"
-                            or d.get("selftext") in ("[removed]", "[deleted]")}
+                            or d.get("selftext") in ("[removed]", "[deleted]"),
+                            "title": clean_title(d.get("title")),
+                            "body": _clean_text(body, MAX_BODY_CHARS) if isinstance(body, str) and body not in ("[removed]", "[deleted]") else ""}
     return out
 
 
@@ -426,7 +453,7 @@ def verify_publication(deps, links, window):
     window [start, end). Fail closed per candidate: a post that is missing from the reply (deleted / private / inaccessible), in
     another subreddit than its URL says, removed, without a readable or plausible timestamp, or outside the window is dropped
     and counted; if the lookup itself fails, every candidate is dropped. A model's date or a title is never evidence. Each kept
-    link carries the date Reddit reported, as an ISO UTC string. Never raises."""
+    link carries the date, real title, subreddit and text Reddit reported (the date as an ISO UTC string). Never raises."""
     start, end = timerange.to_utc(window[0]), timerange.to_utc(window[1])
     stats = {"checked": 0, "verified": 0, "outside_window": 0, "unverifiable": 0, "removed": 0, "lookup_failed": 0}
     refs = []
@@ -457,6 +484,8 @@ def verify_publication(deps, links, window):
             stats["unverifiable"] += 1
         elif d.get("removed"):
             stats["removed"] += 1
+        elif not d.get("title"):
+            stats["unverifiable"] += 1              # no real title from Reddit = no grounded content for this post
         else:
             when = timerange.publication_time(d.get("created_utc"), now=end, platform="reddit")
             if when is None:
@@ -465,8 +494,89 @@ def verify_publication(deps, links, window):
                 stats["outside_window"] += 1
             else:
                 stats["verified"] += 1
-                kept.append(dict(l, published_at=when.isoformat()))
+                kept.append(dict(l, published_at=when.isoformat(), title=d["title"], subreddit=d.get("subreddit"),
+                                 body=d.get("body") or ""))      # the post's REAL title / text as Reddit reports them
     return kept, stats
+
+
+# ── content analysis (active-intent workflow only) ──────────────────────────────────────────────────────────────────────────
+# The model is asked, in the same single request, to read each post it found and report a summary, a sentiment, a relevance note
+# and a SHORT VERBATIM QUOTE. The backend then (a) matches every entry to a validated, date-verified post by its stable post id,
+# never by position or title, and (b) accepts the analysis ONLY if the quote really occurs in the post's title or text as Reddit
+# reports them. An entry that fails any check is dropped: that post is shown without a summary, never with an invented one.
+SENTIMENTS = ("positive", "negative", "neutral", "mixed")
+MAX_THEMES = 3
+MAX_IMPLICATIONS = 3
+
+
+def _norm(text) -> str:
+    return _WS.sub(" ", _CTRL.sub(" ", str(text or ""))).strip().lower()
+
+
+def parse_analysis(data):
+    """The model's JSON object from the final message text, or None. Strict: it must parse as a JSON object (a ```json fence or
+    text around one object is tolerated); anything else - including a truncated reply - is None, never a guess."""
+    text = None
+    for item in (data.get("output") if isinstance(data, dict) else None) or []:
+        if isinstance(item, dict) and item.get("type") == "message":
+            for part in item.get("content") or []:
+                if isinstance(part, dict) and part.get("type") == "output_text" and isinstance(part.get("text"), str):
+                    text = part["text"]
+    if not text:
+        return None
+    s = text.strip()
+    for candidate in (s, s[s.find("{"):s.rfind("}") + 1] if "{" in s and "}" in s else ""):
+        try:
+            obj = json.loads(candidate)
+        except (ValueError, TypeError):
+            continue
+        if isinstance(obj, dict):
+            return obj
+    return None
+
+
+def ground_analysis(links, analysis):
+    """(links, report). Each link gains `analysis` = {summary, sentiment, relevance, quote} when the model's entry for the SAME post
+    id passes every check, else None. `report` is the model's main finding / themes / implications restricted to what the grounded
+    posts support (theme counts are computed here from grounded posts, at most MAX_THEMES themes and MAX_IMPLICATIONS points), or None."""
+    entries = {}
+    for e in (analysis.get("posts") if isinstance(analysis, dict) else None) or []:
+        url = valid_reddit_url(e.get("url")) if isinstance(e, dict) else None
+        ref = post_ref(url) if url else None
+        if ref and ref[1] not in entries:
+            entries[ref[1]] = (ref[0].lower(), e)
+    out = []
+    for l in links or []:
+        ref = post_ref(l.get("url"))
+        got = entries.get(ref[1]) if ref else None
+        ok = None
+        if got and got[0] == ref[0].lower():
+            e = got[1]
+            quote, summary = _norm(e.get("quote")), _clean_text(e.get("summary"), 400)
+            haystack = _norm(f"{l.get('title') or ''} {l.get('body') or ''}")
+            if (12 <= len(quote) <= 300 and quote in haystack and summary and e.get("sentiment") in SENTIMENTS):
+                ok = {"summary": summary, "sentiment": e["sentiment"], "relevance": _clean_text(e.get("relevance"), 250) or None,
+                      "quote": _clean_text(e.get("quote"), 300)}
+        out.append(dict(l, analysis=ok))
+    grounded = {url_key(l["url"]) for l in out if l.get("analysis")}
+    if not grounded or not isinstance(analysis, dict):
+        return out, None
+    themes = []
+    for t in (analysis.get("themes") if isinstance(analysis.get("themes"), list) else [])[:MAX_THEMES]:
+        if not isinstance(t, dict):
+            continue
+        urls = []
+        for u in t.get("post_urls") if isinstance(t.get("post_urls"), list) else []:
+            v = valid_reddit_url(u)
+            if v and url_key(v) in grounded and v not in urls:
+                urls.append(next(l["url"] for l in out if url_key(l["url"]) == url_key(v)))
+        name = _clean_text(t.get("theme"), 80)
+        if name and urls:
+            themes.append({"theme": name, "why_it_matters": _clean_text(t.get("why_it_matters"), 220) or None,
+                           "verified_post_count": len(urls), "post_urls": urls})
+    imps = [x for x in (_clean_text(i, 200) for i in (analysis.get("implications") if isinstance(analysis.get("implications"), list) else [])[:MAX_IMPLICATIONS]) if x]
+    return out, {"main_finding": _clean_text(analysis.get("main_finding"), 450) or None, "themes": themes, "implications": imps,
+                 "posts_with_analysis": len(grounded), "posts_without_analysis": sum(1 for l in out if not l.get("analysis"))}
 
 
 def _record_usage(model, data, status):
@@ -519,6 +629,14 @@ def _safe_links(links):
             when = timerange.to_utc(l.get("published_at")) if isinstance(l.get("published_at"), str) else None
             if when is not None:
                 item["published_at"] = when.isoformat()      # only ever set by verify_publication
+            if isinstance(l.get("subreddit"), str) and l["subreddit"]:
+                item["subreddit"] = _clean_text(l["subreddit"], 40)
+            if isinstance(l.get("body"), str) and l["body"]:
+                item["body"] = _clean_text(l["body"], MAX_BODY_CHARS)
+            a = l.get("analysis")
+            if isinstance(a, dict) and a.get("sentiment") in SENTIMENTS and isinstance(a.get("summary"), str) and a["summary"]:
+                item["analysis"] = {"summary": _clean_text(a["summary"], 400), "sentiment": a["sentiment"],
+                                    "relevance": _clean_text(a.get("relevance"), 250) or None, "quote": _clean_text(a.get("quote"), 300)}
             out.append(item)
     return out
 
@@ -535,7 +653,10 @@ def present(live, now, pre_answer=False) -> dict:
     if state == STATE_OK:
         links = _safe_links(live.get("links"))
         if links:
-            return {"state": "ok", "label": LABEL, "note": NOTE, "links": links}
+            out = {"state": "ok", "label": LABEL, "note": NOTE, "links": links}
+            if pre_answer and isinstance(live.get("report"), dict):
+                out["report"] = live["report"]      # the workflow's own stored report (built by ground_analysis), for a reused record
+            return out
         return {"state": "none"}
     if state in (STATE_CLAIMING, STATE_CALLING):
         claimed = _aware(live.get("claimed_at"))
@@ -763,7 +884,7 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
         headers = {"Authorization": f"Bearer {config.OPENAI_API_KEY}", "content-type": "application/json"}
         started = deps.now()
         state, links, calls, sources, data, http_status = STATE_ERROR, [], 0, 0, None, None
-        completed, outcome, vstats = 0, "api_error", None
+        completed, outcome, vstats, report = 0, "api_error", None, None
         try:
             data = deps.post(config.OPENAI_RESPONSES_URL, headers, payload, timeout)
             if isinstance(data, dict):
@@ -780,6 +901,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
                     if wdoc is not None:     # keep only posts whose PUBLICATION time Reddit confirms is inside the window
                         links, vstats = verify_publication(deps, links, window)
                         state, outcome = (STATE_OK, "ok") if links else (STATE_EMPTY, "no_verified_in_window")
+                        if links:                # the model's reading of each post, kept only where the post's own text backs it
+                            links, report = ground_analysis(links, parse_analysis(data))
                 elif links:
                     state, links, outcome = STATE_ERROR, [], "no_completed_web_search_call"
                 else:
@@ -805,7 +928,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
             log.warning("Recording a live-links attempt failed (%s)", type(exc).__name__)
         try:
             saved = _set_live(deps, chat_id, owner_key, idx, rid, claim_id,
-                              {"state": state, "links": links, "finished_at": deps.now(), "latency_ms": latency_ms},
+                              {"state": state, "links": links, "finished_at": deps.now(), "latency_ms": latency_ms,
+                               **({"report": report} if report else {})},
                               require_state=(STATE_CALLING,))
             if not saved:
                 log.warning("Live-links result was not stored (claim no longer matches)")
@@ -814,6 +938,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
         info = {"http_status": http_status, "web_search_calls": completed, "validated_urls": len(links)}
         if vstats is not None:
             info["verification"] = vstats
+        if report:
+            info["report"] = report
         if state == STATE_OK:
             return R(present({"state": STATE_OK, "links": links}, now, pre_answer=True), outcome, **info)
         return R({"state": "none"}, outcome, **info)
