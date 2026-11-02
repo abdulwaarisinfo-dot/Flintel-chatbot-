@@ -115,3 +115,17 @@ def test_an_analysed_block_shows_the_concise_report_and_each_posts_own_summary_a
     assert page.inner_text("section.live-links").count("four is cut") == 0 and "Limitations:" in page.inner_text("section.live-links")
     assert errors == []
     page.close()
+
+
+UNAVAILABLE = """{live_candidates: {intent: 'demand', statement: 's',
+  items: [{rank: 1, title: 'Real post', url: 'https://www.reddit.com/r/SaaS/comments/abc123/x/', subreddit: 'SaaS', date_verified: true,
+           published_at: '2026-11-01T10:05:00+00:00', analysis: null, content_status: 'analysis_unavailable'}]}}"""
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_a_valid_post_without_analysis_is_kept_and_clearly_marked_analysis_unavailable(integrity_browser, template):
+    page, errors = _page(integrity_browser, template, UNAVAILABLE)
+    li = page.inner_text("section.live-links li")
+    assert "Real post" in li and "analysis unavailable" in li and "sentiment" not in li and page.query_selector(".live-links-summary") is None
+    assert errors == []
+    page.close()
