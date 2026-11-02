@@ -242,7 +242,7 @@ def test_the_live_request_carries_the_wording_the_keywords_and_the_demand_instru
     run.finish(answer_json(HURL), historical=[hrow(1, url=HURL)])
     p = env.calls[0]["payload"]
     assert "Find businesses wanting an AI agent built" in p["input"] and "find people who need AI agents" in p["input"]
-    assert "ai agent, automation" in p["input"] and "do not limit the search to them" in p["input"]
+    assert "ai agent, automation" in p["input"] and "matching these keywords: ai agent, automation" in p["input"]
     ins = p["instructions"].lower()
     for needle in ("genuine, current demand", "do not depend on exact keywords", "unsure", "never invent"):
         assert needle in ins
@@ -250,6 +250,30 @@ def test_the_live_request_carries_the_wording_the_keywords_and_the_demand_instru
     start, end = env.chats.find_one({"chat_id": "c1"})["messages"][0]["live_reddit"]["window"].values()
     assert start in p["input"] and end in p["input"] and start in p["instructions"]          # the window text is still there
     assert len(env.calls) == 1 and len(env.cls_calls) == 1                                    # one Live call + one classifier call, no more
+
+
+def test_with_a_window_the_keywords_are_the_primary_search_terms_and_the_wording_is_context():
+    win = ("2026-11-01T11:30:00Z", "2026-11-01T12:00:00Z")
+    ctx = {"query": "my own words", "keywords": ["ai agent", " ai\x00 automation ", 7, None, "", "x" * 100] + ["k%d" % i for i in range(30)]}
+    p = rl.build_payload("find people who need AI agents", win, ctx)
+    first, rest = p["input"].split("\n", 1)
+    assert first.startswith("Search reddit.com for posts matching these keywords: ai agent, ai automation, " + "x" * 60 + ", k0")
+    assert "k13" in first and "k14" not in first and "\x00" not in p["input"]      # the first 20 raw items are sanitised (the existing cap)
+    assert "context only" in rest and "not the search query): find people who need AI agents" in rest
+    assert "The user's original wording (context only): my own words" in rest
+    assert "do not limit the search" not in p["input"] and "Find Reddit posts for this request" not in p["input"]
+    ins = p["instructions"]
+    assert "close synonyms or variants" in ins and "ONE search" in ins and "genuine, current demand" in ins
+    assert p["max_tool_calls"] == 1 and p["tool_choice"] == "required" and p["tools"][0]["filters"] == {"allowed_domains": ["reddit.com"]}
+
+
+@pytest.mark.parametrize("kws", [None, [], [None, 5, "", "   ", "\x00"], "not a list"])
+def test_with_a_window_and_no_usable_keywords_the_request_is_the_old_fallback(kws):
+    win = ("2026-11-01T11:30:00Z", "2026-11-01T12:00:00Z")
+    p = rl.build_payload("find people who need AI agents", win, {"query": "my own words", "keywords": kws})
+    assert p["input"].startswith("Find Reddit posts for this request: find people who need AI agents\nPublication window (UTC)")
+    assert "keywords" not in p["input"].lower() and "synonyms" not in p["instructions"] and "ONE search" not in p["instructions"]
+    assert p["input"].endswith("The user's original wording: my own words")
 
 
 def test_the_ordinary_live_links_request_is_unchanged():
