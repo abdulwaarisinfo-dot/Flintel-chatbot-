@@ -92,16 +92,15 @@ def test_a_range_search_that_already_has_enough_evidence_does_not_poll(app_env, 
     assert len(calls) == 1
 
 
-def test_active_intent_is_capped_with_unchanged_boundaries_and_one_live_call(app_env, on, monkeypatch):
+def test_active_intent_no_longer_makes_the_stream_a_range_search_so_the_cap_does_not_apply_to_it(app_env, on, monkeypatch):
+    """Historical gets no window from Active Intent any more, so its polling is the normal polling (the cap is for explicit ranges)."""
     enable(monkeypatch, minutes=1500, wait=10)
     monkeypatch.setattr(rl.config, "REDDIT_LIVE_MAX_INFLIGHT", 4, raising=False)
     world = World("s1")
-    calls, pools, events, secs, chats = drive(app_env, monkeypatch, query=CRM, rows=[HIST_ROW] * 3, cap=2, response_timeout=60, world=world)
-    assert len(calls) == 1 + 2 and secs < 30                    # Active Intent window = explicit range: capped
-    windows = {(kw["time_range"]["start"], kw["time_range"]["end"]) for kw in calls}
-    assert len(windows) == 1                                    # every scan and poll used the identical boundaries
-    tr = timerange.range_from_doc(calls[0]["time_range"])
-    assert tr.end - tr.start == datetime.timedelta(minutes=1500)
+    calls, pools, events, secs, chats = drive(app_env, monkeypatch, query=CRM, rows=[HIST_ROW] * 3, cap=1, response_timeout=9, world=world)
+    assert len(calls) > 2 and secs >= 8                         # polled on like any normal search (cap would have stopped at 1 + 1)
+    assert all("time_range" not in kw for kw in calls)          # every Historical call was the normal one
     assert len(world.live.calls) == 1                           # Live ran exactly once, polling or not
-    assert rl._utc(tr.start) in json.dumps(world.live.calls[0]["payload"]) and rl._utc(tr.end) in json.dumps(world.live.calls[0]["payload"])
+    wdoc = world.live.stored(0, "s1")["window"]
+    assert timerange.to_utc(wdoc["end"]) - timerange.to_utc(wdoc["start"]) == datetime.timedelta(minutes=1500)
     assert len([e for e in events if e.get("done")]) == 1
