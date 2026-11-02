@@ -4588,7 +4588,7 @@
       const an = it.analysis && typeof it.analysis === 'object' ? it.analysis : null;
       const sent = an && typeof an.sentiment === 'string' ? ' · sentiment: ' + an.sentiment : '';
       tag.textContent = ' · live Reddit ' + (discussion ? 'discussion' : 'result') + sub + when + sent +
-        (an ? '' : ' · content not assessed');
+        (an ? '' : (it.content_status === 'analysis_unavailable' ? ' · analysis unavailable' : ' · content not assessed'));
       li.appendChild(tag);
       if (an && typeof an.summary === 'string' && an.summary) {
         const s = document.createElement('div');
