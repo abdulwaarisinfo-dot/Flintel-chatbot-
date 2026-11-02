@@ -318,16 +318,20 @@ def build_payload(query: str, window=None, context=None) -> dict:
         instructions = (INSTRUCTIONS + f" Only return Reddit posts that were published between {start} (inclusive) and {end} "
                         "(exclusive), both in UTC. Return only real Reddit post URLs that your search actually found; never invent "
                         "or guess a post, title, author, date or URL. If you find nothing in that period, return nothing.")
-        text += (f"\nPublication window (UTC): from {start} (inclusive) until {end} (exclusive). "
-                 "Return only posts published inside it.")
         ctx = context if isinstance(context, dict) else {}
-        original = _WS.sub(" ", _CTRL.sub(" ", str(ctx.get("query") or ""))).strip()[:300]
-        if original and original != query:
-            text += f"\nThe user's original wording: {original}"
         kws = [k for k in (_WS.sub(" ", _CTRL.sub(" ", k)).strip()[:60] for k in (ctx.get("keywords") if isinstance(ctx.get("keywords"), list) else [])[:20]
                            if isinstance(k, str)) if k]
-        if kws:
-            text += "\nKeywords saved for this search (context only; do not limit the search to them): " + ", ".join(kws)
+        if kws:       # the keywords generated for this prompt are the PRIMARY search terms; the wording only says what demand to look for
+            text = ("Search reddit.com for posts matching these keywords: " + ", ".join(kws)
+                    + f"\nThe user's request (context only - it defines what demand to look for; it is not the search query): {query}")
+            instructions += (" Use the given keywords, plus close synonyms or variants you judge appropriate, to build your search "
+                             "query. You may run only ONE search, so combine them into one effective query instead of searching "
+                             "once per keyword.")
+        text += (f"\nPublication window (UTC): from {start} (inclusive) until {end} (exclusive). "
+                 "Return only posts published inside it.")
+        original = _WS.sub(" ", _CTRL.sub(" ", str(ctx.get("query") or ""))).strip()[:300]
+        if original and original != query:
+            text += f"\nThe user's original wording{' (context only)' if kws else ''}: {original}"
         instructions += (" First work out what the user actually wants. Then look for posts whose authors show genuine, current "
                          "demand for it: a real need, an active search, an intention to hire or buy, a request for recommendations, "
                          "or an attempt to find a solution. People word this in many different ways, so do not depend on exact "
