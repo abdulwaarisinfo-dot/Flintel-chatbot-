@@ -1911,7 +1911,7 @@ def count_owner_busy(owner_key: str) -> int:
         return _local_slot_count(owner_key)                 # what this process knows, not 0
 
 
-def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
+def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict, active_demand: bool = False):
     """(GOOGLE-FALLBACK FEATURE) Fires the Google-search-for-Reddit-posts
     fallback for a message that still has no flintel_signals match after
     GOOGLE_FALLBACK_TRIGGER_SECONDS — see
@@ -1933,10 +1933,15 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
     try:
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
                                 request_id=msg.get("request_id")):
+            # Last-24-hours Google filter ONLY for a prompt the Active Intent classifier decided is "demand", and only when the
+            # user gave no range of their own (then the in-memory window is the Active Intent window, kind WINDOW_KIND).
+            _tr = msg.get("time_range")
+            _recent = bool(active_demand is True and isinstance(_tr, dict) and _tr.get("kind") == active_intent.WINDOW_KIND)
             google_search.search_google_for_reddit_posts(
                 msg.get("keywords", []),
                 google_posts_collection,
                 search_keyword_for_storage=msg.get("topic_key"),
+                **({"recent_day": True} if _recent else {}),
             )
     except Exception as exc:
         log.warning(f"Google-fallback search failed for topic_key={msg.get('topic_key')}: {exc}")
@@ -2585,10 +2590,12 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # it always has.
         effective_evidence_limit = msg.get("evidence_required")
 
+        _ai_demand = False   # True only when the classifier decided "demand" for this message (used by the Google search trigger below)
         if needs_answer:     # (ACTIVE INTENT) the shared window goes onto THIS in-memory message BEFORE the retrieval below reads it
             _prev_range = msg.get("time_range")
             try:
-                active_intent.apply_window(msg, owner_key=owner_key, chat_id=chat_id, mode="background_retrieval")
+                _win = active_intent.apply_window(msg, owner_key=owner_key, chat_id=chat_id, mode="background_retrieval")
+                _ai_demand = bool(isinstance(_win, tuple) and len(_win) > 1 and _win[0] is not None and _win[1] == "demand")
             except Exception as _exc:     # fail closed: retrieval continues exactly as it would without Active Intent
                 if msg.get("time_range") != _prev_range:
                     msg["time_range"] = _prev_range      # never leave a half-applied window behind
@@ -2630,10 +2637,11 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # marked synchronously before dispatch, unchanged from before).
         if flintel.should_trigger_immediately(msg.get("google_fallback_triggered", False)):
             mark_google_fallback_triggered(chat_id, owner_key, msg["topic_key"])
+            _gargs = (chat_id, owner_key, msg) + ((True,) if _ai_demand else ())     # the extra argument only for "demand"
             if background_tasks is not None:
-                background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
+                background_tasks.add_task(_trigger_google_fallback_search, *_gargs)
             else:
-                _trigger_google_fallback_search(chat_id, owner_key, msg)
+                _trigger_google_fallback_search(*_gargs)
 
         if flintel.should_trigger_immediately(msg.get("search_progress_generated", False)):
             mark_search_progress_generated(chat_id, owner_key, msg["topic_key"])
