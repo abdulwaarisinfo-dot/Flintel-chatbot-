@@ -105,8 +105,18 @@ def _inflight_limit():
     return v if _pos_int(v) and v <= INFLIGHT_CEILING else None
 
 
+# HISTORICAL-ONLY SEARCH: GPT Live Web Search is removed from the user's search path. This is a source-level switch, deliberately NOT an
+# environment variable, so no deployment setting can switch it back on. While False, is_active() is False, so process() (the only
+# function that calls the web_search model), the /live-links endpoint, the pre-answer Live worker and the frontend trigger all stay off.
+# The code below is kept (unused) for a later cleanup task; only tests set this True, to exercise the legacy implementation.
+LIVE_SEARCH_EXECUTION_ENABLED = False
+
+
 def is_active() -> bool:
-    """True only when the feature is switched on AND both daily caps AND the in-flight limit are valid. Read at call time."""
+    """True only when the feature is switched on AND both daily caps AND the in-flight limit are valid. Read at call time.
+    Always False while LIVE_SEARCH_EXECUTION_ENABLED is False (historical-only search)."""
+    if LIVE_SEARCH_EXECUTION_ENABLED is not True:
+        return False
     try:
         return (getattr(config, "REDDIT_LIVE_LINKS_ENABLED", False) is True
                 and _caps() is not None and _inflight_limit() is not None)
@@ -768,9 +778,10 @@ def present(live, now, pre_answer=False) -> dict:
 
 def render_links(live):
     """Template helper (registered as `live_links_for`): the validated links of a stored record, or []. Same validator as at
-    write time, so a tampered or legacy stored URL can never reach a page. Nothing is rendered while the feature is off."""
+    write time, so a tampered or legacy stored URL can never reach a page. (HISTORICAL-ONLY SEARCH) Live search is removed, so this no
+    longer depends on is_active(): links SAVED with an older answer are still shown, and the template labels them as saved, not live."""
     try:
-        if is_active() and isinstance(live, dict) and live.get("state") == STATE_OK and not live.get("workflow"):
+        if isinstance(live, dict) and live.get("state") == STATE_OK and not live.get("workflow"):
             return _safe_links(live.get("links"))
     except Exception:
         pass
@@ -914,6 +925,8 @@ def process(deps, *, owner_key, owner_type, chat_id, request_id=None, topic_key=
     `window=(start, end)` (aware UTC, half-open) is only used together with `pre_answer`: it goes into the model's instructions,
     every returned post is then checked against Reddit's own publication time (`verify_publication`) and only posts inside the
     window are kept, and the window is recorded on the claim so that a stored result is only ever reused for the SAME window."""
+    if LIVE_SEARCH_EXECUTION_ENABLED is not True:      # historical-only search: no claim, no budget, no database read, no API call
+        return {"state": "disabled", "reason": "live_search_removed"} if pre_answer else {"state": "disabled"}
     entered = False
     wdoc = {"start": _utc(window[0]), "end": _utc(window[1])} if (pre_answer and window is not None) else None
 
