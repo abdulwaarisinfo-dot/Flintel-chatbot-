@@ -388,11 +388,13 @@ def test_live_and_historical_get_the_same_configured_interval_in_the_real_stream
     assert stored.get("time_range") is None                                                 # the shared interval is never persisted
 
 
-def test_guests_and_inactive_live_get_no_window_and_no_live_call(wf, monkeypatch):
+def test_inactive_live_makes_no_live_call_but_active_intent_still_gives_historical_its_window(wf, monkeypatch):
+    # HISTORICAL-ONLY SEARCH (changed contract): Live being inactive no longer switches Active Intent or the shared Historical window off.
     world = World("s1")
     monkeypatch.setattr(rl.config, "REDDIT_LIVE_LINKS_ENABLED", False, raising=False)
     done, _u, chats = run_stream(wf, monkeypatch, world)
-    assert world.live.calls == [] and world.retrieval_kwargs[0].get("time_range") is None and "live_candidates" not in final_answer(done, chats, "s1")
+    assert world.live.calls == [] and "live_candidates" not in final_answer(done, chats, "s1")
+    assert world.retrieval_kwargs[0].get("time_range") is not None
 
 
 def test_live_is_claimed_once_per_message_even_if_the_stream_runs_again(wf, monkeypatch):
