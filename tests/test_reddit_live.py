@@ -426,9 +426,11 @@ def test_the_same_validator_guards_storage_serving_and_rendering(on):
     assert rl.render_links(tampered) == [{"url": URL1, "title": "ok"}]
 
 
-def test_nothing_is_rendered_while_the_feature_is_off(monkeypatch):
+def test_saved_links_still_render_while_the_feature_is_off_but_only_validated_ones(monkeypatch):
+    # HISTORICAL-ONLY SEARCH (changed contract): links SAVED with an older answer are shown (the page labels them as saved), whatever the
+    # Live settings are; every URL still passes the same validator.
     monkeypatch.setattr(rl.config, "REDDIT_LIVE_LINKS_ENABLED", False, raising=False)
-    assert rl.render_links({"state": "ok", "links": [{"url": URL1, "title": "t"}]}) == []
+    assert rl.render_links({"state": "ok", "links": [{"url": URL1, "title": "t"}, {"url": "javascript:1", "title": "x"}]}) == [{"url": URL1, "title": "t"}]
 
 
 @pytest.mark.parametrize("live", [None, "x", [], {"state": "error", "links": [{"url": URL1}]}, {"state": "ok", "links": "x"},
