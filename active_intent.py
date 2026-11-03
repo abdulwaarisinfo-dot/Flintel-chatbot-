@@ -365,9 +365,8 @@ def apply_window(msg, *, owner_key, chat_id, mode, owner_type=None, now=None):
         return None, "disabled", "disabled"
     if not isinstance(msg, dict):
         return None, "rejected", "no_message"
-    if not reddit_live.is_active():
-        _log("intent_detected_live_inactive", mode=mode)
-        return None, "live_inactive", "live_inactive"
+    # (HISTORICAL-ONLY SEARCH) Active Intent no longer depends on Live Search being available: the classifier and the shared
+    # Historical window below run whether or not any Live code is switched on.
     owner_type = owner_type or ("email" if isinstance(owner_key, str) and "@" in owner_key else "anon")
     if owner_type != "email":
         _log("live_eligibility_rejected", reason="guest", mode=mode)
@@ -445,6 +444,10 @@ class Run:
     def start(self):
         """Start the Live branch NOW, independently of the historical branch. Idempotent; never raises."""
         if not self.active or self._thread is not None:
+            return
+        if reddit_live.LIVE_SEARCH_EXECUTION_ENABLED is not True:   # historical-only search: no thread, no Live call, nothing to wait for
+            self.live_result = {"state": "disabled", "reason": "live_search_removed"}
+            self._done.set()
             return
         try:
             self._t0 = time.monotonic()
