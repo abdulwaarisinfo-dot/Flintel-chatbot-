@@ -52,15 +52,15 @@ GOOD = """{live_candidates: {statement: 'Live web search: 2 Reddit links found b
 def test_block_shows_only_https_links_as_text_with_the_unverified_label(integrity_browser, template):
     page, errors = _page(integrity_browser, template, GOOD)
     assert page.evaluate("window.__pwn") is None and page.query_selector("section.live-links img") is None
-    assert page.inner_text("section.live-links .live-links-title") == "Live Reddit results — date-checked, content not assessed"
+    assert page.inner_text("section.live-links .live-links-title") == "Previously saved Reddit results — date-checked, content not assessed"
     links = page.eval_on_selector_all("section.live-links li a", "els => els.map(e => [e.href, e.textContent, e.rel, e.target])")
     assert links == [["https://www.reddit.com/r/a_b/comments/abc123/x/", "<img src=x onerror=window.__pwn=1> Which CRM?", "noopener noreferrer nofollow ugc", "_blank"],
                      ["https://www.reddit.com/r/c_d/comments/def456/y/", "https://www.reddit.com/r/c_d/comments/def456/y/", "noopener noreferrer nofollow ugc", "_blank"]]
-    tags = page.eval_on_selector_all("section.live-links li", "els => els.map(e => e.textContent.includes('live Reddit result'))")
+    tags = page.eval_on_selector_all("section.live-links li", "els => els.map(e => e.textContent.includes('saved Reddit result'))")
     assert tags == [True, True]
     assert "posted 2026-11-01 10:05 UTC" in page.inner_text("section.live-links li:first-child")
     assert "posted" not in page.inner_text("section.live-links li:nth-child(2)")      # no verified date -> none invented
-    assert "Each post date was checked" in page.inner_text("section.live-links")
+    assert "not current results" in page.inner_text("section.live-links")        # the one accurate note replaces the stored "live" wording
     assert errors == []
     page.close()
 
@@ -82,13 +82,13 @@ DISC = """{live_candidates: {intent: 'discussion', label: 'Live Reddit discussio
 @pytest.mark.parametrize("template", TEMPLATES)
 def test_a_discussion_block_is_labelled_as_discussions_and_a_demand_block_keeps_its_label(integrity_browser, template):
     page, errors = _page(integrity_browser, template, DISC)
-    assert page.inner_text("section.live-links .live-links-title") == "Live Reddit discussions — date-checked, content not assessed"
+    assert page.inner_text("section.live-links .live-links-title") == "Previously saved Reddit discussions — date-checked, content not assessed"
     tag = page.inner_text("section.live-links li")
-    assert "live Reddit discussion" in tag and "buyer" not in tag.lower() and "lead" not in tag.lower()
+    assert "saved Reddit discussion" in tag and "buyer" not in tag.lower() and "lead" not in tag.lower()
     page.close()
     page, errors = _page(integrity_browser, template, GOOD)
-    assert page.inner_text("section.live-links .live-links-title") == "Live Reddit results — date-checked, content not assessed"
-    assert "live Reddit result" in page.inner_text("section.live-links li")
+    assert page.inner_text("section.live-links .live-links-title") == "Previously saved Reddit results — date-checked, content not assessed"
+    assert "saved Reddit result" in page.inner_text("section.live-links li")
     assert errors == []
     page.close()
 
@@ -129,3 +129,43 @@ def test_a_valid_post_without_analysis_is_kept_and_clearly_marked_analysis_unava
     assert "Real post" in li and "analysis unavailable" in li and "sentiment" not in li and page.query_selector(".live-links-summary") is None
     assert errors == []
     page.close()
+
+
+# ── (HISTORICAL-ONLY SEARCH) old saved answers are labelled as saved; new answers show no such section ─────────────────────────
+LEGACY_STORED = """{live_candidates: {source: 'live_web_search', intent: 'demand', label: 'Live Reddit results',
+  statement: 'Live Reddit results: 1 Reddit post found by a separate live web search for people who appear to be looking for a solution (the 1500-minute live search window).',
+  items: [{rank: 1, title: 'Looking for a CRM', url: 'https://www.reddit.com/r/SaaS/comments/abc123/x/', source: 'live_web_search', date_verified: true,
+           published_at: '2026-11-01T10:05:00+00:00', subreddit: 'SaaS', analysis: {summary: 'Needs a CRM.', sentiment: 'neutral'}}]}}"""
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_an_old_saved_live_block_is_kept_but_never_presented_as_live_or_current(integrity_browser, template):
+    page, errors = _page(integrity_browser, template, LEGACY_STORED)
+    box = page.inner_text("section.live-links")
+    assert page.inner_text("section.live-links .live-links-title").startswith("Previously saved Reddit results")
+    assert "Looking for a CRM" in box and "Needs a CRM." in box and "posted 2026-11-01 10:05 UTC" in box      # the saved content is preserved
+    assert "not current results" in box and "no longer runs" in box
+    assert "Live Reddit" not in box and "live Reddit" not in box and "live search window" not in box and "separate live web search" not in box
+    assert page.get_attribute("section.live-links", "aria-label").startswith("Previously saved")
+    assert errors == []
+    page.close()
+
+
+NEW_STYLE = """{format: 'source_list', executive_summary: 'Analysed the saved posts.', platforms: [], data_freshness: {statement: 'Saved posts only.'}}"""
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_a_new_historical_only_answer_renders_no_live_or_saved_live_section(integrity_browser, template):
+    page, errors = _page(integrity_browser, template, NEW_STYLE)
+    assert page.query_selector("section.live-links") is None and "Live Reddit" not in page.inner_text("#c") and errors == []
+    page.close()
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_the_renderer_source_has_no_live_heading_left(template):
+    _text, fn = _function_source(template)
+    assert "Live Reddit" not in fn and "live Reddit" not in lc_free(fn)
+
+
+def lc_free(fn):
+    return fn.replace("lc.", "")
