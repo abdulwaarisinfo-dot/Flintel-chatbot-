@@ -202,10 +202,11 @@ def test_guests_and_a_disabled_feature_never_reach_the_classifier(ai_on, monkeyp
     assert ain.Run.prepare(stored_msg(env), owner_key=OWNER, chat_id="c1").active is False and env.cls_calls == []
 
 
-def test_live_inactive_means_no_classifier_call(ai_on, monkeypatch):
+def test_live_inactive_does_not_stop_the_classifier(ai_on, monkeypatch):
+    # HISTORICAL-ONLY SEARCH (changed contract): Active Intent is independent of Live Search; the classifier still runs once.
     env = live_env()
     monkeypatch.setattr(rl.config, "REDDIT_LIVE_LINKS_ENABLED", False, raising=False)
-    assert prepare(env).active is False and env.cls_calls == []
+    assert prepare(env).active is True and len(env.cls_calls) == 1 and env.calls == []
 
 
 # ── Historical Search is unchanged whatever the model says ─────────────────────────────────────────────────────────────────
