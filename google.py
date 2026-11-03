@@ -91,7 +91,7 @@ GOOGLE_SEARCH_DEPTH = int(os.getenv("GOOGLE_SEARCH_DEPTH", "200"))
 _SUBREDDIT_RE = re.compile(r"reddit\.com/r/([^/]+)/", re.IGNORECASE)
 
 
-def _call_rapidapi_google_search(query: str):
+def _call_rapidapi_google_search(query: str, recent_day: bool = False):
     """Calls the RapidAPI "google-search116" host with `query` and
     returns the raw, unparsed JSON response — or None on any failure
     (missing/invalid RAPIDAPI_KEY, timeout, non-200 status, a response
@@ -99,6 +99,9 @@ def _call_rapidapi_google_search(query: str):
     response shape here — that's _extract_reddit_results()'s job, kept
     separate so this function stays swappable if the RapidAPI provider
     ever changes without needing to touch the parsing logic too.
+
+    `recent_day=True` (only ever passed for an Active Demand user prompt, see index._trigger_google_fallback_search) adds the
+    documented Google last-24-hours filter `tbs=qdr:d` to the SAME request. Without it the request is exactly as before.
 
     Never raises: every failure path returns None instead."""
     if not query or not isinstance(query, str):
@@ -113,11 +116,14 @@ def _call_rapidapi_google_search(query: str):
         "Content-Type": "application/json",
     }
     status = "error"
+    params = {"query": query, "depth": GOOGLE_SEARCH_DEPTH}
+    if recent_day is True:
+        params["tbs"] = "qdr:d"
     try:
         with httpx.Client(timeout=GOOGLE_SEARCH_TIMEOUT_SECONDS) as client:
             response = client.get(
                 url, headers=headers,
-                params={"query": query, "depth": GOOGLE_SEARCH_DEPTH},
+                params=params,
             )
             status = "ok" if response.status_code < 400 else f"http_{response.status_code}"
             response.raise_for_status()
@@ -204,7 +210,8 @@ def _extract_reddit_results(raw_response) -> list:
     return extracted
 
 
-def search_google_for_reddit_posts(keywords: list, google_posts_collection, search_keyword_for_storage: str = None) -> list:
+def search_google_for_reddit_posts(keywords: list, google_posts_collection, search_keyword_for_storage: str = None,
+                                   recent_day: bool = False) -> list:
     """Public entry point index.py calls. Splits ALL of the caller's
     non-empty string keywords (not just a fixed first-N subset) into
     consecutive batches of GOOGLE_QUERY_KEYWORDS_PER_BATCH keywords each
@@ -263,7 +270,8 @@ def search_google_for_reddit_posts(keywords: list, google_posts_collection, sear
 
         for batch_keywords in batches:
             query = "site:reddit.com " + " ".join(batch_keywords)
-            raw_response = _call_rapidapi_google_search(query)
+            raw_response = (_call_rapidapi_google_search(query, recent_day=True) if recent_day is True
+                            else _call_rapidapi_google_search(query))      # same ONE call per batch either way
             extracted = _extract_reddit_results(raw_response)
             if not extracted:
                 continue
