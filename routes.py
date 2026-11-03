@@ -3308,7 +3308,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 mark_google_fallback_triggered(chat_id, owner_key, topic_key)
                 threading.Thread(
                     target=_trigger_google_fallback_search,
-                    args=(chat_id, owner_key, msg),
+                    args=(chat_id, owner_key, msg) + ((True,) if (_ai.active and _ai.intent == "demand") else ()),   # "demand" only
                     daemon=True,
                 ).start()
                 msg["google_fallback_triggered"] = True
