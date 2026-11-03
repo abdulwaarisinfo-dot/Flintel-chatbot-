@@ -67,3 +67,26 @@ def _no_scan_state_leaks_between_tests():
     reset()
     yield
     reset()
+
+
+# HISTORICAL-ONLY SEARCH: Live Web Search is switched off at source level (reddit_live.LIVE_SEARCH_EXECUTION_ENABLED = False).
+# These modules test the LEGACY Live implementation in isolation, so they re-enable the switch for their own duration only.
+# Every other test module (and the production default) runs with it off. tests/test_historical_only.py asserts the off state.
+_LEGACY_LIVE_MODULES = ("test_reddit_live", "test_reddit_live_claim_race", "test_reddit_live_endpoint", "test_live_content_analysis",
+                        "test_live_search_intents", "test_active_intent_workflow", "test_active_intent_frontend",
+                        "test_active_intent", "test_active_intent_kinds", "test_active_intent_window", "test_intent_classifier",
+                        "test_corrective_patch", "test_activation_resume", "test_range_poll_cap")
+
+
+@pytest.fixture(autouse=True)
+def _legacy_live_switch(request):
+    if request.module.__name__.split(".")[-1] not in _LEGACY_LIVE_MODULES:
+        yield
+        return
+    import reddit_live
+    old = reddit_live.LIVE_SEARCH_EXECUTION_ENABLED
+    reddit_live.LIVE_SEARCH_EXECUTION_ENABLED = True
+    try:
+        yield
+    finally:
+        reddit_live.LIVE_SEARCH_EXECUTION_ENABLED = old
