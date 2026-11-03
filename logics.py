@@ -5812,14 +5812,10 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
 # keywords when that's what the message is asking for, and can return
 # intent="clarify" instead of guessing at an unclear topic.
 #
-# (CHAT WEB-SEARCH FEATURE) The SAME call now ALSO has the Anthropic
-# web_search tool available to it (see _call_claude()'s own
-# `enable_web_search` parameter and classify_and_maybe_chat() below) —
-# this only ever matters for the "chat" branch, since that's the only
-# branch where Claude writes a user-facing reply directly; "search" still
-# only ever returns keywords/time_window_days, never a reply, so having
-# the tool available changes nothing about that branch's own output
-# contract.
+# (CHAT WEB-SEARCH FEATURE — WITHDRAWN) This call once had a web_search tool.
+# It no longer does: classify_and_maybe_chat() passes enable_web_search=False,
+# so the router has no web access. (Kept as a comment only: the wording of the
+# prompt below is unchanged by this note.)
 #
 # Safety rule: ANY failure here (bad JSON, API error, timeout, missing
 # key) defaults to {"intent": "search", "reply": None, "keywords": None,
@@ -6414,11 +6410,10 @@ ChatGPT would in any normal conversation. Plain language, no rigid
 template, no JSON, no code blocks. Don't mention you're an AI or that
 this is a "mock".
 
-You also have access to a live web_search tool — use it whenever the
-user's question is about something current, recent, or beyond your own
-training knowledge, instead of saying you don't have real-time access or
-citing a knowledge cutoff. Search first, then answer plainly and
-naturally from what you find.
+You do not have web search or any real-time information. If the user's
+question is about something current or recent, or beyond what you reliably
+know, say plainly that you can't check it from here instead of guessing.
+Flintel can only look at posts it has already saved.
 """
 
 # (v6) Safety-net text used only if the router itself flagged a message as
@@ -6848,7 +6843,7 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
 # ─────────────────────────────────────────────────────────────────────────────
 # (SMALL-TALK FAST PATH) A message that is ONLY a greeting / "how are you" /
 # thanks / goodbye / "what can you do" gets a ready reply here, so it never
-# pays for the router LLM call (a ~30k-character prompt with web search on).
+# pays for the router LLM call (a ~30k-character prompt).
 # The WHOLE message must be one of these phrases (after removing punctuation,
 # an optional leading greeting and an optional "there / Flintel / team"):
 # "hello, find people looking for a CRM" is not small talk and goes to the
