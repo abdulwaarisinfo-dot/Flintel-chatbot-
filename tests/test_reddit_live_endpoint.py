@@ -289,8 +289,8 @@ def test_persisted_ok_links_render_in_a_separate_labelled_section_and_are_escape
         {"url": "http://www.reddit.com/r/SaaS/comments/def456/plain-http/", "title": "must not appear"},
         {"url": "https://www.reddit.com/r/SaaS/comments/ghi789/no-title/", "title": None}]))
     sec = _live_section(html)
-    assert sec and "Live web-search links — unverified" in sec
-    assert "Post dates and recency are unverified" in sec and "live web search" in sec and "just now" not in sec.lower()
+    assert sec and "Previously saved links — unverified" in sec and "Live web-search links" not in sec
+    assert "Post dates and recency are unverified" in sec and "no longer runs" in sec and "not current results" in sec and "just now" not in sec.lower()
     assert "<script>alert(1)</script>" not in sec and "&lt;script&gt;alert(1)&lt;/script&gt;" in sec
     assert "plain-http" not in sec and "must not appear" not in sec
     assert 'href="https://www.reddit.com/r/SaaS/comments/ghi789/no-title/"' in sec and 'rel="noopener noreferrer nofollow ugc"' in sec
@@ -298,9 +298,12 @@ def test_persisted_ok_links_render_in_a_separate_labelled_section_and_are_escape
     assert wrap and "live-links" not in wrap.group(0)                     # not inside the answer or its cards
 
 
-def test_the_page_text_matches_the_server_constants(on):
+def test_the_saved_links_section_uses_the_saved_wording_not_the_old_live_constants(on):
+    # HISTORICAL-ONLY SEARCH (changed contract): the section is no longer the live-links label/note (rl.LABEL / rl.NOTE, which only
+    # the disabled endpoint still returns); it says plainly that the links were saved earlier.
     sec = _live_section(render(_ok_record([{"url": URL1, "title": "t"}])))
-    assert rl.NOTE in sec and rl.LABEL in sec
+    assert "Previously saved links — unverified" in sec and "Post dates and recency are unverified" in sec
+    assert rl.LABEL not in sec and rl.NOTE not in sec
 
 
 def test_tampered_stored_links_are_filtered_by_the_same_validator_before_rendering(on):
@@ -318,11 +321,13 @@ def test_tampered_stored_links_are_filtered_by_the_same_validator_before_renderi
     assert _live_section(only_bad) is None
 
 
-def test_nothing_renders_while_the_feature_is_off_or_the_helper_is_absent(on, monkeypatch):
+def test_saved_links_render_as_saved_when_the_feature_is_off_and_nothing_when_the_helper_is_absent(on, monkeypatch):
+    # HISTORICAL-ONLY SEARCH (changed contract): saved links of an older answer are kept and shown, labelled as saved, not live.
     rec = _ok_record([{"url": URL1, "title": "t"}])
     assert _live_section(render(rec, helper=False)) is None
     monkeypatch.setattr(rl.config, "REDDIT_LIVE_LINKS_ENABLED", False, raising=False)
-    assert _live_section(render(rec)) is None
+    sec = _live_section(render(rec))
+    assert sec and "Previously saved links — unverified" in sec and "Live web-search links" not in sec and URL1 in sec
 
 
 @pytest.mark.parametrize("live_reddit", [None, {"state": "error"}, {"state": "empty", "links": []}, {"state": "skipped"},
