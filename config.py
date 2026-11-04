@@ -219,6 +219,11 @@ __all__ = [
     "REDDIT_LIVE_MAX_LINKS",
     "REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS",
     "REDDIT_LIVE_MODEL",
+    # Hacker News as a selectable, live-fetched platform (OFF by default)
+    "HACKERNEWS_ENABLED",
+    "HN_FETCH_TIMEOUT_SECONDS",
+    "HN_MAX_PAGES_PER_KEYWORD",
+    "HN_HITS_PER_PAGE",
     # Active-lead-intent workflow (historical recent window + live Reddit candidates; OFF by default)
     "ACTIVE_INTENT_ENABLED",
     "ACTIVE_INTENT_WINDOW_MINUTES",
@@ -1123,3 +1128,32 @@ ACTIVE_INTENT_LIVE_WAIT_SECONDS = _live_pos_int("ACTIVE_INTENT_LIVE_WAIT_SECONDS
 ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_GLOBAL = _live_pos_int("ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_GLOBAL")
 ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_PER_OWNER = _live_pos_int("ACTIVE_INTENT_CLASSIFIER_DAILY_CAP_PER_OWNER")
 ACTIVE_INTENT_CLASSIFIER_TIMEOUT_SECONDS = _live_pos_int("ACTIVE_INTENT_CLASSIFIER_TIMEOUT_SECONDS", 10)
+
+
+# ── Hacker News (selectable platform, fetched LIVE from the public Algolia HN API; see hackernews_live.py) ──────────────
+# OFF by default: with it off Hacker News is not offered ("Coming soon"), not searched, and every search behaves exactly as before.
+# Fail closed: the flag must be an explicit true value AND every numeric setting below must be either unset or a plain integer in
+# its range; a set-but-invalid value keeps Hacker News OFF (with a warning), it is never silently replaced.
+def _hn_int(name, default, low, high):
+    """(value, ok). Unset/blank -> (default, True); a plain integer in [low, high] -> (value, True); anything else -> (default, False)."""
+    import re as _re
+    text = os.getenv(name)
+    text = "" if text is None else str(text).strip()
+    if not text:
+        return default, True
+    if _re.fullmatch(r"[0-9]+", text) and low <= int(text) <= high:
+        return int(text), True
+    return default, False
+
+
+_hn_timeout, _hn_ok1 = _hn_int("HN_FETCH_TIMEOUT_SECONDS", 12, 1, 60)         # hard overall deadline of ONE Hacker News fetch
+_hn_pages, _hn_ok2 = _hn_int("HN_MAX_PAGES_PER_KEYWORD", 3, 1, 10)            # page cap per keyword
+_hn_hits, _hn_ok3 = _hn_int("HN_HITS_PER_PAGE", 50, 1, 100)                   # Algolia hitsPerPage
+HN_FETCH_TIMEOUT_SECONDS = _hn_timeout
+HN_MAX_PAGES_PER_KEYWORD = _hn_pages
+HN_HITS_PER_PAGE = _hn_hits
+_hn_requested = os.getenv("HACKERNEWS_ENABLED", "false").strip().lower() in ("1", "true", "yes")
+HACKERNEWS_ENABLED = bool(_hn_requested and _hn_ok1 and _hn_ok2 and _hn_ok3)
+if _hn_requested and not HACKERNEWS_ENABLED:
+    _logging.getLogger("flintel.config").warning(
+        "HACKERNEWS_ENABLED is true but an HN_* setting is invalid (timeout 1-60, pages 1-10, hits 1-100): Hacker News stays OFF.")
