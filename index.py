@@ -154,7 +154,7 @@ from logics import (
     normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, unsupported_requested, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
     matcher_for_kind, request_kind_note,   # (REQUEST KIND)
-    freshness_enabled, enrich_freshness_answer,   # (FRESHNESS DISCLOSURE)
+    freshness_enabled, enrich_freshness_answer, hackernews_note, hackernews_only,   # (FRESHNESS DISCLOSURE) + (HACKER NEWS)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
     _call_claude, classify_and_maybe_chat,
@@ -1930,6 +1930,8 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict, act
     before this feature existed."""
     if _turn_stopped_now(chat_id, owner_key, msg):
         return                                   # (STOP) the user stopped this turn: no new external search is started
+    if hackernews_only(msg.get("targeting_platform")):
+        return                                   # (HACKER NEWS) Hacker News alone: no Reddit-discovery (Google) call is made at all
     try:
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
                                 request_id=msg.get("request_id")):
@@ -2379,7 +2381,8 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                                                   msg.get("time_range"), msg.get("time_window_days"), msg.get("keywords"))
                 answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement; no-op when off
                     answer, merged_pool, time_range=msg.get("time_range"), time_window_days=msg.get("time_window_days"),
-                    provenance=freshness_prov, matched_count=len(matched), evidence_limit=effective_evidence_limit)
+                    provenance=freshness_prov, matched_count=len(matched), evidence_limit=effective_evidence_limit,
+                    platform_note=hackernews_note(chat_id, msg.get("topic_key")))
             answer = _ai.finish(answer, historical=merged_pool)     # (ACTIVE INTENT) adds the labelled live block, or leaves it
             # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
             verdict = guest_gate.on_answer_ready(gate_key, chat_id, msg["topic_key"], gate_token, answer, lease=gate_lease)
