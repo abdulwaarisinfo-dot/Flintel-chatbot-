@@ -543,3 +543,21 @@ def test_case6_on_error_parameter_and_sanitized_logging(app_env, monkeypatch, ca
         assert rts.owner_has_started_conversation("o1", on_error=False) is False
     assert "lookup failed" in caplog.text
     assert "database unavailable" not in caplog.text                                      # no raw exception text is logged
+
+
+def test_hacker_news_is_offered_when_enabled_and_coming_soon_when_off(app_env):
+    # (HACKER NEWS) The copy tests above keep the marketing text free of platform claims; the dropdown itself is what changes with the flag.
+    import platforms
+    idx, _rts, _ = app_env
+
+    def option(html):
+        return re.search(r'<li[^>]*data-value="Hacker News".*?</li>', html, re.S).group(0)
+    assert platforms.get("hackernews") is None                                   # flag off by default
+    off = option(_client(idx).get("/").text)
+    assert 'aria-disabled="true"' in off and "Coming soon" in off
+    platforms.apply_flags(hackernews=True)
+    try:
+        on = option(_client(idx).get("/").text)
+    finally:
+        platforms.apply_flags(hackernews=False)
+    assert "aria-disabled" not in on and "Coming soon" not in on and 'tabindex="0"' in on
