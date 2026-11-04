@@ -90,6 +90,7 @@ from logics import platform_display_value   # (PLATFORM PERSISTENCE)
 from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
 from logics import enrich_no_results_answer   # (NO-RESULTS UI)
 from logics import freshness_enabled, enrich_freshness_answer   # (FRESHNESS DISCLOSURE)
+from logics import hackernews_only, hackernews_note   # (HACKER NEWS) no collector job for HN alone; honest per-platform status line
 import os   # (DATE/TIME) DEFAULT_USER_TIMEZONE env var
 import timerange   # (DATE/TIME)
 import turn_finisher   # (STREAM LEASE) the stream holds its turn's lease while it runs
@@ -1072,6 +1073,16 @@ def _tpl_home_greeting(context) -> dict:
 
 
 templates.env.globals["conversation_started"] = _tpl_conversation_started
+def _platform_enabled(key):
+    """(HACKER NEWS) True when `key` is an enabled platform (the dropdown shows a flag-gated one as selectable only then)."""
+    try:
+        import platforms as _pf
+        return key in _pf.enabled_keys()
+    except Exception:
+        return False
+
+
+templates.env.globals["platform_enabled"] = _platform_enabled      # (HACKER NEWS) dropdown option selectable vs "Coming soon"
 templates.env.globals["live_links_enabled"] = reddit_live.is_active    # (LIVE REDDIT LINKS) False unless enabled AND both caps are set
 templates.env.globals["live_links_for"] = reddit_live.render_links      # (LIVE REDDIT LINKS) re-validates stored links before they reach a page
 templates.env.globals["home_greeting"] = _tpl_home_greeting
@@ -1821,14 +1832,14 @@ def search(
                                     "evidence_quality": evidence["evidence_quality"],
                                 },
                             },
-                            expects_job=bool(keywords), after_save=_save_site_ctx, routed=routed,
+                            expects_job=bool(keywords) and not hackernews_only(targeting_platform), after_save=_save_site_ctx, routed=routed,
                         )
 
                     # (GUEST GATE) legacy path (credit kill switch on): reserve before any job is queued
                     guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id, routed=routed)
                     if guest_denial is not None:
                         return _guest_gate_denial_response(request, guest_denial, query, _gate_owner(request, owner_key))
-                    if keywords:
+                    if keywords and not hackernews_only(targeting_platform):       # (HACKER NEWS) HN alone collects nothing: no job
                         try:
                             enqueue_search_job(topic_key, keywords, targeting_platform)
                         except BaseException:
@@ -2352,7 +2363,8 @@ def search(
         # before this feature.
         # (REQUEST KIND) A request that names a PERSON only searches the posts Flintel has ALREADY stored: it never queues a new
         # collection job for that name (no proactive gathering of posts about an individual). Every other request is unchanged.
-        _skip_collector_job = bool(reuse_website_keywords) or routed_request_kind == "person_mentions"
+        _skip_collector_job = (bool(reuse_website_keywords) or routed_request_kind == "person_mentions"
+                               or hackernews_only(targeting_platform))        # (HACKER NEWS) HN alone collects nothing: no job
 
         if credit_store is not None:
             # (SEARCH CREDITS) reserve before any enqueue; the legacy path below is unchanged
@@ -3669,7 +3681,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         full_answer, merged_pool, time_range=msg.get("time_range"),
                         time_window_days=msg.get("time_window_days"), provenance=_fresh_prov,
                         matched_count=len(matched), evidence_limit=effective_evidence_limit,
-                        timed_out=bool(scan_timed_out))
+                        timed_out=bool(scan_timed_out), platform_note=hackernews_note(chat_id, msg.get("topic_key")))
                 full_answer, results_to_save = (
                     _finalize_answer_and_results(full_answer, merged_pool, seed=msg.get("query", ""))
                     if full_answer else (full_answer, merged_pool)
