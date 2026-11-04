@@ -139,6 +139,7 @@ import contextlib
 import contextvars
 import inspect
 import threading
+import functools
 import concurrent.futures
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -149,6 +150,11 @@ import httpx
 import flintel
 import timerange   # (DATE/TIME) natural-language search ranges
 import platforms   # (PLATFORM REGISTRY) platform identity, URL hosts, labels, earliest valid date
+try:                  # (HACKER NEWS) switch the flag-gated platform on ONLY when config says so; any problem leaves it off
+    import config as _hn_flag_cfg
+    platforms.apply_flags(hackernews=bool(getattr(_hn_flag_cfg, "HACKERNEWS_ENABLED", False)))
+except Exception:     # pragma: no cover - fail closed
+    platforms.apply_flags(hackernews=False)
 import answer_integrity   # (ANSWER INTEGRITY) deterministic checks on the listed posts
 import website_intelligence
 import google as google_search   # the new google.py module
@@ -739,6 +745,9 @@ def normalize_platform(raw: str) -> str:
 # normalize_platform); several -> a comma list in fixed order, e.g.
 # "x_twitter,linkedin"; every platform, nothing usable, or "all" -> "all".
 _PLATFORM_ORDER = ("x_twitter", "reddit", "linkedin", "facebook")
+if platforms.get("hackernews") is not None:   # (HACKER NEWS) registered only when the flag is on; off = unchanged
+    _PLATFORM_ORDER = ("x_twitter", "reddit", "hackernews", "linkedin", "facebook")
+    PLATFORM_KEY_MAP.update({"hacker news": "hackernews", "hackernews": "hackernews", "hn": "hackernews"})
 
 
 def normalize_platforms(raw: str) -> str:
@@ -1130,7 +1139,7 @@ def _prov_note(out, kind, chat_id=None, topic_key=None, marker_before=None,
 
 def build_data_freshness(posts, reference_utc=None, *, time_range=None, time_window_days=None,
                          provenance=None, matched_count=None, evidence_limit=None,
-                         timed_out: bool = False) -> dict:
+                         timed_out: bool = False, platform_note=None) -> dict:
     """The "data_freshness" object for one answer, including a plain-text
     "statement". Pure given its inputs. Never raises.
 
@@ -1311,7 +1320,11 @@ def build_data_freshness(posts, reference_utc=None, *, time_range=None, time_win
                          and isinstance(matched_count, int) and matched_count >= evidence_limit)
     if limit_reached:
         lines.append(f"Showing up to {evidence_limit} matching posts; more may exist.")
-    lines.append("Collection time is unknown, and this is not a complete view of Reddit.")
+    if platform_note:                         # (HACKER NEWS) one honest sentence about the live-fetched platform, when it was part of this search
+        lines.append(platform_note)
+        lines.append("Collection time is unknown, and this is not a complete view of Reddit or Hacker News.")
+    else:
+        lines.append("Collection time is unknown, and this is not a complete view of Reddit.")
 
     return {
         "version": _FD_VERSION,
@@ -1336,7 +1349,7 @@ def build_data_freshness(posts, reference_utc=None, *, time_range=None, time_win
 
 def enrich_freshness_answer(answer_text, posts, *, time_range=None, time_window_days=None, provenance=None,
                             matched_count=None, evidence_limit=None, timed_out: bool = False,
-                            reference_utc=None):
+                            reference_utc=None, platform_note=None):
     """Adds "data_freshness" to a structured answer. Returns `answer_text`
     unchanged when the flag is off, `provenance` is None (the caller did not
     track it), the text is not a structured answer, the answer is cut off, or
@@ -1355,7 +1368,7 @@ def enrich_freshness_answer(answer_text, posts, *, time_range=None, time_window_
         data["data_freshness"] = build_data_freshness(
             posts, reference_utc, time_range=time_range, time_window_days=time_window_days,
             provenance=provenance, matched_count=matched_count, evidence_limit=evidence_limit,
-            timed_out=timed_out)
+            timed_out=timed_out, platform_note=platform_note)
         return json.dumps(data, ensure_ascii=False)
     except Exception as exc:
         log.warning(f"Freshness disclosure failed (answer left unchanged): {exc}")
@@ -1624,6 +1637,7 @@ _PLATFORM_FIELD_CANDIDATES = ["platform", "source", "source_platform"]
 # it means "no filter" and is handled separately.
 _PLATFORM_DOC_VALUES = {
     "reddit":    ["reddit"],
+    "hackernews": ["hackernews", "hacker news", "hn"],
     "x_twitter": ["twitter", "x", "x_twitter", "x/twitter"],
     "linkedin":  ["linkedin"],
     "facebook":  ["facebook"],
@@ -2316,13 +2330,191 @@ def _build_window_scope(time_window_days=None, time_range=None, requested_at=Non
     return None
 
 
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# (HACKER NEWS) Live-fetched candidates. Everything below is inert unless the platform is registered (HACKERNEWS_ENABLED) AND
+# selected: with the flag off, get_matched_signals() below is the original function and nothing here runs.
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+_HN_CACHE = {}                    # key -> (expires_monotonic, records, status): the stream polls get_matched_signals() repeatedly
+_HN_CACHE_LOCK = threading.Lock()
+_HN_STATUS = {}                   # (chat_id, topic_key) -> status of the last Hacker News fetch (read by hackernews_note)
+_HN_TTL_OK, _HN_TTL_FAIL, _HN_CACHE_MAX = 120.0, 30.0, 64
+
+
+def _hn_wanted(targeting_platform):
+    """(wants_hn, hn_only). (False, False) unless Hacker News is registered (flag on) and selected; "all" means every enabled one."""
+    if platforms.get("hackernews") is None:
+        return False, False
+    keys = platforms.expand_selection(targeting_platform)
+    return ("hackernews" in keys), (keys == ("hackernews",))
+
+
+def _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id=None, topic_key=None):
+    """(records, status). The router's keywords searched live on Hacker News; the pool is sized by the Reddit wide-pool rule
+    (limit x INTENT_CANDIDATE_MULTIPLIER, clamped by INTENT_CANDIDATE_MIN/MAX). Cached briefly. NEVER raises."""
+    try:
+        import hackernews_live                                   # noqa: PLC0415
+        import config as _c                                      # noqa: PLC0415
+        pool_n = hackernews_live.pool_size(limit, _c.INTENT_CANDIDATE_MULTIPLIER, _c.INTENT_CANDIDATE_MIN, _c.INTENT_CANDIDATE_MAX)
+        now = datetime.now(timezone.utc)
+        start, end = hackernews_live.window_bounds(since_days, time_range, now, MAX_TIME_WINDOW_DAYS)
+        tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+        try:
+            import mysql_signals as _ms                          # noqa: PLC0415  (logics imports it lazily elsewhere too)
+            _window_kind = _ms.ACTIVE_INTENT_WINDOW_KIND
+        except Exception:
+            _window_kind = "active_intent_window"
+        by_date = bool(tr is not None and getattr(tr, "kind", None) == _window_kind)   # the Active Intent window: newest first
+        key = (tuple(sorted(q.lower() for q in hackernews_live.clean_queries(keywords))), pool_n, by_date,
+               (tr.start.isoformat(), tr.end.isoformat()) if tr is not None else (since_days if isinstance(since_days, int) else None))
+        mono = time.monotonic()
+        with _HN_CACHE_LOCK:
+            hit = _HN_CACHE.get(key)
+            if hit and hit[0] > mono:
+                recs, status = [dict(r) for r in hit[1]], dict(hit[2])
+                _HN_STATUS[(chat_id, topic_key)] = status
+                return recs, status
+        recs, status = hackernews_live.fetch(
+            keywords, pool_n=pool_n, start=start, end=end, by_date=by_date, hits_per_page=_c.HN_HITS_PER_PAGE,
+            max_pages=_c.HN_MAX_PAGES_PER_KEYWORD, deadline_seconds=_c.HN_FETCH_TIMEOUT_SECONDS, now=now)
+        status = dict(status, pool_n=pool_n, candidates=len(recs), window=bool(start or end))
+        ttl = _HN_TTL_OK if status.get("state") in ("ok", "empty", "partial") else _HN_TTL_FAIL
+        with _HN_CACHE_LOCK:
+            if len(_HN_CACHE) >= _HN_CACHE_MAX:
+                for _k in sorted(_HN_CACHE, key=lambda k: _HN_CACHE[k][0])[: _HN_CACHE_MAX // 2]:
+                    _HN_CACHE.pop(_k, None)
+            _HN_CACHE[key] = (mono + ttl, [dict(r) for r in recs], dict(status))
+            _HN_STATUS[(chat_id, topic_key)] = status
+            while len(_HN_STATUS) > 256:
+                _HN_STATUS.pop(next(iter(_HN_STATUS)), None)
+        log.info("hackernews fetch | state=%s candidates=%s requests=%s failed=%s no_text=%s outside_window=%s", status.get("state"),
+                 len(recs), status.get("requests"), status.get("failed_requests"), status.get("no_text"), status.get("outside_window"))
+        return recs, status
+    except Exception as exc:                                     # fail closed
+        log.warning("hackernews pool failed closed (%s)", type(exc).__name__)
+        status = {"state": "failed", "reason": "exception:" + type(exc).__name__, "candidates": 0}
+        try:
+            _HN_STATUS[(chat_id, topic_key)] = status          # the failure is disclosed, never a silent drop
+        except Exception:
+            pass
+        return [], status
+
+
+def _hn_start(keywords, limit, since_days, time_range, chat_id, topic_key):
+    """Start the Hacker News fetch on a daemon thread NOW (so it runs in parallel with the Reddit scan). Returns the box."""
+    box = {"event": threading.Event(), "recs": [], "status": None, "consumed": False, "abandoned": False, "key": (chat_id, topic_key),
+           "wait": float(getattr(__import__("config"), "HN_FETCH_TIMEOUT_SECONDS", 12)) + 2.0, "t0": time.monotonic()}
+
+    def _run():
+        try:
+            box["recs"], box["status"] = _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id, topic_key)
+        except Exception:
+            box["recs"], box["status"] = [], {"state": "failed", "reason": "thread_exception", "candidates": 0}
+        finally:
+            if box.get("abandoned"):          # the caller already gave up on this branch: the disclosure must keep saying so
+                _HN_STATUS[box["key"]] = {"state": "failed", "reason": "timeout", "candidates": 0}
+            box["event"].set()
+    threading.Thread(target=_run, name="hackernews-fetch", daemon=True).start()
+    return box
+
+
+def _hn_take(box):
+    """The box's records once the fetch is done, waiting at most until its own deadline (+2s). A branch that overruns is left
+    behind (its status says so) and the caller carries on without it. Marks the box consumed. Never raises."""
+    try:
+        box["consumed"] = True
+        left = max(0.0, box["wait"] - (time.monotonic() - box["t0"]))
+        if not box["event"].wait(left):
+            box["abandoned"] = True
+            box["status"] = {"state": "failed", "reason": "timeout", "candidates": 0}
+            _HN_STATUS[box["key"]] = box["status"]
+            return []
+        return [dict(r) for r in box["recs"]]
+    except Exception:
+        return []
+
+
+def hackernews_note(chat_id, topic_key):
+    """One honest sentence about the Hacker News branch of THIS search, or None when it was not part of it."""
+    st = _HN_STATUS.get((chat_id, topic_key))
+    if not isinstance(st, dict):
+        return None
+    state, n = st.get("state"), st.get("candidates", 0)
+    if state == "ok":
+        return f"Hacker News was searched live this time ({n} candidate{'s' if n != 1 else ''} considered)."
+    if state == "partial":
+        return f"Hacker News was only partly searched this time (some requests failed or timed out; {n} candidate{'s' if n != 1 else ''} considered)."
+    if state == "empty":
+        return "Hacker News was searched live this time and had no qualifying stories (only stories with text qualify)."
+    if state == "skipped":
+        return "Hacker News was selected but not searched (no usable search terms)."
+    return "Hacker News could not be searched this time (" + str(st.get("reason") or state or "unavailable") + "); this answer does not include it."
+
+
+def hackernews_only(targeting_platform) -> bool:
+    """True when Hacker News is the ONLY platform selected (flag on). Such a search needs no collector job: nothing is collected for it."""
+    try:
+        return bool(_hn_wanted(targeting_platform)[1])
+    except Exception:
+        return False
+
+
+def _hn_only_matched(topic_key, keywords, targeting_platform, limit, since_days, user_query, scan_state, time_range, chat_id):
+    """Hacker News selected ALONE: no Mongo, MySQL, embedding or Reddit call at all. The live pool goes to the SAME intent bridge as
+    Reddit candidates (or, with the bridge off, is returned in the API's relevance order), then the same cap and limit apply."""
+    limit = limit or MAX_MATCHED_RESULTS
+    recs, status = _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id, topic_key)
+    _register_scan_status(chat_id, topic_key, status.get("state") in ("ok", "empty", "partial"))
+    if scan_state is not None:
+        scan_state["delta_mode"] = False
+        scan_state["sims"] = {}
+        scan_state["truncated"] = len(recs) >= (status.get("pool_n") or limit)
+        scan_state["hackernews"] = status
+    return _hn_rank_pool(recs, topic_key, targeting_platform, limit, user_query, chat_id)
+
+
+def _hn_rank_pool(recs, topic_key, targeting_platform, limit, user_query, chat_id):
+    """A Hacker News pool -> the final matched list: the SAME intent bridge as Reddit candidates (when it is on), then the same
+    per-platform cap and limit. Fail-safe: any bridge problem returns the pool in its original order, never fewer posts."""
+    limit = limit or MAX_MATCHED_RESULTS
+    if not recs:
+        return []
+    ordered = recs
+    try:
+        from config import INTENT_BRIDGE_ENABLED   # noqa: PLC0415
+        if (INTENT_BRIDGE_ENABLED or strict_intent_mode()) and user_query and user_query.strip():
+            from intent_bridge import rerank_with_intent   # noqa: PLC0415
+            kw = {"topic_sims": [0.0] * len(recs)}
+            if chat_id and topic_key and _cfg_value("INCREMENTAL_RESCAN_ENABLED", True) and _accepts_kw(rerank_with_intent, "plan_key"):
+                kw["plan_key"] = (chat_id, topic_key)
+            ordered = rerank_with_intent(user_query, recs, limit, **kw)
+    except Exception as exc:                              # fail-safe: the un-reranked pool, never fewer posts
+        log.warning(f"intent_bridge hook failed for Hacker News (non-fatal): {exc}")
+        ordered = recs
+    cap = max(MAX_POSTS_PER_PLATFORM, limit // 2)
+    if strict_intent_mode() and _single_platform_query(user_query, targeting_platform):
+        cap = max(cap, limit)
+    out, seen = [], set()
+    for item in ordered:
+        url = item.get("post_url")
+        if url and url in seen:
+            continue
+        if len(out) >= cap:
+            break
+        if url:
+            seen.add(url)
+        out.append(item)
+        if len(out) >= limit:
+            break
+    return out
+
+
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
                          match_phrases: list = None, loose: bool = False,
                          signals_collection_2=None, chat_id: str = None,
                          signals_collection_4=None, user_query: str = None,
                          scan_state: dict = None, time_range=None,
-                         cancel_event: "threading.Event" = None) -> list:
+                         cancel_event: "threading.Event" = None, _hn_box: dict = None) -> list:
     """Reads `flintel_signals` and keeps only the signals that are
     genuinely relevant to this job's topic. topic_key match is
     intentionally NOT required: Background Service #1 may store its own
@@ -3658,6 +3850,19 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 _trunc_hit.append(1)
                 break
 
+        # (HACKER NEWS) The live-fetched Hacker News candidates (own wide pool, started in parallel by the get_matched_signals wrapper)
+        # join the SAME wide pool here, so the bridge below is called exactly ONCE with the merged pool. HN has no embeddings: 0.0.
+        if _hn_box is not None:
+            for _hn_rec in _hn_take(_hn_box):
+                _hn_url = _hn_rec.get("post_url")
+                if _hn_url and _hn_url in wide_seen:
+                    continue
+                if _hn_url:
+                    wide_seen.add(_hn_url)
+                    _sim_by_url[_hn_url] = 0.0
+                wide_matched.append(_hn_rec)
+                wide_sims.append(0.0)
+
         # Step 2: call intent bridge; fall back to wide_matched on error.
         try:
             from intent_bridge import rerank_with_intent  # noqa: PLC0415
@@ -3736,6 +3941,19 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             if len(matched) >= limit:
                 break
 
+    if _hn_box is not None and not _bridge_active:        # (HACKER NEWS) narrow path: fill ONLY the slots Reddit left empty
+        _have_urls = {m.get("post_url") for m in matched if m.get("post_url")}
+        for _hn_rec in _hn_take(_hn_box):
+            if len(matched) >= limit:
+                break
+            _hn_url = _hn_rec.get("post_url")
+            if _hn_url and _hn_url in _have_urls:
+                continue
+            matched.append(_hn_rec)
+            if _hn_url:
+                _have_urls.add(_hn_url)
+                _sim_by_url[_hn_url] = 0.0
+
     if scan_state is not None:
         scan_state["sims"] = {
             m["post_url"]: _sim_by_url[m["post_url"]]
@@ -3743,6 +3961,59 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         }
         scan_state["truncated"] = bool(_trunc_hit) or len(matched) >= limit
     return matched
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# (HACKER NEWS) get_matched_signals(), the public name. Same signature and, whenever Hacker News is not both registered (flag on)
+# AND selected, it simply calls the original function above. Otherwise:
+#   * HN alone  -> the live pool only (no Mongo / MySQL / embedding / Reddit call).
+#   * HN + others -> the HN fetch starts NOW in parallel with the Reddit scan and joins the wide pool at the existing intent-bridge
+#     hook, so the bridge runs once on the merged pool. If the Reddit side returns empty before reaching that hook (no embeddings,
+#     empty corpus, ...), the HN pool is ranked on its own. An "unchanged" incremental rescan returns [] as it always did.
+# Any problem in the HN branch falls back to exactly what the original function returned.
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+_get_matched_signals_core = get_matched_signals
+
+
+@functools.wraps(_get_matched_signals_core)
+def get_matched_signals(topic_key, keywords, targeting_platform="all", limit=None, since_days=None, unfiltered=False,
+                        match_phrases=None, loose=False, signals_collection_2=None, chat_id=None, signals_collection_4=None,
+                        user_query=None, scan_state=None, time_range=None, cancel_event=None):
+    try:
+        wants_hn, hn_only = _hn_wanted(targeting_platform)
+    except Exception:
+        wants_hn, hn_only = False, False
+    if not wants_hn:
+        return _get_matched_signals_core(
+            topic_key, keywords, targeting_platform, limit, since_days, unfiltered, match_phrases, loose, signals_collection_2,
+            chat_id, signals_collection_4, user_query, scan_state, time_range, cancel_event)
+    if hn_only:
+        try:
+            return _hn_only_matched(topic_key, keywords, targeting_platform, limit, since_days, user_query, scan_state, time_range,
+                                    chat_id)
+        except Exception as exc:
+            log.warning(f"Hacker News-only search failed closed: {exc}")
+            return []
+    box = None
+    if not unfiltered and keywords:
+        try:
+            box = _hn_start(keywords, limit or MAX_MATCHED_RESULTS, since_days, time_range, chat_id, topic_key)
+        except Exception as exc:
+            log.warning(f"Hacker News start failed (Reddit search continues): {exc}")
+            box = None
+    result = _get_matched_signals_core(
+        topic_key, keywords, targeting_platform, limit, since_days, unfiltered, match_phrases, loose, signals_collection_2,
+        chat_id, signals_collection_4, user_query, scan_state, time_range, cancel_event, _hn_box=box)
+    if box is not None and not box["consumed"] and not result and not (scan_state or {}).get("unchanged"):
+        try:                                           # the Reddit side ended before the hook: rank the HN pool on its own
+            recs = _hn_take(box)
+            if recs:
+                if scan_state is not None:
+                    scan_state["hackernews"] = box["status"]
+                return _hn_rank_pool(recs, topic_key, targeting_platform, limit, user_query, chat_id)
+        except Exception as exc:
+            log.warning(f"Hacker News fallback failed closed: {exc}")
+    return result
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -7069,6 +7340,22 @@ VERIFIED_CAPABILITIES_TEXT = (
     "- **Narrow by platform or time** (\"from the last 24 hours\", \"October 9 to 12\").\n"
     "- **Turn the posts you get into outreach notes** for the ones that look like real prospects."
 )
+
+def _with_hackernews_capabilities(how_it_works, platforms_reply, verified_text):
+    """(HACKER NEWS) The three capability statements with Hacker News added, so what the app says about itself stays true when the
+    platform is on. Pure; applied only when the platform is registered, so with the flag off the statements are untouched."""
+    return (
+        how_it_works.replace("(Reddit today; X / Twitter, LinkedIn and Facebook are coming soon)",
+                             "(Reddit today, plus Hacker News searched live; X / Twitter, LinkedIn and Facebook are coming soon)"),
+        platforms_reply.replace("Right now I search **Reddit**.",
+                                "Right now I search **Reddit** (posts Flintel has collected) and **Hacker News** (searched live)."),
+        verified_text.replace("Reddit today; X / Twitter", "Reddit today, plus Hacker News searched live; X / Twitter"),
+    )
+
+
+if platforms.get("hackernews") is not None:
+    (SMALLTALK_REPLIES["how_it_works"], SMALLTALK_REPLIES["platforms"], VERIFIED_CAPABILITIES_TEXT) = _with_hackernews_capabilities(
+        SMALLTALK_REPLIES["how_it_works"], SMALLTALK_REPLIES["platforms"], VERIFIED_CAPABILITIES_TEXT)
 
 
 def exploratory_reply(info: dict) -> str:
