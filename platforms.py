@@ -52,9 +52,38 @@ REGISTRY = {
     "facebook": Platform("facebook", "Facebook", False, ("facebook",), ("facebook.com", "fb.com")),
 }
 
+# Hacker News: fetched LIVE from the public Algolia API (hackernews_live.py), never from the saved corpus. It is NOT in REGISTRY until
+# apply_flags(hackernews=True) registers it (config HACKERNEWS_ENABLED), so with the flag off the registry, the selector keys and every
+# selection are exactly what they were before. No community label/prefix (the generic "Source"), no invented earliest-date floor.
+_HACKERNEWS = Platform("hackernews", "Hacker News", True, ("hackernews", "hacker news", "hn"), ("news.ycombinator.com",))
 _ALIASES = {alias: p.key for p in REGISTRY.values() for alias in p.aliases}
 _URL_FIELDS = ("post_url", "url", "link", "permalink")
 _PLATFORM_FIELDS = ("platform", "source_platform")
+
+
+def apply_flags(hackernews=False) -> None:
+    """Register (True) or remove (False) the flag-gated Hacker News entry, IN PLACE (other modules hold REGISTRY). Called once at
+    start-up with the config flag. Idempotent. Registry order is the order of a multi-selection key: Hacker News follows Reddit."""
+    global _ALIASES
+    present = "hackernews" in REGISTRY
+    if bool(hackernews) == present:
+        return
+    items = [(k, v) for k, v in REGISTRY.items() if k != "hackernews"]
+    if hackernews:
+        pos = next((i for i, (k, _v) in enumerate(items) if k == "reddit"), len(items) - 1) + 1
+        items.insert(pos, ("hackernews", _HACKERNEWS))
+    REGISTRY.clear()
+    REGISTRY.update(items)
+    _ALIASES = {alias: p.key for p in REGISTRY.values() for alias in p.aliases}
+
+
+def expand_selection(raw) -> tuple:
+    """The platforms a stored selection means, as registry keys in registry order: "all" / empty / unrecognised means EVERY ENABLED
+    platform (never a still-disabled X / LinkedIn / Facebook); a named list is returned as named, restricted to enabled platforms."""
+    sel = selection_key(raw)
+    if sel == "all":
+        return tuple(enabled_keys())
+    return tuple(k for k in sel.split(",") if k in enabled_keys())
 
 
 def get(key) -> Optional[Platform]:
@@ -141,6 +170,7 @@ def selection_key(raw) -> str:
 
 # ── source identity, community, removed content ────────────────────────────────────────────────────────────────────────
 _REDDIT_ID = re.compile(r"/comments/([a-z0-9]+)", re.I)
+_HN_ID = re.compile(r"[?&]id=([0-9]+)")
 _REDDIT_SUB = re.compile(r"/r/([^/?#]+)", re.I)
 
 
@@ -160,6 +190,10 @@ def source_id(record) -> str:
         found = _REDDIT_ID.findall(url)
         if found:
             return f"reddit:{found[0].lower()}"
+    if of(record) == "hackernews":                  # the item id lives in the query string, which normalized_url() strips
+        found = _HN_ID.findall(url)
+        if found:
+            return f"hackernews:{found[0]}"
     return normalized_url(url)
 
 
