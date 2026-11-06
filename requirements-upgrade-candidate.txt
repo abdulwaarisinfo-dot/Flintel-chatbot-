@@ -1,0 +1,15 @@
+# NOT used by any deployment. A CANDIDATE set for a staged framework upgrade, to be tried in staging only.
+# Evidence so far (unit tests only): the full suite gives the same 38 pre-existing failures on this set (Python 3.13) as on the pinned set (Python 3.12).
+# NOT verified: real OAuth round trip, signed-cookie sessions behind a proxy, streaming under uvicorn, the payment webhook, real bcrypt hashing (the suite
+# stubs passlib), Python 3.12 + this set. Starlette >= 1.3.1 contains the fixes for all seven advisories listed in FLINTEL_SECURITY_FINDINGS.md (F4);
+# advisories published after that date were not checked (no vulnerability database was reachable from the test environment).
+fastapi==0.143.3
+starlette==1.6.0
+uvicorn[standard]==0.53.0
+python-multipart==0.0.32
+itsdangerous==2.2.0
+jinja2==3.1.6
+httpx==0.28.1
+authlib==1.9.1
+passlib[bcrypt]>=1.7.4
+bcrypt==4.0.1
