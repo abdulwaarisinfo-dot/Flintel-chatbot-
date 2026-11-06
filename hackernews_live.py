@@ -279,7 +279,7 @@ def fetch(keywords, *, pool_n, start=None, end=None, by_date=False, hits_per_pag
         log.warning("hackernews fetch failed closed (%s)", type(exc).__name__)
         status.update(state="failed", reason="exception:" + type(exc).__name__)
         return [], status
-
+     
 
 def probe_newest(http_get=None, timeout=6.0):
     """(state, iso) — one cheap request for the single newest story, to tell "Hacker News has stories, just none in your window"
