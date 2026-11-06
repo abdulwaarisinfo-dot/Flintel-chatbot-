@@ -6,6 +6,7 @@ route on it; index.py imports this module once, at the bottom, purely
 for its side effect of registering these routes.   
 """
 
+import contextlib
 import json
 import re
 import time
@@ -90,6 +91,9 @@ from logics import platform_display_value   # (PLATFORM PERSISTENCE)
 from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
 from logics import enrich_no_results_answer   # (NO-RESULTS UI)
 from logics import freshness_enabled, enrich_freshness_answer   # (FRESHNESS DISCLOSURE)
+from logics import enrich_signal_report, result_coverage_if_enabled, zero_result_coverage_for, enrich_search_mode, search_mode_scope   # (SIGNAL INTELLIGENCE)
+import search_modes   # (SEARCH MODES) pure: mode normalisation, canonical URLs, merge, provenance
+import signal_intel   # (GENERAL DISCOVERY) pure detector; not part of the stubbed `flintel` module
 from logics import hackernews_only, hackernews_note   # (HACKER NEWS) no collector job for HN alone; honest per-platform status line
 import os   # (DATE/TIME) DEFAULT_USER_TIMEZONE env var
 import timerange   # (DATE/TIME)
@@ -1213,10 +1217,12 @@ def search(
     chat_id: str = Form(None),
     tz: str = Form(None),
     submit_key: str = Form(None),   # (SEARCH CREDITS) same key = same request (retries)
+    search_mode: str = Form(None),   # (SEARCH MODES) live | historical | combined; absent = the default (combined)
 ):
     # (DATE/TIME) ONE reference instant for this whole request: every relative
     # phrase ("last 3 hours", "today") is resolved against it.
     reference_utc = datetime.now(timezone.utc)
+    search_mode = search_mode.strip() if isinstance(search_mode, str) else ""   # (SEARCH MODES) direct calls pass the Form default object
     # (PER-USER BUSY LOCK) Additive check at the very start, before any
     # existing logic below runs — declines a new request from THIS SAME
     # owner_key while their previous one is still being processed by
@@ -2354,6 +2360,20 @@ def search(
         if not time_window_days:
             time_window_source = None
 
+        # (GENERAL DISCOVERY) "Show me recent threads" / "a general unfiltered sample" names NO topic: it is a request for a sample of
+        # what was collected, not a keyword search. The router often gives it no period (so the check above refused it) and, after a
+        # follow-up, may even carry the previous topic's keywords; the message itself decides. Such a request becomes a real unfiltered
+        # search over the requested period (or the default recent window), with no topic keywords and no intent filter.
+        if intent == "search" and not routed_unfiltered and (signal_intel.is_general_discovery_request(query)
+                                                           or (not website_context_url and not reuse_website_keywords
+                                                               and signal_intel.keywords_are_generic_discovery(keywords))):
+            routed_unfiltered = True
+            keywords = []
+            if not time_window_days and time_range_obj is None:
+                time_window_days = int(getattr(config, "RECENT_DEFAULT_WINDOW_DAYS", 30) or 30)
+                time_window_source = "default_recent"
+            log.info(f"General discovery | query={query!r} | days={time_window_days} | range={bool(time_range_obj)}")
+
         # (VAGUE WEBSITE FOLLOW-UP REUSE) When this message's keywords were
         # reused from a stored last_website_context, the matching job for
         # them is already collecting data under the ORIGINAL message's
@@ -2387,6 +2407,7 @@ def search(
                 "time_window_days": time_window_days,
                 **({"time_window_source": time_window_source} if time_window_source else {}),
                 "unfiltered": routed_unfiltered,
+                **({"search_mode": search_modes.normalize_mode(search_mode)} if search_mode else {}),   # (SEARCH MODES)
                 "website_context": website_answer_context,
                 "match_phrases": routed_match_phrases,
                 "evidence_required": routed.get("evidence_required"),
@@ -2433,6 +2454,7 @@ def search(
                 active_chat_id, owner_key, query, topic_key, keywords, targeting_platform,
                 time_window_days=time_window_days,
                 **({"time_window_source": time_window_source} if time_window_source else {}),
+                **({"search_mode": search_modes.normalize_mode(search_mode)} if search_mode else {}),   # (SEARCH MODES)
                 unfiltered=routed_unfiltered,
                 website_context=website_answer_context,
                 match_phrases=routed_match_phrases,
@@ -3045,6 +3067,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     # window is put on THIS request's in-memory message here - the same `time_range` a typed range uses - before any retrieval.
     _ai = active_intent.Run.prepare(msg, owner_key=owner_key, chat_id=chat_id, mode="stream", owner_type=_owner_type)
 
+    _mode_ctx = search_mode_scope(msg["search_mode"]) if msg.get("search_mode") else contextlib.nullcontext()   # (SEARCH MODES)
+    _mode_info = getattr(_mode_ctx, "info", None)
+
     def _topup(cancel_event=None):
         """The one place get_evidence_with_topup() is called for this
         message — used by the sync (flag-off) path, the background scan
@@ -3071,7 +3096,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         if _fresh_prov is not None:
             kwargs["provenance_out"] = _fresh_prov     # (FRESHNESS) write-only record of what this call did
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
-                                request_id=msg.get("request_id")):
+                                request_id=msg.get("request_id")), _mode_ctx:
             return get_evidence_with_topup(**kwargs)
 
     _rid = msg.get("request_id")
@@ -3085,7 +3110,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         """The evidence of a scan that already finished for this turn, read back from the durable per-chat topic cache. None when
         the cache cannot vouch for it (then the turn simply scans)."""
         try:
-            cached = get_cached_topic_evidence(chat_id, topic_key)
+            with _mode_ctx:
+                cached = get_cached_topic_evidence(chat_id, topic_key)
             if not cached:
                 return None
             return usable_cached_posts(cached, msg.get("targeting_platform"), msg.get("time_window_days"),
@@ -3675,7 +3701,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 if full_answer:
                     full_answer = enrich_no_results_answer(   # (NO-RESULTS UI) verified search facts + next steps
                         full_answer, msg.get("query"), msg.get("targeting_platform"), msg.get("time_range"),
-                        msg.get("time_window_days"), msg.get("keywords"))
+                        msg.get("time_window_days"), msg.get("keywords"),
+                        coverage_fn=lambda: zero_result_coverage_for(msg, chat_id))
                 if full_answer:
                     full_answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement
                         full_answer, merged_pool, time_range=msg.get("time_range"),
@@ -3689,6 +3716,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 answer_integrity.reset_request_kind(_kind_token)
                 if full_answer:      # (ACTIVE INTENT) after integrity: adds the labelled live block, or leaves the answer as is
                     full_answer = _ai.finish(full_answer, historical=merged_pool, historical_timed_out=bool(scan_timed_out))
+                if full_answer:      # (SIGNAL INTELLIGENCE) after integrity: class per retrieved post with exact quotes + coverage, or unchanged
+                    full_answer = enrich_signal_report(
+                        full_answer, results_to_save, query=msg.get("query"), mode="general" if msg.get("unfiltered") else "topic",
+                        coverage=result_coverage_if_enabled(msg, results_to_save, chat_id))
+                if full_answer and _mode_info:      # (SEARCH MODES) which paths ran, what each found, provenance counts
+                    full_answer = enrich_search_mode(full_answer, _mode_info, results_to_save)
             except Exception as exc:
                 try:
                     answer_integrity.reset_request_kind(_kind_token)
@@ -3981,6 +4014,22 @@ def _post_auth_target(request: Request, resume_chat, email) -> str:
     return "/"
 
 
+def _oauth_redirect_uri(request: Request) -> str:
+    """The Google OAuth redirect_uri. With SITE_URL set it is built from that trusted value and the route path only, so no request
+    header (Host, X-Forwarded-Host/Proto) can steer where Google sends the authorisation code. Without SITE_URL (local development)
+    it is derived from the request, as before."""
+    site = (getattr(config, "SITE_URL", "") or "").strip().rstrip("/")
+    if site:
+        return site + request.app.url_path_for("google_callback")
+    if not getattr(config, "TRUSTED_HOSTS", ""):
+        host = (request.url.hostname or "").lower()
+        if host not in ("localhost", "127.0.0.1", "::1", "testserver") and not getattr(_oauth_redirect_uri, "_warned", False):
+            _oauth_redirect_uri._warned = True
+            log.warning("OAuth redirect_uri is derived from the request Host because SITE_URL and TRUSTED_HOSTS are not set; "
+                        "set SITE_URL (and TRUSTED_HOSTS) on any deployed instance")
+    return str(request.url_for("google_callback"))
+
+
 @app.get("/auth/google/login")
 async def google_login(request: Request, resume: str = None):
     # (GUEST GATE) remembered in the signed session across the Google round trip; honoured only if the
@@ -3989,8 +4038,7 @@ async def google_login(request: Request, resume: str = None):
         request.session["guest_resume"] = True
     else:
         request.session.pop("guest_resume", None)
-    redirect_uri = request.url_for("google_callback")
-    return await oauth.google.authorize_redirect(request, redirect_uri)
+    return await oauth.google.authorize_redirect(request, _oauth_redirect_uri(request))
 
 
 @app.get("/auth/google/callback")
@@ -4050,10 +4098,29 @@ async def google_callback(request: Request):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _client_ip(request: Request) -> str:
-    """The client address for the per-address send allowance: the LAST X-Forwarded-For hop (appended by our own
-    proxy; earlier hops are client-supplied), else the socket peer."""
-    fwd = (request.headers.get("x-forwarded-for") or "").split(",")[-1].strip()
-    return fwd or (request.client.host if request.client else "unknown")
+    """The client address for the per-address limits. Behind `config.TRUSTED_PROXY_HOPS` proxies you control, it is the Nth X-Forwarded-For entry
+    counted from the RIGHT (each of your proxies appends one; everything to the left is client-supplied and forgeable). 0 = ignore the header
+    (app directly exposed). Falls back to the socket peer when the header is shorter than the hop count."""
+    peer = request.client.host if request.client else "unknown"
+    hops = int(getattr(config, "TRUSTED_PROXY_HOPS", 1))
+    if hops <= 0:
+        return peer
+    parts = [p.strip() for p in (request.headers.get("x-forwarded-for") or "").split(",") if p.strip()]
+    return parts[-hops] if len(parts) >= hops else peer
+
+
+def _login_throttle():
+    """The failed-login throttle, or None when disabled (config.LOGIN_RATE_LIMIT_ENABLED=false) or its store is unavailable."""
+    if not getattr(config, "LOGIN_RATE_LIMIT_ENABLED", True):
+        return None
+    try:
+        import database
+        from login_throttle import LoginThrottle
+        return LoginThrottle(database.email_codes_collection, config.LOGIN_RATE_WINDOW_SECONDS,
+                             config.LOGIN_MAX_FAILURES_PER_ACCOUNT_IP, config.LOGIN_MAX_FAILURES_PER_IP)
+    except Exception as exc:
+        log.warning(f"login throttle unavailable (login continues unthrottled): {exc}")
+        return None
 
 
 _CODE_MESSAGES = {
@@ -4189,9 +4256,23 @@ def signup(
 @app.post("/login")
 def login(request: Request, email: str = Form(...), password: str = Form(...), resume: str = Form(None)):
     email_norm = email.strip().lower()
+    _throttle = _login_throttle()
+    _ip = _client_ip(request)
+    _wait = _throttle.retry_after(_ip, email_norm) if _throttle else 0
+    if _wait:
+        _msg = f"Too many failed sign-in attempts. Try again in {max(1, (_wait + 59) // 60)} minute(s)."
+        if _wants_json(request):
+            _r = _auth_json({"ok": False, "error": _msg}, 429)
+            _r.headers["Retry-After"] = str(_wait)
+            return _r
+        _r = templates.TemplateResponse(request, "index.html", {"error": _msg, "query": None, "user": None}, status_code=429)
+        _r.headers["Retry-After"] = str(_wait)
+        return _r
     user = users_collection.find_one({"email": email_norm})
 
     if not user or not user.get("password_hash") or not pwd_context.verify(password, user["password_hash"]):
+        if _throttle:
+            _throttle.record_failure(_ip, email_norm)
         if _wants_json(request):
             return _auth_json({"ok": False, "error": "Invalid email or password."}, 401)
         return templates.TemplateResponse(
@@ -4200,6 +4281,8 @@ def login(request: Request, email: str = Form(...), password: str = Form(...), r
             {"error": "Invalid email or password.", "query": None, "user": None},
         )
 
+    if _throttle:
+        _throttle.clear(_ip, email_norm)
     anon_id = peek_guest_id(request)
     resume_chat = _guest_resume_chat(anon_id, resume == "1")
 
@@ -4220,8 +4303,23 @@ def login(request: Request, email: str = Form(...), password: str = Form(...), r
     return RedirectResponse(url=target, status_code=303)
 
 
+def _clear_session_and_go_home(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/", status_code=303)
+
+
+@app.post("/logout")
+def logout_post(request: Request):
+    """State-changing logout. Protected like every unsafe method by the same-origin guard (origin_guard.py)."""
+    return _clear_session_and_go_home(request)
+
+
 @app.get("/logout")
 def logout(request: Request):
+    # Kept as GET so existing links and bookmarks work. A request a browser itself marks as cross-site or same-site-but-not-same-origin
+    # (Sec-Fetch-Site) is NOT honoured: it goes home without touching the session, so another site cannot log a user out with a link or <img>.
+    if (request.headers.get("sec-fetch-site") or "").lower() in ("cross-site", "same-site"):
+        return RedirectResponse(url="/", status_code=303)
     # Clearing the session only drops the login cookie and the guest UUID
     # for THIS browser session — nothing is deleted from Mongo. Because
     # chats are stored keyed by email, logging back in with the same email
