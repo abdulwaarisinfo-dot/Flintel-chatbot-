@@ -103,10 +103,12 @@ def strip_html(text) -> str:
     return _NL.sub("\n\n", t).strip()
 
 
-def normalize_hit(hit):
+def normalize_hit(hit, allow_title_only=False):
     """One Algolia hit -> the Reddit wide-pool record shape, or None when it has no usable id / title / integer date.
     post_url = the HN item URL (identity for dedup / source_id); the external article link is kept in `external_url`. The record
-    may have an empty post_text — `is_candidate` is the text-required rule."""
+    may have an empty post_text — `is_candidate` is the text-required rule.
+    `allow_title_only` (general discovery only): a story with no body keeps its TITLE as its text (nothing is invented: it is the
+    post's own title) and says so in `text_source` / `limitations`, so the evidence can never be mistaken for a full post body."""
     if not isinstance(hit, dict):
         return None
     oid = str(hit.get("objectID") or "").strip()
@@ -116,9 +118,18 @@ def normalize_hit(hit):
         return None
     rec = {"title": title.strip(), "post_text": strip_html(hit.get("story_text")), "post_url": ITEM_URL.format(oid),
            "platform": PLATFORM, "created_utc": float(ts), "hn_id": oid}
+    rec["text_source"] = "story_text" if rec["post_text"] else None
+    if allow_title_only and not rec["post_text"]:
+        rec["post_text"] = rec["title"]
+        rec["text_source"] = "title"
+        rec["limitations"] = ["Link story without body text: only the title is available as evidence."]
     ext = hit.get("url")
     if isinstance(ext, str) and ext.strip():
         rec["external_url"] = ext.strip()
+    for src, dst in (("author", "author"), ("points", "hn_points"), ("num_comments", "hn_comments")):
+        v = hit.get(src)
+        if isinstance(v, (str, int)) and not isinstance(v, bool) and v != "":
+            rec[dst] = v                                   # only what the API returned; nothing is derived or invented
     return timerange.with_published_at(rec, rec)       # published_at only when the date passes the repo's publication-time rules
 
 
@@ -150,17 +161,20 @@ class RateLimited(Exception):
 
 # ── the bounded fetch ─────────────────────────────────────────────────────────────────────────────────────────────────────
 def fetch(keywords, *, pool_n, start=None, end=None, by_date=False, hits_per_page=50, max_pages=3, deadline_seconds=12.0,
-          http_get=None, now=None):
+          http_get=None, now=None, general=False):
     """(records, status). `records`: up to `pool_n` unique candidates (text present, inside [start, end)), merged round-robin over
     the keyword queries so no single keyword fills the pool. `status` is an honest summary:
         state: "ok" (>=1 candidate) | "empty" (searched fine, nothing qualified) | "partial" (some requests failed or the deadline
                hit, with candidates) | "failed" (no request succeeded) | "rate_limited" | "skipped" (no usable keyword / pool)
         requests, failed_requests, fetched_hits, no_text, outside_window, duplicates, reason.
+    `general=True` is GENERAL DISCOVERY: no keyword at all (an empty query on `search_by_date`: the newest stories first), title-only
+    link stories are kept (see normalize_hit) and the date window / de-duplication / verification are exactly the same.
     Never raises."""
     status = {"state": "skipped", "requests": 0, "failed_requests": 0, "fetched_hits": 0, "no_text": 0, "outside_window": 0,
               "duplicates": 0, "reason": None}
     try:
-        queries = clean_queries(keywords)
+        queries = [""] if general else clean_queries(keywords)
+        by_date = bool(by_date or general)
         if not queries or not isinstance(pool_n, int) or pool_n <= 0:
             status["reason"] = "no_keywords" if not queries else "no_pool"
             return [], status
@@ -210,7 +224,7 @@ def fetch(keywords, *, pool_n, start=None, end=None, by_date=False, hits_per_pag
                 if not isinstance(hits, list) or not hits:
                     return
                 for hit in hits:
-                    rec = normalize_hit(hit)
+                    rec = normalize_hit(hit, allow_title_only=general)
                     with lock:
                         counters["hits"] += 1
                         if rec is None:
@@ -265,3 +279,21 @@ def fetch(keywords, *, pool_n, start=None, end=None, by_date=False, hits_per_pag
         log.warning("hackernews fetch failed closed (%s)", type(exc).__name__)
         status.update(state="failed", reason="exception:" + type(exc).__name__)
         return [], status
+
+
+def probe_newest(http_get=None, timeout=6.0):
+    """(state, iso) — one cheap request for the single newest story, to tell "Hacker News has stories, just none in your window"
+    from "nothing came back". state: "ok" (iso = its UTC time), "empty" (the API answered with no stories), "failed". Never raises."""
+    try:
+        data = (http_get or _default_http_get)(build_url("", by_date=True, hits_per_page=1), timeout)
+        hits = data.get("hits") if isinstance(data, dict) else None
+        if not isinstance(hits, list):
+            return "failed", None
+        if not hits:
+            return "empty", None
+        ts = hits[0].get("created_at_i") if isinstance(hits[0], dict) else None
+        if isinstance(ts, int) and not isinstance(ts, bool):
+            return "ok", datetime.fromtimestamp(ts, timezone.utc).isoformat()
+        return "failed", None
+    except Exception:
+        return "failed", None
