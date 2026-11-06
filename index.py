@@ -101,6 +101,7 @@ future readers.
 """
 
 import re
+import contextlib
 import json
 import time
 import threading
@@ -154,6 +155,7 @@ from logics import (
     normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, unsupported_requested, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
     matcher_for_kind, request_kind_note,   # (REQUEST KIND)
+    enrich_signal_report, result_coverage_if_enabled, zero_result_coverage_for, enrich_search_mode, search_mode_scope,   # (SIGNAL INTELLIGENCE)
     freshness_enabled, enrich_freshness_answer, hackernews_note, hackernews_only,   # (FRESHNESS DISCLOSURE) + (HACKER NEWS)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
@@ -202,7 +204,21 @@ templates.env.globals.setdefault("new_submit_key", lambda: _secrets.token_hex(16
 # Also doubles as where we stash the anonymous chat-owner UUID and the
 # currently active chat_id, exactly like a browser-local "current chat"
 # pointer in Claude/ChatGPT.
-app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
+import config as _cookie_cfg   # read once at startup: SESSION_COOKIE_SECURE=true marks the session cookie Secure (HTTPS only)
+app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY, https_only=bool(getattr(_cookie_cfg, "SESSION_COOKIE_SECURE", False)))
+_trusted_hosts = [h.strip() for h in str(getattr(_cookie_cfg, "TRUSTED_HOSTS", "") or "").split(",") if h.strip()]
+if _trusted_hosts:      # TRUSTED_HOSTS set: any other Host header is refused (400), which also constrains the OAuth redirect_uri built from the request
+    from starlette.middleware.trustedhost import TrustedHostMiddleware
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=_trusted_hosts)
+import origin_guard as _og_cfg
+_sec_problems = _og_cfg.security_config_problems(
+    getattr(_cookie_cfg, "FLINTEL_ENV", ""), getattr(_cookie_cfg, "TRUSTED_HOSTS", ""), getattr(_cookie_cfg, "ORIGIN_CHECK_ENABLED", False),
+    getattr(_cookie_cfg, "SESSION_COOKIE_SECURE", False), getattr(_cookie_cfg, "SITE_URL", ""))
+if _sec_problems:
+    raise RuntimeError("Refusing to start in staging with incomplete security configuration: " + "; ".join(_sec_problems))
+if getattr(_cookie_cfg, "ORIGIN_CHECK_ENABLED", False):
+    import origin_guard
+    app.add_middleware(origin_guard.OriginGuard, trusted_hosts=_trusted_hosts)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # (GUEST IDENTITY) A guest's id used to live only in the 14-day session cookie, so it
@@ -812,7 +828,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         website_only: bool = False, website_evidence: dict = None,
                         website_note: str = None, resolved_query: str = None, time_range: dict = None,
                         credit_request_id: str = None, late_delivery: tuple = None,
-                        request_kind: str = None, subject: str = None, time_window_source: str = None):
+                        request_kind: str = None, subject: str = None, time_window_source: str = None,
+                        search_mode: str = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -950,6 +967,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
 
     if credit_request_id:
         message["credit_request_id"] = credit_request_id
+    if search_mode in ("live", "historical", "combined"):     # (SEARCH MODES) recorded only when the user chose one
+        message["search_mode"] = search_mode
     if time_window_source and time_window_days:      # (RANGE ORIGIN) recorded only when a lookback exists: "default_recent" | "explicit_period"
         message["time_window_source"] = time_window_source
     if request_kind:                       # (REQUEST KIND) only a non-lead request records its kind; every other message is unchanged
@@ -2378,12 +2397,18 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 if msg.get("website_context"):
                     answer = _inject_website_context_into_answer(answer, msg["website_context"])
                 answer = enrich_no_results_answer(answer, msg.get("query"), msg.get("targeting_platform"),   # (NO-RESULTS UI)
-                                                  msg.get("time_range"), msg.get("time_window_days"), msg.get("keywords"))
+                                                  msg.get("time_range"), msg.get("time_window_days"), msg.get("keywords"),
+                                                  coverage_fn=lambda: zero_result_coverage_for(msg, chat_id))
                 answer = enrich_freshness_answer(   # (FRESHNESS) stored-date / search-activity statement; no-op when off
                     answer, merged_pool, time_range=msg.get("time_range"), time_window_days=msg.get("time_window_days"),
                     provenance=freshness_prov, matched_count=len(matched), evidence_limit=effective_evidence_limit,
                     platform_note=hackernews_note(chat_id, msg.get("topic_key")))
             answer = _ai.finish(answer, historical=merged_pool)     # (ACTIVE INTENT) adds the labelled live block, or leaves it
+            answer = enrich_signal_report(                          # (SIGNAL INTELLIGENCE) class per retrieved post + exact quotes + coverage
+                answer, merged_pool, query=msg.get("query"), mode="general" if msg.get("unfiltered") else "topic",
+                coverage=result_coverage_if_enabled(msg, merged_pool, chat_id))
+            if msg.get("_search_mode_info"):                        # (SEARCH MODES) which paths ran + provenance counts
+                answer = enrich_search_mode(answer, msg["_search_mode_info"], merged_pool)
             # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
             verdict = guest_gate.on_answer_ready(gate_key, chat_id, msg["topic_key"], gate_token, answer, lease=gate_lease)
             if verdict != guest_gate.DELIVER:
@@ -2605,9 +2630,12 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 log.warning("active_intent window preparation failed (%s): normal retrieval continues", type(_exc).__name__)
 
         _fresh_prov = {} if freshness_enabled() else None      # (FRESHNESS) per-request provenance; None = off
+        _mode_ctx = search_mode_scope(msg["search_mode"]) if msg.get("search_mode") else contextlib.nullcontext()   # (SEARCH MODES)
+        if getattr(_mode_ctx, "info", None):
+            msg["_search_mode_info"] = _mode_ctx.info          # in-memory only; read by _complete_message_answer_and_results
         try:
             with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
-                                    request_id=msg.get("request_id")):
+                                    request_id=msg.get("request_id")), _mode_ctx:
                 matched = get_evidence_with_topup(
                     chat_id=chat_id,
                     owner_key=owner_key,
