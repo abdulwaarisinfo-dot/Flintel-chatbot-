@@ -219,6 +219,20 @@ __all__ = [
     "REDDIT_LIVE_MAX_LINKS",
     "REDDIT_LIVE_ELIGIBLE_WINDOW_SECONDS",
     "REDDIT_LIVE_MODEL",
+    # Signal report (class per retrieved post, exact quotes, coverage) added to answers; OFF by default, fail-safe
+    "SIGNAL_REPORT_ENABLED",
+    "ZERO_RESULT_MYSQL_PROBE_ENABLED",
+    # Deployment identity + the trending-keywords background scheduler switch (paid LLM + Google calls)
+    "FLINTEL_ENV",
+    "TRENDING_KEYWORDS_ENABLED",
+    "SESSION_COOKIE_SECURE",
+    "TRUSTED_HOSTS",
+    "ORIGIN_CHECK_ENABLED",
+    "LOGIN_RATE_LIMIT_ENABLED",
+    "TRUSTED_PROXY_HOPS",
+    "LOGIN_RATE_WINDOW_SECONDS",
+    "LOGIN_MAX_FAILURES_PER_ACCOUNT_IP",
+    "LOGIN_MAX_FAILURES_PER_IP",
     # Hacker News as a selectable, live-fetched platform (OFF by default)
     "HACKERNEWS_ENABLED",
     "HN_FETCH_TIMEOUT_SECONDS",
@@ -1157,3 +1171,55 @@ HACKERNEWS_ENABLED = bool(_hn_requested and _hn_ok1 and _hn_ok2 and _hn_ok3)
 if _hn_requested and not HACKERNEWS_ENABLED:
     _logging.getLogger("flintel.config").warning(
         "HACKERNEWS_ENABLED is true but an HN_* setting is invalid (timeout 1-60, pages 1-10, hits 1-100): Hacker News stays OFF.")
+
+
+# ── Signal report (signal_intel.py): classify the posts a search returned, show coverage. OFF by default (answers unchanged); "true" turns it on.
+# Probe the configured MySQL sources (three bounded read-only aggregate SELECTs) when a search returns nothing, so the "why" is real.
+# Off by default (fail-closed): index coverage of the publication column on the real MySQL tables is unverified. While off, MySQL
+# coverage is reported as UNKNOWN, never as empty.
+# Deployment identity. Only the value "staging" changes behaviour (it flips the default of TRENDING_KEYWORDS_ENABLED below); anything
+# else, including unset, keeps the existing production behaviour exactly.
+FLINTEL_ENV = os.getenv("FLINTEL_ENV", "").strip().lower()
+
+
+def _parse_trending_enabled(raw, env):
+    """TRENDING_KEYWORDS_ENABLED: the 12-hourly trending-keywords cycle (one LLM web-search call + one Google-discovery call + a search job).
+    Explicit value wins: 1/true/yes/on enable, 0/false/no/off disable; an unrecognised value is IGNORED with a warning and the default applies.
+    Default when unset: DISABLED when FLINTEL_ENV=staging, ENABLED otherwise (the pre-existing behaviour, so production is unchanged)."""
+    default = env != "staging"
+    if raw is None or not str(raw).strip():
+        return default
+    v = str(raw).strip().lower()
+    if v in ("1", "true", "yes", "on"):
+        return True
+    if v in ("0", "false", "no", "off"):
+        return False
+    _logging.getLogger("flintel.config").warning(f"TRENDING_KEYWORDS_ENABLED={str(raw).strip()!r} ignored; default {default} applies.")
+    return default
+
+
+# Mark the SESSION cookie Secure (sent only over HTTPS). Off by default so existing deployments are unchanged; the staging preflight requires it, and any
+# HTTPS deployment should set it. (The guest-identity cookie already sets Secure adaptively when the visitor arrives over HTTPS.)
+SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").strip().lower() in ("1", "true", "yes", "on")
+# Host-header and cross-origin hardening, TRUSTED_HOSTS is unset by default; ORIGIN_CHECK_ENABLED is ON by default (the staging preflight requires both):
+#   TRUSTED_HOSTS        comma list of hostnames this app answers to; any other Host header gets 400 (Starlette TrustedHostMiddleware). This also stops a
+#                        hostile Host header from steering the Google OAuth redirect_uri, the billing return URL and every request.url-derived value.
+#   ORIGIN_CHECK_ENABLED reject cross-site state-changing requests (Sec-Fetch-Site, else Origin vs Host; origin_guard.py). ON by default; set false to disable.
+TRUSTED_HOSTS = os.getenv("TRUSTED_HOSTS", "").strip()
+ORIGIN_CHECK_ENABLED = os.getenv("ORIGIN_CHECK_ENABLED", "true").strip().lower() in ("1", "true", "yes", "on")
+# Failed-login throttle (login_throttle.py). ON by default (it only ever blocks after repeated FAILED logins; storage errors fail open).
+def _int_env(name, default, lo):
+    try:
+        return max(lo, int(os.getenv(name, str(default)).strip()))
+    except ValueError:
+        return default
+# Number of reverse proxies YOU control in front of the app. The client address is the Nth entry from the RIGHT of X-Forwarded-For (earlier entries are
+# client-supplied and forgeable). 1 = one proxy (previous behaviour); 0 = ignore X-Forwarded-For and use the socket peer (app directly exposed).
+TRUSTED_PROXY_HOPS = _int_env("TRUSTED_PROXY_HOPS", 1, 0)
+LOGIN_RATE_LIMIT_ENABLED = os.getenv("LOGIN_RATE_LIMIT_ENABLED", "true").strip().lower() in ("1", "true", "yes", "on")
+LOGIN_RATE_WINDOW_SECONDS = _int_env("LOGIN_RATE_WINDOW_SECONDS", 900, 60)
+LOGIN_MAX_FAILURES_PER_ACCOUNT_IP = _int_env("LOGIN_MAX_FAILURES_PER_ACCOUNT_IP", 8, 1)
+LOGIN_MAX_FAILURES_PER_IP = _int_env("LOGIN_MAX_FAILURES_PER_IP", 40, 1)
+TRENDING_KEYWORDS_ENABLED = _parse_trending_enabled(os.getenv("TRENDING_KEYWORDS_ENABLED"), FLINTEL_ENV)
+ZERO_RESULT_MYSQL_PROBE_ENABLED = os.getenv("ZERO_RESULT_MYSQL_PROBE_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
+SIGNAL_REPORT_ENABLED = os.getenv("SIGNAL_REPORT_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
