@@ -818,6 +818,25 @@
   /* (NO-RESULTS UI) structured "nothing qualifying found" answer */
   .answer-rendered .nr-searched { color: #a0a09d; font-size: 14px; line-height: 20px; margin: 0 0 14px 0; }
   .answer-rendered .data-freshness { color: #8a8a87; font-size: 13px; line-height: 19px; margin: 18px 0 0 0; }
+  .answer-rendered .prov-tag { display: inline-block; margin-left: 8px; padding: 1px 7px; border: 1px solid #3d3d3b; border-radius: 6px; font: 600 11px/1.5 Inter, Figtree, sans-serif; letter-spacing: .06em; color: #a8a8a5; vertical-align: middle; }
+  .answer-rendered .search-mode-note { margin: 18px 0 0 0; padding: 10px 14px; border: 1px solid #3d3d3b; border-radius: 10px; font-size: 13px; line-height: 20px; color: #a8a8a5; }
+  .answer-rendered .search-mode-note p { margin: 2px 0; }
+  .answer-rendered .search-mode-note .sm-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: #d1d0cf; font-weight: 600; }
+  .answer-rendered .search-mode-note .sm-head .prov-tag { margin-left: 0; }
+  .answer-rendered .signal-meta .prov-tag { margin-left: 6px; }
+  .answer-rendered .prov-tag.sm-mode { border-color: #C1FB3B; color: #C1FB3B; }
+  .answer-rendered .prov-tag.prov-live, .answer-rendered .prov-tag.prov-both { border-color: #C1FB3B; color: #C1FB3B; }
+  .answer-rendered .signal-report { margin: 18px 0 0 0; padding: 12px 14px; border: 1px solid #3d3d3b; border-radius: 10px; font-size: 14px; }
+  .answer-rendered .signal-title { margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #c9c8c5; }
+  .answer-rendered .signal-statement { margin: 0 0 6px 0; color: #e8e7e4; }
+  .answer-rendered .signal-coverage { margin: 0 0 6px 0; font-size: 12.5px; color: #8a8a87; }
+  .answer-rendered .signal-items { list-style: none; margin: 8px 0 0 0; padding: 0; }
+  .answer-rendered .signal-items li { margin: 10px 0; }
+  .answer-rendered .signal-tag { display: inline-block; margin-right: 8px; padding: 1px 8px; border: 0.5px solid #3d3d3b; border-radius: 20px; background: #2a2927; color: #c9c8c5; font-size: 11px; font-weight: 600; }
+  .answer-rendered .signal-tag.demand { border-color: #C1FB3B; color: #C1FB3B; }
+  .answer-rendered .signal-meta { color: #8a8a87; font-size: 12.5px; }
+  .answer-rendered .signal-quote { margin: 4px 0 0 0; padding-left: 8px; border-left: 2px solid #3d3d3b; color: #b4b3b0; font-size: 13px; }
+  .answer-rendered .signal-limits { margin: 2px 0 0 0; color: #8a8a87; font-size: 12px; }
   .answer-rendered .nr-note { color: #c9c8c5; }
   .answer-rendered .nr-steps { margin: 0 0 18px 0; padding-left: 22px; color: #e8e7e4; font-size: 16px; line-height: 26px; }
   .answer-rendered .nr-steps li { margin: 6px 0; }
@@ -1604,6 +1623,8 @@
               spellcheck="false"
             >{{ query or '' }}</textarea>
             <input type="hidden" name="platform" id="platform-input" value="All Platforms" />
+            {% include "_search_mode.html" %}
+            {% include "_touch_targets.html" %}
             <input type="hidden" name="tz" class="tz-input" value="" />
             <!-- Keeps a search launched from the home page attached to
                  whichever chat is currently active (active_chat_id in
@@ -4247,7 +4268,7 @@
   function answerHasText(data) {
     // Same rule as logics._answer_has_content(): any non-empty text outside
     // the meta keys. Text the renderer doesn't know is still real content.
-    const META = { format: 1, searched: 1, near_match_confidence: 1, answer_status: 1, website_context: 1, data_freshness: 1, time_scope: 1 };
+    const META = { format: 1, searched: 1, near_match_confidence: 1, answer_status: 1, website_context: 1, data_freshness: 1, time_scope: 1, signal_report: 1, search_mode: 1 };
     const has = (v) => (typeof v === 'string' ? v.trim() !== ''
       : Array.isArray(v) ? v.some(has)
       : (v && typeof v === 'object') ? Object.values(v).some(has) : false);
@@ -4331,6 +4352,112 @@
 
   // (FRESHNESS DISCLOSURE) One plain-text line under the answer, written by the server (stored post dates, window,
   // saved-vs-searched, what is unknown). Rendered as text only; absent -> nothing is added.
+  // (SIGNAL INTELLIGENCE) The server-built signal report: coverage, a class breakdown and one evidence record per retrieved post (class,
+  // exact quotation, limitations). Text only; a link is made only for an https URL; nothing here is written by a model.
+  const SIGNAL_ORDER = ['DIRECT_DEMAND', 'PROBLEM_SIGNAL', 'MARKET_SIGNAL', 'COMPETITOR_SIGNAL', 'GENERAL_DISCUSSION'];
+  const SIGNAL_LABEL = { DIRECT_DEMAND: 'Direct demand', PROBLEM_SIGNAL: 'Problem signal', MARKET_SIGNAL: 'Market signal',
+                         COMPETITOR_SIGNAL: 'Competitor signal', GENERAL_DISCUSSION: 'General discussion' };
+  function appendSearchMode(data, container) {
+    const m = data && data.search_mode;
+    if (!m || typeof m !== 'object') return;
+    const box = document.createElement('section');
+    box.className = 'search-mode-note';
+    box.setAttribute('aria-label', 'Search mode');
+    const para = (text) => { const p = document.createElement('p'); p.textContent = String(text).slice(0, 600); p.style.margin = '4px 0'; return p; };
+    const names = { live: 'Live', historical: 'Historical', combined: 'Combined' };
+    const st = { not_requested: 'not used', ok: 'ok', empty: 'no results', partial: 'partial', failed: 'failed', rate_limited: 'rate limited', unavailable: 'no live source available', skipped: 'skipped', unknown: 'unknown' };
+    const bits = [];
+    if (m.live && m.live !== 'not_requested') bits.push('Live source: ' + (st[m.live] || m.live));
+    if (m.historical && m.historical !== 'not_requested') bits.push('Stored conversations: ' + (st[m.historical] || m.historical));
+    const c = m.counts && typeof m.counts === 'object' ? m.counts : null;
+    if (c && Number.isInteger(c.live) && Number.isInteger(c.historical) && Number.isInteger(c.both))
+      bits.push('Results: ' + c.live + ' live, ' + c.historical + ' historical, ' + c.both + ' found by both');
+    const head = document.createElement('p'); head.className = 'sm-head';
+    const lab = document.createElement('strong'); lab.textContent = 'Search mode'; head.appendChild(lab);
+    const chip = document.createElement('span'); chip.className = 'prov-tag sm-mode'; chip.textContent = (names[m.mode] || 'Combined').toUpperCase(); head.appendChild(chip);
+    box.appendChild(head);
+    if (bits.length) box.appendChild(para(bits.join(' \u00b7 ')));
+    // Per-result origin: each rendered card gets a LIVE / HISTORICAL / BOTH label from the server's retrieval metadata (by link).
+    const prov = m.provenance && typeof m.provenance === 'object' ? m.provenance : null;
+    if (prov) {
+      const PL = { live: 'LIVE', historical: 'HISTORICAL', both: 'BOTH' };
+      container.querySelectorAll('.post-block').forEach((blk) => {
+        if (blk.querySelector('.prov-tag')) return;
+        const a = blk.querySelector('.post-field a');
+        const path = a ? prov[a.getAttribute('href')] : null;
+        if (!PL[path]) return;
+        const tag = document.createElement('span');
+        tag.className = 'prov-tag prov-' + path;
+        tag.textContent = PL[path];
+        tag.title = path === 'both' ? 'Found by the live search and in stored conversations' : path === 'live' ? 'Fetched live from the source' : 'From stored conversations';
+        const lab = blk.querySelector('.post-label');
+        (lab || blk).appendChild(tag);
+      });
+    }
+    if (Array.isArray(m.notes)) m.notes.slice(0, 4).forEach((n) => { const p = para(n); p.style.opacity = '0.8'; box.appendChild(p); });
+    container.appendChild(box);
+  }
+
+  function appendSignalReport(data, container) {
+    const r = data && data.signal_report;
+    if (!r || typeof r !== 'object' || !Array.isArray(r.items) || !r.items.length) return;
+    const box = document.createElement('section');
+    box.className = 'signal-report';
+    box.setAttribute('aria-label', 'Signal report');
+    const para = (cls, text) => { const p = document.createElement('p'); p.className = cls; p.textContent = String(text).slice(0, 1200); return p; };
+    const when = (iso) => { const d = new Date(iso); return isNaN(d.getTime()) ? null : d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC'; };
+    box.appendChild(para('signal-title', r.mode === 'general' ? 'General discovery: what the retrieved posts are' : 'What the retrieved posts are'));
+    if (typeof r.statement === 'string' && r.statement.trim()) box.appendChild(para('signal-statement', r.statement.trim()));
+    const cov = r.coverage && typeof r.coverage === 'object' ? r.coverage : null;
+    if (cov) {
+      const bits = [];
+      if (Array.isArray(cov.sources) && cov.sources.length) bits.push('Searched: ' + cov.sources.join(', '));
+      const a = cov.requested_from ? when(cov.requested_from) : null, b = cov.requested_until ? when(cov.requested_until) : null;
+      if (a || b) bits.push('Period: ' + (a || 'any time') + ' to ' + (b || 'now'));
+      if (Number.isInteger(cov.returned)) bits.push('Returned: ' + cov.returned);
+      if (Number.isInteger(cov.hackernews_examined)) bits.push('Hacker News stories examined: ' + cov.hackernews_examined);
+      const n = cov.newest_post ? when(cov.newest_post) : null, o = cov.oldest_post ? when(cov.oldest_post) : null;
+      if (n || o) bits.push('Posts span ' + (o || '?') + ' to ' + (n || '?'));
+      if (typeof cov.basis === 'string' && cov.basis) bits.push(cov.basis);
+      if (bits.length) box.appendChild(para('signal-coverage', bits.join(' · ')));
+    }
+    const counts = r.breakdown && typeof r.breakdown === 'object' ? r.breakdown : {};
+    const parts = SIGNAL_ORDER.filter((k) => Number.isInteger(counts[k]) && counts[k] > 0).map((k) => SIGNAL_LABEL[k] + ': ' + counts[k]);
+    if (parts.length) box.appendChild(para('signal-coverage', parts.join(' · ')));
+    const ul = document.createElement('ul');
+    ul.className = 'signal-items';
+    r.items.slice(0, 25).forEach((it) => {
+      if (!it || typeof it !== 'object' || SIGNAL_ORDER.indexOf(it.class) === -1) return;
+      const li = document.createElement('li');
+      const tag = document.createElement('span');
+      tag.className = 'signal-tag' + (it.class === 'DIRECT_DEMAND' ? ' demand' : '');
+      tag.textContent = SIGNAL_LABEL[it.class];
+      li.appendChild(tag);
+      const title = (typeof it.title === 'string' && it.title) ? it.title.slice(0, 200) : (typeof it.url === 'string' ? it.url : 'Post');
+      if (typeof it.url === 'string' && it.url.startsWith('https://')) {
+        const link = document.createElement('a');
+        link.href = it.url; link.target = '_blank'; link.rel = 'noopener noreferrer nofollow ugc'; link.textContent = title;
+        li.appendChild(link);
+      } else { li.appendChild(document.createTextNode(title)); }
+      const PLAT_NAME = { hackernews: 'Hacker News', hackernews_comment: 'Hacker News comment', reddit: 'Reddit', twitter: 'X (Twitter)', x: 'X (Twitter)', linkedin: 'LinkedIn', facebook: 'Facebook' };
+      const platName = it.platform ? (PLAT_NAME[String(it.platform).toLowerCase()] || String(it.platform)) : null;
+      const meta = [platName, it.author ? 'by ' + it.author : null, it.published_at ? when(it.published_at) : null].filter(Boolean);
+      const PATH_NAME = { live: 'LIVE', historical: 'HISTORICAL', both: 'BOTH' };
+      if (meta.length || PATH_NAME[it.retrieval_path]) {
+        const m = document.createElement('span'); m.className = 'signal-meta'; m.textContent = meta.length ? ' \u00b7 ' + meta.join(' \u00b7 ') : '';
+        if (PATH_NAME[it.retrieval_path]) { const t = document.createElement('span'); t.className = 'prov-tag prov-' + it.retrieval_path; t.textContent = PATH_NAME[it.retrieval_path]; m.appendChild(t); }
+        li.appendChild(m);
+      }
+      if (typeof it.quote === 'string' && it.quote) li.appendChild(para('signal-quote', '“' + it.quote + '”'));
+      if (typeof it.intent_explanation === 'string' && it.intent_explanation) li.appendChild(para('signal-limits', it.intent_explanation));
+      if (Array.isArray(it.limitations) && it.limitations.length) li.appendChild(para('signal-limits', 'Limitations: ' + it.limitations.slice(0, 3).join(' ')));
+      ul.appendChild(li);
+    });
+    if (!ul.children.length) return;
+    box.appendChild(ul);
+    container.appendChild(box);
+  }
+
   function appendFreshnessNote(data, container) {
     const f = data && data.data_freshness;
     if (!f || typeof f !== 'object' || typeof f.statement !== 'string') return;
@@ -4430,6 +4557,8 @@
             rawEl.style.display = 'block';
             return;
           }
+          if (!answerEmpty) appendSearchMode(data, renderedEl);
+          if (!answerEmpty) appendSignalReport(data, renderedEl);   // (SIGNAL INTELLIGENCE)
           if (!answerEmpty) appendFreshnessNote(data, renderedEl);   // (FRESHNESS DISCLOSURE)
           if (!answerEmpty) appendLiveCandidates(data, renderedEl);   // (ACTIVE INTENT)
           if (answerEmpty) {
