@@ -150,6 +150,8 @@ import httpx
 import flintel
 import timerange   # (DATE/TIME) natural-language search ranges
 import platforms   # (PLATFORM REGISTRY) platform identity, URL hosts, labels, earliest valid date
+import search_modes   # (SEARCH MODES) live / historical / combined, canonical-URL dedup, provenance
+import signal_intel   # (SIGNAL INTELLIGENCE) pure classification / coverage / zero-result explanations
 try:                  # (HACKER NEWS) switch the flag-gated platform on ONLY when config says so; any problem leaves it off
     import config as _hn_flag_cfg
     platforms.apply_flags(hackernews=bool(getattr(_hn_flag_cfg, "HACKERNEWS_ENABLED", False)))
@@ -818,7 +820,7 @@ _BUYER_QUERY_RE = re.compile(r"\b(?:buy|buying|buyers?|purchas\w*|leads?|custome
 
 
 def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_range=None,
-                             time_window_days=None, keywords=None):
+                             time_window_days=None, keywords=None, coverage_fn=None):
     """Adds Flintel-verified fields to a "no_results" answer (see above).
     Any other answer, unparseable text or a cut-off ("incomplete") answer is
     returned unchanged. Never raises."""
@@ -928,6 +930,20 @@ def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_r
             data["suggested_search"] = suggested[:200]
         else:
             data.pop("suggested_search", None)
+        if coverage_fn is not None and reason != "error":
+            # (ZERO-RESULT EXPLANATION) why there is nothing, from REAL coverage numbers: nothing collected / nothing in the date range /
+            # retrieval filters excluded the posts / nothing matches the topic / the search failed / the source is unavailable.
+            try:
+                _ex = signal_intel.combine_zero_results([signal_intel.explain_zero_result(c) for c in (coverage_fn() or [])])
+            except Exception as _cov_exc:
+                log.warning(f"Zero-result coverage failed (generic wording kept): {_cov_exc}")
+                _ex = None
+            if _ex:
+                data["no_results_code"] = _ex["code"]
+                data["headline"] = _ex["headline"]
+                data["message"] = _ex["message"]
+                data["next_steps"] = _ex["next_steps"]
+                data["coverage"] = _ex["facts"]
         return json.dumps(data, ensure_ascii=False)
     except Exception as exc:
         log.warning(f"No-results enrichment failed (answer left unchanged): {exc}")
@@ -1637,7 +1653,7 @@ _PLATFORM_FIELD_CANDIDATES = ["platform", "source", "source_platform"]
 # it means "no filter" and is handled separately.
 _PLATFORM_DOC_VALUES = {
     "reddit":    ["reddit"],
-    "hackernews": ["hackernews", "hacker news", "hn"],
+    "hackernews": ["hackernews", "hackernews_comment", "hacker news", "hn"],
     "x_twitter": ["twitter", "x", "x_twitter", "x/twitter"],
     "linkedin":  ["linkedin"],
     "facebook":  ["facebook"],
@@ -2340,15 +2356,46 @@ _HN_STATUS = {}                   # (chat_id, topic_key) -> status of the last H
 _HN_TTL_OK, _HN_TTL_FAIL, _HN_CACHE_MAX = 120.0, 30.0, 64
 
 
+_MODE_TLS = threading.local()
+
+
+def _mode_scope_now():
+    return getattr(_MODE_TLS, "scope", None)
+
+
+class search_mode_scope:
+    """Context manager: the retrieval calls made inside it (same thread) run in LIVE / HISTORICAL / COMBINED mode. `info` is
+    filled with what each path actually did: info['live'] / info['historical'] in {not_requested, ok, empty, partial, failed,
+    rate_limited, unavailable} plus info['stats'] (provenance counts). Without a scope nothing changes (default behaviour)."""
+
+    def __init__(self, mode):
+        self.info = {"mode": search_modes.normalize_mode(mode), "live": "not_requested", "historical": "not_requested", "stats": {}}
+
+    def __enter__(self):
+        stack = getattr(_MODE_TLS, "stack", None)
+        if stack is None:
+            stack = _MODE_TLS.stack = []
+        stack.append(_mode_scope_now())
+        _MODE_TLS.scope = self.info
+        return self.info
+
+    def __exit__(self, *exc):
+        _MODE_TLS.scope = _MODE_TLS.stack.pop() if getattr(_MODE_TLS, "stack", None) else None
+        return False
+
+
 def _hn_wanted(targeting_platform):
     """(wants_hn, hn_only). (False, False) unless Hacker News is registered (flag on) and selected; "all" means every enabled one."""
     if platforms.get("hackernews") is None:
+        return False, False
+    _sc = _mode_scope_now()
+    if _sc is not None and _sc.get("mode") == "historical_inner":
         return False, False
     keys = platforms.expand_selection(targeting_platform)
     return ("hackernews" in keys), (keys == ("hackernews",))
 
 
-def _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id=None, topic_key=None):
+def _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id=None, topic_key=None, general=False):
     """(records, status). The router's keywords searched live on Hacker News; the pool is sized by the Reddit wide-pool rule
     (limit x INTENT_CANDIDATE_MULTIPLIER, clamped by INTENT_CANDIDATE_MIN/MAX). Cached briefly. NEVER raises."""
     try:
@@ -2364,7 +2411,7 @@ def _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id=None, topic_
         except Exception:
             _window_kind = "active_intent_window"
         by_date = bool(tr is not None and getattr(tr, "kind", None) == _window_kind)   # the Active Intent window: newest first
-        key = (tuple(sorted(q.lower() for q in hackernews_live.clean_queries(keywords))), pool_n, by_date,
+        key = (bool(general), tuple(sorted(q.lower() for q in hackernews_live.clean_queries(keywords))), pool_n, by_date,
                (tr.start.isoformat(), tr.end.isoformat()) if tr is not None else (since_days if isinstance(since_days, int) else None))
         mono = time.monotonic()
         with _HN_CACHE_LOCK:
@@ -2375,8 +2422,13 @@ def _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id=None, topic_
                 return recs, status
         recs, status = hackernews_live.fetch(
             keywords, pool_n=pool_n, start=start, end=end, by_date=by_date, hits_per_page=_c.HN_HITS_PER_PAGE,
-            max_pages=_c.HN_MAX_PAGES_PER_KEYWORD, deadline_seconds=_c.HN_FETCH_TIMEOUT_SECONDS, now=now)
-        status = dict(status, pool_n=pool_n, candidates=len(recs), window=bool(start or end))
+            max_pages=_c.HN_MAX_PAGES_PER_KEYWORD, deadline_seconds=_c.HN_FETCH_TIMEOUT_SECONDS, now=now, general=bool(general))
+        status = dict(status, pool_n=pool_n, candidates=len(recs), window=bool(start or end), mode="general" if general else "topic",
+                      window_start=start.isoformat() if start else None, window_end=end.isoformat() if end else None)
+        if not recs and status.get("state") in ("empty", "ok", "partial"):     # real coverage for the zero-result explanation (one cheap call)
+            _ps, _pn = hackernews_live.probe_newest()
+            status["probe"] = _ps
+            status["newest_available"] = _pn
         ttl = _HN_TTL_OK if status.get("state") in ("ok", "empty", "partial") else _HN_TTL_FAIL
         with _HN_CACHE_LOCK:
             if len(_HN_CACHE) >= _HN_CACHE_MAX:
@@ -2399,14 +2451,14 @@ def _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id=None, topic_
         return [], status
 
 
-def _hn_start(keywords, limit, since_days, time_range, chat_id, topic_key):
+def _hn_start(keywords, limit, since_days, time_range, chat_id, topic_key, general=False):
     """Start the Hacker News fetch on a daemon thread NOW (so it runs in parallel with the Reddit scan). Returns the box."""
     box = {"event": threading.Event(), "recs": [], "status": None, "consumed": False, "abandoned": False, "key": (chat_id, topic_key),
            "wait": float(getattr(__import__("config"), "HN_FETCH_TIMEOUT_SECONDS", 12)) + 2.0, "t0": time.monotonic()}
 
     def _run():
         try:
-            box["recs"], box["status"] = _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id, topic_key)
+            box["recs"], box["status"] = _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id, topic_key, general=general)
         except Exception:
             box["recs"], box["status"] = [], {"state": "failed", "reason": "thread_exception", "candidates": 0}
         finally:
@@ -2414,6 +2466,9 @@ def _hn_start(keywords, limit, since_days, time_range, chat_id, topic_key):
                 _HN_STATUS[box["key"]] = {"state": "failed", "reason": "timeout", "candidates": 0}
             box["event"].set()
     threading.Thread(target=_run, name="hackernews-fetch", daemon=True).start()
+    _sc = _mode_scope_now()
+    if _sc is not None:
+        _sc["_hn_box"] = box
     return box
 
 
@@ -2439,6 +2494,8 @@ def hackernews_note(chat_id, topic_key):
     if not isinstance(st, dict):
         return None
     state, n = st.get("state"), st.get("candidates", 0)
+    if state == "ok" and st.get("mode") == "general":
+        return f"Hacker News was sampled live this time: the newest stories in the period, not selected by topic ({n} considered)."
     if state == "ok":
         return f"Hacker News was searched live this time ({n} candidate{'s' if n != 1 else ''} considered)."
     if state == "partial":
@@ -2450,6 +2507,276 @@ def hackernews_note(chat_id, topic_key):
     return "Hacker News could not be searched this time (" + str(st.get("reason") or state or "unavailable") + "); this answer does not include it."
 
 
+def _hn_sample(recs, limit):
+    """A REPRESENTATIVE sample for general discovery: `limit` posts spread evenly across the newest-first pool (so the whole requested
+    window is covered, not just its newest minutes). Deterministic; never more than the pool; nothing is invented."""
+    recs = sorted([r for r in recs if isinstance(r, dict)], key=lambda r: r.get("created_utc") or 0, reverse=True)
+    limit = limit or MAX_MATCHED_RESULTS
+    if len(recs) <= limit:
+        return recs
+    step = len(recs) / float(limit)
+    return [recs[int(i * step)] for i in range(limit)]
+
+
+def _selection_keys(targeting_platform):
+    try:
+        keys = platforms.expand_selection(targeting_platform) if targeting_platform else tuple(platforms.enabled_keys())
+    except Exception:
+        keys = ("reddit",)
+    return keys
+
+
+def _window_of(msg):
+    """(start, end) of the message's own period, or (None, None) when it has none."""
+    try:
+        import hackernews_live                                   # noqa: PLC0415
+        return hackernews_live.window_bounds(msg.get("time_window_days"), msg.get("time_range"), None, MAX_TIME_WINDOW_DAYS)
+    except Exception:
+        return None, None
+
+
+def _iso(dt):
+    try:
+        t = timerange.to_utc(dt)
+        return t.isoformat() if t is not None else None
+    except Exception:
+        return None
+
+
+def probe_stored_coverage(targeting_platform, start=None, end=None, include_hackernews=False):
+    """Real coverage of the SAVED posts for the non-Hacker-News part of a selection, probed ONLY when a search came back empty:
+    does the source have any posts, how many fall in the period (counted up to 1000), the oldest / newest publication time. Bounded
+    (maxTimeMS) and fail-safe: on any error it reports the error instead of guessing. MySQL sources are not probed; when they are
+    enabled and MongoDB shows nothing, the totals are reported as UNKNOWN rather than zero (never a false "nothing collected")."""
+    keys_ = [k for k in _selection_keys(targeting_platform) if include_hackernews or k != "hackernews"]
+    cov = {"source": " and ".join(platforms.label(k, k) for k in keys_) if keys_ else "Reddit", "source_available": True}   # "Reddit" unless HN is included
+    try:
+        vals = sorted({v for k in keys_ for v in _PLATFORM_DOC_VALUES.get(k, [k])})
+        if not vals:
+            cov["source_available"] = False
+            return cov
+        base = {"platform": {"$in": vals}}
+        colls = [c for c in (signals_collection, signals_collection_2, signals_collection_4) if c is not None]
+        any_posts, in_range, newest, oldest = False, 0, None, None
+
+        def one(cur):
+            cur = cur.limit(1)
+            mt = getattr(cur, "max_time_ms", None)
+            if callable(mt):
+                cur = mt(3000)
+            return next(iter(cur), None)
+        for coll in colls:
+            hi = one(coll.find(base, {"created_utc": 1}).sort("created_utc", -1))
+            if hi is not None:
+                any_posts = True
+                t = timerange.publication_time(hi.get("created_utc"))
+                if t is not None and (newest is None or t > newest):
+                    newest = t
+                lo = one(coll.find(base, {"created_utc": 1}).sort("created_utc", 1))
+                t = timerange.publication_time((lo or {}).get("created_utc"))
+                if t is not None and (oldest is None or t < oldest):
+                    oldest = t
+            rng = dict(base)
+            if start is not None or end is not None:
+                rng["created_utc"] = {k: v for k, v in (("$gte", start), ("$lt", end)) if v is not None}
+            try:
+                n = coll.count_documents(rng, limit=1000, maxTimeMS=3000)
+            except TypeError:
+                n = coll.count_documents(rng, limit=1000)
+            if not isinstance(n, int) or isinstance(n, bool):      # not a real driver answer (a test double, a broken proxy): never a fact
+                cov["unusable"] = True
+                return cov
+            in_range += n
+        mysql_unknown, note = False, None
+        if bool(_cfg_value("MYSQL_READ_ENABLED", False)):
+            if bool(_cfg_value("ZERO_RESULT_MYSQL_PROBE_ENABLED", False)):
+                try:
+                    import mysql_signals as _ms                          # noqa: PLC0415
+                    sources = _ms.configured_sources()
+                except Exception:
+                    sources = []
+                    mysql_unknown, note = True, "MySQL sources could not be listed"
+                for src in sources:
+                    try:
+                        r = _ms.probe_coverage(src, start, end)
+                        any_posts = any_posts or bool(r.get("total"))
+                        in_range += int(r.get("in_range") or 0)
+                        for t, pick in ((r.get("newest"), max), (r.get("oldest"), min)):
+                            if t is not None:
+                                if pick is max:
+                                    newest = t if newest is None else max(newest, t)
+                                else:
+                                    oldest = t if oldest is None else min(oldest, t)
+                    except Exception:                                      # unreachable / timed out / unreadable: UNKNOWN, never "empty"
+                        mysql_unknown, note = True, "a MySQL source could not be probed"
+            else:
+                mysql_unknown, note = True, "MySQL sources were not probed"
+        if mysql_unknown:
+            # Part of the corpus is unseen: a known positive is kept, but "none in range" and "nothing collected" cannot be claimed.
+            cov.update(total=1 if any_posts else None, in_range=in_range if in_range else None, note=note)
+        else:
+            cov.update(total=1 if any_posts else 0, in_range=in_range)
+        cov.update(newest=_iso(newest), oldest=_iso(oldest), window_start=_iso(start), window_end=_iso(end))
+    except Exception as exc:
+        cov["error"] = "coverage probe failed: " + type(exc).__name__
+        cov["db_unavailable"] = True                  # the store itself could not be queried: not a collection fault
+    return cov
+
+
+def _hn_coverage(msg, chat_id, mode, start, end):
+    st = _HN_STATUS.get((chat_id, msg.get("topic_key")))
+    cov = {"source": "Hacker News", "mode": mode, "source_available": True, "window_start": _iso(start), "window_end": _iso(end)}
+    if not isinstance(st, dict):
+        return cov
+    state, hits, cands = st.get("state"), st.get("fetched_hits") or 0, st.get("candidates") or 0
+    if state in ("failed", "rate_limited"):
+        cov["error"] = str(st.get("reason") or state)
+        return cov
+    if state == "skipped":
+        return cov
+    cov["newest"] = st.get("newest_available")
+    probe = st.get("probe")
+    if hits == 0:
+        if probe == "ok":
+            cov.update(total=1, in_range=0)                       # Hacker News has stories, just none in the requested period
+        elif probe == "empty":
+            cov.update(total=0)
+        return cov
+    cov.update(total=1, in_range=hits, examined=hits, excluded_filters=(st.get("no_text") or 0) + (st.get("outside_window") or 0))
+    if cands > 0:
+        cov["excluded_filters"] = 0
+    return cov
+
+
+def zero_result_coverage_for(msg, chat_id=None):
+    """The coverage dicts (one per selected source) for a search that returned nothing. Probing happens here, only for empty results."""
+    m = msg if isinstance(msg, dict) else {}
+    keys = _selection_keys(m.get("targeting_platform"))
+    mode = "general" if m.get("unfiltered") else "topic"
+    start, end = _window_of(m)
+    topic = " ".join((m.get("query") or "").split())[:80] or None
+    out = []
+    sm_mode = m.get("search_mode")
+    if sm_mode == search_modes.LIVE:
+        # LIVE reads only live sources: a source without a live path was NOT searched, so its stored data must not be probed or reported as if it had been
+        for name in search_modes.unsupported_sources(search_modes.LIVE, keys):
+            out.append({"source": name, "mode_unsupported": "live", "mode_label": "Live"})
+        keys = [k for k in keys if not search_modes.SOURCE_MODES.get(k, {}).get("live", True) is False]
+    elif sm_mode == search_modes.HISTORICAL and "hackernews" in keys:
+        # HISTORICAL never fetches live: Hacker News coverage is its STORED posts, not the (never-run) live fetch
+        c = probe_stored_coverage(m.get("targeting_platform"), start, end, include_hackernews=True)
+        c.update(mode=mode, topic=topic)
+        if not c.get("unusable"):
+            out.append(c)
+        return out or [{"source": "the selected source", "source_available": False}]
+    if any(k != "hackernews" for k in keys):
+        c = probe_stored_coverage(m.get("targeting_platform"), start, end)
+        c.update(mode=mode, topic=topic)
+        if c.get("unusable"):                                     # no trustworthy numbers for this source: keep the generic wording for it
+            c = None
+        ss = _SCAN_STATUS.get((chat_id, m.get("topic_key")))
+        if c is not None and isinstance(ss, dict) and ss.get("complete") is False and not c.get("error"):
+            c["error"] = "the saved-post scan did not complete"
+        if c is not None:
+            out.append(c)
+    if "hackernews" in keys and sm_mode != search_modes.HISTORICAL:
+        c = _hn_coverage(m, chat_id, mode, start, end)
+        c["topic"] = topic
+        out.append(c)
+    if not keys and not out:
+        out.append({"source": "the selected source", "source_available": False})
+    return out
+
+
+def signal_report_enabled() -> bool:
+    """OFF unless SIGNAL_REPORT_ENABLED is true: with it off every answer is exactly what it was before (the repo convention for new behaviour)."""
+    return _cfg_value("SIGNAL_REPORT_ENABLED", False) is True
+
+
+def build_result_coverage(msg, posts, chat_id=None):
+    """What the user can check about a NON-empty answer: sources, period, how many posts, newest / oldest post, stored-data basis."""
+    m = msg if isinstance(msg, dict) else {}
+    keys = _selection_keys(m.get("targeting_platform"))
+    start, end = _window_of(m)
+    times = []
+    for p in posts or []:
+        t = timerange.post_published_at(p) if isinstance(p, dict) else None
+        if t is not None:
+            times.append(t)
+    cov = {"sources": [platforms.label(k, k) for k in keys], "mode": "general" if m.get("unfiltered") else "topic",
+           "requested_from": _iso(start), "requested_until": _iso(end), "returned": len(posts or []),
+           "newest_post": _iso(max(times)) if times else None, "oldest_post": _iso(min(times)) if times else None,
+           "basis": ("Saved posts" if any(k != "hackernews" for k in keys) else "") +
+                    (" and " if any(k != "hackernews" for k in keys) and "hackernews" in keys else "") +
+                    ("Hacker News fetched live from its public API" if "hackernews" in keys else "") + "; no live web search."}
+    st = _HN_STATUS.get((chat_id, m.get("topic_key")))
+    if "hackernews" in keys and isinstance(st, dict) and st.get("fetched_hits") is not None:
+        cov["hackernews_examined"] = st.get("fetched_hits")
+    return cov
+
+
+def result_coverage_if_enabled(msg, posts, chat_id=None):
+    """build_result_coverage() only when the signal report is enabled; None otherwise. With the report OFF (the default) nothing consumes the
+    coverage, and building it is not free (it measured 48-79 ms inside a contended answer-finalisation path), so the call sites use this instead
+    of evaluating build_result_coverage() eagerly as an argument."""
+    if not signal_report_enabled():
+        return None
+    return build_result_coverage(msg, posts, chat_id)
+
+
+def enrich_signal_report(answer_text, posts, *, query=None, mode="topic", coverage=None):
+    """Adds the server-built "signal_report" (class per retrieved post, exact quotes, coverage, honest statement) to a structured answer.
+    Post-integrity, additive; the answer is returned unchanged when the flag is off, the answer is not a posts answer, there are no
+    posts, or anything goes wrong. Never raises."""
+    if not signal_report_enabled() or not posts:
+        return answer_text
+    try:
+        data = json.loads((answer_text or "").strip())
+    except (ValueError, TypeError, AttributeError):
+        return answer_text
+    if (not isinstance(data, dict) or not isinstance(data.get("format"), str) or data["format"] in _FD_SKIP_FORMATS
+            or data["format"] == "no_results" or data.get("answer_status") == "incomplete" or "signal_report" in data):
+        return answer_text
+    try:
+        data["signal_report"] = signal_intel.build_signal_report(posts, query, mode, coverage)
+        return json.dumps(data, ensure_ascii=False)
+    except Exception as exc:
+        log.warning(f"Signal report failed (answer left unchanged): {exc}")
+        return answer_text
+
+
+def provenance_map(posts, cap=100):
+    """{post_url: 'live'|'historical'|'both'} from the retrieval metadata the posts actually carry. Posts without it (for example
+    Google discovery stubs) are omitted: no label is ever guessed."""
+    out = {}
+    for p in posts or []:
+        if isinstance(p, dict) and p.get("post_url") and p.get("retrieval_path") in ("live", "historical", "both"):
+            out[p["post_url"]] = p["retrieval_path"]
+            if len(out) >= cap:
+                break
+    return out
+
+
+def enrich_search_mode(answer_text, info, posts=None):
+    """Adds `search_mode` (mode, label, per-path coverage, provenance counts, notes) to a delivered answer JSON. Only called when
+    the user chose a mode, so the default delivery is byte-identical. Fail-safe: any problem returns the answer unchanged."""
+    if not info or not isinstance(answer_text, str):
+        return answer_text
+    try:
+        data = json.loads(answer_text)
+        if not isinstance(data, dict) or "search_mode" in data:
+            return answer_text
+        data["search_mode"] = search_modes.mode_coverage(info.get("mode"), info.get("live"), info.get("historical"), info.get("stats"),
+                                                         info.get("unsupported"))
+        pm = provenance_map(posts)
+        if pm:
+            data["search_mode"]["provenance"] = pm          # per-result origin, keyed by the post's own URL
+        return json.dumps(data, ensure_ascii=False)
+    except Exception as exc:
+        log.warning(f"Search-mode disclosure failed (answer left unchanged): {exc}")
+        return answer_text
+
+
 def hackernews_only(targeting_platform) -> bool:
     """True when Hacker News is the ONLY platform selected (flag on). Such a search needs no collector job: nothing is collected for it."""
     try:
@@ -2458,17 +2785,20 @@ def hackernews_only(targeting_platform) -> bool:
         return False
 
 
-def _hn_only_matched(topic_key, keywords, targeting_platform, limit, since_days, user_query, scan_state, time_range, chat_id):
+def _hn_only_matched(topic_key, keywords, targeting_platform, limit, since_days, user_query, scan_state, time_range, chat_id,
+                     unfiltered=False):
     """Hacker News selected ALONE: no Mongo, MySQL, embedding or Reddit call at all. The live pool goes to the SAME intent bridge as
     Reddit candidates (or, with the bridge off, is returned in the API's relevance order), then the same cap and limit apply."""
     limit = limit or MAX_MATCHED_RESULTS
-    recs, status = _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id, topic_key)
+    recs, status = _hn_fetch_pool(keywords, limit, since_days, time_range, chat_id, topic_key, general=bool(unfiltered))
     _register_scan_status(chat_id, topic_key, status.get("state") in ("ok", "empty", "partial"))
     if scan_state is not None:
         scan_state["delta_mode"] = False
         scan_state["sims"] = {}
         scan_state["truncated"] = len(recs) >= (status.get("pool_n") or limit)
         scan_state["hackernews"] = status
+    if unfiltered:           # GENERAL DISCOVERY: no topic and no buying-intent filter; the pool is sampled, then classified after retrieval
+        return _hn_sample(recs, limit)
     return _hn_rank_pool(recs, topic_key, targeting_platform, limit, user_query, chat_id)
 
 
@@ -3976,7 +4306,7 @@ _get_matched_signals_core = get_matched_signals
 
 
 @functools.wraps(_get_matched_signals_core)
-def get_matched_signals(topic_key, keywords, targeting_platform="all", limit=None, since_days=None, unfiltered=False,
+def _get_matched_signals_hn(topic_key, keywords, targeting_platform="all", limit=None, since_days=None, unfiltered=False,
                         match_phrases=None, loose=False, signals_collection_2=None, chat_id=None, signals_collection_4=None,
                         user_query=None, scan_state=None, time_range=None, cancel_event=None):
     try:
@@ -3990,12 +4320,33 @@ def get_matched_signals(topic_key, keywords, targeting_platform="all", limit=Non
     if hn_only:
         try:
             return _hn_only_matched(topic_key, keywords, targeting_platform, limit, since_days, user_query, scan_state, time_range,
-                                    chat_id)
+                                    chat_id, unfiltered=bool(unfiltered))
         except Exception as exc:
             log.warning(f"Hacker News-only search failed closed: {exc}")
             return []
+    if unfiltered:           # GENERAL DISCOVERY across several platforms: Reddit's own unfiltered sample + a Hacker News sample
+        box = None
+        try:
+            box = _hn_start([], limit or MAX_MATCHED_RESULTS, since_days, time_range, chat_id, topic_key, general=True)
+        except Exception as exc:
+            log.warning(f"Hacker News start failed (Reddit search continues): {exc}")
+        reddit = _get_matched_signals_core(
+            topic_key, keywords, targeting_platform, limit, since_days, unfiltered, match_phrases, loose, signals_collection_2,
+            chat_id, signals_collection_4, user_query, scan_state, time_range, cancel_event)
+        if box is None:
+            return reddit
+        try:
+            lim = limit or MAX_MATCHED_RESULTS
+            hn_recs = _hn_sample(_hn_take(box), max(1, lim // 2))                 # each platform gets a fair share of the sample
+            if scan_state is not None:
+                scan_state["hackernews"] = box["status"]
+            keep = reddit[: max(0, lim - len(hn_recs))] if reddit else []
+            return keep + hn_recs[: max(0, lim - len(keep))]
+        except Exception as exc:
+            log.warning(f"Hacker News general-sample merge failed closed: {exc}")
+            return reddit
     box = None
-    if not unfiltered and keywords:
+    if keywords:
         try:
             box = _hn_start(keywords, limit or MAX_MATCHED_RESULTS, since_days, time_range, chat_id, topic_key)
         except Exception as exc:
@@ -4016,6 +4367,96 @@ def get_matched_signals(topic_key, keywords, targeting_platform="all", limit=Non
     return result
 
 
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# SEARCH MODES. The public get_matched_signals() adds LIVE / HISTORICAL / COMBINED on top of the function above, only inside a
+# search_mode_scope(). No scope = exactly the previous behaviour (stored posts plus any selected live source = COMBINED).
+#   HISTORICAL  stored conversations only (no live fetch). LIVE  live sources only; with none available it returns [] and says
+#   'unavailable' (never a simulated result). COMBINED  both, merged and de-duplicated across URL forms, provenance per post.
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+def _live_state(chat_id, topic_key, scan_state=None):
+    st = (scan_state or {}).get("hackernews") or _HN_STATUS.get((chat_id, topic_key))
+    return (st.get("state") if isinstance(st, dict) else None) or "unknown"
+
+
+@functools.wraps(_get_matched_signals_core)
+def get_matched_signals(topic_key, keywords, targeting_platform="all", limit=None, since_days=None, unfiltered=False,
+                        match_phrases=None, loose=False, signals_collection_2=None, chat_id=None, signals_collection_4=None,
+                        user_query=None, scan_state=None, time_range=None, cancel_event=None):
+    scope = _mode_scope_now()
+    args = (topic_key, keywords, targeting_platform, limit, since_days, unfiltered, match_phrases, loose, signals_collection_2,
+            chat_id, signals_collection_4, user_query, scan_state, time_range, cancel_event)
+    if scope is None:
+        return _get_matched_signals_hn(*args)
+    mode = scope.get("mode")
+    try:
+        wants_hn, _only = _hn_wanted(targeting_platform)
+    except Exception:
+        wants_hn = False
+    try:                                    # sources the user selected that cannot serve this mode (disclosed in the answer)
+        scope["unsupported"] = search_modes.unsupported_sources(
+            mode if mode != "historical_inner" else "historical", platforms.expand_selection(targeting_platform))
+    except Exception:
+        scope["unsupported"] = []
+    if mode == search_modes.HISTORICAL:
+        scope["historical"], scope["live"] = "ok", "not_requested"
+        _MODE_TLS.scope = dict(scope, mode="historical_inner")          # _hn_wanted callers below see no live source
+        try:
+            res = _get_matched_signals_core(*args)
+        except Exception:
+            scope["historical"] = "failed"
+            raise
+        finally:
+            _MODE_TLS.scope = scope
+        scope["historical"] = "ok" if res else "empty"
+        merged, stats = search_modes.merge([], res)
+        scope["stats"] = stats
+        return merged
+    if mode == search_modes.LIVE:
+        scope["historical"] = "not_requested"
+        if not wants_hn:                                                # no live source for the selected platforms
+            scope["live"] = "unavailable"
+            return []
+        try:
+            res = _hn_only_matched(topic_key, keywords, targeting_platform, limit, since_days, user_query, scan_state, time_range,
+                                   chat_id, unfiltered=bool(unfiltered))
+        except Exception as exc:
+            log.warning(f"Live search failed closed: {exc}")
+            scope["live"] = "failed"
+            return []
+        scope["live"] = _live_state(chat_id, topic_key, scan_state)
+        merged, stats = search_modes.merge(res, [])
+        scope["stats"] = stats
+        return merged
+    # COMBINED
+    scope["live"] = "unavailable" if not wants_hn else "unknown"
+    try:
+        res = _get_matched_signals_hn(*args)
+    except Exception:
+        scope["historical"] = "failed"
+        raise
+    scope["historical"] = "ok" if res else "empty"
+    live_recs = []
+    if wants_hn:
+        scope["live"] = _live_state(chat_id, topic_key, scan_state)
+        box = scope.pop("_hn_box", None)
+        if box is not None:
+            live_recs = [r for r in (box.get("recs") or []) if isinstance(r, dict)]
+    # Live records already inside `res` carry hn_id; everything else came from the stored path. Re-merging with canonical URLs
+    # removes duplicates that differ only in URL form, and marks a post both paths found as 'both'.
+    in_live = [r for r in res if isinstance(r, dict) and r.get("hn_id")]
+    hist = [r for r in res if not (isinstance(r, dict) and r.get("hn_id"))]
+    live_ids = {search_modes.post_identity(r) for r in live_recs}
+    merged, stats = search_modes.merge(in_live, hist, limit=limit or None)
+    for p in merged:
+        if p.get("retrieval_path") == "historical" and search_modes.post_identity(p) in live_ids:
+            p["retrieval_path"] = "both"
+    stats = {"live": 0, "historical": 0, "both": 0, "duplicates_removed": stats.get("duplicates_removed", 0)}
+    for p in merged:
+        stats[p.get("retrieval_path", "historical")] += 1
+    scope["stats"] = stats
+    return merged
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # TOPIC EVIDENCE CACHE (per-chat, per-topic post reuse)
 #
@@ -4031,12 +4472,23 @@ def get_matched_signals(topic_key, keywords, targeting_platform="all", limit=Non
 # completely untouched by this feature.
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _cache_topic_key(topic_key):
+    """Posts found in one search mode must never be served to another: HISTORICAL / LIVE cache under their own key. COMBINED (the
+    default, and everything outside a mode scope) keeps the original key, so existing cache records stay valid."""
+    sc = _mode_scope_now()
+    m = (sc or {}).get("mode")
+    if m in (search_modes.HISTORICAL, search_modes.LIVE) and topic_key:
+        return f"{topic_key}::{m}"
+    return topic_key
+
+
 def get_cached_topic_evidence(chat_id: str, topic_key: str) -> Optional[dict]:
     """Reads the already-cached evidence posts for this chat + topic.
     Returns None if there's nothing cached yet (first time this topic is
     asked about in this chat)."""
     if not chat_id or not topic_key:
         return None
+    topic_key = _cache_topic_key(topic_key)
     try:
         return topic_evidence_cache_collection.find_one(
             {"chat_id": chat_id, "topic_key": topic_key}, {"_id": 0}
@@ -4063,6 +4515,7 @@ def save_topic_evidence_cache(chat_id: str, owner_key: str, topic_key: str,
     caller add small fields to the same $set, e.g. {"strict_mode": True}."""
     if not chat_id or not topic_key:
         return
+    topic_key = _cache_topic_key(topic_key)
     capped_posts = (posts or [])[-TOPIC_CACHE_MAX_EVIDENCE:]
     now = datetime.now(timezone.utc)
     set_doc = {
@@ -9653,7 +10106,8 @@ _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 
 # (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
 # made only of these renders as an EMPTY answer on the page.
-_ANSWER_META_KEYS = {"format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness", "time_scope"}
+_ANSWER_META_KEYS = {"search_mode", "format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness", "time_scope",
+                     "signal_report"}
 
 
 
