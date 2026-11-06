@@ -1,443 +1,187 @@
 """
-FLINTEL — TRENDING-KEYWORDS BACKGROUND SCHEDULER
-============================================================================
-Self-contained orchestration module — same one-way-dependency spirit as 
-google.py/website_intelligence.py: this file imports FROM logics.py, 
-google.py, and database.py, never the other way around. It owns no
-keyword-generation or storage logic of its own; it only calls, in order,
-two functions that already exist and already degrade gracefully on their
-own:
+search_modes.py — LIVE / HISTORICAL / COMBINED search modes (pure; no application imports).
 
-  1. logics.generate_trending_keywords_via_web_search() — one Claude call
-     (with live web search) that returns up to 200 trending keyword
-     strings, or None on any failure.
-  2. google.search_google_for_reddit_posts(keywords, google_posts_collection,
-     search_keyword_for_storage="auto_trending") — exactly as it already
-     works for any other caller; the "auto_trending" tag is the ONLY
-     thing this file adds, so a stub written by this scheduler can later
-     be told apart from one written by a real user search.
+LIVE        newly available discussions fetched from a source's live API at request time (today: Hacker News via Algolia).
+            Reddit has no working live path (GPT web search is disabled at source), so a Reddit-only LIVE search is
+            reported as SOURCE_UNAVAILABLE, never simulated.
+HISTORICAL  stored conversations (MongoDB / MySQL) only. Never claimed to be current.
+COMBINED    both paths, merged and deduplicated across retrieval methods and URL forms, provenance per result.
 
-WHAT THIS FILE DOES NOT DO: no new keyword-generation logic, no new
-storage pattern, no new Mongo fields, no changes to google.py or
-logics.py. Purely scheduling + the two calls above, in order.
-
-(TRENDING SEARCH JOBS) Before the Google step, the same keywords — trimmed,
-de-duplicated case-insensitively and capped at config.SEARCH_WEBSITE_KEYWORDS
-(default 200 considered per cycle; 0/negative/invalid = off) — are written as
-ONE combined flintel_search_jobs job per cycle via the existing
-logics.enqueue_search_job(): topic_key "auto_trending:<UTC time of the cycle,
-YYYYMMDDTHHMMSSZ>", keywords [ALL of that cycle's cleaned keywords],
-targeting_platform TRENDING_JOB_TARGETING_PLATFORM. Every cycle gets its own
-topic_key, so each 12-hour cycle creates a NEW job and an earlier cycle's job
-is never updated or reset. The legacy combined job (topic_key "auto_trending")
-and the earlier one-job-per-keyword jobs ("auto_trending:<keyword>") are no
-longer written and are left as they are. This step has its own try/except: a
-failure there is only logged (exception type only, never the keywords) and the
-Google step still runs. The Google step receives the generated list exactly as
-before (the cap only applies to the job). The job is written ONLY by a cycle
-that won the schedule claim: a fallback cycle (Mongo schedule unavailable, so
-several workers may run at once) writes no job and still runs the Google step.
-
-FIRE-AND-FORGET: start_trending_keywords_scheduler() schedules an asyncio
-background task and returns immediately — it never blocks FastAPI
-startup, and the recurring cycle never blocks any incoming request's
-response time, since both calls happen in a worker thread
-(asyncio.to_thread) rather than on the event loop. This mirrors
-_trigger_google_fallback_search()'s own "kick off work on a background
-thread/task and don't make the caller wait for it" shape.
-
-PERSISTED SCHEDULE (TRENDING SCHEDULE STATE): the next due time lives in
-Mongo (database.auto_keywords_collection = flintel_auto_keywords, one
-document _id "trending_keywords"), so a restart/deploy does not reset the
-12-hour timer. A worker runs a cycle only after winning ONE atomic
-find_one_and_update claim (next_due_at <= now -> next_due_at = now + 12h), so
-several workers do not each run it. No saved state yet -> the first cycle is
-due immediately. If Mongo cannot be read/claimed, the loop falls back to the
-old in-memory behaviour for one cycle (sleep 12h, run, no claim) and then
-tries Mongo again; during such an outage several workers CAN each run a
-cycle (no coordination without Mongo).
-
-NEVER CRASHES: every failure path (Claude call fails, empty/None
-keywords, the Google/RapidAPI call fails, an unexpected exception
-anywhere in one cycle) is caught, logged as a warning, and skipped — the
-loop always comes back and tries again on the next 12-hour cycle. Nothing
-in this file can bring down the app or stop future cycles from running.
+Provenance (`retrieval_path`): "live" | "historical" | "both". A post found by both paths is ONE result, marked "both".
 """
+import re
+from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
-import asyncio
-import logging
-import os
-from datetime import datetime, timedelta, timezone
+LIVE, HISTORICAL, COMBINED = "live", "historical", "combined"
+MODES = (LIVE, HISTORICAL, COMBINED)
+DEFAULT_MODE = COMBINED          # = what the application already did: stored posts plus any live source that is selected
+LABELS = {LIVE: "Live", HISTORICAL: "Historical", COMBINED: "Combined"}
+PATH_LABELS = {"live": "Live", "historical": "Historical", "both": "Live + Historical"}
 
-from pymongo import ReturnDocument
-from pymongo.errors import DuplicateKeyError
-
-import config
-import database
-from database import google_posts_collection
-from google import search_google_for_reddit_posts
-from logics import enqueue_search_job, generate_trending_keywords_via_web_search
-
-log = logging.getLogger(__name__)
-
-# How often the trending-keywords chain runs, in seconds (12 hours).
-TRENDING_KEYWORDS_INTERVAL_SECONDS = 43200
-
-# Fixed search_keyword_for_storage tag for every stub this scheduler ever
-# writes — lets a later reader tell "came from the scheduled trending job"
-# apart from "came from an actual user search", per google_posts_collection's
-# existing search_keyword field. Never changes.
-TRENDING_KEYWORDS_SEARCH_TAG = "auto_trending"
-
-# topic_key prefix of the per-cycle trending job ("auto_trending:<cycle time, YYYYMMDDTHHMMSSZ>").
-# Never equals the legacy combined job's topic_key "auto_trending".
-TRENDING_JOB_TOPIC_PREFIX = "auto_trending:"
-
-# targeting_platform of the trending flintel_search_jobs job. "reddit" so
-# Background Service #1 does not spend X/Twitter (RapidAPI) calls on ~200
-# keywords every cycle. Change this one value to widen it (e.g. "all").
-TRENDING_JOB_TARGETING_PLATFORM = "reddit"
-
-# (TRENDING SCHEDULE STATE) persisted-schedule settings
-SCHEDULE_STATE_ID = "trending_keywords"        # the one state document's _id
-SCHEDULE_MAX_SLEEP_SECONDS = 3600              # re-read the due time at least hourly
-SCHEDULE_CLAIM_LOST_RECHECK_SECONDS = 60       # after losing a claim to another worker
-
-# Outcome of the most recent _run_trending_keywords_cycle() call, filled in by
-# the cycle itself (status / keywords_count / stubs_count / job_queued) so the
-# loop can record it in the state document. Side channel only: the cycle's
-# return value is unchanged. Never holds keywords.
-_cycle_outcome: dict = {}
+_TRACKING = re.compile(r"^(utm_.*|ref|ref_src|ref_url|source|share|context|sort|st|sh|fbclid|gclid)$", re.I)
+_HN_ITEM = re.compile(r"news\.ycombinator\.com/item", re.I)
 
 
-def _search_website_keywords_limit() -> int:
-    """config.SEARCH_WEBSITE_KEYWORDS read live; 0 when <= 0 or not a number."""
+# What each source can do, from the code (not from hope). Used for the user-facing explanations and the capability matrix.
+# Reddit has a legacy GPT web-search path (reddit_live.py) but it is switched off at source by an explicit product decision
+# (reddit_live.LIVE_SEARCH_EXECUTION_ENABLED = False; paid model call), so it is NOT a live capability here.
+SOURCE_MODES = {
+    "reddit": {"live": False, "historical": True},
+    "hackernews": {"live": True, "historical": True},
+}
+SOURCE_NAMES = {"reddit": "Reddit", "hackernews": "Hacker News"}
+
+
+def unsupported_sources(mode, selected_keys):
+    """Selected sources that cannot serve the mode (names), e.g. Reddit in LIVE. Unknown sources are not judged."""
+    mode = normalize_mode(mode)
+    need = "historical" if mode == HISTORICAL else "live"        # Combined also wants the live path where a source has one
+    return [SOURCE_NAMES.get(k, k) for k in selected_keys or [] if k in SOURCE_MODES and not SOURCE_MODES[k][need]]
+
+
+def normalize_mode(value, default=DEFAULT_MODE):
+    """Any input -> one of MODES. Unknown / empty -> `default` (never raises, never an invalid mode)."""
+    v = str(value or "").strip().lower()
+    if v in MODES:
+        return v
+    return default if default in MODES else DEFAULT_MODE
+
+
+def canonical_url(url):
+    """One identity for one post across URL representations (www / old / m / np, http, trailing slash, tracking params,
+    fragments, Reddit comment-slug and HN item forms). '' for anything that is not a usable URL."""
+    if not isinstance(url, str) or not url.strip():
+        return ""
+    u = url.strip()
+    if "://" not in u:
+        u = "https://" + u
     try:
-        limit = int(getattr(config, "SEARCH_WEBSITE_KEYWORDS", 0))
-    except (TypeError, ValueError):
-        return 0
-    return limit if limit > 0 else 0
+        p = urlsplit(u)
+    except ValueError:
+        return ""
+    host = (p.hostname or "").lower()
+    if not host:
+        return ""
+    for pre in ("www.", "old.", "new.", "m.", "np.", "i."):
+        if host.startswith(pre):
+            host = host[len(pre):]
+    path = re.sub(r"/{2,}", "/", p.path or "/")
+    if host in ("redd.it",):
+        return "reddit.com/comments/" + path.strip("/").lower()
+    if host.endswith("reddit.com"):
+        m = re.search(r"/comments/([a-z0-9]+)(?:/[^/]*)?(?:/([a-z0-9]+))?", path, re.I)
+        if m:
+            post, comment = m.group(1).lower(), (m.group(2) or "").lower()
+            return f"reddit.com/comments/{post}" + (f"/c/{comment}" if comment else "")
+    q = sorted((k, v) for k, v in parse_qsl(p.query, keep_blank_values=False) if not _TRACKING.match(k))
+    if _HN_ITEM.search(host + path):
+        q = [(k, v) for k, v in q if k == "id"]
+    path = path.rstrip("/") or "/"
+    return urlunsplit(("", host, path.lower() if host.endswith("reddit.com") else path, urlencode(q), "")).lstrip("/")
 
 
-def _trending_job_keywords(keywords, limit: int) -> list:
-    """Strip, drop empties, de-duplicate case-insensitively (first spelling
-    and order kept), then cap at `limit`."""
-    out, seen = [], set()
-    for kw in keywords or []:
-        if not isinstance(kw, str):
-            continue
-        kw = kw.strip()
-        if not kw:
-            continue
-        key = kw.casefold()
-        if key in seen:
-            continue
-        seen.add(key)
-        out.append(kw)
-        if len(out) >= limit:
-            break
+def post_identity(post):
+    """Stable key for dedup: canonical URL, else platform + id, else ''."""
+    if not isinstance(post, dict):
+        return ""
+    c = canonical_url(post.get("post_url") or post.get("url"))
+    if c:
+        return c
+    pid = post.get("hn_id") or post.get("message_id") or post.get("id")
+    plat = str(post.get("platform") or "").replace("_comment", "")
+    return f"{plat}:{pid}" if pid else ""
+
+
+def tag(posts, path):
+    """Stamp provenance on a copy of each post (does not mutate the inputs)."""
+    out = []
+    for p in posts or []:
+        if isinstance(p, dict):
+            q = dict(p)
+            q["retrieval_path"] = path
+            out.append(q)
     return out
 
 
-def _trending_cycle_topic_key() -> str:
-    """topic_key of THIS cycle's job: the prefix plus the cycle's UTC time, so every
-    12-hour cycle gets a new job and an earlier cycle's job is never touched."""
-    when = _aware_utc(_utcnow()) or datetime.now(timezone.utc)
-    return TRENDING_JOB_TOPIC_PREFIX + when.strftime("%Y%m%dT%H%M%SZ")
+def merge(live_posts, historical_posts, limit=None):
+    """Merge the two paths into ONE ordered list without double counting.
+    Order: the historical ranking is kept as is (it is the existing ranking), live-only posts are interleaved after it by their
+    own order; a post found by both keeps the historical record (richer stored fields) with retrieval_path='both'.
+    Returns (merged, stats) with stats = {live, historical, both, duplicates_removed}."""
+    def _fill(kept, other):
+        """A duplicate must not lose metadata: fields the kept record lacks are copied from the duplicate (never overwritten)."""
+        for k, v in other.items():
+            if k not in kept or kept[k] in (None, "", [], {}):
+                if k not in ("retrieval_path",):
+                    kept[k] = v
 
-
-async def _queue_trending_search_job(keywords) -> None:
-    """Write ALL of this cycle's cleaned keywords as ONE search job under a
-    per-cycle topic_key. Never raises: a failure is logged (exception type
-    only) and the caller carries on."""
-    _cycle_outcome["job_queued"] = False
-    try:
-        limit = _search_website_keywords_limit()
-        if limit <= 0:
-            # kill-switch: job writing off. Logged (was silent) so a blank/0/invalid
-            # SEARCH_WEBSITE_KEYWORDS on the server is visible in the logs.
-            log.warning(
-                "Trending-keywords scheduler: search job NOT written — "
-                f"SEARCH_WEBSITE_KEYWORDS is off/invalid "
-                f"(env={os.getenv('SEARCH_WEBSITE_KEYWORDS')!r}); Google search continues."
-            )
-            return
-        job_keywords = _trending_job_keywords(keywords, limit)
-        if not job_keywords:
-            log.warning("Trending-keywords scheduler: search job NOT written — no usable keywords after cleanup.")
-            return
-        topic_key = _trending_cycle_topic_key()
-        try:
-            await asyncio.to_thread(enqueue_search_job, topic_key, job_keywords, TRENDING_JOB_TARGETING_PLATFORM)
-        except Exception as exc:
-            # type only: the message could echo document content (keywords)
-            log.warning(
-                f"Trending-keywords scheduler: queuing the search job failed "
-                f"({type(exc).__name__}); Google search continues."
-            )
-            return
-        _cycle_outcome["job_queued"] = True
-        log.info(f"Trending-keywords scheduler: job created topic_key={topic_key} keywords={len(job_keywords)}")
-    except Exception as exc:
-        # type only: the message could echo document content (keywords)
-        log.warning(
-            f"Trending-keywords scheduler: queuing the search job failed "
-            f"({type(exc).__name__}); Google search continues."
-        )
-
-
-async def _run_trending_keywords_cycle(write_jobs: bool = True):
-    """One full cycle of the chain: generate up to 200 trending keywords,
-    then hand them as-is to search_google_for_reddit_posts() tagged
-    "auto_trending". Both underlying calls are synchronous/blocking
-    (httpx, Claude API, Mongo) — run via asyncio.to_thread() so this
-    cycle never blocks the event loop (and therefore never blocks any
-    concurrent incoming request) while it's in flight.
-
-    Skips the cycle (logs a warning, returns) if the keyword-generation
-    step returns None or an empty list — never calls
-    search_google_for_reddit_posts() with nothing to search for. Any
-    other unexpected exception anywhere in this function is caught here
-    too, so a single bad cycle can never kill the scheduler loop below.
-
-    write_jobs=False (fallback cycles, run without the schedule claim):
-    no search job is written — overlapping uncoordinated cycles would each
-    create their own job for what is one 12-hour cycle — and job_queued stays
-    False; the Google step still runs."""
-    _cycle_outcome.clear()
-    try:
-        keywords = await asyncio.to_thread(generate_trending_keywords_via_web_search)
-        if not keywords:
-            _cycle_outcome.update(status="skipped_no_keywords", keywords_count=0)
-            log.warning("Trending-keywords scheduler: no keywords generated this cycle — skipping.")
-            return
-        _cycle_outcome["keywords_count"] = len(keywords)
-
-        # (TRENDING SEARCH JOB) own try/except inside; never raises
-        if write_jobs:
-            await _queue_trending_search_job(keywords)
-        else:
-            _cycle_outcome["job_queued"] = False
-            log.warning(
-                "Trending-keywords scheduler: search jobs NOT written — cycle ran "
-                "without the schedule claim (fallback); Google search continues."
-            )
-
-        stubs = await asyncio.to_thread(
-            search_google_for_reddit_posts,
-            keywords,
-            google_posts_collection,
-            TRENDING_KEYWORDS_SEARCH_TAG,
-        )
-        _cycle_outcome.update(status="ok", stubs_count=len(stubs) if stubs else 0)
-        log.info(
-            f"Trending-keywords scheduler: cycle complete | "
-            f"keywords={len(keywords)} | stubs={len(stubs) if stubs else 0}"
-        )
-    except Exception as exc:
-        _cycle_outcome["status"] = "failed"
-        log.warning(f"Trending-keywords scheduler: cycle failed, will retry next cycle: {exc}")
-
-
-# ── (TRENDING SCHEDULE STATE) persisted schedule + atomic claim ─────────────
-# The sync helpers below talk to Mongo and run via asyncio.to_thread().
-
-def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
-
-
-def _aware_utc(value):
-    """Mongo may hand back naive datetimes: they are UTC. None if not a datetime."""
-    if not isinstance(value, datetime):
-        return None
-    if value.tzinfo is None:
-        return value.replace(tzinfo=timezone.utc)
-    return value.astimezone(timezone.utc)
-
-
-def _state_collection():
-    coll = getattr(database, "auto_keywords_collection", None)
-    if coll is None:
-        raise RuntimeError("auto_keywords_collection is not available")
-    return coll
-
-
-def _read_schedule_state():
-    return _state_collection().find_one({"_id": SCHEDULE_STATE_ID})
-
-
-def _init_schedule_state(now: datetime) -> None:
-    """Create the state document, due immediately. Several workers may race
-    here: exactly one insert wins, the others get DuplicateKeyError, which is
-    fine — who RUNS the cycle is still decided by the atomic claim."""
-    try:
-        _state_collection().insert_one({"_id": SCHEDULE_STATE_ID, "next_due_at": now})
-    except DuplicateKeyError:
-        pass
-
-
-def _claim_due_cycle(now: datetime):
-    """ONE atomic find_one_and_update: matches only while next_due_at <= now
-    (or is missing/null) and, in the same operation, moves next_due_at to
-    now + interval and marks the cycle running. Returns the updated document
-    for the winner, None for everyone else."""
-    return _state_collection().find_one_and_update(
-        {"_id": SCHEDULE_STATE_ID,
-         "$or": [{"next_due_at": {"$lte": now}}, {"next_due_at": None}]},
-        {"$set": {
-            "next_due_at": now + timedelta(seconds=TRENDING_KEYWORDS_INTERVAL_SECONDS),
-            "last_started_at": now,
-            "last_status": "running",
-        }},
-        return_document=ReturnDocument.AFTER,
-    )
-
-
-def _outcome_update(finished_at: datetime) -> dict:
-    """$set/$unset for the finished cycle's result (never next_due_at)."""
-    out = dict(_cycle_outcome)
-    status = out.get("status")
-    if status not in ("ok", "skipped_no_keywords", "failed"):
-        status = "failed"
-    sets = {"last_finished_at": finished_at, "last_status": status}
-    unsets = {}
-    for key, field in (("keywords_count", "last_keywords_count"),
-                       ("stubs_count", "last_stubs_count"),
-                       ("job_queued", "last_job_queued")):
-        if key in out:
-            sets[field] = out[key]
-        else:
-            unsets[field] = ""
-    update = {"$set": sets}
-    if unsets:
-        update["$unset"] = unsets
-    return update
-
-
-def _finish_claimed_cycle(started_at_raw) -> None:
-    """Record the outcome on the document THIS claim started (matched by
-    last_started_at, so a slow cycle never overwrites a newer claim)."""
-    _state_collection().update_one(
-        {"_id": SCHEDULE_STATE_ID, "last_started_at": started_at_raw},
-        _outcome_update(_utcnow()),
-    )
-
-
-def _record_fallback_cycle(started_at: datetime) -> None:
-    """After an in-memory fallback cycle: if Mongo works again, push
-    next_due_at to started_at + interval (only forward, never back) and
-    record the outcome, so the recovered schedule does not immediately run
-    the cycle a second time."""
-    push = started_at + timedelta(seconds=TRENDING_KEYWORDS_INTERVAL_SECONDS)
-    update = _outcome_update(_utcnow())
-    update["$set"].update({"next_due_at": push, "last_started_at": started_at})
-    try:
-        _state_collection().update_one(
-            {"_id": SCHEDULE_STATE_ID,
-             "$or": [{"next_due_at": {"$lt": push}}, {"next_due_at": None}]},
-            update,
-            upsert=True,
-        )
-    except DuplicateKeyError:
-        pass                     # a newer due time is already stored — keep it
-
-
-async def _run_claimed_cycle(started_at_raw) -> None:
-    await _run_trending_keywords_cycle()
-    try:
-        await asyncio.to_thread(_finish_claimed_cycle, started_at_raw)
-    except Exception as exc:
-        log.warning(f"Trending-keywords scheduler: could not record the cycle result "
-                    f"({type(exc).__name__}); schedule is unaffected.")
-
-
-async def _persisted_schedule_step(first_check: bool) -> float:
-    """One check of the persisted schedule; returns seconds to wait before
-    the next check. Raises on a Mongo read/init/claim error (the loop then
-    falls back to the in-memory timer)."""
-    now = _utcnow()
-    state = await asyncio.to_thread(_read_schedule_state)
-    if state is None:
-        if first_check:
-            log.info("Trending-keywords scheduler started — next cycle due now (no saved state)")
-        await asyncio.to_thread(_init_schedule_state, now)
-        due = now
-    else:
-        due = _aware_utc(state.get("next_due_at")) or now
-        if first_check:
-            log.info(f"Trending-keywords scheduler started — next cycle due at "
-                     f"{due.isoformat()} (from flintel_auto_keywords)")
-    if due > now:
-        return min((due - now).total_seconds(), SCHEDULE_MAX_SLEEP_SECONDS)
-    claimed = await asyncio.to_thread(_claim_due_cycle, now)
-    if not claimed:
-        log.info("Trending-keywords scheduler: cycle already claimed by another worker — "
-                 "not running it here, will recheck.")
-        return SCHEDULE_CLAIM_LOST_RECHECK_SECONDS
-    await _run_claimed_cycle(claimed.get("last_started_at", now))
-    return 0
-
-
-async def _trending_keywords_loop():
-    """Runs the trending cycle every TRENDING_KEYWORDS_INTERVAL_SECONDS for
-    the lifetime of the app process, on the PERSISTED schedule (see
-    _persisted_schedule_step): the due time survives restarts/deploys, a
-    cycle runs only in the worker that wins the atomic claim, and the
-    loop re-reads the due time at least every SCHEDULE_MAX_SLEEP_SECONDS.
-    No saved state yet -> the first cycle runs right away.
-
-    Mongo unavailable (read/claim error): log the exception TYPE only, then
-    the old in-memory behaviour for ONE cycle — sleep the full interval, run
-    the cycle without a claim and without writing search jobs — record it in
-    Mongo if possible, and go back to the persisted schedule. Bounded: at
-    most one Mongo attempt per interval while the outage lasts, never a
-    tight retry loop. During an outage several workers may each run a
-    cycle (Google step only)."""
-    first_check = True
-    while True:
-        try:
-            wait = await _persisted_schedule_step(first_check)
-        except Exception as exc:
-            first_check = False
-            log.warning(
-                f"Trending-keywords scheduler: Mongo schedule unavailable "
-                f"({type(exc).__name__}) — falling back to the in-memory "
-                f"{TRENDING_KEYWORDS_INTERVAL_SECONDS}s timer for one cycle; "
-                f"Mongo scheduling is retried after it."
-            )
-            await asyncio.sleep(TRENDING_KEYWORDS_INTERVAL_SECONDS)
-            fallback_started = _utcnow()
-            await _run_trending_keywords_cycle(write_jobs=False)
-            try:
-                await asyncio.to_thread(_record_fallback_cycle, fallback_started)
-            except Exception as rec_exc:
-                log.warning(f"Trending-keywords scheduler: could not record the fallback cycle "
-                            f"({type(rec_exc).__name__}).")
+    seen, merged = {}, []
+    dup = 0
+    for p in tag(historical_posts, "historical"):
+        k = post_identity(p)
+        if k and k in seen:
+            _fill(seen[k], p)
+            dup += 1
             continue
-        first_check = False
-        if wait > 0:
-            await asyncio.sleep(wait)
+        if k:
+            seen[k] = p
+        merged.append(p)
+    live_only = []
+    for p in tag(live_posts, "live"):
+        k = post_identity(p)
+        if k and k in seen:
+            _fill(seen[k], p)
+            seen[k]["retrieval_path"] = "both"
+            dup += 1
+            continue
+        if k:
+            seen[k] = p
+        live_only.append(p)
+    merged.extend(live_only)
+    if limit is not None and limit >= 0:
+        merged = merged[:limit]
+    stats = {"live": 0, "historical": 0, "both": 0, "duplicates_removed": dup}
+    for p in merged:
+        stats[p.get("retrieval_path", "historical")] = stats.get(p.get("retrieval_path", "historical"), 0) + 1
+    return merged, stats
 
 
-def start_trending_keywords_scheduler():
-    """Call once, at FastAPI startup (see index.py's startup event/
-    lifespan hook). Schedules _trending_keywords_loop() as a background
-    asyncio task and returns immediately — never awaits it, never blocks
-    app startup. Must be called from inside a running event loop (i.e.
-    from within an async startup/lifespan function), since
-    asyncio.create_task() requires one.
+def mode_coverage(mode, live_status=None, historical_status=None, stats=None, unsupported=None):
+    """Honest coverage record for one search. Statuses are free-form dicts/strings from the paths; a path that was not run for
+    the mode is 'not_requested', never 'empty'. A path that failed is 'failed', so a failure is not mistaken for 'no match'."""
+    mode = normalize_mode(mode)
 
-    Never raises: if scheduling the task itself somehow fails (e.g. this
-    is called with no running event loop), that failure is caught and
-    logged — the app still starts up normally, it just runs without this
-    background job, exactly like any other degrade-gracefully failure
-    elsewhere in this product."""
-    try:
-        asyncio.create_task(_trending_keywords_loop())
-        log.info(
-            f"Trending-keywords scheduler started — cycle every "
-            f"{TRENDING_KEYWORDS_INTERVAL_SECONDS}s (12h), tag="
-            f"{TRENDING_KEYWORDS_SEARCH_TAG!r}."
-        )
-    except Exception as exc:
-        log.warning(f"Trending-keywords scheduler: could not start: {exc}")
+    def _st(requested, status):
+        if not requested:
+            return "not_requested"
+        if isinstance(status, dict):
+            status = status.get("state")
+        return str(status or "unknown")
+
+    cov = {"mode": mode, "label": LABELS[mode],
+           "live": _st(mode in (LIVE, COMBINED), live_status),
+           "historical": _st(mode in (HISTORICAL, COMBINED), historical_status),
+           "counts": dict(stats or {})}
+    # 'unavailable' is a capability gap (no live source for the selected platforms), NOT a failure; only real errors count as failed.
+    failed = [k for k in ("live", "historical") if cov[k] in ("failed", "rate_limited")]
+    ran = [k for k in ("live", "historical") if cov[k] != "not_requested"]
+    cov["partial"] = bool(failed) and len(failed) < len(ran)
+    cov["failed_paths"] = failed
+    notes = []
+    if mode == HISTORICAL:
+        notes.append("Historical results come from stored conversations and are not a view of what was posted most recently.")
+    if mode in (LIVE, COMBINED) and cov["live"] in ("unavailable", "source_unavailable", "skipped"):
+        notes.append("No live source is available for the selected platforms, so no live results could be retrieved.")
+    if cov["partial"]:
+        notes.append("One retrieval path failed; the results shown come from the other path only.")
+    if mode == LIVE:
+        notes.append("Live results are a bounded fetch from the source's search API, not a complete archive.")
+    uns = [str(u) for u in (unsupported or [])][:6]
+    if uns:
+        cov["unsupported_sources"] = uns
+        if mode == COMBINED:
+            notes.append(f"{', '.join(uns)} has no live source; its results come from stored conversations only.")
+        elif mode == LIVE:
+            notes.append(f"{', '.join(uns)} does not support Live search and was not searched.")
+    cov["notes"] = notes
+    return cov
