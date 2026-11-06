@@ -250,10 +250,13 @@ def test_bridge_off_hn_only_fills_the_slots_reddit_left_empty(lg, hn, monkeypatc
     assert [m["platform"] for m in full] == ["reddit"] * 3                              # Reddit is never displaced
 
 
-def test_unfiltered_requests_keep_the_reddit_path_and_do_not_start_hn(lg, hn, monkeypatch):
-    monkeypatch.setattr(lg, "_get_matched_signals_core", lambda *a, **k: ["R"])
-    assert lg.get_matched_signals("t", ["crm"], "reddit,hackernews", 15, None, True, None, False, None, "c", None, QUERY, None, None) == ["R"]
-    assert hn.calls == []
+def test_unfiltered_requests_run_reddit_unfiltered_and_add_a_general_hn_sample(lg, hn, monkeypatch):
+    seen = []
+    monkeypatch.setattr(lg, "_get_matched_signals_core", lambda *a, **k: seen.append(a) or [{"platform": "reddit", "post_url": "r1", "title": "t", "post_text": "x"}])
+    out = lg.get_matched_signals("t", [], "reddit,hackernews", 4, 30, True, None, False, None, "c", None, QUERY, None, None)
+    assert seen and seen[0][5] is True                                              # Reddit's own unfiltered path, unchanged
+    assert hn.calls and hn.calls[0].get("general") is True                          # plus a general HN sample (no keywords, no intent filter)
+    assert {m["platform"] for m in out} == {"reddit", "hackernews"}
 
 
 # ── time windows ─────────────────────────────────────────────────────────────────────────────────────────────────────────
