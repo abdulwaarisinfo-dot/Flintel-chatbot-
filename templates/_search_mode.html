@@ -1,0 +1,62 @@
+{# Search mode control: Live / Historical / Combined. The hidden input travels with the search form (FormData); default Combined. #}
+<input type="hidden" name="search_mode" id="search-mode-input" value="combined" />
+<div class="search-mode" role="radiogroup" aria-label="Search mode" id="search-mode-group">
+  <button type="button" class="sm-opt" role="radio" aria-checked="false" data-mode="live" title="Newly available discussions from sources with a live API (currently Hacker News). Not a full archive.">Live</button>
+  <button type="button" class="sm-opt" role="radio" aria-checked="false" data-mode="historical" title="Stored conversations only. Not a view of what was posted most recently.">Historical</button>
+  <button type="button" class="sm-opt" role="radio" aria-checked="true" data-mode="combined" title="Both paths, merged and de-duplicated, with the origin of each result. Default.">Combined</button>
+</div>
+<p class="sm-hint" id="search-mode-hint" role="status" aria-live="polite"></p>
+<style>
+  .sm-hint { margin: 6px 0 0; font: 400 12px/1.4 Inter, Figtree, sans-serif; color: #a8a8a5; max-width: 560px; }
+  .search-mode { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid #3d3d3b; border-radius: 8px; font-family: Inter, Figtree, sans-serif; }
+  .search-mode .sm-opt { background: transparent; color: #a8a8a5; border: 0; border-radius: 6px; padding: 4px 10px; font: 500 12px/1.2 inherit; cursor: pointer; }
+  .search-mode .sm-opt[aria-checked="true"] { background: #C1FB3B; color: #111; }
+  .search-mode .sm-opt:focus-visible { outline: 2px solid #C1FB3B; outline-offset: 1px; }
+  @media (max-width: 600px) { .search-mode .sm-opt { padding: 4px 8px; } .sm-hint { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } }
+  @media (pointer: coarse) { .search-mode .sm-opt { min-height: 36px; padding: 8px 12px; } }
+</style>
+<script>
+(function () {
+  var g = document.getElementById('search-mode-group'), input = document.getElementById('search-mode-input');
+  if (!g || !input) return;
+  var MODES = ['live', 'historical', 'combined'];
+  function set(m, save) {
+    if (MODES.indexOf(m) < 0) m = 'combined';
+    input.value = m;
+    Array.prototype.forEach.call(g.querySelectorAll('.sm-opt'), function (b) {
+      var on = b.dataset.mode === m;
+      b.setAttribute('aria-checked', on ? 'true' : 'false');
+      b.tabIndex = on ? 0 : -1;                       // roving tabindex: one tab stop for the group, arrow keys move inside it
+    });
+    if (save) { try { localStorage.setItem('flintel_search_mode', m); } catch (e) {} }
+  }
+  var HINTS = {
+    live: 'Live: newly available discussions from sources with a live API. Only Hacker News has one; it is a bounded fetch, not an archive.',
+    historical: 'Historical: stored conversations only. This is not a view of what was posted most recently.',
+    combined: 'Combined: stored conversations plus live sources where available (Hacker News), merged without duplicates. Reddit is searched from stored conversations only.'
+  };
+  function hint() {
+    var el = document.getElementById('search-mode-hint'); if (!el) return;
+    var m = input.value, text = HINTS[m] || '';
+    var pl = (document.getElementById('platform-input') || {}).value || '';
+    var all = /^\s*$|all/i.test(pl), hn = /hacker/i.test(pl);
+    if (m === 'live' && !all && !hn) text = 'Live search is not available for the selected platform. Reddit has no live source. Select Hacker News or switch to Historical.';
+    el.textContent = text; el.title = text;           // phones show two lines; the full sentence stays in the tooltip / accessibility tree
+  }
+  document.addEventListener('click', function () { setTimeout(hint, 0); });
+  g.addEventListener('keydown', function (e) {       // WAI-ARIA radio group keys: arrows / Home / End move AND select
+    var k = e.key, i = MODES.indexOf(input.value), n = MODES.length, t = null;
+    if (k === 'ArrowRight' || k === 'ArrowDown') t = MODES[(i + 1) % n];
+    else if (k === 'ArrowLeft' || k === 'ArrowUp') t = MODES[(i - 1 + n) % n];
+    else if (k === 'Home') t = MODES[0];
+    else if (k === 'End') t = MODES[n - 1];
+    if (!t) return;
+    e.preventDefault(); set(t, true); setTimeout(hint, 0);
+    var b = g.querySelector('[data-mode="' + t + '"]'); if (b) b.focus();
+  });
+  g.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.sm-opt'); if (b) set(b.dataset.mode, true); });
+  var saved = null; try { saved = localStorage.getItem('flintel_search_mode'); } catch (e) {}
+  set(saved, false);
+  hint();
+})();
+</script>
