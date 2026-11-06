@@ -351,3 +351,55 @@ def iter_signal_batches(source, *, cutoff=None, batch_size=5000, dim=1536, conne
             conn.close()
         except Exception:
             pass
+
+
+def probe_coverage(source, start=None, end=None, *, connect_fn=None, timeout_ms=3000):
+    """READ-ONLY coverage of one MySQL source, for the zero-result explanation only (never for retrieval).
+
+    Three bounded aggregate SELECTs (server-side MAX_EXECUTION_TIME hint; values are parameters; db name validated; identifiers come
+    from the fixed column lists). Returns {"available": True, "total": bool, "in_range": int, "oldest": dt|None, "newest": dt|None}.
+    Raises on connect/query errors: the caller must treat a raise as 'unknown', never as 'empty'. Whether the publication column is
+    indexed is UNVERIFIED here: on a very large unindexed table the aggregates hit the time limit and raise (reported as unknown)."""
+    db = source.db if isinstance(source, MySQLSource) else str(source)
+    if not valid_db_name(db):
+        raise ValueError(f"invalid database name {db!r}")
+    ms = max(100, min(int(timeout_ms or 3000), 10000))
+    conn = (connect_fn or connect)()
+    try:
+        cur = conn.cursor()
+        try:
+            columns = _table_columns(cur, db)
+            publication_only = "created_utc" not in columns and "posted_at" in columns
+            cands = PUBLICATION_COLUMNS if publication_only else FIELD_COLUMNS["created_utc"]
+            present = [c for c in cands if c in columns]
+            if not present:
+                raise SourceUnreadable(f"no publication-time column in `{db}`.{TABLE}")
+            expr = f"`{present[0]}`" if len(present) == 1 else "COALESCE(" + ", ".join(f"`{c}`" for c in present) + ")"
+            hint = f"/*+ MAX_EXECUTION_TIME({ms}) */"
+            tbl = f"`{db}`.`{TABLE}`"
+            row = _select(cur, f"SELECT {hint} COUNT(*), MIN({expr}), MAX({expr}) FROM {tbl} WHERE {expr} IS NOT NULL")
+            row = (row or [(0, None, None)])[0]
+            n_total, oldest, newest = int(row[0] or 0), _aware(row[1]), _aware(row[2])
+            in_range = n_total
+            if start is not None or end is not None:
+                where, params = [f"{expr} IS NOT NULL"], []
+                if start is not None:
+                    where.append(f"{expr} >= %s")
+                    params.append(start.astimezone(timezone.utc).replace(tzinfo=None))
+                if end is not None:
+                    where.append(f"{expr} < %s")
+                    params.append(end.astimezone(timezone.utc).replace(tzinfo=None))
+                r2 = _select(cur, f"SELECT {hint} COUNT(*) FROM {tbl} WHERE {' AND '.join(where)}", tuple(params))
+                in_range = int((r2 or [(0,)])[0][0] or 0)
+            return {"available": True, "total": n_total > 0, "in_range": in_range, "oldest": oldest, "newest": newest}
+        finally:
+            try:
+                cur.close()
+            except Exception:
+                pass
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
