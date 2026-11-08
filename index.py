@@ -155,7 +155,7 @@ from logics import (
     normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, unsupported_requested, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
     matcher_for_kind, request_kind_note,   # (REQUEST KIND)
-    enrich_signal_report, result_coverage_if_enabled, zero_result_coverage_for, enrich_search_mode, search_mode_scope,   # (SIGNAL INTELLIGENCE)
+    enrich_signal_report, result_coverage_if_enabled, zero_result_coverage_for, enrich_search_mode, enrich_search_coverage, search_mode_scope,   # (SIGNAL INTELLIGENCE)
     freshness_enabled, enrich_freshness_answer, hackernews_note, hackernews_only,   # (FRESHNESS DISCLOSURE) + (HACKER NEWS)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
@@ -2409,6 +2409,7 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 coverage=result_coverage_if_enabled(msg, merged_pool, chat_id))
             if msg.get("_search_mode_info"):                        # (SEARCH MODES) which paths ran + provenance counts
                 answer = enrich_search_mode(answer, msg["_search_mode_info"], merged_pool)
+                answer = enrich_search_coverage(answer, msg, msg["_search_mode_info"], merged_pool, chat_id)
             # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
             verdict = guest_gate.on_answer_ready(gate_key, chat_id, msg["topic_key"], gate_token, answer, lease=gate_lease)
             if verdict != guest_gate.DELIVER:
