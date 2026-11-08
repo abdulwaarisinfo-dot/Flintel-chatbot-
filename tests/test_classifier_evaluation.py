@@ -169,3 +169,18 @@ def test_every_item_separates_what_the_post_says_from_what_is_inferred_and_what_
     assert it["confirmed"] and all(x.startswith("Stated in the post") for x in it["confirmed"])        # observation: quoted text
     assert "inferred" in it and "limitations" in it                                                      # inference and caveats kept apart
     assert it["opportunity"]["unknown"]                                                                  # what is NOT known is listed, not assumed
+
+
+def test_v4_platformfix_set_probes_the_failure_patterns_and_is_evaluated_once():
+    """35 synthetic items written after the platform-truth / report-integrity change to probe the patterns of the 'AI SaaS agent' report
+    (vendor announcements, discussion, research versus request). Same author as the rules, so OPTIMISTIC; measured once, no rule change:
+    accuracy 0.943 (33/35), false-buyer rate 0/27, two errors (a switch statement without product words; 'our company' wording read as an announcement)."""
+    import os
+    sys_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "evaluation")
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("run_eval_v4", os.path.join(sys_path, "run_eval.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    res = mod.evaluate(mod.load(os.path.join(sys_path, "classification_eval_v4_platformfix.jsonl")))
+    assert res["n"] == 35 and res["false_buyer_count"] == 0
+    assert res["accuracy"] >= 0.9 and len(res["errors"]) == 2
