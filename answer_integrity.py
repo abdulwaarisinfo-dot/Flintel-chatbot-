@@ -336,6 +336,21 @@ def _clip(sentence: str, limit: int = 220) -> str:
     return cut[: cut.rfind(" ")] if " " in cut else cut
 
 
+def locate_quote(quote, title, text):
+    """The model's quotation as it stands in the ORIGINAL post: a verbatim slice of the stored text (or title), or None when the post does not contain
+    those words in that order. Case, punctuation and spacing may differ between the model's version and the source; the SLICE returned is always the
+    source's own characters, so what is shown as a quotation is never the model's rewrite of it."""
+    toks = re.findall(r"[A-Za-z0-9$\u20ac\u00a3]+(?:[.'][A-Za-z0-9]+)*", str(quote or ""))
+    if len(" ".join(toks)) < 8:
+        return None
+    pat = r"[^A-Za-z0-9$\u20ac\u00a3]+".join(re.escape(t) for t in toks)
+    for src in (text, title):
+        m = re.search(pat, str(src or ""), re.IGNORECASE)
+        if m:
+            return m.group(0)
+    return None
+
+
 def quote_in_post(quote, title, text) -> bool:
     """True only when `quote` occurs in the post (case/punctuation-insensitive)."""
     q = _norm(quote)
@@ -963,6 +978,7 @@ def _classify_mention_post(sig: dict, identity, kind: str, subject) -> dict:
     return {"role": "discussion", "purchase_intent": "none", "product_fit": "fits",
             "relevance": "relevant" if matched else "uncertain", "analysis_status": "matched" if matched else "unmatched",
             "intent": "", "qualified": False, "evidence": evidence, "evidence_source": "excerpt" if evidence else None,
+            "evidence_kind": "source_excerpt" if evidence else None,
             "verification_status": status, "intent_reason": note + " Shown as a mention; buyer intent is not assessed for this request.",
             "uncertainty": uncertainty, "analysis_identity": identity, "analysis_verified": matched, "_exclude": None,
             "purchase_signals": None}
@@ -1086,7 +1102,8 @@ def _classify_provider_post(sig: dict, model_post: dict, identity, subject, term
     offer = provider_offer(title, text)
     return {"role": "discussion", "purchase_intent": "none", "product_fit": "fits", "relevance": "relevant",
             "analysis_status": "matched" if identity is not None else "unmatched", "intent": "", "qualified": False,
-            "evidence": evidence, "evidence_source": "excerpt" if evidence else None, "verification_status": status,
+            "evidence": evidence, "evidence_source": "excerpt" if evidence else None, "evidence_kind": "source_excerpt" if evidence else None,
+            "verification_status": status,
             "intent_reason": "Shown as someone offering this service. Price, availability and links are read from the post; "
                              "buyer intent and sentiment are not assessed for this request.",
             "uncertainty": [], "analysis_identity": identity, "analysis_verified": True, "_exclude": None,
@@ -1116,7 +1133,8 @@ def _classify_lead_post(sig: dict, model_post: dict, terms: set, icp: bool, iden
         evidence = _pick_evidence(title, text, None, None) if (status == "inaccessible" and text) else None
         return {"role": None, "purchase_intent": "unknown", "product_fit": "unknown", "relevance": "unverified", "analysis_status": "not_applicable",
                 "intent": "Uncertain", "qualified": False, "evidence": evidence,
-                "evidence_source": "excerpt" if evidence else None, "verification_status": status,
+                "evidence_source": "excerpt" if evidence else None, "evidence_kind": "source_excerpt" if evidence else None,
+                "verification_status": status,
                 "intent_reason": _STATUS_REASONS[status], "uncertainty": [], "analysis_identity": None,
                 "analysis_verified": None, "purchase_signals": None, "_exclude": None}
 
@@ -1166,16 +1184,22 @@ def _classify_lead_post(sig: dict, model_post: dict, terms: set, icp: bool, iden
     if fit_note and fit == "partial":
         uncertainty.append(fit_note)
 
-    evidence, evidence_source = model_post.get("evidence"), "model_quote"
+    # Evidence has exactly two kinds: an EXACT QUOTE (the model's quotation, shown as the original post's own characters) or, when the
+    # model's quotation is not in the post, a SOURCE EXCERPT chosen by Flintel from the post. Neither is a paraphrase; a paraphrase is the summary.
+    evidence, evidence_source, evidence_kind = model_post.get("evidence"), "model_quote", "exact_quote"
     if not isinstance(evidence, str) or not evidence.strip():
         evidence = None
-    elif not quote_in_post(evidence, title, text):
-        uncertainty.append("The model's quote was not found in the post; an excerpt is shown instead.")
-        evidence = None
+    else:
+        located = locate_quote(evidence, title, text)
+        if located:
+            evidence = located
+        else:
+            uncertainty.append("The model's quote was not found in the original post, so it is not shown as a quotation; an excerpt from the post is shown instead.")
+            evidence = None
     if not evidence:
-        evidence, evidence_source = _pick_evidence(title, text, role, trigger, sg), "excerpt"
+        evidence, evidence_source, evidence_kind = _pick_evidence(title, text, role, trigger, sg), "excerpt", "source_excerpt"
     if not evidence:
-        evidence_source = None
+        evidence_source = evidence_kind = None
 
     if role == "competitor_promo":
         label, reason = "Low", "A vendor promoting their own tool — competitor activity, not buyer demand."
@@ -1208,7 +1232,7 @@ def _classify_lead_post(sig: dict, model_post: dict, terms: set, icp: bool, iden
             "relevance": "uncertain" if (fit == "uncertain" or not matched) else "relevant",
             "analysis_status": "matched" if matched else "unmatched",
             "intent": label, "qualified": label == "High", "evidence": evidence, "evidence_source": evidence_source,
-            "verification_status": status, "intent_reason": reason, "uncertainty": uncertainty,
+            "evidence_kind": evidence_kind, "verification_status": status, "intent_reason": reason, "uncertainty": uncertainty,
             "analysis_identity": identity, "analysis_verified": matched, "_exclude": None,
             "purchase_signals": {"budget": bool(sg["budget"]), "timing": bool(sg["timing"]), "evaluation": bool(sg["evaluation"]),
                                  "willingness": bool(sg["willingness"]), "unconfirmed": bool(sg["unconfirmed"]),
@@ -2087,6 +2111,52 @@ def _window_bounds(time_scope):
     return start, end, str(time_scope.get("label") or "the search window")
 
 
+def _reconciliation_and_not_listed(sigs, listed, rows, excluded, listed_links, excluded_posts, terms, icp):
+    """(reconciliation, not_listed) for one answer. Every retrieved post is exactly one of: shown, excluded (with its reason), or not listed by
+    the writer. `not_listed` names the retrieved-but-unlisted posts that a text-only check reads as someone asking for a solution (title, URL, platform
+    and the check's own labels only: nothing is written about them), so a relevant post can never silently disappear from the report."""
+    pool = []
+    for sg in sigs:
+        if sg.get("post_url") and sg["post_url"] not in pool:
+            pool.append(sg["post_url"])
+    shown = {p["link"] for p in rows}
+    excluded_in_pool = {e["link"] for e in excluded_posts if e.get("link") in set(pool) and e.get("reason") != "unverifiable"} - shown
+    unlisted = [u for u in pool if u not in listed_links]
+    by = {sg["post_url"]: sg for sg in sigs if sg.get("post_url")}
+    not_listed = []
+    for u in unlisted[:200]:
+        sg = by[u]
+        try:
+            lab = classify_post(sg, {}, terms, icp, None)
+        except Exception:
+            continue
+        if lab.get("_exclude") or lab.get("role") != "buyer" or lab.get("product_fit") not in ("fits", "partial"):
+            continue
+        not_listed.append({"link": u, "title": str(sg.get("title") or "")[:200], "platform": platform_of(sg), "role": lab.get("role"),
+                           "intent": lab.get("intent"), "reason": "Retrieved and checked by Flintel, but not listed by the report writer."})
+        if len(not_listed) >= 25:
+            break
+    ex_total = sum(excluded.values())
+    rec = {"retrieved": len(pool), "listed_by_writer": listed, "shown": len(rows), "excluded": ex_total,
+           "excluded_reasons": dict(excluded), "not_listed": len(unlisted), "not_listed_buyer_like": len(not_listed),
+           "excluded_retrieved": len(excluded_in_pool),           # distinct RETRIEVED posts that were excluded (a duplicate LISTING is not a second retrieved post)
+           "duplicate_listings": excluded.get("duplicate", 0), "unverifiable_listings": excluded.get("unverifiable", 0),
+           "listed_balanced": listed == len(rows) + ex_total,
+           "pool_balanced": len(pool) == len(shown) + len(excluded_in_pool) + len(unlisted)}
+    return rec, not_listed
+
+
+def _reconciled_fields(sigs, listed, rows, excluded, listed_links, excluded_posts, terms, icp):
+    try:
+        rec, nl = _reconciliation_and_not_listed(sigs, listed, rows, excluded, listed_links, excluded_posts, terms, icp)
+        out = {"reconciliation": rec}
+        if nl:
+            out["not_listed"] = nl
+        return out
+    except Exception:
+        return {}
+
+
 def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, query, post_records=None,
                              time_scope=None) -> dict:
     """Applies the guardrails to a parsed source_list / comparison answer.
@@ -2101,6 +2171,11 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
         return data
     sigs = [s for s in (matched_signals or []) if isinstance(s, dict)]
     by_url = {s["post_url"]: s for s in sigs if s.get("post_url")}
+    by_source = {}
+    for _s in sigs:
+        _sid = platforms.source_id(_s) if _s.get("post_url") else ""
+        if _sid:
+            by_source.setdefault(_sid, _s)
     global_pos = {}
     for i, s in enumerate(aligned or [], 1):
         if isinstance(s, dict) and s.get("post_url"):
@@ -2120,6 +2195,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
     seen = set()
     entries = []
     counters = {"platform_corrected": 0}
+    listed_links = set()
 
     def collect(plat_list):
         nonlocal listed
@@ -2136,13 +2212,23 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
                     continue
                 listed += 1
                 sig = by_url.get(post.get("link"))
+                if sig is None and isinstance(post.get("link"), str) and post.get("link"):
+                    # The writer spelled the URL differently (scheme, www, trailing slash, tracking query): the same stored post, found by its
+                    # canonical source id and shown with ITS stored URL. A link that matches no retrieved post stays unverifiable.
+                    sig = by_source.get(platforms.source_id({"post_url": post["link"]}) or "\x00")
+                    if sig is not None:
+                        post = dict(post, link=sig["post_url"])
                 if sig is None:
                     excluded["unverifiable"] += 1
+                    excluded_posts.append({"link": str(post.get("link") or "")[:300], "reason": "unverifiable",
+                                           "title": str(post.get("title") or "")[:200], "title_source": "model"})
                     continue
+                listed_links.add(sig["post_url"])
                 keys = {rules_for(sig).source_id(sig), _fingerprint(sig)}
                 if keys & seen:
                     excluded["duplicate"] += 1
-                    excluded_posts.append({"link": sig["post_url"], "reason": "duplicate"})
+                    excluded_posts.append({"link": sig["post_url"], "reason": "duplicate", "title": str(sig.get("title") or "")[:200],
+                                           "platform": platform_of(sig)})
                     continue
                 seen.update(keys)
                 position = global_pos.get(sig["post_url"])
@@ -2162,7 +2248,8 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
                 labels = classify_post(sig, post, terms, icp, identity)
                 if labels.pop("_exclude"):
                     excluded["irrelevant"] += 1
-                    excluded_posts.append({"link": sig["post_url"], "reason": "not relevant"})
+                    excluded_posts.append({"link": sig["post_url"], "reason": "not relevant", "title": str(sig.get("title") or "")[:200],
+                                           "platform": platform_of(sig)})
                     continue
                 new = dict(post, **labels)
                 when = timerange.post_published_at(sig)       # the validated PUBLICATION time (never scan/ingestion time)
@@ -2312,6 +2399,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
             "suggested_actions": [],
             "counts": counts,
             "excluded_posts": excluded_posts,
+            **_reconciled_fields(sigs, listed, rows, excluded, listed_links, excluded_posts, terms, icp),
             "time_scope": _time_scope_summary(rows, window, time_scope),     # (Phase 2.2) the period searched, even with nothing to show
         }
 
@@ -2368,6 +2456,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
                       "analysis_unverified": len(verified_rows) - len(analysis_ok)}
     data["analysis_check"] = analysis_check
     data["excluded_posts"] = excluded_posts
+    data.update(_reconciled_fields(sigs, listed, rows, excluded, listed_links, excluded_posts, terms, icp))
     data["verified_summary"] = verified_summary(counts, analysis_check, time_out)
     return data
 
