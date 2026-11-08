@@ -91,7 +91,7 @@ from logics import platform_display_value   # (PLATFORM PERSISTENCE)
 from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
 from logics import enrich_no_results_answer   # (NO-RESULTS UI)
 from logics import freshness_enabled, enrich_freshness_answer   # (FRESHNESS DISCLOSURE)
-from logics import enrich_signal_report, result_coverage_if_enabled, zero_result_coverage_for, enrich_search_mode, search_mode_scope   # (SIGNAL INTELLIGENCE)
+from logics import enrich_signal_report, result_coverage_if_enabled, zero_result_coverage_for, enrich_search_mode, search_mode_scope, enrich_search_coverage   # (SIGNAL INTELLIGENCE)
 import search_modes   # (SEARCH MODES) pure: mode normalisation, canonical URLs, merge, provenance
 import signal_intel   # (GENERAL DISCOVERY) pure detector; not part of the stubbed `flintel` module
 from logics import hackernews_only, hackernews_note   # (HACKER NEWS) no collector job for HN alone; honest per-platform status line
@@ -3722,6 +3722,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         coverage=result_coverage_if_enabled(msg, results_to_save, chat_id))
                 if full_answer and _mode_info:      # (SEARCH MODES) which paths ran, what each found, provenance counts
                     full_answer = enrich_search_mode(full_answer, _mode_info, results_to_save)
+                    full_answer = enrich_search_coverage(full_answer, msg, _mode_info, results_to_save, chat_id, bool(scan_timed_out))   # (SEARCH COVERAGE) period, sources, one set of counts
             except Exception as exc:
                 try:
                     answer_integrity.reset_request_kind(_kind_token)
