@@ -559,20 +559,78 @@ def _day_part(t, ref, tz, tz_name, today):
 
 
 # 4) "last 2 hours", "past 24 hours", "in the last minute", "since 3 hours ago", "within the past week"
-def _rolling(t, ref, tz_name):
-    m = re.search(r"\b(?:in |within |over |during )?(?:the )?(?:last|past|previous|recent)\s+(?:" + _NUM_RE + r"\s+)?"
-                  + _UNIT_RE + r"\b", t)
-    if not m:
+_LONG_UNIT_RE = r"(?P<unit>seconds?|secs?|minutes?|mins?|hours?|hrs?|days?|weeks?|wks?|months?|years?|yrs?|d|w)"
+_LONG_UNIT_SECONDS = {"month": 30 * 86400, "mo": 30 * 86400, "year": 365 * 86400, "yr": 365 * 86400}
+
+
+def _unit_seconds_long(unit: str) -> int:
+    """Seconds in one `unit`, including months (30 days) and years (365 days) for ROLLING lookbacks ("last 3 months")."""
+    u = (unit or "").lower()
+    for prefix, secs in _LONG_UNIT_SECONDS.items():
+        if u.startswith(prefix):
+            return secs
+    return _unit_seconds(u)
+
+
+def _rolling_candidates(t):
+    """Every rolling-lookback phrase in the text as (start_pos, phrase, n, unit): "the last 30 days", "past 3 months", "30-day window", "last 30d",
+    "past month". A bare "last month" / "previous month" / "last year" is NOT here: those name a calendar period (see _week_month)."""
+    out = []
+    for m in re.finditer(r"\b(?:in |within |over |during |for )?(?:the )?(?P<lead>last|past|previous|recent)\s+(?:" + _NUM_RE + r"[\s-]*)?"
+                         + _LONG_UNIT_RE + r"\b", t):
+        unit, num, lead = m.group("unit").lower(), m.group("num"), m.group("lead")
+        long_unit = unit.startswith(("month", "year", "yr"))
+        if long_unit and not num and lead != "past":
+            continue                                   # "last month" / "last year": a calendar period, handled elsewhere
+        if unit in ("d", "w") and not num:
+            continue
+        out.append((m.start(), m.group(0).strip(), _num(num) if num else 1, unit))
+    for m in re.finditer(r"\b(?:in |within |over |during |for )?(?:the )?(?P<num>\d{1,4})\s*-\s*(?P<unit>day|week|month|year)s?\b", t):
+        out.append((m.start(), m.group(0).strip(), int(m.group("num")), m.group("unit")))
+    for m in re.finditer(r"\b(?P<num>\d{1,4})\s+(?P<unit>day|week|month|year)s?\s+(?:period|window|range|timeframe|time frame|lookback)\b", t):
+        out.append((m.start(), m.group(0).strip(), int(m.group("num")), m.group("unit")))
+    if not out:
         m = re.search(r"\bsince\s+" + _NUM_RE + r"\s+" + _UNIT_RE + r"\s+ago\b", t)
-    if not m:
+        if m:
+            out.append((m.start(), m.group(0).strip(), _num(m.group("num")) if m.group("num") else 1, m.group("unit").lower()))
+    return out
+
+
+def _rolling(t, ref, tz_name):
+    cands = []
+    for _pos, phrase, n, unit in _rolling_candidates(t):
+        secs = _unit_seconds_long(unit)
+        if n and secs:
+            cands.append((n * secs, phrase, n, secs))
+    if not cands:
         return None
-    n = _num(m.group("num")) if m.group("num") else 1
-    secs = _unit_seconds(m.group("unit"))
-    if not n or not secs:
-        return None
-    start = ref - timedelta(seconds=n * secs)
-    return TimeRange(start=start, end=ref, tz_name=tz_name, kind="rolling", phrase=m.group(0).strip(),
-                     note=f"Rolling window: the {_unit_name(secs, n)} before this search.")
+    # Several lookbacks in one request ("the last 24 hours ... the last 30 days"): never silently keep the first / shortest. The LONGEST wins, and
+    # the note says that more than one was mentioned.
+    total, phrase, n, secs = max(cands, key=lambda c: c[0])
+    start = ref - timedelta(seconds=total)
+    long_note = ""
+    distinct = sorted({c[0] for c in cands})
+    if len(distinct) > 1:
+        long_note = " Several periods were mentioned (" + ", ".join(sorted({c[1] for c in cands})) + "); the longest was used."
+    if secs >= 30 * 86400:
+        days = total // 86400
+        label = f"{days} days"
+    else:
+        label = _unit_name(secs, n)
+    return TimeRange(start=start, end=ref, tz_name=tz_name, kind="rolling", phrase=phrase,
+                     note=f"Rolling window: the {label} before this search." + long_note)
+
+
+_PERIOD_WORDS = re.compile(
+    r"\b(?:(?:last|past|previous|recent|this|next)\s+(?:[\w-]+\s+){0,2}(?:seconds?|minutes?|hours?|days?|weeks?|months?|years?|d|w)\b|"
+    r"\d{1,4}\s*-?\s*(?:days?|weeks?|months?|years?)\b|since\b|between\b[^.]{0,40}\band\b|yesterday|today|tonight|"
+    r"(?:in|during|within|over)\s+(?:the\s+)?(?:last|past)\b)", re.I)
+
+
+def mentions_period(text) -> bool:
+    """True when the user's own words name a period of time ("last 30 days", "past month", "30-day window", "since Monday", "yesterday"), whether or not
+    parse_time_range could turn it into a range. Used so that an AUTOMATIC window is never substituted for a period the user stated."""
+    return bool(isinstance(text, str) and _PERIOD_WORDS.search(text))
 
 
 # 5) "3 hours ago", "1 minute ago", "2 weeks ago" (days are calendar days — see _single_day)
