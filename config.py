@@ -137,6 +137,7 @@ __all__ = [
     # Claude analysis layer config (v4)
     "CLAUDE_MAX_TOKENS",
     "CLAUDE_MAP_MAX_TOKENS",
+    "CLAUDE_MAP_CONCURRENCY",
     "CLAUDE_POSTS_PER_CHUNK",
     "CLAUDE_TIMEOUT_SECONDS",
     "CLAUDE_NOTES_PER_CHUNK",
@@ -397,6 +398,12 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 # ── Claude analysis layer config (v4) ────────────────────────────────────
 CLAUDE_MAX_TOKENS       = int(os.getenv("CLAUDE_MAX_TOKENS", "2500"))
 CLAUDE_MAP_MAX_TOKENS   = int(os.getenv("CLAUDE_MAP_MAX_TOKENS", "512"))
+# Concurrent map-step / notes-condense calls (each is one model request over a batch of posts). They were strictly sequential: 1000 posts at 12 per batch is
+# 84 requests one after another. 1 restores that behaviour. Order of results is preserved; a failed batch is retried once and any that still fail are reported.
+try:
+    CLAUDE_MAP_CONCURRENCY = max(1, min(16, int(os.getenv("CLAUDE_MAP_CONCURRENCY", "4"))))
+except ValueError:
+    CLAUDE_MAP_CONCURRENCY = 4
 CLAUDE_POSTS_PER_CHUNK  = int(os.getenv("CLAUDE_POSTS_PER_CHUNK", "12"))
 CLAUDE_TIMEOUT_SECONDS  = float(os.getenv("CLAUDE_TIMEOUT_SECONDS", "60"))
 CLAUDE_NOTES_PER_CHUNK  = int(os.getenv("CLAUDE_NOTES_PER_CHUNK", "8"))
