@@ -174,7 +174,7 @@ from config import (
     CLAUDE_API_URL, CLAUDE_API_VERSION,
     LLM_MODEL, LLM_REASONING_EFFORT, LLM_REASONING_HEADROOM, LLM_VERBOSITY,
     OPENAI_RESPONSES_URL,
-    CLAUDE_MAX_TOKENS, CLAUDE_MAP_MAX_TOKENS,
+    CLAUDE_MAX_TOKENS, CLAUDE_MAP_MAX_TOKENS, CLAUDE_MAP_CONCURRENCY,
     CLAUDE_POSTS_PER_CHUNK, CLAUDE_NOTES_PER_CHUNK, CLAUDE_TIMEOUT_SECONDS,
     CLAUDE_ROUTER_MAX_TOKENS, CLAUDE_TOPIC_RESOLVER_MAX_TOKENS,
     MAX_WEBSITE_KEYWORDS, WEBSITE_FETCH_TIMEOUT_SECONDS,
@@ -1685,11 +1685,7 @@ def _signal_platform_matches(doc: dict, targeting_platform: str) -> bool:
     if not allowed:
         return True  # unrecognized targeting value -> don't accidentally exclude everything
 
-    doc_platform = _first_present(doc, _PLATFORM_FIELD_CANDIDATES)
-    if not doc_platform or not isinstance(doc_platform, str):
-        # No platform field on this doc — fall back to guessing from its
-        # URL rather than excluding it outright.
-        doc_platform = _infer_platform_from_url(_first_present(doc, _URL_FIELD_CANDIDATES))
+    doc_platform = _resolve_platform(_first_present(doc, _PLATFORM_FIELD_CANDIDATES), _first_present(doc, _URL_FIELD_CANDIDATES))
     if not doc_platform:
         return False
 
@@ -1828,6 +1824,16 @@ def _text_matches_any_phrase(text: str, phrases: list, loose: bool = False) -> b
     if not text or not phrases:
         return False
     return any(_phrase_matches_text(phrase, text, loose=loose) for phrase in phrases)
+
+
+def _resolve_platform(stored, url):
+    """The platform of a retrieved record: the HOST of its URL when that names a known platform, else the stored label, else None.
+    (PLATFORM TRUTH) The stored label used to win and the URL was only a fallback, so a record filed under the wrong platform kept the wrong
+    name all the way to the report. Returns the token this module has always used for X ("twitter")."""
+    key = platforms.url_platform(url) if isinstance(url, str) and url else None
+    if key:
+        return "twitter" if key == "x_twitter" else key
+    return stored if isinstance(stored, str) and stored.strip() else None
 
 
 def _infer_platform_from_url(url: str):
@@ -4154,10 +4160,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 continue
 
             post_url = _first_present(doc, _URL_FIELD_CANDIDATES)
-            platform = (
-                _first_present(doc, _PLATFORM_FIELD_CANDIDATES)
-                or _infer_platform_from_url(post_url)
-            )
+            platform = _resolve_platform(_first_present(doc, _PLATFORM_FIELD_CANDIDATES), post_url)
 
             if not title and not post_text and not post_url:
                 continue
@@ -4242,7 +4245,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 continue
 
             post_url  = _first_present(doc, _URL_FIELD_CANDIDATES)
-            platform  = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
+            platform  = _resolve_platform(_first_present(doc, _PLATFORM_FIELD_CANDIDATES), post_url)
 
             if not title and not post_text and not post_url:
                 continue
@@ -6034,6 +6037,49 @@ def _condense_notes_chunk(query: str, notes_chunk: list) -> str:
     return _call_claude(CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_MAP_MAX_TOKENS)
 
 
+def _concurrent_calls(fn, arg_list, what="step"):
+    """(PERFORMANCE) Runs fn(*args) for every args tuple with at most CLAUDE_MAP_CONCURRENCY calls in flight, and returns (results, failed).
+    Results are in INPUT order (None for a call that failed twice), so the notes reach the final reduce in the same order as a sequential
+    run. A call that raises is retried once, sequentially, after the parallel pass, so a burst of rate-limit errors does not drop coverage;
+    `failed` counts the calls that still failed. CLAUDE_MAP_CONCURRENCY=1 is exactly the previous sequential behaviour (without the retry).
+    Each worker runs in a copy of the caller's contextvars, so request-scoped context is still visible."""
+    n = len(arg_list)
+    workers = max(1, min(int(CLAUDE_MAP_CONCURRENCY or 1), n))
+    results = [None] * n
+
+    def one(i):
+        try:
+            return fn(*arg_list[i]), None
+        except Exception as exc:
+            return None, exc
+
+    if workers == 1:
+        outs = [one(i) for i in range(n)]
+    else:
+        import contextvars
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex:
+            futs = [ex.submit(contextvars.copy_context().run, one, i) for i in range(n)]
+            outs = [f.result() for f in futs]
+    failed_first = []
+    for i, (val, exc) in enumerate(outs):
+        if exc is None:
+            results[i] = val
+        else:
+            log.warning(f"Claude {what} call {i + 1}/{n} failed (will retry once): {exc}")
+            failed_first.append(i)
+    failed = 0
+    if workers > 1:
+        for i in failed_first:
+            try:
+                results[i] = fn(*arg_list[i])
+            except Exception as exc:
+                log.warning(f"Claude {what} call {i + 1}/{n} failed again (skipped): {exc}")
+                failed += 1
+    else:
+        failed = len(failed_first)
+    return results, failed
+
+
 def _notes_unavailable_user_message(query: str) -> str:
     """(EMPTY-NOTES GROUNDING FIX) Shared user-message text for the case
     where posts were retrieved but every map/condense step failed or
@@ -6111,7 +6157,7 @@ def _records_mac(payload: dict) -> str:
     return hmac.new(_POST_RECORDS_KEY, body, hashlib.sha256).hexdigest()
 
 
-def _with_server_fields(answer_text, records: dict = None):
+def _with_server_fields(answer_text, records: dict = None, coverage: dict = None):
     """The final analysis JSON with any model-written "_post_records" removed
     and, for a listed-posts answer, the server's signed records added."""
     if not isinstance(answer_text, str):
@@ -6126,10 +6172,14 @@ def _with_server_fields(answer_text, records: dict = None):
     if not isinstance(data, dict):
         return answer_text
     had = data.pop(_POST_RECORDS_FIELD, None) is not None
+    partial = bool(isinstance(coverage, dict) and coverage.get("failed_batches") and data.get("format") not in _NO_DATA_CLAUDE_FORMATS)
+    if partial:      # (PARTIAL RESULTS) some posts could not be analysed: the answer says so instead of passing for complete
+        data["analysis_coverage"] = {"batches": int(coverage.get("batches") or 0), "failed_batches": int(coverage["failed_batches"]),
+                                     "posts": int(coverage.get("posts") or 0)}
     if records and data.get("format") in ("source_list", "comparison"):
         payload = {str(n): r for n, r in sorted(records.items())}
         data[_POST_RECORDS_FIELD] = {"records": payload, "mac": _records_mac(payload)}
-    elif not had:
+    elif not had and not partial:
         return answer_text
     return json.dumps(data, ensure_ascii=False)
 
@@ -6232,16 +6282,15 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     # posts here; the kept ones travel to the final answer, signed.
     fingerprints = {p["_n"]: answer_integrity.post_fingerprint(p.get("title"), p.get("text")) for p in numbered}
     notes, records = [], {}
-    for chunk in chunks:
-        try:
-            note = _map_chunk(query, chunk)
-        except Exception as exc:
-            log.warning(f"Claude map-step failed for a chunk (skipping chunk): {exc}")
-            continue
+    map_results, map_failed = _concurrent_calls(_map_chunk, [(query, c) for c in chunks], "map-step")
+    for chunk, note in zip(chunks, map_results):
+        if note is None:
+            continue                                # failed twice: skipped, and counted in `coverage` below
         note, found = _split_map_reply(note, chunk, fingerprints)
         records.update(found)                       # chunks are disjoint: one record per post at most
         if note:
             notes.append(note)
+    coverage = {"batches": len(chunks), "failed_batches": map_failed, "posts": len(posts)}
 
     # (BUGFIX PACK #3 — 2ND-LEVEL CHUNKING) If the number of condensed
     # first-level notes itself is large enough that combining them all in
@@ -6253,17 +6302,12 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     # identical to before this bugfix pack.
     if len(notes) > CLAUDE_NOTES_PER_CHUNK:
         note_chunks = chunk_list(notes, CLAUDE_NOTES_PER_CHUNK)
-        condensed_notes = []
-        for note_chunk in note_chunks:
-            try:
-                condensed = _condense_notes_chunk(query, note_chunk)
-            except Exception as exc:
-                log.warning(f"Claude notes-condense step failed for a batch (skipping batch): {exc}")
-                continue
-            if condensed:
-                condensed_notes.append(condensed)
+        cond_results, cond_failed = _concurrent_calls(_condense_notes_chunk, [(query, nc) for nc in note_chunks], "notes-condense")
+        condensed_notes = [c for c in cond_results if c]
         if condensed_notes:
             notes = condensed_notes
+        coverage["failed_batches"] += cond_failed
+        coverage["batches"] += len(note_chunks)        # map batches + condense batches, so failed_batches can never exceed batches
 
     # (EMPTY-NOTES GROUNDING FIX) If every map/condense step failed or
     # returned empty, do NOT call Claude with "(no grounded points
@@ -6294,7 +6338,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     if extra_context:
         user_message += "\n\n" + extra_context
     return _with_server_fields(_extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True)),
-                               records)
+                               records, coverage)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -6455,27 +6499,13 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
     # Map step + optional 2nd-level note chunking: identical logic to
     # analyze_with_claude(), still blocking (never shown to the user
     # directly) — only the final call below streams.
-    notes = []
-    for chunk in chunks:
-        try:
-            note = _map_chunk(query, chunk)
-        except Exception as exc:
-            log.warning(f"Claude map-step failed for a chunk (skipping chunk): {exc}")
-            continue
-        if note:
-            notes.append(note)
+    map_results, _map_failed = _concurrent_calls(_map_chunk, [(query, c) for c in chunks], "map-step")
+    notes = [note for note in map_results if note]
 
     if len(notes) > CLAUDE_NOTES_PER_CHUNK:
         note_chunks = chunk_list(notes, CLAUDE_NOTES_PER_CHUNK)
-        condensed_notes = []
-        for note_chunk in note_chunks:
-            try:
-                condensed = _condense_notes_chunk(query, note_chunk)
-            except Exception as exc:
-                log.warning(f"Claude notes-condense step failed for a batch (skipping batch): {exc}")
-                continue
-            if condensed:
-                condensed_notes.append(condensed)
+        cond_results, _cond_failed = _concurrent_calls(_condense_notes_chunk, [(query, nc) for nc in note_chunks], "notes-condense")
+        condensed_notes = [c for c in cond_results if c]
         if condensed_notes:
             notes = condensed_notes
 
@@ -7241,7 +7271,7 @@ def literal_mention_matcher(subject):
                     continue
                 if url:
                     seen.add(url)
-                platform = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(url)
+                platform = _resolve_platform(_first_present(doc, _PLATFORM_FIELD_CANDIDATES), url)
                 found.append((doc.get("created_utc"), timerange.with_published_at(
                     {"title": title, "post_text": text, "post_url": url, "platform": platform,
                      "subreddit": _signal_subreddit(doc, url)}, doc)))
@@ -10107,7 +10137,7 @@ _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 # (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
 # made only of these renders as an EMPTY answer on the page.
 _ANSWER_META_KEYS = {"search_mode", "format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness", "time_scope",
-                     "signal_report"}
+                     "signal_report", "analysis_coverage"}
 
 
 
@@ -10912,7 +10942,7 @@ def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str, qu
                     new["url"] = url or ""
                 if pos is not None:
                     new["index"] = pos
-                platform = (sig.get("platform") or _infer_platform_from_url(url) or "")
+                platform = (_resolve_platform(sig.get("platform"), url) or "")
                 if str(platform).strip().lower() == "reddit":
                     sub = _normalize_subreddit(sig.get("subreddit")) or _subreddit_from_url(url)
                     if sub:
@@ -11145,7 +11175,7 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=
                 if post_url:
                     _set(post, "link", post_url)
 
-                platform = (match.get("platform") or _infer_platform_from_url(post_url) or "")
+                platform = (_resolve_platform(match.get("platform"), post_url) or "")
                 if str(platform).strip().lower() == "reddit":
                     sub = _normalize_subreddit(match.get("subreddit")) or _subreddit_from_url(post_url)
                     if sub:
