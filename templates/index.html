@@ -852,6 +852,34 @@
   .answer-rendered .ap-table th { white-space: nowrap; word-break: normal; overflow-wrap: normal; }
   .answer-rendered .ap-sources-table { min-width: 640px; }
   .answer-rendered .ap-sources-table td:first-child, .answer-rendered .ap-sources-table th:first-child { width: 36px; }
+  .answer-rendered .ap-kv { display: flex; gap: 8px; margin: 0 0 4px 0; font-size: 13px; line-height: 1.45; }
+  .answer-rendered .ap-kv .ap-k { flex: 0 0 auto; min-width: 84px; color: #7a7a77; }
+  .answer-rendered .ap-kv .ap-v { min-width: 0; overflow-wrap: anywhere; color: #e8e7e4; }
+  .answer-rendered .ap-kv.ap-post-note .ap-v { color: #a8a8a5; }
+  .answer-rendered .ap-evkind { display: inline-block; margin: 0 0 4px 0; padding: 1px 7px; border: 1px solid #3d3d3b; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: .03em; color: #a8a8a5; }
+  .answer-rendered .ap-evkind.exact_quote { color: #C1FB3B; border-color: rgba(193,251,59,.45); }
+  .answer-rendered .ap-sources-table td { min-width: 150px; }
+  .answer-rendered .ap-sources-table td:first-child { min-width: 0; }
+  .answer-rendered .search-coverage { margin: 14px 0 0 0; padding: 12px 14px; border: 1px solid #3d3d3b; border-radius: 10px; font-size: 14px; }
+  .answer-rendered .search-coverage .sc-title { margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #c9c8c5; }
+  .answer-rendered .search-coverage .sc-row .ap-k { min-width: 120px; }
+  .answer-rendered .search-coverage .sc-warn .ap-v { color: #f0b44c; }
+  .answer-rendered .search-coverage .sc-unavailable .ap-v { color: #E2645A; }
+  .answer-rendered .search-coverage .sc-not_searched .ap-v { color: #a8a8a5; }
+  .answer-rendered .search-coverage .sc-failed .ap-v, .answer-rendered .search-coverage .sc-unavailable .ap-v, .answer-rendered .search-coverage .sc-partial .ap-v, .answer-rendered .search-coverage .sc-unconfirmed .ap-v { color: #d9a441; }
+  .answer-rendered .ap-omitted { margin: 0 0 14px 0; font-size: 13px; color: #a8a8a5; }
+  .answer-rendered .ap-omitted summary { cursor: pointer; color: #c9c8c5; }
+  .answer-rendered .ap-omitted ul { margin: 6px 0 0 0; padding: 0 0 0 18px; }
+  @media (max-width: 720px) {
+    .answer-rendered .ap-sources-table { min-width: 0; }
+    .answer-rendered .ap-sources-table thead { display: none; }
+    .answer-rendered .ap-sources-table, .answer-rendered .ap-sources-table tbody { display: block; }
+    .answer-rendered .ap-sources-table tr { display: block; margin: 0 0 12px 0; padding: 8px 10px; border: 1px solid #2f2e2c; border-radius: 10px; }
+    .answer-rendered .ap-sources-table td { display: block; min-width: 0; width: auto; padding: 6px 0; border: 0; }
+    .answer-rendered .ap-sources-table td::before { content: attr(data-label); display: block; margin: 0 0 2px 0; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: #7a7a77; }
+    .answer-rendered .ap-sources-table td:first-child { width: auto; }
+    .answer-rendered .search-coverage .ap-kv { flex-direction: column; gap: 0; }
+  }
   .answer-rendered .ap-source-counts { color: rgba(255,255,255,0.55); font-size: 14px; line-height: 20px; margin-bottom: 12px; }
   .answer-rendered .ap-evidence { color: rgba(255,255,255,0.78); font-style: italic; margin-top: 6px; }
   .answer-rendered .ap-post-note { color: rgba(255,255,255,0.5); font-size: 13px; line-height: 18px; margin-top: 4px; }
@@ -2862,8 +2890,9 @@
     const tbody = document.createElement('tbody');
     rows.forEach((cells) => {
       const tr = document.createElement('tr');
-      cells.forEach((cell) => {
+      cells.forEach((cell, ci) => {
         const td = document.createElement('td');
+        td.setAttribute('data-label', headers[ci] || '');
         if (cell instanceof Node) td.appendChild(cell);
         else if (cell != null) apInline(td, cell);
         tr.appendChild(td);
@@ -2928,6 +2957,27 @@
   }
   const AP_ROLE_LABELS = { buyer: 'Prospective buyer', discussion: 'Discussion', competitor_promo: 'Competitor promotion', testimonial: 'Testimonial' };
   const AP_STATUS_LABELS = { verified: 'verified', unverified: 'unverified', inaccessible: 'inaccessible', removed: 'removed' };
+  const AP_PURCHASE_LABELS = { explicit: 'Explicit purchase step stated', research: 'Researching / asking for options', none: 'No purchase intent', unknown: 'Unknown' };
+  const AP_FIT_LABELS = { fits: 'Fits the request', partial: 'Partly fits', uncertain: 'Relevance unconfirmed', unrelated: 'Unrelated', unknown: 'Unknown' };
+  const AP_EVIDENCE_KINDS = {
+    exact_quote: 'Exact quote · verified in the original post',
+    source_excerpt: 'Excerpt from the original post · not a model quote'
+  };
+  // One labelled line: used inside table cells so every field sits under its heading with its own name.
+  function apKV(parent, label, value, cls) {
+    const d = parent.appendChild(document.createElement('div'));
+    d.className = 'ap-kv' + (cls ? ' ' + cls : '');
+    const k = d.appendChild(document.createElement('span')); k.className = 'ap-k'; k.textContent = label;
+    const v = d.appendChild(document.createElement('span')); v.className = 'ap-v';
+    if (value instanceof Node) v.appendChild(value); else v.textContent = value;
+    return d;
+  }
+  function apEvidenceKind(post) {
+    if (post.evidence_kind && AP_EVIDENCE_KINDS[post.evidence_kind]) return post.evidence_kind;
+    if (post.evidence_source === 'excerpt') return 'source_excerpt';          // older saved answers
+    if (post.evidence_source === 'model_quote') return 'exact_quote';
+    return null;
+  }
   // (RECENCY) A publication date is an instant in UTC. It is always shown as a UTC calendar date, labelled UTC, so a post
   // made at 23:30 UTC is never moved to another day by the viewer's local zone. '' when the date is missing or unreadable.
   function formatPostedDate(raw) {
@@ -3025,9 +3075,11 @@
     const postedText = (post) => formatPostedDate(post && post.published_at);
     // the column also appears when a row is known to be undated, so an unknown date is stated, not hidden
     const anyPosted = groups.some((p) => p.posts.some((x) => postedText(x) || (x && x.date_status === 'undated')));
-    const headers = ['#', multi ? 'Source' : (groups[0].community_label || (normalizePlatform(groups[0].platform) === 'reddit' ? 'Subreddit' : 'Source')), 'Post', 'Summary'];
+    const headers = ['#', multi ? 'Source' : (groups[0].community_label || (normalizePlatform(groups[0].platform) === 'reddit' ? 'Subreddit' : 'Source')), 'Post'];
+    // One schema per table: lead answers always carry Evidence / Assessment / Source check (whatever a given row lacks reads "not available"),
+    // so every row has the same cells under the same headings.
+    if (anyIntent) headers.push('Evidence', 'Assessment', 'Source check'); else headers.push('Summary');
     if (anyOffer) headers.push('Offer');
-    if (anyIntent) headers.push('Intent');
     if (anyPosted) headers.push('Posted');
     if (anySentiment) headers.push('Sentiment');
     const rows = [];
@@ -3042,7 +3094,7 @@
         const source = label ? (multi ? `${label} (${pname})` : label) : pname;      // a post always shows where it is from, never a blank Source cell
         let postCell;
         const titleText = post.title || '';
-        if (post.link) {
+        if (typeof post.link === 'string' && /^https?:\/\//i.test(post.link)) {            // only web links become anchors (never javascript: / data:)
           const a = document.createElement('a');
           a.href = post.link; a.target = '_blank'; a.rel = 'noopener noreferrer';
           a.textContent = titleText || 'View post';
@@ -3052,24 +3104,59 @@
         }
         let summary = post.summary || '';
         if (post.google_rank) summary = (summary ? summary + ' · ' : '') + `Google rank #${post.google_rank}`;
-        let summaryCell = summary;
-        const notes = [post.intent_reason].concat(Array.isArray(post.uncertainty) ? post.uncertainty : []).filter((t) => typeof t === 'string' && t);
-        if (post.evidence || notes.length) {
-          summaryCell = document.createElement('div');
-          apInline(summaryCell.appendChild(document.createElement('div')), summary);
-          if (post.evidence) {
-            const q = summaryCell.appendChild(document.createElement('div'));
-            q.className = 'ap-evidence';
-            q.textContent = `\u201C${post.evidence}\u201D`;
-          }
-          if (notes.length) {
-            const note = summaryCell.appendChild(document.createElement('div'));
-            note.className = 'ap-post-note';
-            note.textContent = notes.join(' ');
-          }
-        }
         const num = Number.isInteger(post.index) && post.index > 0 ? post.index : n;
-        const row = [String(num), source, postCell, summaryCell];
+        const row = [String(num), source, postCell];
+        if (anyIntent) {
+          // EVIDENCE: what the author actually wrote (exact quote or an excerpt, never a paraphrase), then the AI summary, kept apart and labelled.
+          const ev = document.createElement('div');
+          const kind = apEvidenceKind(post);
+          if (post.evidence) {
+            const tag = ev.appendChild(document.createElement('div'));
+            tag.className = 'ap-evkind ' + (kind || '');
+            tag.textContent = kind ? AP_EVIDENCE_KINDS[kind] : 'Text from the original post';
+            const q = ev.appendChild(document.createElement('div'));
+            q.className = 'ap-evidence';
+            q.textContent = `“${post.evidence}”`;
+          } else {
+            apKV(ev, 'Evidence', 'None available from the original post');
+          }
+          if (summary && summary !== 'Summary unavailable') apKV(ev, 'AI summary', summary, 'ap-summary');
+          row.push(ev);
+          // ASSESSMENT: each dimension on its own labelled line; the reasoning is an inference, and says so.
+          const as = document.createElement('div');
+          apKV(as, 'Intent', post.intent || 'Not rated');
+          apKV(as, 'Role', AP_ROLE_LABELS[post.role] || 'Not classified');
+          apKV(as, 'Purchase', AP_PURCHASE_LABELS[post.purchase_intent] || 'Unknown');
+          apKV(as, 'Fit', AP_FIT_LABELS[post.product_fit] || 'Unknown');
+          if (post.intent_reason) apKV(as, 'Why (inference)', post.intent_reason, 'ap-post-note');
+          row.push(as);
+          // SOURCE CHECK: was the post itself retrieved and read, and was the analysis proven to be about it.
+          const sc = document.createElement('div');
+          apKV(sc, 'Source', AP_STATUS_LABELS[post.verification_status] || 'unknown');
+          apKV(sc, 'Analysis', post.analysis_verified === true ? 'matched to this post' : (post.analysis_verified === false ? 'not verified for this post' : 'not applicable'));
+          apKV(sc, 'Relevance', post.relevance || 'unknown');
+          const notes = Array.isArray(post.uncertainty) ? post.uncertainty.filter((t) => typeof t === 'string' && t) : [];
+          if (notes.length) apKV(sc, 'Unknown', notes.join(' '), 'ap-post-note');
+          row.push(sc);
+        } else {
+          const notes = [post.intent_reason].concat(Array.isArray(post.uncertainty) ? post.uncertainty : []).filter((t) => typeof t === 'string' && t);
+          let summaryCell = summary;
+          if (post.evidence || notes.length) {
+            summaryCell = document.createElement('div');
+            apInline(summaryCell.appendChild(document.createElement('div')), summary);
+            if (post.evidence) {
+              const q = summaryCell.appendChild(document.createElement('div'));
+              q.className = 'ap-evidence';
+              q.textContent = `“${post.evidence}”`;
+            }
+            if (notes.length) {
+              const note = summaryCell.appendChild(document.createElement('div'));
+              note.className = 'ap-post-note';
+              note.textContent = notes.join(' ');
+            }
+          }
+          row.push(summaryCell);
+        }
         if (anyOffer) {
           const cell = document.createElement('div');
           const o = post.offer && typeof post.offer === 'object' ? post.offer : {};
@@ -3078,14 +3165,14 @@
             d.textContent = `${label}: ${value}`;
             return d;
           };
-          line('Price', Array.isArray(o.price) && o.price.length ? o.price.join(' \u00B7 ') : 'not stated in the post');
-          if (Array.isArray(o.availability) && o.availability.length) line('Availability', o.availability.join(' \u00B7 '));
+          line('Price', Array.isArray(o.price) && o.price.length ? o.price.join(' · ') : 'not stated in the post');
+          if (Array.isArray(o.availability) && o.availability.length) line('Availability', o.availability.join(' · '));
           const links = (Array.isArray(o.links) ? o.links : []).filter((u) => typeof u === 'string' && /^https?:\/\//i.test(u));
           if (links.length) {
             const d = cell.appendChild(document.createElement('div'));
             d.appendChild(document.createTextNode('Links in the post: '));
             links.forEach((u, i) => {
-              if (i) d.appendChild(document.createTextNode(' \u00B7 '));
+              if (i) d.appendChild(document.createTextNode(' · '));
               const a = document.createElement('a');
               a.href = u; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow';
               a.textContent = u.replace(/^https?:\/\//i, '');
@@ -3095,15 +3182,6 @@
           const how = cell.appendChild(document.createElement('div'));
           how.className = 'ap-post-note';
           how.textContent = typeof o.how_to_reach === 'string' ? o.how_to_reach : '';
-          row.push(cell);
-        }
-        if (anyIntent) {
-          // Overall rating, then each dimension on its own: purchase intent, fit, source.
-          const cell = document.createElement('div');
-          cell.appendChild(document.createElement('div')).textContent = [post.intent, AP_ROLE_LABELS[post.role]].filter(Boolean).join(' · ');
-          const dims = cell.appendChild(document.createElement('div'));
-          dims.className = 'ap-post-note';
-          dims.textContent = `Purchase: ${post.purchase_intent || 'unknown'} · Fit: ${post.product_fit || 'unknown'} · Source: ${AP_STATUS_LABELS[post.verification_status] || 'unknown'}`;
           row.push(cell);
         }
         if (anyPosted) row.push(postedText(post) || 'Date unknown');
@@ -3132,6 +3210,7 @@
     apPendingTimeScope = data.time_scope;
     apSourcesTable(data.platforms, container, 'Source posts', data.counts, data.answer_status === 'partial',
       data.answer_status == null || data.answer_status === 'complete');
+    apOmittedLists(data, container);
     apFollowup(data, container);
   }
 
@@ -4485,6 +4564,63 @@
     container.appendChild(box);
   }
 
+  function appendSearchCoverage(data, container) {
+    // (SEARCH COVERAGE) Server-built facts only: what was searched, for which period, what each source did, one set of counts.
+    const c = data && data.search_coverage;
+    if (!c || typeof c !== 'object') return;
+    const box = document.createElement('section');
+    box.className = 'search-coverage';
+    box.setAttribute('aria-label', 'Search coverage');
+    const title = box.appendChild(document.createElement('p')); title.className = 'sc-title'; title.textContent = 'Search coverage';
+    const day = (iso) => { const d = iso ? new Date(iso) : null; return d && !isNaN(d.getTime()) ? d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }) : '?'; };
+    const span = (p) => p ? `${day(p.from)} → ${day(p.to)} (${p.days} day${p.days === 1 ? '' : 's'}, UTC)` : null;
+    const line = (k, v, cls) => { const d = apKV(box, k, v, cls); d.classList.add('sc-row'); return d; };
+    line('Mode', c.mode_label || c.mode || 'unknown');
+    const rq = c.requested_period;
+    line('Period requested', rq ? (rq.interpreted ? `${span(rq)} — “${rq.phrase}”` : 'A period was mentioned but could not be interpreted') : 'None stated');
+    const ap = c.applied_period;
+    const origin = ap ? ({ requested: 'as requested', automatic_recent_window: 'automatic recent window (you gave no period)', automatic_default: 'automatic default for “recent” wording' }[ap.origin] || '') : '';
+    line('Period applied', ap ? `${span(ap)}${origin ? ' — ' + origin : ''}` : 'No date filter');
+    if (c.period_ok === false && c.period_note) line('Warning', c.period_note, 'sc-warn');
+    (Array.isArray(c.sources) ? c.sources : []).forEach((s) => {
+      const st = { searched: 'Searched', partial: 'Partly searched', failed: 'Failed', unavailable: 'Unavailable', unconfirmed: 'Not confirmed', not_searched: 'Not searched' }[s.state] || s.state;
+      line(s.label || s.key, `${st} — ${s.detail || ''}`, 'sc-' + s.state);
+    });
+    const k = c.counts || {};
+    const num = (v) => (v === null || v === undefined) ? 'n/a' : String(v);
+    line('Counts', `Retrieved ${num(k.retrieved)} · Duplicates ${num(k.duplicates)} · Excluded ${num(k.excluded)} · Relevant ${num(k.relevant)} · Displayed ${num(k.displayed)}` +
+      (k.not_listed ? ` · Retrieved but not listed ${num(k.not_listed)}` : ''));
+    line('Retrieval', c.retrieval === 'complete' ? 'Complete' : (c.retrieval === 'partial' ? 'Partial' : 'Unavailable') +
+      (Array.isArray(c.partial_reasons) && c.partial_reasons.length ? ' — ' + c.partial_reasons.join('; ') : ''),
+      c.retrieval === 'complete' ? '' : 'sc-warn');
+    container.appendChild(box);
+  }
+
+  function apOmittedLists(data, container) {
+    // Every retrieved post is accounted for: shown in the table, excluded with its reason, or (if it looks like a request for a solution) listed here.
+    const mk = (summaryText, items, describe) => {
+      if (!Array.isArray(items) || !items.length) return;
+      const det = container.appendChild(document.createElement('details'));
+      det.className = 'ap-omitted';
+      det.appendChild(document.createElement('summary')).textContent = summaryText;
+      const ul = det.appendChild(document.createElement('ul'));
+      items.forEach((it) => {
+        if (!it || typeof it !== 'object') return;
+        const li = ul.appendChild(document.createElement('li'));
+        const t = (it.title || it.link || 'Post').toString().slice(0, 200);
+        if (typeof it.link === 'string' && /^https:\/\//i.test(it.link)) {
+          const a = li.appendChild(document.createElement('a')); a.href = it.link; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow'; a.textContent = t;
+        } else li.appendChild(document.createTextNode(t));
+        const d = describe(it); if (d) li.appendChild(document.createTextNode(' — ' + d));
+      });
+    };
+    const REASONS = { duplicate: 'duplicate of a post already shown', 'not relevant': 'not relevant to the request', unverifiable: 'the link matches no retrieved post, so it could not be verified' };
+    mk(`Retrieved but not listed in the report (${(data.not_listed || []).length})`, data.not_listed,
+       (it) => 'checked by Flintel as a possible request for a solution; the report writer did not list it');
+    mk(`Excluded from the report (${(data.excluded_posts || []).length})`, data.excluded_posts,
+       (it) => (REASONS[it.reason] || it.reason || 'excluded') + (it.title_source === 'model' ? ' (title written by the model)' : ''));
+  }
+
   function appendAnalysisCoverage(data, container) {
     // (PARTIAL RESULTS) the server sets this only when some batches of retrieved posts could not be analysed: never present such an answer as complete.
     const c = data && data.analysis_coverage;
@@ -4598,6 +4734,7 @@
             return;
           }
           if (!answerEmpty) appendAnalysisCoverage(data, renderedEl);   // (PARTIAL RESULTS) first: it qualifies everything below
+          if (!answerEmpty) appendSearchCoverage(data, renderedEl);   // (SEARCH COVERAGE)
           if (!answerEmpty) appendSearchMode(data, renderedEl);
           if (!answerEmpty) appendSignalReport(data, renderedEl);   // (SIGNAL INTELLIGENCE)
           if (!answerEmpty) appendFreshnessNote(data, renderedEl);   // (FRESHNESS DISCLOSURE)
