@@ -322,7 +322,9 @@ def test_rendered_page_shows_the_same_records(integrity_browser, flow, name):
     try:
         rows = page.evaluate("""() => [...document.querySelectorAll('.ap-sources-table tbody tr')].map(tr =>
             [...tr.querySelectorAll('td')].map(td => td.innerText.trim()))""")
-        assert [(r[0], r[2], r[4].split("\n")[0].split(" · ")[0]) for r in rows] == \
+        import re as _re
+        intent_of = lambda cell: _re.search(r"Intent\s+(\w+)", cell).group(1)       # the Assessment column: "Intent High / Role ... / Purchase ..."
+        assert [(r[0], r[2], intent_of(r[4])) for r in rows] == \
             [(str(p["index"]), p["title"], p["intent"]) for p in _rows(ans)]
         text = page.inner_text(".answer-rendered")
         # the classification line / verified_summary prose are not shown on the page (removed on purpose); the stored answer
