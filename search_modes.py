@@ -175,7 +175,7 @@ def mode_coverage(mode, live_status=None, historical_status=None, stats=None, un
     if cov["partial"]:
         notes.append("One retrieval path failed; the results shown come from the other path only.")
     if mode == LIVE:
-        notes.append("Live results are a bounded fetch from the source's search API, not a complete archive.")
+        notes.append("Live results are a bounded fetch from the source's search API (Hacker News stories only, not comments), not a complete archive.")
     uns = [str(u) for u in (unsupported or [])][:6]
     if uns:
         cov["unsupported_sources"] = uns
