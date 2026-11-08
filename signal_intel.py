@@ -21,6 +21,8 @@ Classes
 import re
 from datetime import datetime, timezone
 
+import platforms   # pure registry: the platform of a post is read from its URL host, not from a stored label
+
 CLASSIFIER_VERSION = "rules-3"
 DIRECT_DEMAND, PROBLEM_SIGNAL, MARKET_SIGNAL = "DIRECT_DEMAND", "PROBLEM_SIGNAL", "MARKET_SIGNAL"
 COMPETITOR_SIGNAL, GENERAL_DISCUSSION = "COMPETITOR_SIGNAL", "GENERAL_DISCUSSION"
@@ -107,7 +109,8 @@ _COMMERCIAL_CUES = re.compile(r"\b(?:budget|pay|paid|pricing|price|hire|hiring|v
 _CURRENTLY_USING = re.compile(r"\b(?i:currently\s+using|(?:we|i)\s+(?:currently\s+)?(?:use|used)|switch(?:ed|ing)\s+from|moving\s+off|migrat(?:e|ing)\s+from|stuck\s+with)\s+([A-Z][\w.+-]*(?:\s+[A-Z][\w.+-]*)?)")
 _STOP = frozenset("""a an the of on in at for to from with and or but is are was were be been being it its this that these those i we you he she they
 me my our your their do does did can could would should will just not no yes any anyone some more most very about into than then there here what which
-who whom how why when where if so as by up out over also get got have has had using use used need needs want looking look find ai agent agents""".split())
+who whom how why when where if so as by up out over also get got have has had using use used need needs want looking look find""".split())
+# NOTE: "ai" / "agent" are NOT stop words. They were, which made a query such as "Find people looking for AI SaaS agents" score an on-topic post 0.0.
 
 _SENT = re.compile(r"(?<=[.!?])\s+|\n+")
 
@@ -173,14 +176,39 @@ def topic_relevance(query, text):
 
 
 def _use_case_relevance(query, text):
-    """0..1 by consecutive query word pairs found in the text (the use case, not just the topic words), or None."""
-    qs = _terms(query)
-    pairs = {(a, b) for a, b in zip(qs, qs[1:])}
+    """0..1 by query word pairs (at most two words apart) found in the text (the use case, not just the topic words), or None."""
+    def skip_pairs(words):          # ordered pairs at most two words apart, so "AI agent" still matches the query "AI SaaS agent"
+        return {(words[i], words[j]) for i in range(len(words)) for j in range(i + 1, min(i + 3, len(words)))}
+    pairs = skip_pairs(_terms(query))
     if not pairs:
         return None
-    ts = _terms(text)
-    have = {(a, b) for a, b in zip(ts, ts[1:])}
-    return round(len(pairs & have) / len(pairs), 2)
+    return round(len(pairs & skip_pairs(_terms(text))) / len(pairs), 2)
+
+
+def _intent_strength(cls, rule_strength):
+    """How strongly the AUTHOR expresses intent to obtain a solution. This is not how well a pattern matched: a vendor announcement matches its
+    pattern strongly but expresses no buyer intent (0.0), and a described problem is capped because it asks for nothing."""
+    if cls == DIRECT_DEMAND:
+        return round(rule_strength, 2)
+    if cls == PROBLEM_SIGNAL:
+        return round(min(rule_strength, 0.5), 2)
+    return 0.0
+
+
+def _platform_of(p):
+    """Canonical platform key from the post's URL host (else its stored label, else None). Never guessed from text."""
+    try:
+        key = platforms.of(p)
+        if key:
+            return key
+        raw = p.get("platform")
+        return str(raw).strip().lower() if isinstance(raw, str) and raw.strip() else None
+    except Exception:
+        return None
+
+
+# Rules that are requests for OPTIONS or opinions ("alternatives to", "any recommendations"): solution-seeking, not a stated purchase decision.
+_OPTION_SEEKING = frozenset({"alternatives", "recommendations", "recommend_req", "recommend", "anyone_know", "which_tool", "is_there_tool"})
 
 
 def classify_post(post, query=None):
@@ -250,6 +278,8 @@ def classify_post(post, query=None):
                 confirmed.append("Stated in the post: “" + quote + "”")
             else:
                 quote = None
+        if cls == DIRECT_DEMAND and rule in _OPTION_SEEKING:
+            limitations.append("The author asks for options or recommendations; that is solution-seeking, not a stated purchase decision.")
         if cls == DIRECT_DEMAND:
             inferred.append("Whether the author has authority or budget to buy is not stated." if not _COMMERCIAL_CUES.search(full)
                             else "A commercial cue (budget, hiring, pricing or purchase) appears in the text.")
@@ -276,10 +306,10 @@ def classify_post(post, query=None):
            + ("" if uc is None else f"; {int(round(uc * 100))}% of its term pairs (use case)") + ". Topic relevance is separate from intent.")
     return {
         "class": cls, "label": LABELS[cls], "rule": rule,
-        "title": title, "url": url, "platform": p.get("platform") or None, "author": p.get("author") or None, "published_at": when,
+        "title": title, "url": url, "platform": _platform_of(p), "author": p.get("author") or None, "published_at": when,
         "retrieval_path": p.get("retrieval_path") if p.get("retrieval_path") in ("live", "historical", "both") else None,   # provenance only; never an input to the class
         "quote": quote, "text_source": "title" if title_only else "body",
-        "scores": {"topic_relevance": tr, "use_case_relevance": uc, "intent_strength": round(strength, 2) if cls != GENERAL_DISCUSSION else 0.0,
+        "scores": {"topic_relevance": tr, "use_case_relevance": uc, "intent_strength": _intent_strength(cls, strength),
                    "commercial_relevance": commercial, "evidence_confidence": round(min(conf, 0.9), 2)},
         "relevance_explanation": rel, "intent_explanation": intent_expl,
         "confirmed": confirmed, "inferred": inferred, "limitations": limitations,
@@ -334,6 +364,54 @@ def summarize(items, query=None, mode="topic", total=None):
     return {"counts": counts, "direct_demand": counts[DIRECT_DEMAND], "statement": stmt}
 
 
+_REVIEW_STATUSES = ("in_report", "excluded", "not_selected", "not_analyzed")
+
+
+# Roles the checked report (answer_integrity) gives to posts that are NOT demand. Two classifiers must not tell the reader two different stories about one post.
+_NON_DEMAND_REVIEW_ROLES = frozenset({"competitor_promo", "testimonial"})
+
+
+def _reconcile_with_checked_report(c, post):
+    """If the checked report rated this very post as a vendor promotion or a testimonial, this report may not call it direct demand: it becomes a
+    competitor signal with the reason stated. (The checked report is stricter about authors promoting themselves; neither report is overruled
+    in the other direction: a post the checked report calls a buyer can still be 'general' here.)"""
+    role = post.get("report_role") if isinstance(post, dict) else None          # set by answer_integrity.annotate_results for in-report posts
+    if c.get("class") == DIRECT_DEMAND and role in _NON_DEMAND_REVIEW_ROLES:
+        c["class"], c["label"] = COMPETITOR_SIGNAL, LABELS[COMPETITOR_SIGNAL]
+        c["scores"]["intent_strength"] = 0.0
+        c["limitations"] = list(c.get("limitations") or []) + ["The checked report above classifies this post as a vendor or testimonial, not a buyer."]
+        c["intent_explanation"] = "The checked report treats the author as a vendor or testimonial, which is competitive context, not demand."
+        c["reconciled"] = True
+
+
+def _review_of(p):
+    """The server-set review of a stored result (answer_integrity.annotate_results), reduced to what the report may show."""
+    rv = p.get("review") if isinstance(p, dict) else None
+    if not isinstance(rv, dict) or rv.get("status") not in _REVIEW_STATUSES:
+        return None
+    out = {"status": rv["status"]}
+    if isinstance(rv.get("index"), int):
+        out["index"] = rv["index"]
+    if isinstance(rv.get("reason"), str) and rv["reason"]:
+        out["reason"] = rv["reason"]
+    return out
+
+
+def _accounting(posts, items):
+    """One set of counts for the whole report. Every retrieved post is in exactly one bucket, so the numbers always add up:
+    retrieved = in_report + excluded + not_selected + not_analyzed + unreviewed, and classified <= retrieved (the rest is stated)."""
+    counts = {k: 0 for k in _REVIEW_STATUSES}
+    unreviewed = 0
+    for p in posts:
+        rv = _review_of(p)
+        if rv:
+            counts[rv["status"]] += 1
+        else:
+            unreviewed += 1
+    return {"retrieved": len(posts), "classified": len(items), "not_classified": len(posts) - len(items), **counts,
+            "unreviewed": unreviewed, "reviewed": len(posts) - unreviewed}
+
+
 def build_signal_report(posts, query=None, mode="topic", coverage=None, max_items=25):
     """The server-built `signal_report` for an answer: coverage, class breakdown and one evidence record per retrieved post."""
     posts = [p for p in (posts or []) if isinstance(p, dict)]
@@ -341,15 +419,28 @@ def build_signal_report(posts, query=None, mode="topic", coverage=None, max_item
     for i, p in enumerate(posts[:max_items], start=1):
         c = classify_post(p, query if mode != "general" else None)
         c["rank"] = i
+        rv = _review_of(p)
+        if rv:
+            c["review"] = rv           # the post's place in the checked report ABOVE: the same record, not a second opinion
+            _reconcile_with_checked_report(c, p)
         opp = extract_opportunity(p, c)
         if opp:
             c["opportunity"] = opp
         items.append(c)
     s = summarize(items, query, mode, total=len(posts))
+    accounting = _accounting(posts, items)
+    statement = s["statement"]
+    if accounting["reviewed"]:
+        a = accounting
+        statement += (f" Of the {a['retrieved']} retrieved post{'s' if a['retrieved'] != 1 else ''}, {a['in_report']} "
+                      f"{'appears' if a['in_report'] == 1 else 'appear'} in the checked report, {a['excluded']} "
+                      f"{'was' if a['excluded'] == 1 else 'were'} excluded, {a['not_selected']} "
+                      f"{'was' if a['not_selected'] == 1 else 'were'} retrieved but not selected for it"
+                      + (f" and {a['not_analyzed']} had no readable text" if a["not_analyzed"] else "") + ".")
     return {"version": 1, "classifier": CLASSIFIER_VERSION, "mode": mode, "query": query if mode != "general" else None,
             "based_on": "stored or fetched posts only; no live web search", "coverage": dict(coverage or {}),
-            "breakdown": s["counts"], "direct_demand_count": s["direct_demand"], "statement": s["statement"], "items": items,
-            "returned": len(posts), "classified": len(items)}
+            "breakdown": s["counts"], "direct_demand_count": s["direct_demand"], "statement": statement, "items": items,
+            "returned": len(posts), "classified": len(items), "accounting": accounting}
 
 
 # ── general discovery: "show me recent threads" is a request for a SAMPLE, not a topic search ──────────────────────────
