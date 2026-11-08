@@ -106,3 +106,31 @@ def test_search_mode_hint_takes_at_most_two_lines_on_a_phone_and_keeps_the_full_
         assert height <= 2 * line + 1
     finally:
         c.close()
+
+
+@pytest.mark.parametrize("name,ctx", [("index.html", {"user": USER}), ("chat.html", {"chat": CHAT, "chat_id": "c1", "user": USER})])
+def test_the_search_mode_control_is_rendered_exactly_once(name, ctx):
+    """A manual upload once put a copy of the control into _touch_targets.html, so every page contained it twice (duplicate element ids, two hidden
+    inputs named search_mode). Rendered HTML, no browser needed."""
+    import re
+    html = render(name, **ctx)
+    for ident in ("search-mode-input", "search-mode-group", "search-mode-hint"):
+        assert len(re.findall(rf'id="{ident}"', html)) == 1, ident
+    assert len(re.findall(r'name="search_mode"', html)) == 1
+    from pathlib import Path
+    touch = (Path(__file__).resolve().parent.parent / "templates" / "_touch_targets.html").read_text()
+    assert "search-mode" not in touch and "pointer: coarse" in touch
+
+
+@needs_browser
+@pytest.mark.parametrize("name,ctx", [("index.html", {"user": USER}), ("chat.html", {"chat": CHAT, "chat_id": "c1", "user": USER})])
+def test_there_is_a_single_working_mode_control_in_the_live_page(integrity_browser, name, ctx):
+    c, pg = _ctx(integrity_browser, 1200, 800)
+    try:
+        _open(pg, name, ctx)
+        assert pg.evaluate("document.querySelectorAll('.search-mode').length") == 1
+        assert pg.evaluate("document.querySelectorAll('input[name=search_mode]').length") == 1
+        pg.click('.sm-opt[data-mode="historical"]')
+        assert pg.evaluate("document.getElementById('search-mode-input').value") == "historical"
+    finally:
+        c.close()
