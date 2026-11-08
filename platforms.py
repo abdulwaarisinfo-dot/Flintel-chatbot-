@@ -123,6 +123,31 @@ def from_url(url) -> Optional[str]:
     return None
 
 
+def url_platform(url) -> Optional[str]:
+    """Platform key of the HOST of `url`, for ATTRIBUTION. Unlike from_url() it also knows Hacker News when that platform is not registered
+    (HACKERNEWS_ENABLED off), so a Hacker News link is never attributed to another platform just because the platform is disabled.
+    The host is deterministic evidence; a stored label or a model-written group name is not."""
+    key = from_url(url)
+    if key:
+        return key
+    host = _host(url)
+    for h in _HACKERNEWS.hosts:
+        if host and (host == h or host.endswith("." + h)):
+            return _HACKERNEWS.key
+    return None
+
+
+def stored_platform(record) -> Optional[str]:
+    """The record's OWN platform label (canonical key), ignoring its URL."""
+    if not isinstance(record, dict):
+        return None
+    for f in _PLATFORM_FIELDS:
+        k = canonical_key(record.get(f))
+        if k:
+            return k
+    return None
+
+
 def url_of(record) -> str:
     if not isinstance(record, dict):
         return ""
@@ -134,15 +159,18 @@ def url_of(record) -> str:
 
 
 def of(record) -> Optional[str]:
-    """Registry key of a stored record: its own platform value, else the host of its URL, else None. An unrecognised stored
-    value (a platform not in the registry) yields None here; callers that must keep the raw value read the record."""
+    """Registry key of a record. The HOST of its URL wins when it names a known platform (a record stored as "reddit" whose URL is on
+    news.ycombinator.com is a Hacker News post); otherwise its own platform value. An unrecognised stored value yields None here; callers
+    that must keep the raw value read the record. Use `platform_conflict()` to see when the two disagreed."""
     if not isinstance(record, dict):
         return None
-    for f in _PLATFORM_FIELDS:
-        k = canonical_key(record.get(f))
-        if k:
-            return k
-    return from_url(url_of(record))
+    return url_platform(url_of(record)) or stored_platform(record)
+
+
+def platform_conflict(record) -> Optional[tuple]:
+    """(stored_key, url_key) when the record's own platform label disagrees with the platform its URL host names, else None."""
+    stored, by_url = stored_platform(record), url_platform(url_of(record))
+    return (stored, by_url) if stored and by_url and stored != by_url else None
 
 
 def earliest_date(key=None) -> datetime:
@@ -249,10 +277,13 @@ def normalize_signal(record, now=None) -> dict:
     import timerange   # local: timerange imports this module
     out = dict(record) if isinstance(record, dict) else {}
     key = of(out)
+    conflict = platform_conflict(out)
     if key:
         if out.get("platform") and out.get("platform") != key:
             out.setdefault("raw_platform", out["platform"])
         out["platform"] = key
+        if conflict:
+            out["platform_conflict"] = {"stored": conflict[0], "from_url": conflict[1]}
     url = url_of(out)
     if url:
         out["url"] = url
