@@ -238,17 +238,13 @@ def test_route_without_a_mode_leaves_the_message_as_before(fixed_clock, monkeypa
 
 
 # ── UI ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def test_both_pages_include_the_mode_control_with_a_visible_default():
-    part = (ROOT / "templates" / "_search_mode.html").read_text()
-    assert 'name="search_mode"' in part and 'value="combined"' in part and 'aria-checked="true" data-mode="combined"' in part
+def test_pages_have_no_mode_selector_but_still_render_the_per_answer_mode_note():
+    """The selector is gone from the search box (modes are internal); the server-built note on each answer remains."""
+    assert not (ROOT / "templates" / "_search_mode.html").exists()
     for f in ("index.html", "chat.html"):
         t = (ROOT / "templates" / f).read_text()
-        assert '{% include "_search_mode.html" %}' in t and "appendSearchMode" in t and "search_mode: 1" in t
-
-
-def test_mode_control_is_brand_consistent_and_emoji_free():
-    part = (ROOT / "templates" / "_search_mode.html").read_text()
-    assert "#C1FB3B" in part and not any(ord(ch) > 0x2000 for ch in part)
+        assert "_search_mode.html" not in t and 'name="search_mode"' not in t
+        assert "appendSearchMode" in t and "search_mode: 1" in t
 
 
 # ── general discovery in every mode ──────────────────────────────────────────────────────────────────────────────────────
