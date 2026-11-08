@@ -350,6 +350,14 @@ def historical_window_applies(msg, tr) -> bool:
     existing = msg.get("time_range")
     if existing:
         return False
+    # A period the user wrote is theirs even when the parser could not turn it into a range ("the past month", an unusual phrasing): the automatic
+    # Live-sized window must never replace it. (This is how a request for 30 days could become a ~25 hour search.)
+    try:
+        import timerange                                         # noqa: PLC0415
+        if timerange.mentions_period(msg.get("query")) and not _default_recency_lookback(msg):
+            return False
+    except Exception:
+        pass
     days = msg.get("time_window_days")
     return days is None or _default_recency_lookback(msg)
 
