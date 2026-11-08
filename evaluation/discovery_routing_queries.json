@@ -1,0 +1,567 @@
+[
+ {
+  "q": "What are people talking about right now?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Show me what's trending",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What's new on Hacker News today?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Give me a random sample of recent posts",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Show me the latest discussions",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What are folks discussing this week?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Show me recent threads",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What's happening on Reddit right now?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "List some recent conversations",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Pull a general sample of the newest posts",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What is everyone talking about?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Give me today's top discussions",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What are the hottest topics right now?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Show unfiltered discussions from the last 7 days",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Surprise me with some recent threads",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What problems are people discussing today?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What are people complaining about?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What issues are businesses running into?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What are small businesses struggling with?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What are the biggest pain points people mention?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What operational problems are companies repeatedly experiencing?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What frustrations do users keep posting about?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What are founders struggling with right now?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What do customers complain about most?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What recurring problems are people posting about?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What unmet needs are appearing?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What are people willing to pay for?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What products are people requesting?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What are people repeatedly asking for?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What are people struggling to find?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What are people looking for but can't find?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What software are people actively requesting?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "Find people who need help",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What tools do people wish existed?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What do people want that doesn't exist yet?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What opportunities are emerging?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What new needs are showing up?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What are people starting to ask for?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What emerging trends are people discussing?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "Which markets are heating up?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What are people excited about lately?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What new problems are appearing?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What ideas are people validating?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What new demand is appearing?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What market gaps are people mentioning?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What competitors are people switching to?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "What are users unhappy about with competing products?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "Which tools are people leaving?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "What alternatives are people asking for?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "What products are people dissatisfied with?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "Which products do people complain about most?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "What are people switching away from?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "Which vendors are users frustrated with?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "Find people looking for a CRM for small teams",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What do people think about HubSpot pricing?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Invoicing tool complaints",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Show me discussions about Notion alternatives",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are people saying about Stripe fees?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Find buyers for AI note takers",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Reddit posts about Shopify checkout problems",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "competitors of Calendly",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Why are users leaving Slack?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "best CRM for real estate agents",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Who is looking for payroll software?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What do restaurant owners think about Toast POS?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Find complaints about QuickBooks",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Show me posts about kubernetes cost",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "people asking for a Zapier alternative",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Is anyone looking for an AI agent?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Show recent threads about CRM pain",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Latest iPhone",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What do people say about remote work tools?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Find leads for project management software",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Any good alternatives to Mailchimp?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What problems do freelancers have with invoicing?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are people complaining about regarding Notion?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What products are people requesting for dogs?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Find people who need help with taxes",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What opportunities are emerging in healthcare?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What tools are people dissatisfied with for payroll?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are small businesses struggling with in logistics?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Which CRM should a salon use?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Find unmet needs in the pet industry",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are people willing to pay for in fitness apps?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Show me recent discussions about crypto taxes",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are people talking about regarding Tesla?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What's new with OpenAI today?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Who is complaining about Airtable pricing?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What problems are people discussing about invoicing?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are people complaining about with their landlord?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are people willing to pay for in meal prep?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What new needs are showing up in telehealth?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "Show me recent threads about Rust",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are founders struggling with in fintech?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What do customers complain about with airlines?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What unmet needs exist for senior care?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What opportunities are emerging in climate tech?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What products are people requesting for babies?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What competitors are people switching to from Salesforce?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What tools do people wish existed for lawyers?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are people talking about regarding the election?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "Show me the latest discussions on semiconductors",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are the biggest pain points in dental billing?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What do people want?",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "Help",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "Show me stuff about money",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "hello",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "What are people saying?",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "problems",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "Find something interesting",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "What should I build?",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "Who needs software?",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ },
+ {
+  "q": "Is there demand?",
+  "expected": false,
+  "category": "ambiguous (expected NOT discovery: they carry a topic or are unclear)"
+ }
+]

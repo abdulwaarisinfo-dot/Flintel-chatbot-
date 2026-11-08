@@ -1,0 +1,337 @@
+[
+ {
+  "q": "What are people chatting about on Hacker News this morning?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Show me whatever is new right now",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Give me a feed of recent discussions",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What's everyone posting about today?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Show me a sample of what people are discussing lately",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "List the newest conversations please",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What are users talking about at the moment?",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "Pull up some fresh threads",
+  "expected": true,
+  "category": "broad market discovery"
+ },
+ {
+  "q": "What difficulties are small companies facing?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What headaches do business owners post about?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What are people annoyed about these days?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What breaks for teams again and again?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "Which problems keep coming up in conversations?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What do owners say is hard about running a business?",
+  "expected": true,
+  "category": "problems people discuss"
+ },
+ {
+  "q": "What are people hoping someone would build?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What do users keep asking for that doesn't exist?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What are customers searching for and not finding?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What are people begging for in software?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What things do people say they would pay for?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What gaps do people point out in existing tools?",
+  "expected": true,
+  "category": "unmet needs / demand"
+ },
+ {
+  "q": "What new things are people starting to want?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "Which areas are seeing growing interest?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What fresh opportunities do people mention?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What are people newly concerned about?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "What needs are on the rise?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "Which ideas are getting traction in discussions?",
+  "expected": true,
+  "category": "emerging demand / opportunities"
+ },
+ {
+  "q": "Which products are people abandoning?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "What tools are folks moving away from?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "Which services do users keep complaining about?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "What are people replacing their current tools with?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "Which vendors are people unhappy with?",
+  "expected": true,
+  "category": "competitor discovery"
+ },
+ {
+  "q": "What do founders say about Y Combinator?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Show me threads about SQLite performance",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "People complaining about Comcast",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Find posts where people ask for a Notion template",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Who wants a better calendar app?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are people saying about the new iPad?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Is anyone hiring Rust developers?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Posts about layoffs at Meta",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Why do people dislike LinkedIn?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Which password manager do people recommend?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are shops using instead of Shopify?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Find people unhappy with Zoom",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Show me discussions about heat pumps",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "How do people feel about Substack?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are developers complaining about with npm?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Need leads for a web design agency",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Which accounting software do freelancers prefer?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "Show me recent threads about Bitcoin ETFs",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What problems do nurses have with scheduling software?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What are landlords struggling with in New York?",
+  "expected": false,
+  "category": "topic-specific searches"
+ },
+ {
+  "q": "What new needs are showing up in logistics software?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are people asking for in a CRM?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What products are people requesting for their garden?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What issues are restaurants running into with delivery apps?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are customers frustrated with at Comcast?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "Which vendors are people unhappy with for payroll?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What market gaps exist in pet insurance?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What ideas are getting traction in biotech?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What tools are people leaving Evernote for?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "What are people excited about regarding the new iPhone?",
+  "expected": false,
+  "category": "adversarial: discovery words + a real topic"
+ },
+ {
+  "q": "Tell me something",
+  "expected": false,
+  "category": "ambiguous / degenerate (expected NOT discovery)"
+ },
+ {
+  "q": "What?",
+  "expected": false,
+  "category": "ambiguous / degenerate (expected NOT discovery)"
+ },
+ {
+  "q": "Anything",
+  "expected": false,
+  "category": "ambiguous / degenerate (expected NOT discovery)"
+ },
+ {
+  "q": "stuff",
+  "expected": false,
+  "category": "ambiguous / degenerate (expected NOT discovery)"
+ },
+ {
+  "q": "Show me",
+  "expected": false,
+  "category": "ambiguous / degenerate (expected NOT discovery)"
+ },
+ {
+  "q": "What are people?",
+  "expected": false,
+  "category": "ambiguous / degenerate (expected NOT discovery)"
+ }
+]
