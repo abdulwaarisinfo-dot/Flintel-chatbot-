@@ -2783,6 +2783,140 @@ def enrich_search_mode(answer_text, info, posts=None):
         return answer_text
 
 
+_ACTIVE_INTENT_WINDOW_KIND = "active_intent_window"      # == active_intent.WINDOW_KIND (asserted by a test; not imported here to keep logics free of that module)
+
+
+def _period_dict(start, end):
+    s_, e_ = timerange.to_utc(start), timerange.to_utc(end)
+    if s_ is None or e_ is None:
+        return None
+    return {"from": s_.isoformat(), "to": e_.isoformat(), "days": round((e_ - s_).total_seconds() / 86400.0, 1)}
+
+
+def _failed_source_row(st, what):
+    """failed = the attempt ran and errored; unavailable = the source could not be reached / was throttled; unconfirmed = no status was reported."""
+    if st in ("failed", "error"):
+        return {"state": "failed", "detail": f"{what} was attempted but failed."}
+    if st in ("unavailable", "rate_limited"):
+        return {"state": "unavailable", "detail": f"{what} could not be reached ({st})."}
+    return {"state": "unconfirmed", "detail": f"{what} reported no status ({st}); it is not counted as searched."}
+
+
+def build_search_coverage(msg, answer_data, info, posts, chat_id=None, scan_partial=False):
+    """The server-built statement of what this search covered, from facts only: the mode, the period the USER asked for (read from their own words)
+    next to the period actually APPLIED and where it came from, which sources were really searched / unavailable / not searched in this mode, and
+    one set of counts. Nothing here is written by the model. A source is 'searched' only when its retrieval path ran and did not fail."""
+    msg = msg if isinstance(msg, dict) else {}
+    info = info if isinstance(info, dict) else {}
+    mode = search_modes.normalize_mode(info.get("mode"))
+    # ── period: requested (the user's words) vs applied ──
+    query = msg.get("query") if isinstance(msg.get("query"), str) else ""
+    ref = timerange.to_utc(msg.get("requested_at")) or datetime.now(timezone.utc)
+    requested, req_range = None, None
+    try:
+        parsed = timerange.parse_time_range(query, ref, "UTC") if query else None
+    except Exception:
+        parsed = None
+    if isinstance(parsed, timerange.TimeRange):
+        req_range = parsed
+        requested = {"phrase": parsed.phrase, "interpreted": True, **(_period_dict(parsed.start, parsed.end) or {})}
+    elif query and timerange.mentions_period(query):
+        requested = {"phrase": None, "interpreted": False}      # the user named a period that could not be turned into a range
+    applied = None
+    start, end = _window_of(msg)
+    if start is not None and end is not None:
+        applied = _period_dict(start, end)
+        tr_doc = msg.get("time_range") if isinstance(msg.get("time_range"), dict) else None
+        if tr_doc and tr_doc.get("kind") == _ACTIVE_INTENT_WINDOW_KIND:
+            applied["origin"] = "automatic_recent_window"
+        elif tr_doc or msg.get("time_window_source") in (None, "explicit_period"):
+            applied["origin"] = "requested"
+        else:
+            applied["origin"] = "automatic_default"
+    period_ok, period_note = True, None
+    if req_range is not None:
+        req_days = (req_range.end - req_range.start).total_seconds() / 86400.0
+        if applied is None:
+            period_ok, period_note = False, f"A period was requested ({requested['phrase']}) but no date filter was applied."
+        elif applied["days"] < req_days * 0.98:
+            period_ok = False
+            period_note = (f"The period requested ({requested['phrase']}, {req_days:.0f} days) was NOT fully applied: "
+                           f"the search covered {applied['days']:.1f} days.")
+    elif requested and not requested["interpreted"]:
+        period_ok, period_note = False, "A period was mentioned that could not be interpreted, so no date filter was applied for it."
+    # ── sources ──
+    hn = _HN_STATUS.get((chat_id, msg.get("topic_key"))) if chat_id is not None else None
+    sources, partial_reasons = [], []
+    for key in _selection_keys(msg.get("targeting_platform")):
+        label = platforms.label(key, key)
+        if key == "hackernews":
+            path = "live"
+            st = info.get("live", "not_requested")
+            if mode == search_modes.HISTORICAL or st == "not_requested":
+                row = {"state": "not_searched", "detail": "Not searched in Historical mode (Hacker News has no stored corpus)."}
+            elif st in ("ok", "empty"):
+                row = {"state": "searched", "detail": "Fetched live from the public Hacker News API (stories only, not comments)."
+                       + (" It returned no stories for the period." if st == "empty" else "")}
+            elif st == "partial":
+                row = {"state": "partial", "detail": "Fetched live, but only partly (some requests failed or timed out)."}
+                partial_reasons.append("Hacker News was only partly retrieved")
+            else:
+                row = _failed_source_row(st, "The live Hacker News search")
+                partial_reasons.append("Hacker News " + row["state"].replace("_", " ") + f" ({st})")
+        else:
+            path = "stored"
+            st = info.get("historical", "not_requested")
+            if mode == search_modes.LIVE or st == "not_requested":
+                row = {"state": "not_searched", "detail": "Not searched in Live mode: this source has no live search, only stored conversations."}
+            elif st in ("ok", "empty") and not scan_partial:
+                row = {"state": "searched", "detail": "Stored conversations only (not a live search)."
+                       + (" It returned no posts for the period." if st == "empty" else "")}
+            elif st == "partial" or (scan_partial and st in ("ok", "empty")):
+                row = {"state": "partial", "detail": "Stored conversations, but only partly read (a read failed or timed out)."}
+                partial_reasons.append(f"{label} was only partly read")
+            else:
+                row = _failed_source_row(st, "The stored conversations")
+                partial_reasons.append(f"{label} " + row["state"].replace("_", " ") + f" ({st})")
+        if row["state"] == "not_searched":
+            partial_reasons.append(f"{label} was not searched")      # a skipped source is never 'complete coverage'
+        sources.append(dict(key=key, label=label, via=path, **row))
+    # ── counts: one set, from the same records the report tables use ──
+    d = answer_data if isinstance(answer_data, dict) else {}
+    cnt = d.get("counts") if isinstance(d.get("counts"), dict) else {}
+    rec = d.get("reconciliation") if isinstance(d.get("reconciliation"), dict) else {}
+    stats = info.get("stats") if isinstance(info.get("stats"), dict) else {}
+    dup = (int(stats.get("duplicates_removed") or 0) + int((hn or {}).get("duplicates") or 0)
+           + int(((cnt.get("excluded_reasons") or {}).get("duplicate")) or 0)) if (stats or hn or cnt) else None
+    counts = {"retrieved": len(posts or []) if posts is not None else cnt.get("retrieved"), "duplicates": dup,
+              "excluded": cnt.get("excluded"), "relevant": cnt.get("relevant"), "displayed": cnt.get("shown"),
+              "not_listed": rec.get("not_listed")}
+    ac = d.get("analysis_coverage") if isinstance(d.get("analysis_coverage"), dict) else None
+    if ac and ac.get("failed_batches"):
+        partial_reasons.append(f"{ac['failed_batches']} of {ac.get('batches')} analysis batches failed")
+    if rec and not (rec.get("listed_balanced") and rec.get("pool_balanced")):
+        partial_reasons.append("the report's counts did not fully reconcile")
+    searched_any = any(x["state"] in ("searched", "partial") for x in sources)
+    retrieval = ("unavailable" if not searched_any else ("partial" if partial_reasons or not period_ok else "complete"))
+    return {"mode": mode, "mode_label": search_modes.LABELS.get(mode, mode), "requested_period": requested, "applied_period": applied,
+            "period_ok": period_ok, "period_note": period_note, "sources": sources, "counts": counts, "retrieval": retrieval,
+            "partial_reasons": partial_reasons}
+
+
+def enrich_search_coverage(answer_text, msg, info, posts=None, chat_id=None, scan_partial=False):
+    """Adds `search_coverage` to a delivered answer JSON. Fail-safe: any problem returns the answer unchanged."""
+    if not isinstance(answer_text, str):
+        return answer_text
+    try:
+        data = json.loads(answer_text)
+        if not isinstance(data, dict) or "search_coverage" in data or data.get("format") in _FD_SKIP_FORMATS:
+            return answer_text
+        data["search_coverage"] = build_search_coverage(msg, data, info, posts, chat_id, scan_partial)
+        return json.dumps(data, ensure_ascii=False)
+    except Exception as exc:
+        log.warning(f"Search-coverage block failed (answer left unchanged): {exc}")
+        return answer_text
+
+
 def hackernews_only(targeting_platform) -> bool:
     """True when Hacker News is the ONLY platform selected (flag on). Such a search needs no collector job: nothing is collected for it."""
     try:
@@ -10137,7 +10271,7 @@ _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 # (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
 # made only of these renders as an EMPTY answer on the page.
 _ANSWER_META_KEYS = {"search_mode", "format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness", "time_scope",
-                     "signal_report", "analysis_coverage"}
+                     "signal_report", "analysis_coverage", "search_coverage", "reconciliation"}
 
 
 
