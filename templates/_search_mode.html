@@ -31,9 +31,9 @@
     if (save) { try { localStorage.setItem('flintel_search_mode', m); } catch (e) {} }
   }
   var HINTS = {
-    live: 'Live: newly available discussions from sources with a live API. Only Hacker News has one; it is a bounded fetch, not an archive.',
+    live: 'Live: newly submitted Hacker News stories (Ask HN, Show HN and text posts; comments are not searched). Only Hacker News has a live source; it is a bounded fetch, not an archive.',
     historical: 'Historical: stored conversations only. This is not a view of what was posted most recently.',
-    combined: 'Combined: stored conversations plus live sources where available (Hacker News), merged without duplicates. Reddit is searched from stored conversations only.'
+    combined: 'Combined: stored conversations plus live Hacker News stories (comments are not searched), merged without duplicates. Reddit is searched from stored conversations only.'
   };
   function hint() {
     var el = document.getElementById('search-mode-hint'); if (!el) return;
