@@ -1,10 +1,8 @@
 # ── Web framework ──────────────────────────────────────────────────────────
-# PINNED (upper bound added): routes.py still uses the OLD signature
-#   templates.TemplateResponse("index.html", {"request": request, ...})
-# Newer Starlette expects TemplateResponse(request, "index.html", {...}) and
-# crashes with "cannot use 'tuple' as a dict key (unhashable type: 'dict')".
-# Remove these upper bounds only AFTER all 9 TemplateResponse calls in
-# routes.py are migrated to the new signature.
+# PINNED (upper bounds): the framework versions this application is verified against. All 16 templates.TemplateResponse call sites already use the
+# new signature (request first), so the code is not what holds the bounds; the bounds hold the verified set. A newer set (FastAPI 0.143 / Starlette 1.6)
+# gives the same unit-test results (see requirements-upgrade-candidate.txt and FLINTEL_SECURITY_FINDINGS.md F4) but OAuth, proxied cookies, streaming and
+# the payment webhook have not been tried on it, and the pinned Starlette has open advisories until it is upgraded in staging.
 fastapi>=0.115.0,<0.116.0
 uvicorn[standard]>=0.29.0
 starlette>=0.38.0,<0.39.0
