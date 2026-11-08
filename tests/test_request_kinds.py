@@ -133,7 +133,7 @@ def test_literal_matcher_honours_platform_window_limit_and_dedupe(env, monkeypat
     lg = _signals(env, monkeypatch, [
         _doc(1, "Acme news", "Acme launched", days_ago=1),
         _doc(2, "Acme old", "Acme was founded", days_ago=400),
-        _doc(3, "Acme on X", "Acme tweet", platform="x"),
+        _doc(3, "Acme on X", "Acme tweet", platform="x", post_url="https://x.com/acme/status/3"),   # an X post carries an X URL (the host decides the platform)
         _doc(4, "Acme again", "Acme again", days_ago=2),
         _doc(5, "dup", "Acme dup", post_url="https://www.reddit.com/r/x/comments/1/t/"),
     ])
