@@ -156,7 +156,8 @@ QUERIES = [("Find users looking for AI jobs in Pakistan", json.dumps(GOOD)),
 
 def _model_content(answer):
     """The answer minus the fields answer_integrity.py adds next to the model's own."""
-    out = {k: v for k, v in answer.items() if k not in ("counts", "excluded_posts", "verified_summary", "analysis_check", "time_scope")}
+    out = {k: v for k, v in answer.items() if k not in ("counts", "excluded_posts", "verified_summary", "analysis_check", "time_scope",
+                                                          "reconciliation", "not_listed", "platform_corrections", "search_coverage")}
     out["key_findings"] = [{k: v for k, v in f.items() if k in GOOD["key_findings"][0]} for f in out["key_findings"]]
     out["platforms"] = [dict({k: v for k, v in e.items() if k in GOOD["platforms"][0]},        # (Phase 2.2) table-level server labels
                              posts=[{k: v for k, v in p.items() if k in GOOD["platforms"][0]["posts"][0]}
