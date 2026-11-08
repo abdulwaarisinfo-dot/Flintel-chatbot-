@@ -61,8 +61,13 @@ def test_every_former_detection_site_now_agrees(lg):
         assert ai_name == ({"x_twitter": "x"}.get(key, key) or "unknown")                        # integrity token for X: "x"
 
 
-def test_a_stored_platform_value_still_wins_over_the_url():
-    assert ai.platform_of({"platform": "Twitter", "post_url": "https://reddit.com/r/a"}) == "x"
+def test_the_url_host_decides_when_it_names_a_platform_and_the_stored_value_is_used_otherwise():
+    """CHANGED INTENTIONALLY (platform truth). This test used to assert that a stored label wins over the URL, which is exactly what let a Hacker News link
+    stored as "reddit" stay Reddit through the whole report. The host of the URL now decides when it names a known platform; the stored value is used
+    when the URL names none (unknown host) or is absent."""
+    assert ai.platform_of({"platform": "Twitter", "post_url": "https://reddit.com/r/a"}) == "reddit"
+    assert ai.platform_of({"platform": "Twitter", "post_url": "https://example.org/a"}) == "x"
+    assert ai.platform_of({"platform": "Twitter"}) == "x"
     assert ai.platform_of({"platform": "LinkedIn"}) == "linkedin" and ai.platform_of({"platform": "Bluesky"}) == "bluesky"
     assert ai.platform_of({}) == "unknown"
 
