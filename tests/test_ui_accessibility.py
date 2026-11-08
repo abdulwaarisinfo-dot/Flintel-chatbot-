@@ -25,33 +25,6 @@ def _open(pg, name, ctx):
     pg.wait_for_timeout(250)
 
 
-@needs_browser
-@pytest.mark.parametrize("name,ctx", PAGES[:2])
-def test_search_mode_is_a_keyboard_operable_radio_group(integrity_browser, name, ctx):
-    c, pg = _ctx(integrity_browser, 1200, 800)
-    try:
-        _open(pg, name, ctx)
-        state = lambda: pg.evaluate("()=>[...document.querySelectorAll('.sm-opt')].map(b=>[b.dataset.mode,b.getAttribute('aria-checked'),b.tabIndex])")
-        assert state() == [["live", "false", -1], ["historical", "false", -1], ["combined", "true", 0]]      # one tab stop: the checked radio
-        pg.focus('.sm-opt[data-mode="combined"]')
-        pg.keyboard.press("ArrowRight")                                                                    # wraps to the first
-        assert pg.evaluate("document.getElementById('search-mode-input').value") == "live"
-        assert pg.evaluate("document.activeElement.dataset.mode") == "live"
-        pg.keyboard.press("ArrowRight")
-        assert pg.evaluate("document.getElementById('search-mode-input').value") == "historical"
-        pg.keyboard.press("End")
-        assert pg.evaluate("document.getElementById('search-mode-input').value") == "combined"
-        pg.keyboard.press("Home")
-        assert pg.evaluate("document.getElementById('search-mode-input').value") == "live"
-        pg.keyboard.press("ArrowLeft")
-        assert pg.evaluate("document.getElementById('search-mode-input').value") == "combined"
-        assert state() == [["live", "false", -1], ["historical", "false", -1], ["combined", "true", 0]]
-        pg.wait_for_function("document.getElementById('search-mode-hint').textContent.startsWith('Combined')")   # the hint follows the keyboard change (updated on the next tick)
-        assert pg.errors == []
-    finally:
-        c.close()
-
-
 USER = {"name": "Ada Lovelace", "email": "ada@example.com", "picture": None}      # signed in: no guest welcome overlay covering the composer
 
 
@@ -66,8 +39,6 @@ def test_small_icon_buttons_get_a_larger_tap_area_on_touch_devices_only(integrit
         hit = pg.evaluate("""(s)=>{const b=document.querySelector(s);const r=b.getBoundingClientRect();
             const e=document.elementFromPoint(r.left-8,r.top+r.height/2);return !!e&&(e===b||b.contains(e))}""", sel)
         assert hit, "tap area not enlarged on a coarse pointer"
-        modes = pg.evaluate("[...document.querySelectorAll('.sm-opt')].map(b=>b.getBoundingClientRect().height)")
-        assert min(modes) >= 36
     finally:
         c.close()
     # mouse: unchanged (the visible control is exactly its own hit area)
@@ -94,43 +65,31 @@ def test_no_horizontal_scroll_and_no_script_errors_at_phone_tablet_and_desktop_w
         c.close()
 
 
-@needs_browser
 @pytest.mark.parametrize("name,ctx", [("index.html", {"user": USER}), ("chat.html", {"chat": CHAT, "chat_id": "c1", "user": USER})])
-def test_search_mode_hint_takes_at_most_two_lines_on_a_phone_and_keeps_the_full_text(integrity_browser, name, ctx):
-    c, pg = _ctx(integrity_browser, 375, 812, touch=True)
-    try:
-        _open(pg, name, ctx)
-        h = pg.evaluate("(()=>{const e=document.getElementById('search-mode-hint');const lh=parseFloat(getComputedStyle(e).lineHeight);return [e.getBoundingClientRect().height,lh,e.textContent,e.title]})()")
-        height, line, text, title = h
-        assert text and title == text                                         # nothing is lost: the whole sentence is in the tooltip
-        assert height <= 2 * line + 1
-    finally:
-        c.close()
-
-
-@pytest.mark.parametrize("name,ctx", [("index.html", {"user": USER}), ("chat.html", {"chat": CHAT, "chat_id": "c1", "user": USER})])
-def test_the_search_mode_control_is_rendered_exactly_once(name, ctx):
-    """A manual upload once put a copy of the control into _touch_targets.html, so every page contained it twice (duplicate element ids, two hidden
-    inputs named search_mode). Rendered HTML, no browser needed."""
-    import re
+def test_the_search_box_has_no_mode_selector_helper_text_or_field(name, ctx):
+    """Search modes are internal: no selector, no explanatory text, no hidden mode field in the form (rendered HTML)."""
     html = render(name, **ctx)
-    for ident in ("search-mode-input", "search-mode-group", "search-mode-hint"):
-        assert len(re.findall(rf'id="{ident}"', html)) == 1, ident
-    assert len(re.findall(r'name="search_mode"', html)) == 1
+    for gone in ("search-mode-input", "search-mode-group", "search-mode-hint", 'name="search_mode"', 'class="search-mode"', "sm-opt",
+                 "stored conversations plus live Hacker News stories"):
+        assert gone not in html, gone
     from pathlib import Path
-    touch = (Path(__file__).resolve().parent.parent / "templates" / "_touch_targets.html").read_text()
-    assert "search-mode" not in touch and "pointer: coarse" in touch
+    root = Path(__file__).resolve().parent.parent / "templates"
+    assert not (root / "_search_mode.html").exists()
+    assert "search-mode" not in (root / "_touch_targets.html").read_text()
 
 
 @needs_browser
+@pytest.mark.parametrize("w,h", [(375, 812), (1280, 800)])
 @pytest.mark.parametrize("name,ctx", [("index.html", {"user": USER}), ("chat.html", {"chat": CHAT, "chat_id": "c1", "user": USER})])
-def test_there_is_a_single_working_mode_control_in_the_live_page(integrity_browser, name, ctx):
-    c, pg = _ctx(integrity_browser, 1200, 800)
+def test_the_search_form_submits_no_mode_and_the_composer_lays_out_cleanly(integrity_browser, name, ctx, w, h):
+    c, pg = _ctx(integrity_browser, w, h)
     try:
         _open(pg, name, ctx)
-        assert pg.evaluate("document.querySelectorAll('.search-mode').length") == 1
-        assert pg.evaluate("document.querySelectorAll('input[name=search_mode]').length") == 1
-        pg.click('.sm-opt[data-mode="historical"]')
-        assert pg.evaluate("document.getElementById('search-mode-input').value") == "historical"
+        assert pg.evaluate("document.querySelectorAll('.search-mode,.sm-hint,.sm-opt,input[name=search_mode]').length") == 0
+        form = pg.evaluate("""(()=>{const t=document.querySelector('textarea');const f=t&&t.form;if(!f)return null;
+            return [...new FormData(f).keys()]})()""")
+        assert form is not None and "search_mode" not in form
+        assert pg.evaluate("document.documentElement.scrollWidth") <= w + 1
+        assert pg.errors == []
     finally:
         c.close()
