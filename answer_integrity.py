@@ -140,12 +140,15 @@ _GENERIC_RULES = PlatformRules()
 
 
 def platform_of(sig) -> str:
-    """Stored platform, else inferred from the URL host (registry), else "unknown". X / Twitter is reported as "x"."""
+    """The platform a record belongs to. The HOST of its URL decides when it names a known platform (so a Hacker News link stored with another
+    platform's label is still Hacker News); otherwise the stored label; else "unknown". X / Twitter is reported as "x"."""
+    key = platforms.url_platform(platforms.url_of(sig))
+    if key:
+        return "x" if key == "x_twitter" else key
     plat = str((sig or {}).get("platform") or "").strip().lower()
     if plat:
         return "x" if plat == "twitter" else plat
-    key = platforms.from_url(platforms.url_of(sig))
-    return "unknown" if key is None else ("x" if key == "x_twitter" else key)
+    return "unknown"
 
 
 def rules_for(sig) -> PlatformRules:
@@ -2116,6 +2119,7 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
     listed = 0
     seen = set()
     entries = []
+    counters = {"platform_corrected": 0}
 
     def collect(plat_list):
         nonlocal listed
@@ -2198,13 +2202,32 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
             else:
                 kept.sort(key=lambda p: (-_LABEL_ORDER[p["intent"]], p["verification_status"] != "verified",
                                          p["role"] in NON_DEMAND_ROLES, p["_pos"]))
-            entry = dict(entry, posts=kept)
-            # (Phase 2.2) how this table names a post's community ("Subreddit" / "r/"): from the registry, not the page
-            _label, _prefix = platforms.community_display(platforms.canonical_key(kept[0]["platform"] if kept else entry.get("platform")))
-            entry["community_label"], entry["community_prefix"] = _label, _prefix
-            entries.append(entry)
-            if kept:
-                out.append(entry)
+            # (PLATFORM TRUTH) a group is named by the platform its posts really belong to (their URL host), never by the label the model
+            # wrote for the group: posts the model put under the wrong platform are moved to a group of their own platform.
+            def _plat_norm(v):
+                v = str(v or "").strip().lower()
+                k = platforms.canonical_key(v)
+                return ("x" if k == "x_twitter" else k) if k else ("x" if v == "twitter" else v)
+            by_plat = {}
+            for kp in kept:
+                by_plat.setdefault(kp["platform"], []).append(kp)
+            if len(by_plat) <= 1 and (not kept or _plat_norm(entry.get("platform")) == _plat_norm(kept[0]["platform"])):
+                pieces = [(entry.get("platform"), kept)]
+            else:
+                pieces = list(by_plat.items())
+                for plat_key, grp in pieces:
+                    for kp in grp:
+                        if _plat_norm(entry.get("platform")) != _plat_norm(plat_key):
+                            kp["platform_group_corrected"] = True
+                            counters["platform_corrected"] += 1
+            for plat_value, grp in pieces:
+                piece = dict(entry, platform=plat_value, posts=grp)
+                # (Phase 2.2) how this table names a post's community ("Subreddit" / "r/"): from the registry, not the page
+                _label, _prefix = platforms.community_display(platforms.canonical_key(grp[0]["platform"] if grp else piece.get("platform")))
+                piece["community_label"], piece["community_prefix"] = _label, _prefix
+                entries.append(piece)
+                if grp:
+                    out.append(piece)
         return out
 
     if data["format"] == "source_list":
@@ -2257,6 +2280,8 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
         **({"offers": sum(1 for p in rows if p.get("offer"))} if _kind0 == PROVIDER_KIND else {}),
         "categories": {k: sum(1 for p in rows if _row_category(p) == k) for k in CATEGORY_ORDER},
     }
+    if counters["platform_corrected"]:
+        data["platform_corrections"] = counters["platform_corrected"]      # posts moved to the group of their real platform (absent when none)
 
     if listed and not rows:
         _kind, _subject = current_request_kind()
@@ -2552,12 +2577,14 @@ def annotate_results(results: list, answer_text) -> list:
         return results
     groups = [data.get("platforms")] + [s.get("platforms") for s in (data.get("subjects") or []) if isinstance(s, dict)]
     in_report = {}
+    in_report_role = {}
     for plat_list in groups:
         for entry in plat_list if isinstance(plat_list, list) else []:
             for p in (entry.get("posts") if isinstance(entry, dict) else None) or []:
                 if isinstance(p, dict) and p.get("link"):
                     in_report[p["link"]] = {"status": "in_report", "index": p.get("index"), "intent": p.get("intent"),
                                             "qualified": bool(p.get("qualified")), "relevance": p.get("relevance")}
+                    in_report_role[p["link"]] = p.get("role")
     excluded = {e["link"]: e.get("reason") for e in data.get("excluded_posts") or [] if isinstance(e, dict) and e.get("link")}
     out = []
     for r in results:
@@ -2572,6 +2599,6 @@ def annotate_results(results: list, answer_text) -> list:
             review = {"status": "not_selected", "qualified": False}
         else:
             review = {"status": "not_analyzed", "qualified": False}
-        out.append(dict(r, review=review))
+        out.append(dict(r, review=review, report_role=in_report_role[url]) if url in in_report_role else dict(r, review=review))
     out.sort(key=lambda r: (r["review"]["status"] != "in_report", r["review"].get("index") or 0))
     return out
