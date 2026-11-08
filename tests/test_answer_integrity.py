@@ -476,16 +476,21 @@ def test_search_to_report_flow_renders_the_same_records(integrity_browser, env, 
     try:
         rows = page.evaluate(ROWS_JS)
         assert [r[0] for r in rows] == ["1", "2", "3", "4"]
+        # Columns: # | Source | Post | Evidence | Assessment | Source check | Posted. Every dimension is a labelled line in its own column.
+        flat = lambda cell: " ".join(cell.split())
         assert rows[0][2] == "I need a good reddit tool" and "A$150" in rows[0][3]
+        assert all(len(r) == len(rows[0]) for r in rows)                       # one schema: the same cells in every row
         if approved:
-            assert rows[0][4].startswith("High · Prospective buyer")
-            assert "Purchase: explicit · Fit: fits · Source: verified" in rows[0][4]
+            assert flat(rows[0][4]).startswith("Intent High Role Prospective buyer")
+            assert "Purchase Explicit purchase step stated Fit Fits the request" in flat(rows[0][4])
         else:
-            assert rows[0][4].startswith("Medium · Prospective buyer")
-            assert "Purchase: research · Fit: fits · Source: verified" in rows[0][4]
-            assert "no confirmed purchase step" in rows[0][3]            # the reason lists what the post does state
-        assert rows[1][4].startswith("Medium") and "Purchase: research" in rows[1][4]
-        assert {rows[2][4].split("\n")[0], rows[3][4].split("\n")[0]} == {"Low · Testimonial", "Low · Competitor promotion"}
+            assert flat(rows[0][4]).startswith("Intent Medium Role Prospective buyer")
+            assert "Purchase Researching / asking for options Fit Fits the request" in flat(rows[0][4])
+            assert "no confirmed purchase step" in rows[0][4]            # the reason (labelled as an inference) lists what the post does state
+        assert "Source verified" in flat(rows[0][5])                          # source verification is its own column
+        assert flat(rows[1][4]).startswith("Intent Medium") and "Purchase Researching / asking for options" in flat(rows[1][4])
+        assert {flat(rows[2][4]).split(" Purchase")[0], flat(rows[3][4]).split(" Purchase")[0]} == \
+            {"Intent Low Role Testimonial", "Intent Low Role Competitor promotion"}
         shown = {int(r[0]) for r in rows}
         assert set(_cited(page.inner_text(".answer-rendered"))) <= shown            # UI citation audit
         text = page.inner_text(".answer-rendered")
