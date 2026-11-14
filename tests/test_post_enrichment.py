@@ -281,7 +281,10 @@ class TestFormatPostsBlock:
              patch.object(lg, "_call_claude", side_effect=fake_call):
             lg.analyze_with_claude("q", signals)
 
-        map_msgs = [m for sp, m in sent if sp is lg.CLAUDE_MAP_STEP_SYSTEM_PROMPT]
+        # The batches run concurrently (CLAUDE_MAP_CONCURRENCY), so the ORDER in which the fake model is called is not a contract; what each batch
+        # contains is. Order the captured calls by the first post number they carry. (Results are re-assembled in input order by _concurrent_calls.)
+        import re as _re
+        map_msgs = sorted((m for sp, m in sent if sp is lg.CLAUDE_MAP_STEP_SYSTEM_PROMPT), key=lambda m: int(_re.search(r"\[Post (\d+)\]", m).group(1)))
         assert len(map_msgs) == 3
         assert "[Post 1]" in map_msgs[0] and "[Post 12]" in map_msgs[0]
         assert "[Post 13]" in map_msgs[1] and "[Post 24]" in map_msgs[1]
