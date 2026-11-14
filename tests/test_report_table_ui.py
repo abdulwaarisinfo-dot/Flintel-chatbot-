@@ -227,3 +227,20 @@ def test_malformed_rows_from_the_writer_do_not_break_the_page_or_misalign_the_ta
         assert page.evaluate("[...document.querySelectorAll('.ap-sources-table a')].every(a => !a.href.startsWith('javascript:'))")
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("name", TEMPLATES)
+def test_the_opportunity_summary_shows_buyer_statement_entities_and_age(integrity_browser, built, name):
+    out, results = built
+    opp = out["opportunities"]
+    assert opp["listed_posts"] == len(out["platforms"][0]["posts"])
+    page, errors = open_page(integrity_browser, name, out, results)
+    try:
+        box = flat(page.inner_text(".opportunity-summary"))
+        assert "Opportunity summary" in box
+        # this fixture's historical source FAILED: the buyer-signal line must carry that, not a bare "no confirmed buyer signal"
+        assert "No confirmed buyer signal was found in the listed posts, but the search was not complete" in box and "Reddit failed" in box
+        assert f"{opp['listed_posts']} listed post" in box and f"{opp['identity_groups']} verified identity group" in box
+        assert errors == []
+    finally:
+        page.close()
