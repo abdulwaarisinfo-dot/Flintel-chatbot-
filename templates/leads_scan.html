@@ -1,0 +1,28 @@
+{% extends "leads_base.html" %}
+{% block title %}Scan results{% endblock %}
+{% block body %}
+{% set c = scan.counts %}{% set cov = scan.coverage %}
+<h1>Scan results</h1>
+<p class="sub">{{ scan.statement }}</p>
+{% if cov.status != 'complete' %}<div class="notice">This scan was not complete{% if cov.reasons %}: {{ cov.reasons|join('; ') }}{% endif %}. Zero or few results do not mean there is no demand.</div>{% endif %}
+<div class="grid">
+  <div class="stat"><b>{{ c.displayed }}</b><span>Possible leads</span></div>
+  <div class="stat"><b>{{ c.high_potential }}</b><span>High potential</span></div>
+  <div class="stat"><b>{{ c.current_leads }}</b><span>Current</span></div>
+  <div class="stat"><b>{{ c.historical_or_undated }}</b><span>Historical or undated</span></div>
+</div>
+<h2>Sources searched</h2>
+<div class="card cov">
+  {% for s in cov.sources %}<div><b>{{ s.label }}</b><span class="{{ 'ok' if s.state == 'searched' else 'warn' }}">{{ {'searched':'Searched','partial':'Partly searched','failed':'Failed','unavailable':'Unavailable','unconfirmed':'Not confirmed','not_searched':'Not searched'}.get(s.state, s.state) }}</span><span class="meta">{{ s.retrieved }} retrieved · {{ s.detail }}</span></div>{% endfor %}
+  <div><b>Accounting</b><span class="meta">{{ c.retrieved }} retrieved · {{ c.duplicates }} duplicates · {{ c.evaluated }} evaluated · {{ c.displayed }} shown · {{ c.excluded }} excluded{% if not c.reconciled %} · counts do not reconcile{% endif %}</span></div>
+</div>
+{% include "_lead_help.html" %}
+<h2>Leads</h2>
+{% if leads %}{% for lead in leads %}{% include "_lead_card.html" %}{% endfor %}
+{% else %}<div class="card empty"><h2>{{ 'No leads found' if cov.status == 'complete' else 'Nothing found, but the scan was incomplete' }}</h2><p>{{ scan.statement }}</p><a class="btn" href="/leads/profile">Refine your business profile</a></div>{% endif %}
+{% if scan.excluded %}
+<details class="card"><summary>{{ scan.excluded|length }} post{{ '' if scan.excluded|length == 1 else 's' }} excluded, with reasons</summary>
+  {% for e in scan.excluded %}<p class="meta"><b>{{ e.title or 'Untitled' }}</b><br>{{ e.reason }}{% if e.url and (e.url.startswith('https://') or e.url.startswith('http://')) %} · <a href="{{ e.url }}" target="_blank" rel="noopener noreferrer">Open</a>{% endif %}</p>{% endfor %}
+</details>
+{% endif %}
+{% endblock %}
