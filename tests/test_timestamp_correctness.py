@@ -107,9 +107,12 @@ def test_an_explicit_range_keeps_valid_dates_and_counts_bad_ones_as_undated():
 
 
 # ── recency scoring ─────────────────────────────────────────────────────────────────────────────────────────────────
-@pytest.mark.parametrize("value", [NOW + D(days=30), NOW + D(minutes=30), datetime(1970, 1, 1, tzinfo=UTC),
+# The two FUTURE values are built when the test runs, not when the module is imported: recency_score() tolerates 10 minutes of clock skew against the
+# real clock, so a value fixed at import time ("NOW + 30 minutes") stops being in the future after a ~20 minute test session and the test failed.
+@pytest.mark.parametrize("value", [lambda: datetime.now(UTC) + D(days=30), lambda: datetime.now(UTC) + D(minutes=30), datetime(1970, 1, 1, tzinfo=UTC),
                                    datetime(1999, 1, 1), "1970-01-01T00:00:00Z", "junk", None, 0, ""])
 def test_future_epoch_zero_invalid_and_missing_dates_all_get_the_missing_date_score(value):
+    value = value() if callable(value) else value
     assert opportunity.recency_score(value, CFG) == 0.35
 
 
