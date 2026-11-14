@@ -9353,6 +9353,14 @@ _HTML_SCRIPT_STYLE_RE   = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.IGNORE
 _HTML_WHITESPACE_RE     = re.compile(r"\s+")
 
 
+def _fetch_page_safely(url: str) -> str:
+    """(SSRF) The one place the chat flow fetches a USER-SUPPLIED website. Delegates to safe_fetch: http/https only, ports 80/443, every resolved
+    address must be public (no localhost, private, link-local or metadata addresses), every redirect hop is re-validated, the connection goes to the
+    validated address, and time and size are bounded. Raises on any failure (UnsafeUrl / FetchFailed), exactly like the previous httpx fetch."""
+    import safe_fetch
+    return safe_fetch.fetch_public_page(url, timeout=float(WEBSITE_FETCH_TIMEOUT_SECONDS), total_deadline=max(float(WEBSITE_FETCH_TIMEOUT_SECONDS) * 2, 10.0))["text"]
+
+
 def fetch_website_text(url: str) -> str:
     """(WEBSITE-URL KEYWORD EXTRACTION FEATURE) Fetches a user-provided
     website URL and reduces it to plain text, good enough to hand to
@@ -9364,11 +9372,7 @@ def fetch_website_text(url: str) -> str:
 
     Truncates to WEBSITE_FETCH_MAX_CHARS so a large page can never blow
     up the size/cost of the Claude call that follows."""
-    headers = {"User-Agent": "Mozilla/5.0 (compatible; FlintelBot/1.0)"}
-    with httpx.Client(timeout=WEBSITE_FETCH_TIMEOUT_SECONDS, follow_redirects=True) as http_client:
-        response = http_client.get(url, headers=headers)
-        response.raise_for_status()
-        html = response.text
+    html = _fetch_page_safely(url)
 
     text = _HTML_SCRIPT_STYLE_RE.sub(" ", html)
     text = _HTML_TAG_RE.sub(" ", text)
@@ -9423,11 +9427,7 @@ def _fetch_raw_html(url: str) -> str:
     returns RAW html (not tag-stripped) — needed so link-discovery can
     still see <a href> tags. Raises on failure, same convention as
     fetch_website_text()."""
-    headers = {"User-Agent": "Mozilla/5.0 (compatible; FlintelBot/1.0)"}
-    with httpx.Client(timeout=WEBSITE_FETCH_TIMEOUT_SECONDS, follow_redirects=True) as http_client:
-        response = http_client.get(url, headers=headers)
-        response.raise_for_status()
-        return response.text
+    return _fetch_page_safely(url)
 
 
 def fetch_website_multi_page(url: str) -> dict:
@@ -10271,7 +10271,7 @@ _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 # (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
 # made only of these renders as an EMPTY answer on the page.
 _ANSWER_META_KEYS = {"search_mode", "format", "searched", "near_match_confidence", "answer_status", "website_context", "data_freshness", "time_scope",
-                     "signal_report", "analysis_coverage", "search_coverage", "reconciliation"}
+                     "signal_report", "analysis_coverage", "search_coverage", "reconciliation", "opportunities"}
 
 
 
