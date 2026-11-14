@@ -1,0 +1,13 @@
+{% extends "leads_base.html" %}
+{% block title %}My Leads{% endblock %}
+{% block body %}
+<h1>My leads</h1>
+<div class="row" style="margin:14px 0 20px">
+  {% for k, t in [('', 'All'), ('new', 'New'), ('saved', 'Saved'), ('contacted', 'Contacted'), ('not_interested', 'Not interested')] %}
+    <a class="btn small {{ 'primary' if status == k }}" href="/leads/my{{ '?status=' ~ k if k }}">{{ t }}{% if k %} ({{ counts[k] }}){% else %} ({{ counts.total }}){% endif %}</a>
+  {% endfor %}
+</div>
+{% include "_lead_help.html" %}
+{% if leads %}{% for lead in leads %}{% include "_lead_card.html" %}{% endfor %}
+{% else %}<div class="card empty"><h2>{{ 'No leads yet' if not status else 'No leads with this status' }}</h2><p>{{ 'Run a scan to find possible leads.' if not status else 'Leads you mark this way appear here.' }}</p><a class="btn primary" href="/leads/find">Find Leads</a></div>{% endif %}
+{% endblock %}
