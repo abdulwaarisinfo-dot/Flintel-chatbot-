@@ -1,0 +1,22 @@
+{% set INTENT = {'DIRECT_BUYING_INTENT':'Buying intent','SERVICE_REQUEST':'Service request','RECOMMENDATION_REQUEST':'Asking for recommendations','PROVIDER_SEARCH':'Looking for a provider','STRONG_PROBLEM_SIGNAL':'Describes a problem','SOLUTION_RESEARCH':'Comparing solutions','GENERAL_DISCUSSION':'General discussion','VENDOR_PROMOTION':'Vendor promotion','IRRELEVANT':'Not relevant'} %}
+{% set PLAT = {'reddit':'Reddit','hackernews':'Hacker News'} %}
+<article class="card lead">
+  <div class="row">
+    <span class="tag {{ 'hp' if lead.label == 'High potential' else ('rel' if lead.label == 'Relevant' else 'rev') }}">{{ lead.label }}</span>
+    <span class="tag">{{ INTENT.get(lead.intent, lead.intent) }}</span>
+    {% if lead.recency == 'recent' %}<span class="tag">Recent</span>{% elif lead.recency == 'historical' %}<span class="tag rev">Historical</span>{% else %}<span class="tag rev">No verified date</span>{% endif %}
+    {% if lead.status and lead.status != 'new' %}<span class="tag">{{ lead.status|replace('_',' ')|capitalize }}</span>{% endif %}
+  </div>
+  <h3><a href="/leads/item/{{ lead.lead_id }}">{{ lead.title }}</a></h3>
+  {% if lead.evidence and lead.evidence.quote %}<blockquote>“{{ lead.evidence.quote }}”</blockquote>{% endif %}
+  <p class="meta">
+    {{ PLAT.get(lead.platform, lead.platform or 'Unknown source') }}{% if lead.community %} · {{ 'r/' if lead.platform == 'reddit' }}{{ lead.community }}{% endif %}
+    · {{ lead.author if lead.author else 'Author unknown' }}
+    · {{ lead.published_at[:10] if lead.published_at else 'No verified date' }}
+  </p>
+  {% if lead.reasons %}<ul class="why">{% for r in lead.reasons[:2] %}<li>{{ r }}</li>{% endfor %}</ul>{% endif %}
+  <div class="row" style="margin-top:12px">
+    <a class="btn small" href="/leads/item/{{ lead.lead_id }}">View details</a>
+    {% if lead.url and (lead.url.startswith('https://') or lead.url.startswith('http://')) %}<a class="btn small" href="{{ lead.url }}" target="_blank" rel="noopener noreferrer">Open original</a>{% endif %}
+  </div>
+</article>
