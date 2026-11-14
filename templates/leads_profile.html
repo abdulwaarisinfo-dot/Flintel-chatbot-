@@ -1,0 +1,64 @@
+{% extends "leads_base.html" %}
+{% block title %}Business Profile{% endblock %}
+{% block body %}
+<h1>Your business</h1>
+<p class="sub">The more clearly you describe what you sell and who needs it, the better Flintel can tell a real prospect from a casual mention.</p>
+{% if saved %}<div class="card ok">Saved.</div>{% endif %}
+{% if profile and profile.website and profile.website.status == 'analyzed' %}
+  <div class="card"><b>From your website</b><p class="meta">{{ profile.website.facts.title }}{% if profile.website.facts.description %} — {{ profile.website.facts.description }}{% endif %}</p><p class="hint">Read from your public page. Your own answers below are used first.</p></div>
+{% elif profile and profile.website and profile.website.url and profile.website.status not in ('analyzed', 'not_analyzed', 'not_provided') %}
+  <div class="notice">{{ profile.website.message or 'Your website could not be read.' }}</div>
+{% endif %}
+<form method="post" action="/leads/profile" class="card" novalidate id="profile-form">
+  <label for="website">Website <span class="hint">(optional)</span></label>
+  <input id="website" name="website" type="text" inputmode="url" autocomplete="url" value="{{ form.website }}" placeholder="yourcompany.com">
+  {% if errors.website %}<div class="err">{{ errors.website }}</div>{% endif %}
+
+  <label for="business_name">Business name</label>
+  <input id="business_name" name="business_name" type="text" value="{{ form.business_name }}" maxlength="120">
+  {% if errors.business_name %}<div class="err">{{ errors.business_name }}</div>{% endif %}
+
+  <label for="sells">What does your business sell?</label>
+  <p class="hint">In plain words, for example: “CRM software for recruitment agencies”.</p>
+  <textarea id="sells" name="sells" maxlength="2000">{{ form.sells }}</textarea>
+  {% if errors.sells %}<div class="err">{{ errors.sells }}</div>{% endif %}
+
+  <label for="ideal_customers">Who are your ideal customers?</label>
+  <textarea id="ideal_customers" name="ideal_customers" maxlength="2000">{{ form.ideal_customers }}</textarea>
+
+  <label for="problems_solved">What problems do you solve for them?</label>
+  <p class="hint">This helps find people who describe the problem without naming your kind of product.</p>
+  <textarea id="problems_solved" name="problems_solved" maxlength="2000">{{ form.problems_solved }}</textarea>
+
+  <label for="geo_scope">Where do you serve customers?</label>
+  <select id="geo_scope" name="geo_scope">
+    {% for v, t in [('worldwide','Worldwide'),('country','A country'),('region','A region'),('city','A city')] %}<option value="{{ v }}" {{ 'selected' if form.geo_scope == v }}>{{ t }}</option>{% endfor %}
+  </select>
+  <label for="geo_places">Which place(s)? <span class="hint">(if not worldwide, separate with commas)</span></label>
+  <p class="hint">List the suburbs, districts and nearby towns you serve too, for example “Leeds, Headingley, Kirkstall”. A post that names a place that is not on your list is left out of your leads and shown under “excluded”, with the place named.</p>
+  <input id="geo_places" name="geo_places" type="text" value="{{ form.geo_places }}">
+  {% if errors.geo_places %}<div class="err">{{ errors.geo_places }}</div>{% endif %}
+  {% if errors.geo_scope %}<div class="err">{{ errors.geo_scope }}</div>{% endif %}
+
+  <details style="margin-top:16px"><summary class="hint" style="cursor:pointer">More details (optional)</summary>
+    <label for="competitors">Competitors or alternatives</label>
+    <input id="competitors" name="competitors" type="text" value="{{ form.competitors }}" placeholder="Comma separated">
+    <label for="product_terms">Product names or important terms</label>
+    <input id="product_terms" name="product_terms" type="text" value="{{ form.product_terms }}">
+    <label for="exclusions">Words that mean “not a customer”</label>
+    <input id="exclusions" name="exclusions" type="text" value="{{ form.exclusions }}">
+    <label for="notes">Anything else Flintel should know</label>
+    <textarea id="notes" name="notes">{{ form.notes }}</textarea>
+  </details>
+  <div class="row" style="margin-top:20px"><button class="btn primary" type="submit" id="profile-button">{{ 'Save changes' if profile else 'Save and find leads' }}</button></div>
+  <p id="profile-progress" role="status" aria-live="polite" class="hint" hidden>Saving your business. If you entered a website, we are reading it now (up to about 15 seconds).</p>
+</form>
+<script>
+(function () {
+  var f = document.getElementById('profile-form'), b = document.getElementById('profile-button'), p = document.getElementById('profile-progress');
+  if (!f || !b) return;
+  f.addEventListener('submit', function (e) { if (b.disabled) { e.preventDefault(); return; } b.disabled = true; p.hidden = false; });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { b.disabled = false; p.hidden = true; } });
+})();
+</script>
+{% endblock %}
