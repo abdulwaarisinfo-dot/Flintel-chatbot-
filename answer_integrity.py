@@ -24,6 +24,8 @@ import json
 import re
 from datetime import datetime, timedelta, timezone
 
+import opportunity_layer   # evidence-driven opportunity categories, entity grouping, recency
+import report_claims   # free-text claims (names, demo/quote requests, partnerships) checked against the displayed rows
 import platforms   # the platform registry: identity, URL hosts, community labels (Phase 2.2)
 import timerange   # pure date helpers: publication_time / post_published_at (Phase 2: dates decide what counts for a window)
 
@@ -1480,7 +1482,8 @@ def _check_text(text, ctx, key, allowed=None):
     if key in _NAME_KEYS:
         return out
     out = _drop_unsupported_numbers(_drop_uncited_vague(out), ctx["row_text"], allowed)
-    return _drop_contradicted(out, ctx)
+    out = _drop_contradicted(out, ctx)
+    return report_claims.drop_unsupported_claims(out, ctx.get("claim_text") or {}, ctx.get("query") or "", allowed)
 
 
 def _rewrite_tree(node, ctx, key=None):
@@ -2410,9 +2413,13 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
                                                               p.get("published_at")) if x)
                         for p in rows if is_evidence_row(p)},               # a figure in an unmatched row validates nothing
            "rows": {p["index"]: {"role": p["role"], "qualified": p["qualified"]} for p in rows},
+           "query": str(query or ""),
+           "claim_text": {p["index"]: " ".join(str(x) for x in (by_url[p["link"]].get("title"), by_url[p["link"]].get("post_text"),
+                                                                p["link"], by_url[p["link"]].get("author")) if x) for p in rows},
            "qualified": counts["qualified"],
            "count_values": ({counts[k] for k in ("shown", "analyzed", "retrieved", "unique", "relevant", "verified",
                                                  "qualified", "excluded")} | set(counts["categories"].values()))}
+    _had_text = {k for k in ("executive_summary", "summary") if isinstance(data.get(k), str) and data[k].strip()}
     for field in ("executive_summary", "summary"):
         if isinstance(data.get(field), str):
             data[field] = _COUNT_CLAIM.sub(lambda m: _restate_count(m, counts), data[field])
@@ -2458,6 +2465,11 @@ def enforce_answer_integrity(data: dict, matched_signals: list, aligned: list, q
     data["excluded_posts"] = excluded_posts
     data.update(_reconciled_fields(sigs, listed, rows, excluded, listed_links, excluded_posts, terms, icp))
     data["verified_summary"] = verified_summary(counts, analysis_check, time_out)
+    for _k in ("executive_summary", "summary"):       # a summary every sentence of which failed a claim check keeps a server-built line
+        if _k in _had_text and not str(data.get(_k) or "").strip():
+            data[_k] = data["verified_summary"]
+    data["opportunities"] = opportunity_layer.build([p for pl in data.get("platforms") or [] if isinstance(pl, dict)
+                                                     for p in (pl.get("posts") or []) if isinstance(p, dict)], by_url)
     return data
 
 
