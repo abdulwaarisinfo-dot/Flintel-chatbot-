@@ -2,7 +2,7 @@
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure  
 and business logic. Imports `app` from index.py and registers every
-route on it; index.py imports this module once, at the bottom, purely
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
 """
 
@@ -1119,6 +1119,13 @@ def home(request: Request):
     chat_id/chat/pending_stream_topic_key keys are still all passed, just
     with chat_id/chat/pending_stream_topic_key always at their empty
     defaults now instead of being conditionally populated)."""
+    # (LEAD MVP) A signed-out visitor who tried to open a /leads page is brought back there once they have signed in.
+    _next = request.session.get("post_login_next")
+    if _next and get_current_user(request):
+        request.session.pop("post_login_next", None)
+        if isinstance(_next, str) and _next.startswith("/leads") and not _next.startswith("//"):
+            return RedirectResponse(_next, status_code=303)
+
     # (STALE-SESSION FIX) Mirrors new_chat()'s own
     # request.session.pop("active_chat_id", None) — visiting the bare
     # home URL must be a genuinely fresh start in BOTH senses: the
@@ -4005,6 +4012,9 @@ def _hand_over_guest_search(guest_id, email):
 def _post_auth_target(request: Request, resume_chat, email) -> str:
     """Where to land after signing in: that conversation if (and only if) it now belongs to the signed-in
     account, otherwise the normal home page. Idempotent: a duplicate callback lands on the same place."""
+    _next = request.session.pop("post_login_next", None)      # (LEAD MVP) the /leads page the visitor tried to open before signing in
+    if isinstance(_next, str) and _next.startswith("/leads") and not _next.startswith("//"):
+        return _next
     if resume_chat:
         try:
             if get_chat_session(resume_chat, email):
