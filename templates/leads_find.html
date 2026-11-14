@@ -1,0 +1,41 @@
+{% extends "leads_base.html" %}
+{% block title %}Find Leads{% endblock %}
+{% block body %}
+<h1>Find leads</h1>
+<p class="sub">Flintel searches public conversations for people who need what {{ profile.user.business_name }} offers.</p>
+{% if error == 'no_source' %}<div class="notice">Choose at least one source.</div>{% endif %}
+{% if error == 'cap' %}<div class="notice">You have reached today's limit of {{ cap }} scans. Try again tomorrow.</div>{% endif %}
+{% if error == 'busy' %}<div class="notice">A scan for your account is already running. Wait for it to finish, then open it from Overview.</div>{% endif %}
+{% if error == 'failed' %}<div class="notice">The scan could not be completed. Nothing was saved. Please try again.</div>{% endif %}
+<div class="card"><b>Your business</b><p class="meta">{{ profile.user.sells }}</p><a class="btn small" href="/leads/profile">Edit business profile</a></div>
+{% if not sources %}
+  <div class="card empty"><h2>No source is available right now</h2><p>No platform is currently connected for lead discovery. Please try again later.</p></div>
+{% else %}
+<form method="post" action="/leads/find" class="card" id="scan-form">
+  <b>Where should Flintel look?</b>
+  <div class="checks">{% for s in sources %}<label><input type="checkbox" name="sources" value="{{ s.key }}" checked> {{ s.label }} <span class="hint">· {{ s.kind }}</span></label>{% endfor %}</div>
+  <label for="days">How far back?</label>
+  <select id="days" name="days">{% for d in periods %}<option value="{{ d }}" {{ 'selected' if d == 30 }}>Last {{ d }} days</option>{% endfor %}</select>
+  <p class="hint">Reddit comes from a stored archive and Hacker News is searched live (stories only). Results show their dates, and older posts are marked historical.</p>
+  <div class="row" style="margin-top:16px"><button class="btn primary" type="submit" id="scan-button">Find Leads</button><span class="hint">Up to {{ cap }} scans a day. The scan runs now and you will see the results when it finishes.</span></div>
+  <div id="scan-progress" role="status" aria-live="polite" hidden>
+    <div class="progress-bar" aria-hidden="true"><span></span></div>
+    <p class="hint" style="margin:8px 0 0">Searching the sources you chose. This usually takes under a minute. Please keep this page open.</p>
+  </div>
+</form>
+<script>
+(function () {
+  var form = document.getElementById('scan-form'), btn = document.getElementById('scan-button'), box = document.getElementById('scan-progress');
+  if (!form || !btn || !box) return;
+  function idle() { btn.disabled = false; btn.textContent = 'Find Leads'; box.hidden = true; form.removeAttribute('aria-busy'); }
+  form.addEventListener('submit', function (e) {
+    if (btn.disabled) { e.preventDefault(); return; }                       // a second click or Enter press never sends a second request
+    var any = form.querySelectorAll('input[name=sources]:checked').length; if (!any) return;
+    btn.disabled = true; btn.textContent = 'Searching…'; box.hidden = false; form.setAttribute('aria-busy', 'true');
+  });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) idle(); });   // coming back with the browser Back button
+})();
+</script>
+{% endif %}
+{% if concepts %}<h2>What Flintel will look for</h2><div class="card"><ul class="why" style="margin:0">{% for c in concepts %}<li>{{ c.query }}</li>{% endfor %}</ul></div>{% endif %}
+{% endblock %}
