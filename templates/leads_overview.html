@@ -1,0 +1,36 @@
+{% extends "leads_base.html" %}
+{% block title %}Overview{% endblock %}
+{% block body %}
+<h1>Find leads on social media</h1>
+<p class="sub">Tell Flintel what your business sells. Flintel finds people who need it, and shows you the original conversation as evidence.</p>
+{% if not profile %}
+  <div class="card empty">
+    <h2>Start with your business</h2>
+    <p>Describe what you sell and who you want to reach. It takes about two minutes.</p>
+    <a class="btn primary" href="/leads/profile">Set up your business</a>
+  </div>
+{% else %}
+  <div class="row" style="margin-bottom:18px">
+    <a class="btn primary" href="/leads/find">Find Leads</a>
+    <span class="sub" style="margin:0">for {{ profile.user.business_name }}</span>
+  </div>
+  <div class="grid">
+    <div class="stat"><b>{{ counts.new }}</b><span>New leads</span></div>
+    <div class="stat"><b>{{ counts.high_potential_new }}</b><span>New, high potential</span></div>
+    <div class="stat"><b>{{ counts.saved }}</b><span>Saved</span></div>
+    <div class="stat"><b>{{ counts.contacted }}</b><span>Contacted</span></div>
+  </div>
+  <h2>Recent scans</h2>
+  {% if scans %}
+    {% for s in scans %}
+      <a class="card" style="display:block" href="/leads/scan/{{ s.scan_id }}">
+        <div class="row"><b>{{ s.created_at[:16]|replace('T',' ') }} UTC</b>
+          <span class="tag {{ 'rel' if s.coverage.status == 'complete' else 'rev' }}">{{ 'Complete' if s.coverage.status == 'complete' else ('Partial' if s.coverage.status == 'partial' else 'Incomplete') }}</span></div>
+        <p class="meta">{{ s.statement }}</p>
+      </a>
+    {% endfor %}
+  {% else %}
+    <div class="card empty"><h2>No scans yet</h2><p>Run your first scan to see possible leads here.</p><a class="btn primary" href="/leads/find">Find Leads</a></div>
+  {% endif %}
+{% endif %}
+{% endblock %}
