@@ -1,0 +1,41 @@
+{% extends "leads_base.html" %}
+{% block title %}Lead{% endblock %}
+{% block body %}
+{% set INTENT = {'DIRECT_BUYING_INTENT':'Buying intent','SERVICE_REQUEST':'Service request','RECOMMENDATION_REQUEST':'Asking for recommendations','PROVIDER_SEARCH':'Looking for a provider','STRONG_PROBLEM_SIGNAL':'Describes a problem','SOLUTION_RESEARCH':'Comparing solutions'} %}
+<p><a class="hint" href="/leads/my">← My leads</a></p>
+<h1 style="overflow-wrap:anywhere">{{ lead.title }}</h1>
+<div class="row"><span class="tag {{ 'hp' if lead.label == 'High potential' else ('rel' if lead.label == 'Relevant' else 'rev') }}">{{ lead.label }}</span>
+  <span class="tag">{{ INTENT.get(lead.intent, lead.intent|replace('_',' ')|capitalize) }}</span>
+  <span class="tag">{{ lead.status|replace('_',' ')|capitalize }}</span></div>
+<p class="meta">{{ {'reddit':'Reddit','hackernews':'Hacker News'}.get(lead.platform, lead.platform or 'Unknown source') }}{% if lead.community %} · {{ 'r/' if lead.platform == 'reddit' }}{{ lead.community }}{% endif %} · {{ lead.author if lead.author else 'Author unknown' }} · {{ lead.published_at[:10] if lead.published_at else 'No verified date' }} · retrieved {{ lead.retrieved_at[:10] }}</p>
+<div class="row">{% if lead.url and (lead.url.startswith('https://') or lead.url.startswith('http://')) %}<a class="btn primary" href="{{ lead.url }}" target="_blank" rel="noopener noreferrer">Open original conversation</a>{% endif %}</div>
+
+<h2>What they said</h2>
+<div class="card">
+  {% if lead.evidence and lead.evidence.quote %}<blockquote>“{{ lead.evidence.quote }}”</blockquote><p class="hint">An exact quotation copied from the post.</p>{% endif %}
+  {% if lead.text %}<details><summary class="hint" style="cursor:pointer">Full available post text</summary><p style="white-space:pre-wrap;overflow-wrap:anywhere">{{ lead.text[:4000] }}</p></details>{% endif %}
+</div>
+<h2>Why this is a match</h2>
+<div class="card">
+  <p class="hint">This is Flintel's explanation, separate from the author's words.</p>
+  <p>{{ lead.explanation }}</p>
+  <ul class="why">
+    <li>Fit with your offer: {{ lead.fit.business_fit }}{% if lead.fit.offer_terms_found %} (found: {{ lead.fit.offer_terms_found|join(', ') }}){% endif %}</li>
+    <li>Problem fit: {{ lead.fit.problem_fit }}{% if lead.fit.problem_terms_found %} (found: {{ lead.fit.problem_terms_found|join(', ') }}){% endif %}</li>
+    <li>Recency: {{ lead.recency }}</li>
+    <li>Location: {{ {'match':'matches ' ~ (lead.geography.place or ''), 'unknown':'not confirmed', 'not_required':'not required for your business'}.get(lead.geography.status, lead.geography.status) }}</li>
+    {% for r in lead.reasons %}<li>{{ r }}</li>{% endfor %}
+    {% for l in lead.limitations %}<li>{{ l }}</li>{% endfor %}
+  </ul>
+</div>
+<h2>Suggested opener</h2>
+<div class="card"><p class="hint">A starting point built from the post and your own description. Edit it before you use it. Flintel never sends anything for you.</p>
+  <textarea id="opener" aria-label="Suggested opener" readonly style="min-height:130px">{{ lead.suggested_opener }}</textarea>
+  <div class="row" style="margin-top:10px"><button class="btn small" type="button" onclick="navigator.clipboard.writeText(document.getElementById('opener').value);this.textContent='Copied'">Copy</button></div>
+</div>
+<h2>Lead status</h2>
+<form method="post" action="/leads/item/{{ lead.lead_id }}/status" class="card row">
+  {% for s, t in [('new','New'),('saved','Save'),('contacted','Mark contacted'),('not_interested','Not interested')] %}{% if s != lead.status %}<button class="btn small" name="status" value="{{ s }}" type="submit">{{ t }}</button>{% endif %}{% endfor %}
+</form>
+<form method="post" action="/leads/item/{{ lead.lead_id }}/notes" class="card"><label for="notes" style="margin-top:0">Your notes</label><textarea id="notes" name="notes" maxlength="2000">{{ lead.notes }}</textarea><div class="row" style="margin-top:10px"><button class="btn small" type="submit">Save notes</button></div></form>
+{% endblock %}
