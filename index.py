@@ -2949,6 +2949,8 @@ async def _stop_turn_finisher():
 
 
 import routes  # noqa: F401  (registers every route on `app`)
+import lead_routes  # (LEAD MVP) the lead-generation pages: /leads ...
+app.include_router(lead_routes.router)
 
 if __name__ == "__main__":
     import uvicorn
