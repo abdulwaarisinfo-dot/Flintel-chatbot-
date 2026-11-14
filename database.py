@@ -145,6 +145,20 @@ users_collection.create_index("google_id", unique=True, sparse=True)
 # Chat/session memory (Claude/ChatGPT-style conversations). — now on MONGODB3
 chats_collection = db3.flintel_users_chat
 
+# (LEAD MVP) Business profiles, lead scans and leads: one document per owner / scan / (owner, source). Every query filters on owner_key.
+business_profiles_collection = db3.flintel_business_profiles
+lead_scans_collection = db3.flintel_lead_scans
+leads_collection = db3.flintel_leads
+lead_quota_collection = db3.flintel_lead_quota        # atomic per-owner daily counters and the scan lock: one document per (owner_key, slot)
+try:
+    lead_quota_collection.create_index([("owner_key", 1), ("slot", 1)], unique=True)
+    business_profiles_collection.create_index("owner_key", unique=True)
+    lead_scans_collection.create_index([("owner_key", 1), ("scan_id", 1)], unique=True)
+    leads_collection.create_index([("owner_key", 1), ("source_id", 1)], unique=True)
+    leads_collection.create_index([("owner_key", 1), ("lead_id", 1)], unique=True)
+except Exception as exc:                                    # an index problem must not stop the application starting
+    log.warning(f"Could not create lead-MVP indexes: {exc}")
+
 # (PER-USER BUSY LOCK) A dedicated small collection, keyed by owner_key —
 # not an in-memory dict, and not a field bolted onto chats_collection.
 # Reasons this fits the existing pattern best:
