@@ -140,7 +140,9 @@ if MONGODB4:
 # User accounts (Google OAuth + email/password). — now on MONGODB3
 users_collection = db3.flintel_users
 users_collection.create_index("email", unique=True, sparse=True)
-users_collection.create_index("google_id", unique=True, sparse=True)
+
+from user_indexes import ensure_google_id_index
+ensure_google_id_index(users_collection)
 
 # Chat/session memory (Claude/ChatGPT-style conversations). — now on MONGODB3
 chats_collection = db3.flintel_users_chat
