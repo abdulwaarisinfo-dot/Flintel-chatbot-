@@ -547,7 +547,7 @@ def create_email_user(email: str, password_hash: str):
     result = users_collection.insert_one({
         "email":          email,
         "name":           None,
-        "google_id":      None,
+        # NO "google_id" key: a stored null still counts as a value for a unique index, so a second email user would collide.
         "password_hash":  password_hash,
         "provider":       "email",
         "created_at":     now,
