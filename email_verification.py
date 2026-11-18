@@ -34,6 +34,7 @@ import ssl
 import time
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
+from email.utils import formatdate, make_msgid
 
 log = logging.getLogger("flintel.email_verification")
 
@@ -180,6 +181,8 @@ def build_message(to_addr, code, sender):
     msg["Subject"] = f"Your Flintel verification code: {code}"
     msg["From"] = sender
     msg["To"] = to_addr
+    msg["Date"] = formatdate(localtime=False)                       # smtplib adds neither header; a message without them reads as low quality
+    msg["Message-ID"] = make_msgid(domain=(sender.rsplit("@", 1)[-1].strip(" >") or None))   # also the key to find this send in the provider's events
     minutes = CODE_TTL_SECONDS // 60
     msg.set_content(
         f"Your Flintel verification code is {code}.\n\n"
@@ -235,10 +238,23 @@ def send_code(to_addr, code):
                 server.starttls(context=ctx)
             if user:
                 server.login(user, password)
-            server.send_message(msg)
+            refused = server.send_message(msg)
+        if refused:                                                  # defensive: some recipients refused although the call returned
+            raise smtplib.SMTPRecipientsRefused(refused)
     except Exception as exc:
-        log.warning(f"Verification email could not be sent ({type(exc).__name__})")        # never the message text: may echo the address/credentials
+        # classify for diagnostics WITHOUT the server's text (it can echo the address or credentials): only the exception type + numeric SMTP code
+        kind = ("recipient_refused" if isinstance(exc, smtplib.SMTPRecipientsRefused) else
+                "auth_failed" if isinstance(exc, smtplib.SMTPAuthenticationError) else
+                "sender_refused" if isinstance(exc, smtplib.SMTPSenderRefused) else "send_error")
+        codes = sorted({c for c, _ in (exc.recipients.values() if isinstance(exc, smtplib.SMTPRecipientsRefused) else [])}) \
+            or ([getattr(exc, "smtp_code", None)] if getattr(exc, "smtp_code", None) else [])
+        log.warning(f"Verification email NOT sent | kind={kind} error={type(exc).__name__} smtp_code={codes or 'n/a'} "
+                    f"message_id={msg['Message-ID']} to_domain={to_addr.rsplit('@', 1)[-1]} host={host}")
         raise EmailSendFailed(type(exc).__name__)
+    # Acceptance by the SMTP relay is NOT delivery and says nothing about Gmail inbox placement: bounces, suppression and spam
+    # filtering happen afterwards and are visible only in the provider's dashboard/webhooks. Use message_id to find this send there.
+    log.info(f"Verification email accepted by SMTP relay (not proof of inbox delivery) | message_id={msg['Message-ID']} "
+             f"to_domain={to_addr.rsplit('@', 1)[-1]} host={host}")
 
 
 def verified_marker(email, now=None):
