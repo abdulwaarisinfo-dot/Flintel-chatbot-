@@ -191,7 +191,8 @@ from index import (
 )
 from database import users_collection  # <-- FIX: was missing, used in signup()/login()
 from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from pymongo.errors import DuplicateKeyError
 from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT_MAX_PHRASES, URL_MERGED_MAX_PHRASES
 import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
 import billing          # (BILLING) Lemon Squeezy checkout + webhook -> plan entitlements
@@ -4193,6 +4194,24 @@ def signup_verify_code(request: Request, email: str = Form(...), code: str = For
     return _auth_json({"ok": True, "email": email_norm})
 
 
+_SIGNUP_REPEAT_WINDOW_SECONDS = 120
+
+
+def _is_repeat_of_signup(user, password) -> bool:
+    """True when `user` is the email/password account a request with the SAME verified address and the SAME password just created
+    (a double click, a retry, or the losing half of two parallel submits). The caller already proved the address by code, and the
+    password must match the stored hash, so this grants nothing a fresh sign-in would not."""
+    try:
+        created = user.get("created_at")
+        if created is not None and created.tzinfo is None:
+            created = created.replace(tzinfo=timezone.utc)
+        return bool(user.get("provider") == "email" and user.get("password_hash") and created
+                    and datetime.now(timezone.utc) - created <= timedelta(seconds=_SIGNUP_REPEAT_WINDOW_SECONDS)
+                    and pwd_context.verify(password, user["password_hash"]))
+    except Exception:
+        return False
+
+
 @app.post("/signup")
 def signup(
     request: Request,
@@ -4226,8 +4245,18 @@ def signup(
             {"error": "Password must be at least 8 characters.", "user": None},
         )
 
-    if users_collection.find_one({"email": email_norm}):
+    anon_id = peek_guest_id(request)
+    resume_chat = _guest_resume_chat(anon_id, resume == "1")
+
+    def _already_registered():
         request.session.pop("signup_verified", None)
+        _existing = users_collection.find_one({"email": email_norm})
+        if _existing and _is_repeat_of_signup(_existing, password):      # same request repeated: the account exists, just sign in
+            _log_user_in(request, _existing)
+            _t = _post_auth_target(request, resume_chat, email_norm)
+            if _wants_json(request):
+                return _auth_json({"ok": True, "redirect": _t})
+            return RedirectResponse(url=_t, status_code=303)
         if _wants_json(request):
             return _auth_json({"ok": False, "error": "An account with that email already exists."}, 409)
         return templates.TemplateResponse(
@@ -4236,17 +4265,29 @@ def signup(
             {"error": "An account with that email already exists.", "user": None},
         )
 
-    anon_id = peek_guest_id(request)
-    resume_chat = _guest_resume_chat(anon_id, resume == "1")
+    if users_collection.find_one({"email": email_norm}):
+        return _already_registered()
 
     password_hash = pwd_context.hash(password)
     try:
         user_doc = create_email_user(email_norm, password_hash)
-    except Exception as exc:                                  # the unique email index: a parallel sign-up won
-        log.warning(f"Email signup could not create the account: {exc}")
-        request.session.pop("signup_verified", None)
+    except DuplicateKeyError as exc:
+        _kp = (getattr(exc, "details", None) or {}).get("keyPattern") or {}
+        if "email" in _kp or (not _kp and "email" in str(exc)):          # the unique email index: a parallel sign-up won
+            log.warning("Email signup lost a race for an address that now has an account")
+            if _wants_json(request):
+                return _already_registered()
+            request.session.pop("signup_verified", None)
+            return RedirectResponse(url="/", status_code=303)
+        # any OTHER unique index (e.g. google_id) is a server fault, never "you already have an account"
+        log.error(f"Email signup failed on a unique index other than email (keyPattern={_kp}); no account was created")
         if _wants_json(request):
-            return _auth_json({"ok": False, "error": "An account with that email already exists."}, 409)
+            return _auth_json({"ok": False, "error": "We couldn't create your account right now. Please try again in a moment."}, 500)
+        return RedirectResponse(url="/", status_code=303)
+    except Exception as exc:
+        log.error(f"Email signup could not create the account ({type(exc).__name__}): {exc}")
+        if _wants_json(request):
+            return _auth_json({"ok": False, "error": "We couldn't create your account right now. Please try again in a moment."}, 500)
         return RedirectResponse(url="/", status_code=303)
     request.session.pop("signup_verified", None)              # single use
     guest_gate.handover_to_account(anon_id, email_norm)      # (GUEST CREDITS) a NEW account: the guest's usage reduces its first free grant, once
