@@ -18,8 +18,10 @@ Generated from the code on branch `feature/search-modes-universal-intelligence`:
 | `REDDIT_LIVE_LINKS_ENABLED` | 10 Feature flags | Legacy GPT web-search Reddit links (also disabled in source) | No | `false` | UNSET/false | PAID | no |
 | `SIGNAL_REPORT_ENABLED` | 10 Feature flags | Add the five-class signal report to answers | No (default off) | `false` | true | none | no |
 | `STRICT_INTENT_MODE` | 10 Feature flags | Strict intent filtering | No | `false` | UNSET/false | PAID (extra model calls) | no |
-| `EMAIL_BACKEND` | 11 Optional services | Email delivery backend (`smtp`/`console`) | No | unset | UNSET (email sign-up answers unavailable) | outbound email | no |
-| `EMAIL_FROM` | 11 Optional services | Sender address | No | unset | UNSET | none | no |
+| `EMAIL_BACKEND` | 11 Optional services | Email delivery backend (unset/`resend` = the Resend API; `console` = local dev only; `smtp` is no longer supported) | No | unset | UNSET (email sign-up answers unavailable) | outbound email | no |
+| `EMAIL_FROM` | 11 Optional services | Sender address; must be on a domain verified in Resend | No | unset | UNSET | none | no |
+| `RESEND_API_KEY` | 11 Optional services | Resend API key used to send the sign-up code (never logged) | No | unset | UNSET | outbound email | YES |
+| `RESEND_WEBHOOK_SECRET` | 11 Optional services | Signing secret (`whsec_...`) verifying POST /webhooks/resend; without it the endpoint answers 503 | No | unset | UNSET | none | YES |
 | `SMTP_HOST` | 11 Optional services | SMTP server | No | unset | UNSET | outbound email | no |
 | `SMTP_PASSWORD` | 11 Optional services | SMTP password | No | unset | UNSET | none | YES |
 | `SMTP_PORT` | 11 Optional services | SMTP port | No | unset | UNSET | none | no |
