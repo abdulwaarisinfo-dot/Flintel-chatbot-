@@ -32,12 +32,12 @@ WEAK_FRAGMENTS = ("password", "passwd", "secret", "changeme", "change-me", "dev-
 MIN_SECRET_LENGTH, MIN_DISTINCT_CHARS, MIN_ENTROPY_BITS, MAX_SEQUENCE_RUN = 32, 10, 3.0, 6
 # Every variable whose value is a secret (compared by fingerprint, never printed).
 SECRETS = ["SESSION_SECRET_KEY", "MONGODB_URI", "MONGODB2", "MONGODB3", "MONGODB4", "GOOGLE_CLIENT_SECRET", "OPENAI_API_KEY", "ANTHROPIC_API_KEY",
-           "LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_WEBHOOK_SECRET", "MYSQL_PASSWORD", "RAPIDAPI_KEY", "SMTP_PASSWORD"]
+           "LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_WEBHOOK_SECRET", "MYSQL_PASSWORD", "RAPIDAPI_KEY", "SMTP_PASSWORD", "RESEND_API_KEY", "RESEND_WEBHOOK_SECRET"]
 # Feature flags that start paid work or other unreviewed behaviour: they must not be ON for the first staging round.
 RISKY_FLAGS = ["INTENT_BRIDGE_ENABLED", "ACTIVE_INTENT_ENABLED", "REDDIT_LIVE_LINKS_ENABLED", "STRICT_INTENT_MODE", "TURN_FINISH_ENABLED"]
 # Integrations that must be absent: paid discovery, outbound email, read-only database mirrors.
 FORBIDDEN_PRESENT = [("RAPIDAPI_KEY", "paid Google-discovery service"), ("RAPIDAPI_GOOGLE_HOST", "paid Google-discovery service"),
-                     ("SMTP_HOST", "outbound email"), ("EMAIL_BACKEND", "outbound email"),
+                     ("SMTP_HOST", "outbound email"), ("EMAIL_BACKEND", "outbound email"), ("RESEND_API_KEY", "outbound email"),
                      ("MONGODB2", "read-only signals mirror (would add another database as a source)"),
                      ("MONGODB4", "read-only signals mirror (would add another database as a source)")]
 
