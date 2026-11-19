@@ -11,6 +11,9 @@ import mongomock
 import email_verification as ev
 
 
+NOTICES = []        # addresses that got the "you already have an account" notice instead of a code (reset by every request_code)
+
+
 def fresh_codes_collection():
     coll = mongomock.MongoClient()["otp"]["codes"]
     sys.modules["database"].email_codes_collection = coll
@@ -20,7 +23,9 @@ def fresh_codes_collection():
 def request_code(client, email, headers=None):
     """POST /signup/code with delivery captured. -> (response, code or None)."""
     sent = []
-    with mock.patch.object(ev, "send_code", side_effect=lambda to, code: sent.append((to, code))):
+    NOTICES.clear()
+    with mock.patch.object(ev, "send_code", side_effect=lambda to, code: sent.append((to, code))), \
+            mock.patch.object(ev, "send_account_exists_notice", side_effect=lambda to: NOTICES.append(to)):
         resp = client.post("/signup/code", data={"email": email}, headers=headers or {"Accept": "application/json"})
     return resp, (sent[0][1] if sent else None)
 
