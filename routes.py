@@ -201,6 +201,7 @@ import guest_gate       # (GUEST GATE) server-side limit on a visitor's genuine 
 import reddit_live       # (LIVE REDDIT LINKS) separate, unverified, disabled-by-default links; see reddit_live.py
 import active_intent     # (ACTIVE INTENT) historical recent window + separate live candidates in one answer; OFF by default
 import email_verification   # (EMAIL SIGN-UP) emailed 6-digit code before an account is created
+import email_delivery
 import uuid as _uuid
 from jinja2 import pass_context   # (HOME UI) context-aware template helpers
 
@@ -4142,18 +4143,32 @@ _CODE_MESSAGES = {
 }
 
 
+_GENERIC_SIGNUP_ERROR = "We couldn't complete your sign-up. If you already have an account, sign in instead."
+
+
+def _record_email_delivery(email_id, to_email, purpose):
+    """Remember the Resend id of an accepted email so webhooks can be matched to it. Diagnostics only: a failure here never affects sign-up."""
+    if not isinstance(email_id, str) or not email_id:
+        return
+    try:
+        email_delivery.default_store().record_accepted(email_id, to_email, purpose)
+    except Exception as exc:
+        log.warning(f"Could not record the delivery of email {email_id} ({type(exc).__name__})")
+
+
 @app.post("/signup/code")
 def signup_send_code(request: Request, email: str = Form(...)):
-    """Step 1 of email sign-up: email a 6-digit code. Creates nothing; an address that already has an account is told so
-    (as /signup always did) and is NOT emailed."""
+    """Step 1 of email sign-up: email the address something. Creates nothing. The answer is IDENTICAL whether or not the address already
+    has an account (no 409, same cooldown / limits / attempt counting, one email either way): a new address gets its 6-digit code, an
+    existing one gets a "you already have an account" notice and an unusable decoy code record. So the response cannot be used to find
+    out who is registered; the real owner learns it from their inbox."""
     email_norm = email_verification.normalise_email(email)
     if not email_norm:
         return _auth_json({"ok": False, "error": "Enter a valid email address."}, 400)
-    if users_collection.find_one({"email": email_norm}):
-        return _auth_json({"ok": False, "reason": "exists", "error": "An account with that email already exists. Sign in instead."}, 409)
+    already_registered = users_collection.find_one({"email": email_norm}) is not None
     try:
         store = email_verification.default_store()
-        status, code, retry = store.issue(email_norm, email_verification.client_key(_client_ip(request)))
+        status, code, retry = store.issue(email_norm, email_verification.client_key(_client_ip(request)), decoy=already_registered)
     except Exception as exc:
         log.warning(f"Verification code store unavailable: {exc}")
         return _auth_json({"ok": False, "error": "We couldn't send a code right now. Please try again shortly."}, 503)
@@ -4164,7 +4179,10 @@ def signup_send_code(request: Request, email: str = Form(...)):
         return _auth_json({"ok": False, "reason": "limited", "retry_after": retry,
                            "error": "Too many codes requested. Please try again later."}, 429)
     try:
-        email_verification.send_code(email_norm, code)
+        if already_registered:
+            email_id = email_verification.send_account_exists_notice(email_norm)
+        else:
+            email_id = email_verification.send_code(email_norm, code)
     except email_verification.EmailNotConfigured as exc:
         store.discard(email_norm)
         log.error(f"Email sign-up is not available: {exc}")
@@ -4172,6 +4190,7 @@ def signup_send_code(request: Request, email: str = Form(...)):
     except email_verification.EmailSendFailed:
         store.discard(email_norm)
         return _auth_json({"ok": False, "reason": "send_failed", "error": "We couldn't send the email. Check the address and try again."}, 502)
+    _record_email_delivery(email_id, email_norm, "signup_exists_notice" if already_registered else "signup_code")
     request.session.pop("signup_verified", None)           # a new code invalidates any earlier verification
     return _auth_json({"ok": True, "email": email_norm, "retry_after": retry, "expires_in": email_verification.CODE_TTL_SECONDS})
 
@@ -4258,11 +4277,11 @@ def signup(
                 return _auth_json({"ok": True, "redirect": _t})
             return RedirectResponse(url=_t, status_code=303)
         if _wants_json(request):
-            return _auth_json({"ok": False, "error": "An account with that email already exists."}, 409)
+            return _auth_json({"ok": False, "reason": "signup_failed", "error": _GENERIC_SIGNUP_ERROR}, 400)     # never a 409 "exists"
         return templates.TemplateResponse(
             request,
             "index.html",
-            {"error": "An account with that email already exists.", "user": None},
+            {"error": _GENERIC_SIGNUP_ERROR, "user": None},
         )
 
     if users_collection.find_one({"email": email_norm}):
@@ -4582,6 +4601,34 @@ async def lemonsqueezy_webhook(request: Request):
         log.error(f"Lemon Squeezy webhook failed: {type(exc).__name__}")
         return _billing_json({"error": "processing_failed"}, 500)
     return _billing_json({"status": result.get("status")})
+
+
+_email_cfg_missing = email_delivery.config_problems()
+if _email_cfg_missing and (os.getenv("EMAIL_BACKEND") or "").strip().lower() != "console":
+    log.warning("Email delivery is not fully configured; missing settings (names only): " + ", ".join(_email_cfg_missing))
+
+
+@app.post("/webhooks/resend")
+async def resend_webhook(request: Request):
+    """Resend delivery webhook. No session or login: the Svix signature over the RAW body (RESEND_WEBHOOK_SECRET) is the only credential.
+    2xx = processed or safely ignored (do not retry); 400 malformed; 401 bad/missing signature; 409 / 5xx = deliver again later."""
+    from starlette.concurrency import run_in_threadpool
+    length = request.headers.get("content-length")
+    if length and length.isdigit() and int(length) > email_delivery.MAX_BODY_BYTES:
+        return _auth_json({"error": "too_large"}, 413)
+    raw = await request.body()
+    try:
+        result = await run_in_threadpool(email_delivery.handle_webhook, raw, request.headers, email_delivery.default_store())
+    except email_delivery.WebhookRejected as rejected:
+        if rejected.http_status == 401:
+            log.warning(f"Resend webhook rejected: {rejected.reason}")
+        return _auth_json({"error": rejected.reason}, rejected.http_status)
+    except email_delivery.WebhookRetry:
+        return _auth_json({"error": "retry_later"}, 409)
+    except Exception as exc:
+        log.error(f"Resend webhook failed: {type(exc).__name__}")
+        return _auth_json({"error": "processing_failed"}, 500)
+    return _auth_json({"status": result.get("status")})
 
 
 # ─────────────────────────────────────────────────────────────────────────────
