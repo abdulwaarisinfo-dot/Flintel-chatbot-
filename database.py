@@ -414,3 +414,11 @@ try:
     email_codes_collection.create_index("expires_at", expireAfterSeconds=0)
 except Exception as exc:
     log.warning(f"Could not create flintel_email_codes.expires_at TTL index (codes still expire by their own timestamp): {exc}")
+
+# (EMAIL DELIVERY STATE, email_delivery.py) One small document per email Resend accepted (_id = the Resend email id): its delivery state,
+# a keyed hash of the recipient (never the address) and the webhook event ids already applied. Purged by TTL 30 days after creation.
+email_deliveries_collection = db3.get_collection("flintel_email_deliveries", write_concern=WriteConcern("majority"))
+try:
+    email_deliveries_collection.create_index("expires_at", expireAfterSeconds=0)
+except Exception as exc:
+    log.warning(f"Could not create flintel_email_deliveries.expires_at TTL index (records are only diagnostics): {exc}")
