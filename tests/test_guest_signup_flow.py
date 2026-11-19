@@ -168,97 +168,63 @@ def test_addresses_are_normalised():
 
 
 # ───────────────────────── delivery ─────────────────────────────────────────────────────────────────
-class FakeSMTP:
-    instances = []
-    fail = False
-
-    def __init__(self, host, port, timeout=None, context=None):
-        self.host, self.port, self.timeout, self.context = host, port, timeout, context
-        self.calls, self.sent = [], []
-        FakeSMTP.instances.append(self)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *a):
-        return False
-
-    def starttls(self, context=None):
-        self.calls.append("starttls")
-
-    def login(self, user, password):
-        self.calls.append(("login", user, password))
-
-    def send_message(self, msg):
-        if FakeSMTP.fail:
-            raise OSError("550 mailbox unavailable for secret-password-value")
-        self.sent.append(msg)
+from tests.resend_helpers import FakeResend, PLACEHOLDER_KEY, configure, resend_env, sdk_error  # noqa: E402,F401
 
 
-@pytest.fixture
-def smtp_env(monkeypatch):
-    for k in ("EMAIL_BACKEND", "SMTP_HOST", "SMTP_PORT", "SMTP_USERNAME", "SMTP_PASSWORD", "SMTP_USE_SSL", "SMTP_USE_TLS", "EMAIL_FROM"):
-        monkeypatch.delenv(k, raising=False)
-    FakeSMTP.instances, FakeSMTP.fail = [], False
-    monkeypatch.setattr(ev.smtplib, "SMTP", FakeSMTP)
-    monkeypatch.setattr(ev.smtplib, "SMTP_SSL", type("FakeSSL", (FakeSMTP,), {}))
-    return monkeypatch
-
-
-def test_nothing_is_sent_when_no_provider_is_configured(smtp_env):
+def test_nothing_is_sent_when_no_provider_is_configured(resend_env):
     with pytest.raises(ev.EmailNotConfigured):
         ev.send_code("a@example.com", "123456")
-    assert FakeSMTP.instances == []
+    assert resend_env.resend_fake.calls == []
 
 
-def test_smtp_needs_a_sender_address(smtp_env):
-    smtp_env.setenv("SMTP_HOST", "smtp.example.test")
-    with pytest.raises(ev.EmailNotConfigured):
+def test_a_sender_address_is_required(resend_env):
+    resend_env.setenv("RESEND_API_KEY", PLACEHOLDER_KEY)
+    with pytest.raises(ev.EmailNotConfigured, match="EMAIL_FROM"):
         ev.send_code("a@example.com", "123456")
+    assert resend_env.resend_fake.calls == []
 
 
-def test_smtp_delivery_uses_tls_login_and_carries_the_code(smtp_env):
-    smtp_env.setenv("EMAIL_BACKEND", "smtp")
-    smtp_env.setenv("SMTP_HOST", "smtp.example.test")
-    smtp_env.setenv("SMTP_USERNAME", "mailer")
-    smtp_env.setenv("SMTP_PASSWORD", "placeholder-not-real")
-    smtp_env.setenv("EMAIL_FROM", "Flintel <no-reply@example.test>")
-    ev.send_code("a@example.com", "482913")
-    s = FakeSMTP.instances[0]
-    assert (s.host, s.port) == ("smtp.example.test", 587) and s.calls == ["starttls", ("login", "mailer", "placeholder-not-real")]
-    m = s.sent[0]
-    assert m["To"] == "a@example.com" and m["From"].endswith("<no-reply@example.test>") and "482913" in m["Subject"]
-    plain = m.get_body(preferencelist=("plain",)).get_content()
-    assert "482913" in plain and "10 minutes" in plain
+def test_the_api_key_is_required(resend_env):
+    resend_env.setenv("EMAIL_FROM", "no-reply@mail.flintel.test")
+    with pytest.raises(ev.EmailNotConfigured, match="RESEND_API_KEY"):
+        ev.send_code("a@example.com", "123456")
+    assert resend_env.resend_fake.calls == []
 
 
-def test_port_465_uses_implicit_ssl_and_no_starttls(smtp_env):
-    smtp_env.setenv("SMTP_HOST", "smtp.example.test")
-    smtp_env.setenv("SMTP_PORT", "465")
-    smtp_env.setenv("EMAIL_FROM", "no-reply@example.test")
-    ev.send_code("a@example.com", "111111")
-    assert FakeSMTP.instances[0].port == 465 and "starttls" not in FakeSMTP.instances[0].calls
+def test_resend_delivery_uses_the_configured_key_and_sender_carries_the_code_and_returns_the_email_id(resend_env):
+    configure(resend_env)
+    assert ev.send_code("a@example.com", "482913") == "em_test_0001"
+    call = resend_env.resend_fake.calls[0]
+    assert call["api_key"] == PLACEHOLDER_KEY and call["timeout"] == 10
+    p = call["params"]
+    assert p["to"] == ["a@example.com"] and p["from"] == "Flintel <no-reply@mail.flintel.test>" and "482913" in p["subject"]
+    assert "482913" in p["text"] and "10 minutes" in p["text"] and "482913" in p["html"]
 
 
-def test_a_failed_send_is_reported_without_leaking_the_code_or_the_password(smtp_env, caplog):
-    smtp_env.setenv("SMTP_HOST", "smtp.example.test")
-    smtp_env.setenv("SMTP_PASSWORD", "secret-password-value")
-    smtp_env.setenv("SMTP_USERNAME", "mailer")
-    smtp_env.setenv("EMAIL_FROM", "no-reply@example.test")
-    FakeSMTP.fail = True
+def test_smtp_is_no_longer_a_delivery_backend(resend_env):
+    configure(resend_env)
+    resend_env.setenv("EMAIL_BACKEND", "smtp")
+    with pytest.raises(ev.EmailNotConfigured, match="no longer supported"):
+        ev.send_code("a@example.com", "111111")
+    assert resend_env.resend_fake.calls == []
+
+
+def test_a_failed_send_is_reported_without_leaking_the_code_or_the_api_key(resend_env, caplog):
+    configure(resend_env)
+    resend_env.resend_fake.result = RuntimeError(f"boom {PLACEHOLDER_KEY} 735190")
     with caplog.at_level(logging.DEBUG), pytest.raises(ev.EmailSendFailed):
         ev.send_code("a@example.com", "735190")
-    assert "735190" not in caplog.text and "secret-password-value" not in caplog.text
+    assert "735190" not in caplog.text and PLACEHOLDER_KEY not in caplog.text
 
 
-def test_the_dev_console_backend_logs_the_code_but_is_refused_on_an_https_site(smtp_env, caplog):
+def test_the_dev_console_backend_logs_the_code_but_is_refused_on_an_https_site(resend_env, caplog):
     import config
-    smtp_env.setenv("EMAIL_BACKEND", "console")
-    smtp_env.setattr(config, "SITE_URL", "", raising=False)
+    resend_env.setenv("EMAIL_BACKEND", "console")
+    resend_env.setattr(config, "SITE_URL", "", raising=False)
     with caplog.at_level(logging.WARNING):
-        ev.send_code("a@example.com", "246810")
+        assert ev.send_code("a@example.com", "246810") is None
     assert "246810" in caplog.text and "DEV ONLY" in caplog.text
-    smtp_env.setattr(config, "SITE_URL", "https://flintel.example", raising=False)
+    resend_env.setattr(config, "SITE_URL", "https://flintel.example", raising=False)
     with pytest.raises(ev.EmailNotConfigured):
         ev.send_code("a@example.com", "246810")
 
@@ -282,11 +248,14 @@ def test_a_bad_address_is_refused_and_nothing_is_sent(auth, bad):
     assert resp.status_code in (400, 422) and code is None
 
 
-def test_an_existing_account_is_told_so_and_is_not_emailed(auth):
+def test_an_existing_account_gets_the_same_answer_and_a_notice_instead_of_a_code(auth):
+    """(PRIVACY) The old 409 "exists" answer revealed who is registered. Now the response is the one a new address gets."""
     fresh_codes_collection()
     auth["users"].insert_one({"email": "have@example.com", "password_hash": "h:x"})
     resp, code = request_code(auth["client"], "have@example.com")
-    assert resp.status_code == 409 and resp.json()["reason"] == "exists" and code is None
+    assert resp.status_code == 200 and resp.json()["ok"] is True and "reason" not in resp.json() and code is None
+    from tests.otp_helpers import NOTICES
+    assert NOTICES == ["have@example.com"]
 
 
 def test_without_a_provider_the_signup_is_unavailable_and_stores_nothing(auth, monkeypatch):
@@ -391,7 +360,8 @@ def test_an_account_created_in_parallel_wins_cleanly(auth):
     auth["client"].post("/signup/verify", data={"email": "race@example.com", "code": code}, headers=JSON)
     auth["users"].insert_one({"email": "race@example.com", "password_hash": "h:other"})
     resp = auth["client"].post("/signup", data={"password": "correct-horse-1", "confirm_password": "correct-horse-1"}, headers=JSON)
-    assert resp.status_code == 409 and auth["users"].count_documents({"email": "race@example.com"}) == 1
+    assert resp.status_code == 400 and resp.json()["reason"] == "signup_failed" and "already exists" not in resp.json()["error"]
+    assert auth["users"].count_documents({"email": "race@example.com"}) == 1
 
 
 def test_a_signup_through_the_code_flow_resumes_the_guest_conversation(auth, gg):
