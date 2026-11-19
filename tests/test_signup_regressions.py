@@ -19,7 +19,8 @@ import email_verification as ev
 import user_indexes
 from tests.otp_helpers import fresh_codes_collection, request_code, signup_with_code
 from tests.test_guest_gate import auth, env, fake, gg, load  # noqa: F401  (shared fixtures)
-from tests.test_guest_signup_flow import FakeSMTP, smtp_env, _key  # noqa: F401
+from tests.test_guest_signup_flow import _key  # noqa: F401
+from tests.resend_helpers import PLACEHOLDER_KEY, configure, resend_env, sdk_error  # noqa: F401
 
 JSON = {"Accept": "application/json"}
 _MISSING = object()
@@ -158,13 +159,13 @@ def test_after_a_server_fault_the_verified_session_is_kept_so_the_user_can_retry
     assert ok.status_code == 200 and auth["users"].count_documents({"email": "retry@example.com"}) == 1
 
 
-def test_a_parallel_email_duplicate_still_answers_exists(auth, monkeypatch):
+def test_a_parallel_email_duplicate_gets_a_generic_failure_and_no_second_account(auth, monkeypatch):
     fresh_codes_collection()
     _, code = request_code(auth["client"], "race2@example.com")
     auth["client"].post("/signup/verify", data={"email": "race2@example.com", "code": code}, headers=JSON)
     auth["users"].insert_one({"email": "race2@example.com", "password_hash": "h:someone-else", "provider": "email"})
     resp = auth["client"].post("/signup", data={"password": "correct-horse-1", "confirm_password": "correct-horse-1"}, headers=JSON)
-    assert resp.status_code == 409 and auth["users"].count_documents({"email": "race2@example.com"}) == 1
+    assert resp.status_code == 400 and resp.json()["reason"] == "signup_failed" and auth["users"].count_documents({"email": "race2@example.com"}) == 1
 
 
 def test_a_repeated_identical_signup_request_creates_one_account_and_signs_in(auth):
@@ -191,7 +192,7 @@ def test_a_repeat_with_a_different_password_is_not_signed_in(auth):
     c.post("/signup", data={"password": "correct-horse-1", "confirm_password": "correct-horse-1"}, headers=JSON)
     c2 = type(c)(auth["idx"].app, base_url="https://flintel.test", cookies=stale)
     resp = c2.post("/signup", data={"password": "attacker-guess-9", "confirm_password": "attacker-guess-9"}, headers=JSON)
-    assert resp.status_code == 409 and auth["users"].count_documents({"email": "other@example.com"}) == 1
+    assert resp.status_code == 400 and auth["users"].count_documents({"email": "other@example.com"}) == 1
 
 
 def test_an_old_account_is_not_treated_as_a_repeat(auth):
@@ -199,7 +200,7 @@ def test_an_old_account_is_not_treated_as_a_repeat(auth):
     auth["users"].insert_one({"email": "old@example.com", "password_hash": "h:correct-horse-1", "provider": "email", "created_at": old})
     fresh_codes_collection()
     _, code = request_code(auth["client"], "old@example.com")
-    assert code is None                                                                    # step 1 refuses an existing address and sends nothing
+    assert code is None                                                                    # an existing address gets the account-exists notice, never a code
 
 
 def test_a_pending_signup_is_resumed_not_treated_as_registered_and_resend_creates_no_user(auth):
@@ -234,55 +235,12 @@ def test_email_case_and_spaces_are_normalised_consistently(auth):
     assert r.status_code == 200 and auth["users"].find_one({"email": "mixed@example.com"})
 
 
-# ───────────────────────── 3. verification email delivery diagnostics ─────────────────────────
-def _smtp_configured(smtp_env):
-    smtp_env.setenv("SMTP_HOST", "smtp.resend.com")
-    smtp_env.setenv("SMTP_USERNAME", "resend")
-    smtp_env.setenv("SMTP_PASSWORD", "re_secret_api_key_value")
-    smtp_env.setenv("EMAIL_FROM", "Flintel <no-reply@mail.flintel.test>")
-
-
-def test_the_message_has_date_and_message_id_headers_and_the_acceptance_is_logged_without_the_code(smtp_env, caplog):
-    _smtp_configured(smtp_env)
-    with caplog.at_level(logging.INFO):
-        ev.send_code("person@gmail.com", "482913")
-    msg = FakeSMTP.instances[-1].sent[0]
-    assert msg["Date"] and re.fullmatch(r"<.+@mail\.flintel\.test>", msg["Message-ID"])
-    assert msg["Message-ID"] in caplog.text and "not proof of inbox delivery" in caplog.text
-    assert "482913" not in caplog.text and "re_secret_api_key_value" not in caplog.text and "person@gmail.com" not in caplog.text
-
-
-def test_a_refused_or_suppressed_recipient_is_reported_as_failed_never_as_sent(smtp_env, caplog):
-    _smtp_configured(smtp_env)
-    orig = FakeSMTP.send_message
-    FakeSMTP.send_message = lambda self, msg: (_ for _ in ()).throw(smtplib.SMTPRecipientsRefused({"x@y.com": (550, b"5.1.1 rejected")}))
-    try:
-        with caplog.at_level(logging.INFO), pytest.raises(ev.EmailSendFailed):
-            ev.send_code("x@y.com", "135790")
-    finally:
-        FakeSMTP.send_message = orig
-    assert "kind=recipient_refused" in caplog.text and "550" in caplog.text
-    assert "accepted by SMTP relay" not in caplog.text
-    assert "135790" not in caplog.text and "re_secret_api_key_value" not in caplog.text and "rejected" not in caplog.text
-
-
-def test_an_auth_failure_is_classified_and_leaks_nothing(smtp_env, caplog):
-    _smtp_configured(smtp_env)
-    orig = FakeSMTP.login
-    FakeSMTP.login = lambda self, u, p: (_ for _ in ()).throw(smtplib.SMTPAuthenticationError(535, b"bad key re_secret_api_key_value"))
-    try:
-        with caplog.at_level(logging.INFO), pytest.raises(ev.EmailSendFailed):
-            ev.send_code("x@y.com", "246802")
-    finally:
-        FakeSMTP.login = orig
-    assert "kind=auth_failed" in caplog.text and "re_secret_api_key_value" not in caplog.text and "246802" not in caplog.text
-
-
+# ───────────────────────── 3. delivery failure at the route (the Resend API matrix lives in test_resend_delivery.py) ─────────────────────────
 def test_a_provider_failure_at_the_route_is_a_502_the_code_is_discarded_and_a_retry_is_allowed_at_once(auth, monkeypatch):
     coll = fresh_codes_collection()
-    monkeypatch.setattr(ev, "send_code", mock.Mock(side_effect=ev.EmailSendFailed("SMTPRecipientsRefused")))
+    monkeypatch.setattr(ev, "send_code", mock.Mock(side_effect=ev.EmailSendFailed("rejected_request")))
     r = auth["client"].post("/signup/code", data={"email": "bounce@example.com"}, headers=JSON)
     assert r.status_code == 502 and r.json()["ok"] is False and r.json()["reason"] == "send_failed"
     assert coll.count_documents({"_id": "bounce@example.com"}) == 0 and auth["users"].count_documents({}) == 0
-    monkeypatch.setattr(ev, "send_code", mock.Mock())
+    monkeypatch.setattr(ev, "send_code", mock.Mock(return_value=None))
     assert auth["client"].post("/signup/code", data={"email": "bounce@example.com"}, headers=JSON).status_code == 200
