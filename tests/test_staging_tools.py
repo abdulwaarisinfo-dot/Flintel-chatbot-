@@ -83,7 +83,7 @@ def test_every_production_target_is_rejected_whatever_the_variable_is_called(var
     assert verdict(dict(GOOD, **{var: value})) == "FAILED"
 
 
-@pytest.mark.parametrize("var", ["MONGODB2", "MONGODB4", "RAPIDAPI_KEY", "RAPIDAPI_GOOGLE_HOST", "SMTP_HOST", "EMAIL_BACKEND"])
+@pytest.mark.parametrize("var", ["MONGODB2", "MONGODB4", "RAPIDAPI_KEY", "RAPIDAPI_GOOGLE_HOST", "SMTP_HOST", "EMAIL_BACKEND", "RESEND_API_KEY"])
 def test_forbidden_integrations_fail_even_with_harmless_values(var):
     assert f"{var} is unset" in failed(dict(GOOD, **{var: "x"}))
 
@@ -135,7 +135,7 @@ def test_base_url_guard(url, ok):
 
 def test_the_exit_codes_and_output_never_contain_a_secret(capsys, monkeypatch):
     for k in list(__import__("os").environ):
-        if k.startswith(("MONGO", "STAGING_", "FLINTEL_", "OPENAI", "SESSION", "SITE", "TRENDING", "LAZY", "MYSQL", "RAPID", "SMTP", "EMAIL", "CREDIT", "TURN_", "STRICT", "INTENT", "ACTIVE_", "REDDIT", "LEMON", "ZERO_")):
+        if k.startswith(("MONGO", "STAGING_", "FLINTEL_", "OPENAI", "SESSION", "SITE", "TRENDING", "LAZY", "MYSQL", "RAPID", "SMTP", "EMAIL", "RESEND", "CREDIT", "TURN_", "STRICT", "INTENT", "ACTIVE_", "REDDIT", "LEMON", "ZERO_")):
             monkeypatch.delenv(k, raising=False)
     for k, v in PAID.items():
         monkeypatch.setenv(k, v)
@@ -221,7 +221,7 @@ def test_base_url_guard_needs_the_production_list():
 def _scrub(monkeypatch):
     import os
     for k in list(os.environ):
-        if k.startswith(("MONGO", "STAGING_", "FLINTEL_", "OPENAI", "SESSION", "SITE", "TRENDING", "LAZY", "MYSQL", "RAPID", "SMTP", "EMAIL", "CREDIT", "TURN_", "STRICT", "INTENT", "ACTIVE_", "REDDIT", "LEMON", "ZERO_")):
+        if k.startswith(("MONGO", "STAGING_", "FLINTEL_", "OPENAI", "SESSION", "SITE", "TRENDING", "LAZY", "MYSQL", "RAPID", "SMTP", "EMAIL", "RESEND", "CREDIT", "TURN_", "STRICT", "INTENT", "ACTIVE_", "REDDIT", "LEMON", "ZERO_")):
             monkeypatch.delenv(k, raising=False)
 
 
