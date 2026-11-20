@@ -13,6 +13,7 @@ import hmac
 import json
 import logging
 import os
+import re
 import sys
 import time
 from datetime import datetime, timedelta, timezone
@@ -120,7 +121,7 @@ def test_an_accepted_code_email_is_recorded_by_its_resend_id_with_a_hashed_recip
     assert r.status_code == 200
     doc = deliveries.find_one({"_id": "em_rec_1"})
     assert doc["state"] == "accepted" and doc["purpose"] == "signup_code" and doc["to_domain"] == "example.com"
-    code = [c for c in resend_env.resend_fake.calls][0]["params"]["subject"].rsplit(" ", 1)[-1]
+    code = re.search(r"(?<![#\w])(\d{6})(?!\w)", resend_env.resend_fake.calls[0]["params"]["text"]).group(1)
     assert "recorded@example.com" not in json.dumps(doc, default=str).lower() and code not in json.dumps(doc, default=str)
     assert doc["expires_at"] > datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(seconds=1) or doc["expires_at"]
 
