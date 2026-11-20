@@ -65,7 +65,8 @@ def test_both_paths_do_the_same_work_exactly_one_email_through_the_provider(auth
     assert new_mail["tags"] == [{"name": "purpose", "value": "signup_code"}] and notice["tags"] == [{"name": "purpose", "value": "signup_exists_notice"}]
     import re
     code_like = r"(?<![#\w])\d{6}(?!\w)"                                            # a standalone 6-digit number (not a #191817 CSS colour)
-    assert re.search(code_like, new_mail["subject"]) and not re.search(code_like, notice["subject"] + notice["text"] + notice["html"])
+    assert re.search(code_like, new_mail["text"]) and re.search(code_like, new_mail["html"]) and not re.search(code_like, new_mail["subject"])
+    assert not re.search(code_like, notice["subject"] + notice["text"] + notice["html"])
 
 
 def test_an_existing_address_receives_a_notice_that_names_no_code(auth, resend_env):
@@ -223,7 +224,7 @@ def test_a_fresh_signup_still_works_end_to_end_through_the_real_sender(auth, res
     fresh_codes_collection()
     r = _real_send(auth, resend_env, "brandnew@example.com")
     import re
-    code = re.search(r"(\d{6})", resend_env.resend_fake.calls[0]["params"]["subject"]).group(1)
+    code = re.search(r"(?<![#\w])(\d{6})(?!\w)", resend_env.resend_fake.calls[0]["params"]["text"]).group(1)
     assert auth["client"].post("/signup/verify", data={"email": "brandnew@example.com", "code": code}, headers=JSON).status_code == 200
     done = auth["client"].post("/signup", data=FORM, headers=JSON)
     assert r.status_code == 200 and done.status_code == 200 and auth["users"].count_documents({"email": "brandnew@example.com"}) == 1
