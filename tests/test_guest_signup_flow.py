@@ -197,7 +197,8 @@ def test_resend_delivery_uses_the_configured_key_and_sender_carries_the_code_and
     call = resend_env.resend_fake.calls[0]
     assert call["api_key"] == PLACEHOLDER_KEY and call["timeout"] == 10
     p = call["params"]
-    assert p["to"] == ["a@example.com"] and p["from"] == "Flintel <no-reply@mail.flintel.test>" and "482913" in p["subject"]
+    assert p["to"] == ["a@example.com"] and p["from"] == "Flintel <no-reply@mail.flintel.test>" and p["subject"] == "Your Flintel verification code"
+    assert "482913" not in p["subject"]                                   # the code is never in the subject
     assert "482913" in p["text"] and "10 minutes" in p["text"] and "482913" in p["html"]
 
 
