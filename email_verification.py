@@ -170,39 +170,40 @@ def default_store():
 
 
 # ───────────────────────── delivery ─────────────────────────────────────────
+def _site_url():
+    """The public origin used ONLY to build the logo URL in the email (email_templates ignores anything that is not an https URL)."""
+    try:
+        import config
+        return str(getattr(config, "SITE_URL", "") or os.getenv("SITE_URL") or "")
+    except Exception:
+        return os.getenv("SITE_URL") or ""
+
+
 def build_message(to_addr, code, sender):
-    """-> the Resend API parameters for the verification email. Subject, text and HTML are unchanged from the SMTP version."""
-    minutes = CODE_TTL_SECONDS // 60
+    """-> the Resend API parameters for the verification email. The design lives in email_templates.py. The subject deliberately does NOT
+    contain the code (it would show in inbox lists, notifications, and the provider's dashboard and webhook payloads)."""
+    import email_templates
+    html, text = email_templates.render_verification_email(code, CODE_TTL_SECONDS, _site_url())
     return {
         "from": sender,
         "to": [to_addr],
-        "subject": f"Your Flintel verification code: {code}",
-        "text": (f"Your Flintel verification code is {code}.\n\n"
-                 f"Enter it in the sign-up window to continue. It expires in {minutes} minutes and works once.\n\n"
-                 "If you didn't ask for this, you can safely ignore this email - no account is created without the code.\n"),
-        "html": ('<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:420px;margin:0 auto;padding:24px;color:#191817">'
-                 '<p style="font-size:15px;margin:0 0 16px">Your Flintel verification code is</p>'
-                 f'<p style="font-size:34px;letter-spacing:8px;font-weight:700;margin:0 0 16px">{code}</p>'
-                 f'<p style="font-size:13px;color:#555;margin:0 0 8px">Enter it in the sign-up window to continue. It expires in {minutes} minutes and works once.</p>'
-                 '<p style="font-size:12px;color:#888;margin:0">If you didn\'t ask for this, you can safely ignore this email.</p></div>'),
+        "subject": "Your Flintel verification code",
+        "text": text,
+        "html": html,
         "tags": [{"name": "purpose", "value": "signup_code"}],
     }
 
 
 def build_exists_notice(to_addr, sender):
     """The email sent INSTEAD of a code when the address already has an account, so the response (and timing) never reveals it."""
+    import email_templates
+    html, text = email_templates.render_exists_notice(_site_url())
     return {
         "from": sender,
         "to": [to_addr],
         "subject": "You already have a Flintel account",
-        "text": ("Someone (hopefully you) tried to create a Flintel account with this email address, but one already exists.\n\n"
-                 "Sign in with the method you used before (Google, or your email and password). No new account was created and nothing has changed.\n\n"
-                 "If this wasn't you, you can safely ignore this email.\n"),
-        "html": ('<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:420px;margin:0 auto;padding:24px;color:#191817">'
-                 '<p style="font-size:15px;margin:0 0 12px">You already have a Flintel account.</p>'
-                 '<p style="font-size:13px;color:#555;margin:0 0 8px">Someone (hopefully you) tried to create an account with this email address. '
-                 'Sign in with the method you used before (Google, or your email and password). No new account was created and nothing has changed.</p>'
-                 '<p style="font-size:12px;color:#888;margin:0">If this wasn\'t you, you can safely ignore this email.</p></div>'),
+        "text": text,
+        "html": html,
         "tags": [{"name": "purpose", "value": "signup_exists_notice"}],
     }
 
